@@ -1,0 +1,173 @@
+name: CI/CD prod
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
+
+permissions: {}
+concurrency: prod
+
+jobs:
+  build-push-prod:
+    name: Build & Push New Image
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: write # This is required for actions/checkout
+    environment: prod
+    outputs:
+      new_tag: ${{ steps.set-version-tag-output.outputs.new_tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.62.0
+        id: bump-id
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+
+      - name: Set Version tag output
+        id: set-version-tag-output
+        run: echo "new_tag=${{ steps.bump-id.outputs.new_tag }}" >> $GITHUB_OUTPUT
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Data Account Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: "arn:aws:iam::${{ secrets.DATA_ACCOUNT_ID }}:role/github-actions-ecr-oidc"
+          role-session-name: githubactionsiamsession
+          aws-region: eu-west-1
+
+      - name: Login to Amazon ECR
+        id: login-data-acct-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build
+        env:
+          NEW_TAG_V: ${{ steps.set-version-tag-output.outputs.new_tag }}
+        shell: bash
+        run: |
+          docker build . -t working_image:$NEW_TAG_V
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.PROD_ECR_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ vars.PROD_ECR_REPOSITORY }}
+          NEW_TAG_V: ${{ steps.set-version-tag-output.outputs.new_tag }}
+        shell: bash
+        run: |
+          docker tag working_image:$NEW_TAG_V $ECR_REGISTRY/$ECR_REPOSITORY:$NEW_TAG_V
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$NEW_TAG_V
+
+  deploy-prod:
+    needs: build-push-prod
+    name: Deploy Helm Chart into Cloud Platform
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+    environment: prod
+    steps:
+      - name: Authenticate to the cluster
+        env:
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+        run: |
+          echo "${{ secrets.KUBE_CERT }}" > ca.crt
+          kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://${KUBE_CLUSTER}
+          kubectl config set-credentials deploy-user --token=${{ secrets.KUBE_TOKEN }}
+          kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${{ secrets.KUBE_NAMESPACE }}
+          kubectl config use-context ${KUBE_CLUSTER}
+
+      - name: add helm repo
+        continue-on-error: true
+        run: |
+          helm repo add mojanalytics http://moj-analytics-helm-repo.s3-website-eu-west-1.amazonaws.com/
+
+      - name: update helm repo
+        continue-on-error: true
+        run: |
+          helm repo update mojanalytics
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.PROD_ECR_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Upgrade the Helm chart
+        env:
+          APP_ROLE_ARN: ${{ secrets.APP_ROLE_ARN }}
+          AUTH0_CALLBACK_URL: ${{ vars.AUTH0_CALLBACK_URL }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+          AUTH0_DOMAIN: ${{ vars.AUTH0_DOMAIN }}
+          AUTH0_PASSWORDLESS: ${{ vars.AUTH0_PASSWORDLESS }}
+          AUTH0_TOKEN_ALG: ${{ vars.AUTH0_TOKEN_ALG }}
+          AUTHENTICATION_REQUIRED: ${{ vars.AUTHENTICATION_REQUIRED }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+          ECR_REPO_AUTH0: ${{ steps.login-ecr.outputs.registry }}/analytical-platform/ap-auth-proxy-prod-ecr
+          ECR_REPO_WEBAPP: ${{ steps.login-ecr.outputs.registry }}/${{ vars.PROD_ECR_REPOSITORY }}
+          IP_RANGES: ${{ secrets.IP_RANGES }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          NEW_TAG_V: ${{ needs.build-push-prod.outputs.new_tag }}
+          RELEASE_NAME: ${{ github.event.repository.name }}-prod
+          SECRETS_CONTEXT:  ${{ toJson(secrets) }}
+          VARS_CONTEXT:  ${{ toJson(vars) }}
+        run: |
+          process_ip_range=$(echo $IP_RANGES | sed "s/,/\\\,/g")
+
+          combined_json=$(jq -n \
+              --argjson secrets_json "$SECRETS_CONTEXT" \
+              --argjson vars_json "$VARS_CONTEXT" \
+              '$secrets_json + $vars_json')
+
+          custom_variables=""
+          for row in $(echo "${combined_json}" | jq -r 'to_entries[] | @base64'); do
+            key=$(echo ${row} | base64 --decode | jq -r '.key')
+            value=$(echo ${row} | base64 --decode | jq -r '.value')
+            if [[ $key == XXX* ]]; then
+                custom_key=$(echo $key | sed 's/^XXX_/Secrets.WebApp.Parameters./')
+                custom_variables="$custom_variables --set $custom_key=$value"
+            fi
+          done
+
+          helm upgrade --install --wait --timeout 10m0s --namespace $KUBE_NAMESPACE $RELEASE_NAME mojanalytics/webapp-cp \
+          --set AuthProxy.Env.Auth0Domain=$AUTH0_DOMAIN \
+          --set AuthProxy.Env.Auth0Passwordless=$AUTH0_PASSWORDLESS \
+          --set AuthProxy.Env.Auth0TokenAlg=$AUTH0_TOKEN_ALG \
+          --set AuthProxy.Env.AuthenticationRequired=$AUTHENTICATION_REQUIRED \
+          --set AuthProxy.Env.IPRanges=$process_ip_range \
+          --set AuthProxy.Image.Repository=$ECR_REPO_AUTH0 \
+          --set AuthProxy.Image.Tag="latest" \
+          --set Namespace=$KUBE_NAMESPACE \
+          --set Secrets.Auth0.ClientId=$AUTH0_CLIENT_ID \
+          --set Secrets.Auth0.ClientSecret=$AUTH0_CLIENT_SECRET \
+          --set Secrets.Auth0.CookieSecret=$COOKIE_SECRET \
+          --set ServiceAccount.RoleARN=$APP_ROLE_ARN \
+          --set WebApp.Image.Repository=$ECR_REPO_WEBAPP \
+          --set WebApp.Image.Tag=$NEW_TAG_V \
+          --set WebApp.Name=$KUBE_NAMESPACE \
+          $custom_variables
