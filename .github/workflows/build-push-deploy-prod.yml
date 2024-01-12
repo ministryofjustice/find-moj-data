@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Configure AWS Data Account Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: "arn:aws:iam::${{ secrets.DATA_ACCOUNT_ID }}:role/github-actions-ecr-oidc"
           role-session-name: githubactionsiamsession
@@ -58,7 +58,7 @@ jobs:
           docker build . -t working_image:$NEW_TAG_V
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.PROD_ECR_REGION }}
@@ -108,7 +108,7 @@ jobs:
           helm repo update mojanalytics
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.PROD_ECR_REGION }}
