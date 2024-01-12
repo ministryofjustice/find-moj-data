@@ -37,6 +37,14 @@
             </select>
           </div>
       </div>
+
+      <div class="govuk-grid-column-one-third">
+        {% for result in results %}
+        <code>
+          {{result}}
+        </code>
+        {% endfor %}
+      </div>
     </div>
   </main>
 </div>
