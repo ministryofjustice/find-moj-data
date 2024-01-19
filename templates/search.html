@@ -40,8 +40,11 @@
           {% for result in results %}
           {% include "partial/search_result.html" %}
           {%endfor%}
-      </div>
+          {% include "partial/pagination.html" %}
+        </div>
+        
     </div>
+   
   </main>
 </div>
 {% endblock content %}

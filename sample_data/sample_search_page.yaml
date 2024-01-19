@@ -1,7 +1,7 @@
 # Example search results for prototyping
 results:
   - title: Data supporting HMCTS ‘Commonality’ study
-    summary: Dataset supporting the study on the extent of commonalities between individuals who become involved in violent extremist groups and violent criminal gangs, and the processes by ...
+    summary: Dataset supporting the study on the extent of commonalities between individuals who become involved in violent extremist groups and violent criminal gangs. 
     registered_by: HMCTS Behavioural Science Team
     database_name: Output_CommStud
     first_created: 23/10/2021
