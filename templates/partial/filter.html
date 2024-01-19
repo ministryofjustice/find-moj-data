@@ -7,6 +7,7 @@
         <div class="moj-filter__header-action">
         </div>
       </div>
+    
       <div class="moj-filter__content">
         <div class="moj-filter__selected">
           <div class="moj-filter__selected-heading">
@@ -17,17 +18,18 @@
               <p><a class="govuk-link govuk-link--no-visited-state" href="">Clear filters</a></p>
             </div>
           </div>
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Type</h3>
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
           <ul class="moj-filter-tags">
-            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> Blue</a></li>
-            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> Yellow</a></li>
+            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> HMPPS</a></li>
           </ul>
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Status</h3>
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">DPIA Status</h3>
           <ul class="moj-filter-tags">
             <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> Completed</a></li>
           </ul>
         </div>
         <div class="moj-filter__options">
+          <form action="{% url 'home:filter' %}" method="post" >
+            {% csrf_token %}
           <button type="submit" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
             Apply filters
           </button>
@@ -97,6 +99,7 @@
               </div>
             </fieldset>
           </div>
+        </form>
         </div>
       </div>
     </div>

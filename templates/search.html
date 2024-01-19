@@ -7,7 +7,7 @@
   <main class="govuk-main-wrapper">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <form action="/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+          <form action="{% url 'home:search' %}" method="post" role="search" class="search__form govuk-!-margin-bottom-4">
             <div class="govuk-form-group">
               <h1 class="govuk-heading-xl">Find MOJ Data</h1>
               <div class="search-container">
@@ -24,15 +24,14 @@
     <div class="govuk-grid-row">
       {% include "partial/filter.html" %}
       <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-heading-l govuk-!-display-inline-block">236 Results</h2>
+          <h2 class="govuk-heading-l govuk-!-display-inline-block">{{total}} Results</h2>
           <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-left-5">
             <label class="govuk-label" for="sort">
               Sort by
             </label>
             <select class="govuk-select" id="sort" name="sort">
-              <option value="published">Recently published</option>
-              <option value="updated" selected>Recently updated</option>
-              <option value="views">Most views</option>
+              <option value="database">Database name</option>
+              <option value="updated" selected>First created </option>
               <option value="comments">Most comments</option>
             </select>
           </div>

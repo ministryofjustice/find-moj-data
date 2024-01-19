@@ -3,6 +3,7 @@ results:
   - title: Data supporting HMCTS ‘Commonality’ study
     summary: Dataset supporting the study on the extent of commonalities between individuals who become involved in violent extremist groups and violent criminal gangs. 
     registered_by: HMCTS Behavioural Science Team
+    domain_name: HMCTS
     database_name: Output_CommStud
     first_created: 23/10/2021
     refresh_period: None
@@ -14,6 +15,7 @@ results:
   - title: Gang violence in UK prisons
     summary: Source data for the official Q2 2023 statistics on gang violence in prisons
     registered_by: D&A Statistics Team
+    domain_name: HMPPS
     database_name: GangStatQ32023v1
     first_created: 31/06/2023
     refresh_period: None
@@ -25,6 +27,7 @@ results:
   - title: NOMIS gang violence extracts
     summary: Daily extracts of NOMIS tables related to gang violence, including non-association data, violent incidents data, movement data. Data extracts are anonymised at source
     registered_by: NART Team
+    domain_name: HMPPS
     database_name: DailyGangExports
     first_created: 01/01/2001
     refresh_period: Daily
@@ -36,6 +39,7 @@ results:
   - title: Modelling output
     summary: Output of experimental model run on most working days aiming to predict upticks and downticks in violent activity in prisons, based on prisoner moves of known gang members
     registered_by: D&A Data Modelling Team
+    domain_name: HMPPS
     database_name: ViolentMoves_model
     first_created: 01/11/2023 (1 week ago)
     refresh_period: Daily
@@ -47,6 +51,7 @@ results:
   - title: Non-association data
     summary: Data held in NOMIS for each prisoner, detailing any other person (prisoner, visitor, payee, violent gang member, victim...) that they are not allowed to associate with
     registered_by: NOMIS Team
+    domain_name: HMPPS
     database_name: non-association-list
     first_created: 01/01/2001
     refresh_period: Daily
