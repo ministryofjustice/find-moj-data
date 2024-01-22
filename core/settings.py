@@ -27,9 +27,10 @@ SECRET_KEY = "django-insecure-l!hxiq=!g2@)$-n3v0)yec128g7j=ksrdql+86%z66d-x6no5%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-
-
+ALLOWED_HOSTS = [
+    "localhost", "127.0.0.1",
+    "data-platform-find-moj-data-dev.apps.live.cloud-platform.service.justice.gov.uk"
+]
 # Application definition
 
 INSTALLED_APPS = [
