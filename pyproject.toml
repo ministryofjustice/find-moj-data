@@ -4,12 +4,18 @@ version = "0.1.0"
 description = ""
 authors = ["Mitch Dawson <Mitchell.Dawson@justice.gov.uk>"]
 readme = "README.md"
-packages = [{ include = "daap_catalogue" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "^5.0.1"
 pyyaml = "^6.0.1"
+gunicorn = "^21.2.0"
+
+[tool.poetry.group.dev] # dev group definition
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.12.1"
+
 
 
 [build-system]
