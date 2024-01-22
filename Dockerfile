@@ -34,7 +34,11 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 # copy project
 COPY . .
 
-# Install prod dependencies
-# RUN poetry install --without dev && rm -rf $POETRY_CACHE_DIR
+# Use a non-root user
+RUN addgroup --gid 31337 --system appuser \
+  && adduser --uid 31337 --system appuser --ingroup appuser
+RUN chown --recursive appuser:appuser /app
+USER 31337
 
+EXPOSE 8000
 ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi"]
