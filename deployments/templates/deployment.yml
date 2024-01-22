@@ -1,21 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-deployment
+  name: find-moj-data-deployment
   labels:
-    app: example
+    app: find-moj-data
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: example # this should match the selector in service.yml
+      app: find-moj-data
   template:
     metadata:
       labels:
-        app: example # this should match the selector in service.yml
+        app: find-moj-data
     spec:
       containers:
-        - name: example
+        - name: find-moj-data
           image: ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8000
+              protocol: TCP
