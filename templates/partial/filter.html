@@ -1,3 +1,9 @@
+<script>
+  function clearFiltersCallback() {
+      // Your custom JavaScript logic to handle the click event
+      alert("Clear filters clicked!");
+  }
+</script>
 <div class="govuk-grid-column-one-third">
     <div class="moj-filter">
       <div class="moj-filter__header">
@@ -15,7 +21,14 @@
               <h2 class="govuk-heading-m">Selected filters</h2>
             </div>
             <div class="moj-filter__heading-action">
-              <p><a class="govuk-link govuk-link--no-visited-state" href="">Clear filters</a></p>
+              <p>
+                <a class="govuk-link govuk-link--no-visited-state"
+                   href="#"
+                   value="clear"
+                   id="clear_filter">
+                    Clear filters
+                </a>
+            </p>
             </div>
           </div>
           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
@@ -30,74 +43,35 @@
         <div class="moj-filter__options">
           <form action="{% url 'home:filter' %}" method="post" >
             {% csrf_token %}
-          <button type="submit" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
-            Apply filters
-          </button>
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                Domain
-              </legend>
-              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type" name="type" type="checkbox" value="1" checked>
-                  <label class="govuk-label govuk-checkboxes__label" for="type">
-                    HMPPS
-                  </label>
+            <button type="submit" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
+              Apply filters
+            </button>
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                  {% for option in domainlist%}
+                      <div class="govuk-checkboxes__item">
+                          <input class="govuk-checkboxes__input" id="type-{{ option|lower }}" name="type" type="checkbox" value="{{ option|lower }}" {% if option|lower in selected_domain %}checked{% endif %}>
+                          <label class="govuk-label govuk-checkboxes__label" for="type-{{ option|lower }}">{{ option }}</label>
+                      </div>
+                  {% endfor %}
                 </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type-2" name="type" type="checkbox" value="2" checked>
-                  <label class="govuk-label govuk-checkboxes__label" for="type-2">
-                   OPG
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type-3" name="type" type="checkbox" value="3">
-                  <label class="govuk-label govuk-checkboxes__label" for="type-3">
-                    HMCTS
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type-3" name="type" type="checkbox" value="3">
-                  <label class="govuk-label govuk-checkboxes__label" for="type-3">
-                    LAA
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type-3" name="type" type="checkbox" value="3">
-                  <label class="govuk-label govuk-checkboxes__label" for="type-3">
-                    Platforms
-                  </label>
-                </div>
-              </div>
-            </fieldset>
-          </div>
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                DPIA Status
-              </legend>
-              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="status" name="status" type="checkbox" value="complete" checked>
-                  <label class="govuk-label govuk-checkboxes__label" for="status">
-                    Approved
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="status-2" name="status" type="checkbox" value="incomplete">
-                  <label class="govuk-label govuk-checkboxes__label" for="status-2">
-                    In progress
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="status-3" name="status" type="checkbox" value="inprogress">
-                  <label class="govuk-label govuk-checkboxes__label" for="status-3">
-                    Not required
-                  </label>
-                </div>
-              </div>
-            </fieldset>
+              </fieldset> 
+            </div>
+        <div class="govuk-form-group">
+          <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">DPIA status</legend>
+          <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+              {% for option in dpia_list%}
+                  <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="dpia-{{ option|lower }}" name="dpia" type="checkbox" value="{{ option|lower }}" {% if option|lower in selected_dpia %}checked{% endif %}>
+                      <label class="govuk-label govuk-checkboxes__label" for="dpia-{{ option|lower }}">{{ option }}</label>
+                  </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+          
           </div>
         </form>
         </div>

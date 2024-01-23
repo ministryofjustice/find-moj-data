@@ -6,7 +6,7 @@
   <a href="#" class="govuk-back-link">Back</a>
   <main class="govuk-main-wrapper">
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-two-thirds" id="search_result">
           <form action="{% url 'home:search' %}" method="post" role="search" class="search__form govuk-!-margin-bottom-4">
             <div class="govuk-form-group">
               <h1 class="govuk-heading-xl">Find MOJ Data</h1>
@@ -29,9 +29,9 @@
             <label class="govuk-label" for="sort">
               Sort by
             </label>
-            <select class="govuk-select" id="sort" name="sort">
-              <option value="database">Database name</option>
-              <option value="updated" selected>First created </option>
+            <select class="govuk-select" id="sort" name="sort" >
+              <option value="database" selected>Database name</option>
+              <option value="updated">First created </option>
               <option value="comments">Most comments</option>
             </select>
           </div>

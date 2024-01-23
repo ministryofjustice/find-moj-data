@@ -136,8 +136,15 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
-SAMPLE_SEARCH_RESULTS_FILENAME = BASE_DIR / \
-    "sample_data/sample_search_page.yaml"
+SAMPLE_SEARCH_RESULTS_FILENAME = BASE_DIR / "sample_data/sample_search_page.yaml"
 
 with open(SAMPLE_SEARCH_RESULTS_FILENAME) as f:
     SAMPLE_SEARCH_RESULTS = yaml.safe_load(f)
+
+
+MIDDLEWARE = [
+'django.contrib.sessions.middleware.SessionMiddleware',
+'django.contrib.auth.middleware.AuthenticationMiddleware',
+'django.contrib.messages.middleware.MessageMiddleware',
+'django.middleware.csrf.CsrfViewMiddleware'  
+]

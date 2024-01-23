@@ -10,6 +10,7 @@ packages = [{ include = "daap_catalogue" }]
 python = "^3.11"
 django = "^5.0.1"
 pyyaml = "^6.0.1"
+htmx = "^0.0.0"
 
 
 [build-system]
