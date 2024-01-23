@@ -1,0 +1,48 @@
+{
+  search(input: { type: DATA_PRODUCT, query: "*", count: 500, start: 0 }) {
+    total
+    searchResults {
+      entity {
+        ... on DataProduct {
+          urn
+          tags {
+            tags {
+              tag {
+                urn
+                properties {
+                  name
+                }
+              }
+            }
+          }
+          properties {
+            name
+            description
+            numAssets
+          }
+          relationships(
+            input: {
+              direction: OUTGOING
+              types: "DataProductContains"
+              count: 500
+              start: 0
+            }
+          ) {
+            relationships {
+              entity {
+                urn
+              }
+            }
+          }
+          domain {
+            domain {
+              properties {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
