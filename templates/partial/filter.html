@@ -1,3 +1,9 @@
+<script>
+  function clearFiltersCallback() {
+      // Your custom JavaScript logic to handle the click event
+      alert("Clear filters clicked!");
+  }
+</script>
 <div class="govuk-grid-column-one-third">
     <div class="moj-filter">
       <div class="moj-filter__header">
@@ -19,7 +25,13 @@
                 <a class="govuk-link govuk-link--no-visited-state"
                    href="#"
                    value="clear"
-                   id="clear_filter">
+                   id="clear_filter"
+                   hx-trigger="click"
+                   hx-post="{% url 'home:result_view' %}"
+                   hx-target="#search_result"
+                   hx-data='{"href_value": "clear-filter"}'
+                   hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                  >
                     Clear filters
                 </a>
             </p>
