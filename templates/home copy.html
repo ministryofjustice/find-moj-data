@@ -145,12 +145,10 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="{% static 'assets/js/govuk-frontend-5.0.0.min.js' %}"></script>
-  <script type="module">
-    import {
-      initAll
-    } from "{% static 'assets/js/govuk-frontend-5.0.0.min.js' %}"
-    initAll()
+  <script src="{% static 'assets/js/govuk-frontend-5.0.0.min.js' %}"></script>
+  <script>
+    window.GOVUKFrontend.initAll()
+    
   </script>
 </body>
 

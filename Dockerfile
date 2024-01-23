@@ -31,7 +31,10 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 # copy project
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+RUN python3 manage.py migrate --no-input \
+    && python3 manage.py cleardata \
+    && python3 manage.py loadalldata \
+    && python3 manage.py collectstatic --no-input
 
 # Use a non-root user
 RUN addgroup --gid 31337 --system appuser \
