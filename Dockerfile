@@ -42,6 +42,4 @@ USER 31337
 
 EXPOSE 8000
 
-# ENTRYPOINT [ "python", "manage.py", "runserver"]
 ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
-# 

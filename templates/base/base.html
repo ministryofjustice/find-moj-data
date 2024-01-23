@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" class="govuk-template app-html-class">
+
 {% include "base/head.html" %}
 
 <body class="govuk-template__body app-body-class" data-test="My value" data-other="report:details">
@@ -8,6 +9,7 @@
   document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
 </script>
 <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
 {% include "base/navigation.html" %}
 
 <div class="govuk-width-container app-width-container">
@@ -20,12 +22,13 @@
       </span>
     </p>
   </div>
+
 {% block content %}
 {% endblock content %}
-</div>
 
+</div>
 {% include "base/footer.html" %}
-<script type="module" src="{% static 'assets/js/govuk-frontend-5.0.0.min.js' %}"></script>
+<script type="module" href="{% static 'assets/js/govuk-frontend-5.0.0.min.js' %}"></script>
 <script type="module" href="{% static 'assets/js/moj-frontend.min.js' %}"></script>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
