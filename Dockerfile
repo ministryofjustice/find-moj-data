@@ -32,8 +32,6 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY . .
 
 RUN python3 manage.py migrate --no-input \
-    && python3 manage.py cleardata \
-    && python3 manage.py loadalldata \
     && python3 manage.py collectstatic --no-input
 
 # Use a non-root user
