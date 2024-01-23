@@ -1,9 +1,6 @@
 # The builder image, used to build the virtual environment
 FROM python:3.11-buster as builder
 
-# # pull official base image
-# FROM python:3.11.4-slim-buster
-
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -34,11 +31,17 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 # copy project
 COPY . .
 
+RUN python manage.py collectstatic --noinput
+
 # Use a non-root user
 RUN addgroup --gid 31337 --system appuser \
   && adduser --uid 31337 --system appuser --ingroup appuser
 RUN chown --recursive appuser:appuser /app
 USER 31337
 
+
 EXPOSE 8000
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi"]
+
+# ENTRYPOINT [ "python", "manage.py", "runserver"]
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+# 
