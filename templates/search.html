@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load markdown %}
 
 {% block content %}
 <div class="govuk-width-container">
@@ -11,7 +12,7 @@
             <div class="govuk-form-group">
               <h1 class="govuk-heading-xl">Find MOJ Data</h1>
               <div class="search-container">
-                <input name="search" class="govuk-input search-input" id="searchForm-search" type="search" value="">
+                <input name="query" class="govuk-input search-input" id="searchForm-search" type="search" value="{{query}}">
                 <button class="search-button" type="submit">
                   <svg aria-hidden="true" class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="40" height="40"><path d="M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z" fill="currentColor"></path>
                   </svg><span class="govuk-visually-hidden">Search</span>
@@ -41,54 +42,47 @@
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
               <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-                  <a href="/dataset">{{result.title}}</a>
+                <a href="/dataset/{{result.id}}"></a>{{result.name}}</a>
+                {% if result.result_type.name == "DATA_PRODUCT" %}
+                <strong class="govuk-tag govuk-!-margin-left-2">
+                  Data product
+                </strong>
+                {% elif result.result_type.name == "TABLE" %}
+                <strong class="govuk-tag govuk-!-margin-left-2">
+                  Table
+                </strong>
+                {% endif %}
               </h3>
       
-              <p class="govuk-body-m">{{result.summary}}</p>
+              {% if result.description %}
+              <div class="govuk-body-m">{{result.description|markdown}}</div>
+              {% endif %}
               
               <dl class="govuk-summary-list">
-  
+                {% if result.metadata.domain %}
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">Domain</dt>
+                  <dd class="govuk-summary-list__value">
+                  {{result.metadata.domain.properties.name}}
+                  </dd>
+                </div>
+                {% endif %}
+                {% if result.metadata.owner %}
                 <div class="govuk-summary-list__row">
                   <dt class="govuk-summary-list__key">Registered by</dt>
                   <dd class="govuk-summary-list__value">
-                  {{result.registered_by}}
+                  {{result.metadata.owner}}
                   </dd>
                 </div>
-   
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Database Name</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.database_name}}
-                  </dd>
-                </div>
-   
-
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">First created</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.first_created}}
-                  </dd>
-                </div>
-   
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Refresh period</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.refresh_period}}
-                  </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Retention period</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.retention_period}}
-                  </dd>
-                </div>
+                {% endif %}
+                {% if result.tags %}
                 <div class="govuk-summary-list__row">
                   <dt class="govuk-summary-list__key">Tags</dt>
                   <dd class="govuk-summary-list__value">
                   {{ result.tags |join:", " }}
                   </dd>
                 </div>
+                {% endif %}
             </div>
           </div>
           <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">

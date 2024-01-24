@@ -141,11 +141,13 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
-SAMPLE_SEARCH_RESULTS_FILENAME = BASE_DIR / \
-    "sample_data/sample_search_page.yaml"
+SAMPLE_SEARCH_RESULTS_FILENAME = BASE_DIR / "sample_data/sample_search_page.yaml"
 
 with open(SAMPLE_SEARCH_RESULTS_FILENAME) as f:
     SAMPLE_SEARCH_RESULTS = yaml.safe_load(f)
+
+DATAHUB_TOKEN = os.environ["CATALOGUE_TOKEN"]
+DATAHUB_URL = os.environ["CATALOGUE_URL"]
 
 try:
     from local import *  # type: ignore[reportMissingImports]
