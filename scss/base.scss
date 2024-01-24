@@ -1,0 +1,8 @@
+$govuk-assets-path: '/static/';
+$moj-assets-path: '/static';
+
+// Removes need to put classes on all elements
+$govuk-global-styles: true;
+
+@import "node_modules/govuk-frontend/dist/govuk/all";
+@import "node_modules/@ministryofjustice/frontend/moj/all";
