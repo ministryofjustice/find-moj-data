@@ -5,5 +5,5 @@ from django.conf import settings
 
 def get_catalogue_client() -> BaseCatalogueClient:
     return DataHubCatalogueClient(
-        jwt_token=settings.DATAHUB_TOKEN, api_url=settings.DATAHUB_URL
+        jwt_token=settings.CATALOGUE_TOKEN, api_url=settings.CATALOGUE_URL
     )
