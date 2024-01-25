@@ -38,4 +38,3 @@ spec:
                 secretKeyRef:
                   name: find-moj-data-secrets
                   key: catalogue_token
-
