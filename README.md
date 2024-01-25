@@ -1,14 +1,12 @@
 ## Quick start
 
-Project contains a poetry dependency file for installation with `poetry install`
-To run `poetry run python manage.py runserver`
+You will need npm (for javascript dependencies) and poetry (for python dependencies).
 
-## Configuration
+1. Run `poetry install` to install python dependencies
+2. Set environment variables CATALOGUE_URL and CATALOGUE_TOKEN (TODO: add dotenv support)
+3. Run `poetry run python manage.py runserver`
 
-The following should be set using environment variables:
-
-- CATALOGUE_URL
-- CATALOGUE_TOKEN
+Run `npm install` and then `npm run sass` to compile the stylesheets.
 
 ## Current Endpoints
 
