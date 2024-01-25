@@ -15,6 +15,8 @@ ministryofjustice-data-platform-catalogue = "^0.5.0"
 markdown = "^3.5.2"
 
 [tool.poetry.group.dev] # dev group definition
+pre-commit = "^3.6.0"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"

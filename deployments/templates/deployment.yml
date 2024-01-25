@@ -21,3 +21,21 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          env:
+            - name: CATALOGUE_URL
+              value: "${CATALOGUE_URL}"
+            - name: DEBUG
+              value: "${DEBUG}"
+            - name: DJANGO_ALLOWED_HOSTS
+              value: "${DJANGO_ALLOWED_HOSTS}"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: find-moj-data-secrets
+                  key: secret_key
+            - name: CATALOGUE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: find-moj-data-secrets
+                  key: catalogue_token
+

@@ -166,3 +166,5 @@ staticfiles/
 local.py
 
 node_modules
+
+local.py
