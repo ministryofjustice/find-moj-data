@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render
-from .helper import *
-import json
+from .services import get_catalogue_client
 
 domainlist = {"domainlist": ["HMPPS", "OPG", "HMCTS", "LAA", "Platforms"]}
 dpia_list = {"dpia_list": ["Approved", "In progress", "Not required"]}
@@ -27,6 +26,20 @@ def result_view(request):
     context.update(domainlist)
     context.update(dpia_list)
     return render (request, "search.html", context)
+
+def search_view(request):
+    query = request.GET.get("query", "")
+    page = request.GET.get("page", None)
+
+    client = get_catalogue_client()
+    search_results = client.search(query=query, page=page)
+
+    context = {}
+    context["query"] = query
+    context["service_name"] = "Daap Data Catalogue"
+    context["results"] = search_results.page_results
+    context["total_results"] = search_results.total_results
+    return render(request, "search.html", context)
 
 def filter_view(request):
    

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: find-moj-data-deployment
+  labels:
+    app: find-moj-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: find-moj-data
+  template:
+    metadata:
+      labels:
+        app: find-moj-data
+    spec:
+      containers:
+        - name: find-moj-data
+          image: ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
