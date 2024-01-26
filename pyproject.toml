@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "daap-catalogue"
+name = "find-moj-data"
 version = "0.1.0"
 description = ""
 authors = ["Mitch Dawson <Mitchell.Dawson@justice.gov.uk>"]
@@ -14,11 +14,13 @@ gunicorn = "^21.2.0"
 whitenoise = "^6.6.0"
 ministryofjustice-data-platform-catalogue = "^0.5.0"
 markdown = "^3.5.2"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev] # dev group definition
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
+pre-commit = "^3.6.0"
 
 [build-system]
 requires = ["poetry-core"]

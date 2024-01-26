@@ -163,6 +163,4 @@ cython_debug/
 #static files dirs
 staticfiles/
 
-local.py
-
 node_modules
