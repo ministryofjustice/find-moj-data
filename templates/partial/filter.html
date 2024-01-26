@@ -1,10 +1,3 @@
-<script>
-  function clearFiltersCallback() {
-      // Your custom JavaScript logic to handle the click event
-      console.log("Clear filters clicked!");
-      
-  }
-</script>
 <div class="govuk-grid-column-one-third">
     <div class="moj-filter">
       <div class="moj-filter__header">
@@ -29,8 +22,7 @@
               id="clear_filter"
               hx-trigger="click"
               hx-target="body"
-              hx-get="{% url 'home:result_view' %}"
-              hx-trigger-callback="clearFiltersCallback()"
+              hx-get="{% url 'home:search' %}?clear_filter=True"
               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             >
                 Clear filter
@@ -48,7 +40,7 @@
           {% endif %}
         </div>
         <div class="moj-filter__options">
-          <form action="{% url 'home:filter' %}" method="post" >
+          <form action="{% url 'home:search' %}" method="get" >
             {% csrf_token %}
             <button type="submit" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
               Apply filters
@@ -59,8 +51,8 @@
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                   {% for option in domainlist%}
                       <div class="govuk-checkboxes__item">
-                          <input class="govuk-checkboxes__input" id="type-{{ option|lower }}" name="type" type="checkbox" value="{{ option.value|lower }}" {% if option.value in selected_domain.keys %}checked{% endif %}>
-                          <label class="govuk-label govuk-checkboxes__label" for="type-{{ option.value|lower }}">{{ option.label }}</label>
+                          <input class="govuk-checkboxes__input" id="domain-{{ option|lower }}" name="domain" type="checkbox" value="{{ option.value|lower }}" {% if option.value in selected_domain.keys %}checked{% endif %}>
+                          <label class="govuk-label govuk-checkboxes__label" for="domain-{{ option.value|lower }}">{{ option.label }}</label>
                       </div>
                   {% endfor %}
                 </div>
