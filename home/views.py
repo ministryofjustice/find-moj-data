@@ -27,20 +27,6 @@ def result_view(request):
     context.update(dpia_list)
     return render (request, "search.html", context)
 
-def search_view(request):
-    query = request.GET.get("query", "")
-    page = request.GET.get("page", None)
-
-    client = get_catalogue_client()
-    search_results = client.search(query=query, page=page)
-
-    context = {}
-    context["query"] = query
-    context["service_name"] = "Daap Data Catalogue"
-    context["results"] = search_results.page_results
-    context["total_results"] = search_results.total_results
-    return render(request, "search.html", context)
-
 def filter_view(request):
    
     # Check if we can reload partial search_html page alone
@@ -79,14 +65,28 @@ def filter_view(request):
 
 
 def search_view(request):
-    # For search  page
-    search_context = {}
-    search_context.update(settings.SAMPLE_SEARCH_RESULTS)
-    search_context.update(domainlist)
-    search_context.update(dpia_list)
+    query = request.GET.get("query", "")
+    page = request.GET.get("page", None)
 
-    sorted_results=sorted(search_context['results'], key=lambda x: x.get("database_name", ""), reverse=False)
-    search_context.update(
-            {"results": sorted_results, "total": len(sorted_results)}
-        )
-    return render(request, "search.html", search_context)
+    client = get_catalogue_client()
+    search_results = client.search(query=query, page=page)
+   
+    context = {}
+    context.update(domainlist)
+    context.update(dpia_list)
+
+    context["query"] = query
+    context["service_name"] = "Daap Data Catalogue"
+    context["results"] = search_results.page_results
+    context["total_results"] = search_results.total_results
+    return render(request, "search.html", context)
+    # # For search  page
+    # search_context = {}
+    # search_context.update(settings.SAMPLE_SEARCH_RESULTS)
+  
+
+    # sorted_results=sorted(search_context['results'], key=lambda x: x.get("database_name", ""), reverse=False)
+    # search_context.update(
+    #         {"results": sorted_results, "total": len(sorted_results)}
+    #     )
+    # return render(request, "search.html", search_context)
