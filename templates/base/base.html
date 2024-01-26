@@ -23,8 +23,10 @@
     </p>
   </div>
 
-{% block content %}
-{% endblock content %}
+  <main class="govuk-main-wrapper" id="main-content" role="main">
+  {% block content %}
+  {% endblock content %}
+  </main>
 
 </div>
 {% include "base/footer.html" %}
