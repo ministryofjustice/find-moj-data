@@ -1,5 +1,15 @@
+FROM node:21-bullseye as node_builder
+
+WORKDIR /app
+COPY . .
+
+RUN npm install && npm run sass
+
 # The builder image, used to build the virtual environment
 FROM python:3.11-buster as builder
+
+WORKDIR /app
+COPY --from=node_builder /app .
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -12,9 +22,6 @@ ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
     POETRY_VIRTUALENVS_CREATE=1 \
     POETRY_CACHE_DIR=/tmp/poetry_cache
-
-# set work directory
-WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
 

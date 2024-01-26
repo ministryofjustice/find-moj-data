@@ -60,14 +60,14 @@ a, .govuk-link {
   font-family: "GDS Transport";
   font-style: normal;
   font-weight: normal;
-  src: url("/static/fonts/light-94a07e06a1-v2.woff2") format("woff2"), url("/static/fonts/light-f591b13f7d-v2.woff") format("woff");
+  src: url("/static/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"), url("/static/assets/fonts/light-f591b13f7d-v2.woff") format("woff");
   font-display: fallback;
 }
 @font-face {
   font-family: "GDS Transport";
   font-style: normal;
   font-weight: bold;
-  src: url("/static/fonts/bold-b542beb274-v2.woff2") format("woff2"), url("/static/fonts/bold-affa96571d-v2.woff") format("woff");
+  src: url("/static/assets/fonts/bold-b542beb274-v2.woff2") format("woff2"), url("/static/assets/fonts/bold-affa96571d-v2.woff") format("woff");
   font-display: fallback;
 }
 @media print {
@@ -3654,7 +3654,7 @@ p + .govuk-heading-s,
   display: inline-block;
   min-width: 125px;
   padding-top: 112px;
-  background-image: url("/static/images/govuk-crest.png");
+  background-image: url("/static/assets/images/govuk-crest.png");
   background-repeat: no-repeat;
   background-position: 50% 0%;
   background-size: 125px 102px;
@@ -3663,7 +3663,7 @@ p + .govuk-heading-s,
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .govuk-footer__copyright-logo {
-    background-image: url("/static/images/govuk-crest-2x.png");
+    background-image: url("/static/assets/images/govuk-crest-2x.png");
   }
 }
 
@@ -7873,7 +7873,7 @@ p + .govuk-heading-s,
 }
 .moj-button-menu__toggle-button:after {
   background-repeat: no-repeat;
-  background-image: url(/staticimages/icon-arrow-white-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-down.svg);
   content: "";
   display: inline-block;
   height: 5px;
@@ -7883,23 +7883,23 @@ p + .govuk-heading-s,
 }
 
 .moj-button-menu__toggle-button:focus:after {
-  background-image: url(/staticimages/icon-arrow-black-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-down.svg);
 }
 
 .moj-button-menu__toggle-button[aria-expanded=true]:focus:after {
-  background-image: url(/staticimages/icon-arrow-black-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-up.svg);
 }
 
 .moj-button-menu__toggle-button:hover:after {
-  background-image: url(/staticimages/icon-arrow-white-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-down.svg);
 }
 
 .moj-button-menu__toggle-button[aria-expanded=true]:hover:after {
-  background-image: url(/staticimages/icon-arrow-white-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-up.svg);
 }
 
 .moj-button-menu__toggle-button[aria-expanded=true]:after {
-  background-image: url(/staticimages/icon-arrow-white-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-up.svg);
 }
 
 .moj-button-menu__toggle-button--secondary {
@@ -7907,19 +7907,19 @@ p + .govuk-heading-s,
   margin-right: 0;
 }
 .moj-button-menu__toggle-button--secondary:after {
-  background-image: url(/staticimages/icon-arrow-black-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-down.svg);
 }
 
 .moj-button-menu__toggle-button--secondary[aria-expanded=true]:after {
-  background-image: url(/staticimages/icon-arrow-black-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-up.svg);
 }
 
 .moj-button-menu__toggle-button--secondary:hover:after {
-  background-image: url(/staticimages/icon-arrow-black-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-down.svg);
 }
 
 .moj-button-menu__toggle-button--secondary[aria-expanded=true]:hover:after {
-  background-image: url(/staticimages/icon-arrow-black-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-up.svg);
 }
 
 /* MENU ITEM */
@@ -8255,7 +8255,7 @@ p + .govuk-heading-s,
   border: 0;
 }
 .moj-filter__legend button::after {
-  background-image: url(/staticimages/icon-toggle-plus-minus.svg);
+  background-image: url(/static/assets/images/icon-toggle-plus-minus.svg);
   background-position: 0 0;
   content: "";
   display: block;
@@ -8297,7 +8297,7 @@ p + .govuk-heading-s,
   border: 0;
 }
 .moj-filter__close::before {
-  background-image: url(/staticimages/icon-close-cross-black.svg);
+  background-image: url(/static/assets/images/icon-close-cross-black.svg);
   content: "";
   display: inline-block;
   height: 14px;
@@ -8440,7 +8440,7 @@ p + .govuk-heading-s,
   color: #ffffff;
 }
 .moj-filter__tag:after {
-  background-image: url(/staticimages/icon-tag-remove-cross.svg);
+  background-image: url(/static/assets/images/icon-tag-remove-cross.svg);
   content: "";
   display: inline-block;
   font-weight: bold;
@@ -8450,7 +8450,7 @@ p + .govuk-heading-s,
   width: 10px;
 }
 .moj-filter__tag:hover:after {
-  background-image: url(/staticimages/icon-tag-remove-cross-white.svg);
+  background-image: url(/static/assets/images/icon-tag-remove-cross-white.svg);
 }
 
 .moj-filter__options {
@@ -9825,7 +9825,7 @@ span.moj-header__link:hover {
 
 .moj-progress-bar__icon--complete {
   background-color: #00703c;
-  background-image: url(/staticimages/icon-progress-tick.svg);
+  background-image: url(/static/assets/images/icon-progress-tick.svg);
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
@@ -9906,24 +9906,24 @@ span.moj-header__link:hover {
 }
 
 .moj-rich-text-editor__toolbar-button--bold {
-  background-image: url(/staticimages/icon-wysiwyg-bold.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-bold.svg);
 }
 
 .moj-rich-text-editor__toolbar-button--italic {
-  background-image: url(/staticimages/icon-wysiwyg-italic.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-italic.svg);
 }
 
 .moj-rich-text-editor__toolbar-button--underline {
-  background-image: url(/staticimages/icon-wysiwyg-underline.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-underline.svg);
 }
 
 .moj-rich-text-editor__toolbar-button--unordered-list {
-  background-image: url(/staticimages/icon-wysiwyg-unordered-list.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-unordered-list.svg);
   margin-left: 10px;
 }
 
 .moj-rich-text-editor__toolbar-button--ordered-list {
-  background-image: url(/staticimages/icon-wysiwyg-ordered-list.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-ordered-list.svg);
 }
 
 .moj-rich-text-editor__content {
@@ -10816,7 +10816,7 @@ span.moj-header__link:hover {
 }
 
 .moj-timeline__document-link {
-  background-image: url(/staticimages/icon-document.svg);
+  background-image: url(/static/assets/images/icon-document.svg);
   background-repeat: no-repeat;
   background-size: 20px 16px;
   background-position: 0 50%;

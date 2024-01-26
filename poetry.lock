@@ -1919,13 +1919,13 @@ psutil = "*"
 
 [[package]]
 name = "ministryofjustice-data-platform-catalogue"
-version = "0.5.0"
+version = "0.7.0"
 description = "Library to integrate the MoJ data platform with the catalogue component."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ministryofjustice_data_platform_catalogue-0.5.0-py3-none-any.whl", hash = "sha256:0d3a3b4310589eddaa721cb7911aa80329cb21db0fda0a96f741e9b4f7ff4d82"},
-    {file = "ministryofjustice_data_platform_catalogue-0.5.0.tar.gz", hash = "sha256:9a328cb880e4599f6fed39899b992973929f85d26b6766ad7d9735c8822db9bf"},
+    {file = "ministryofjustice_data_platform_catalogue-0.7.0-py3-none-any.whl", hash = "sha256:2c8c0a7324ead0f45a4f339dfe31905dddf28b0de897d8250172b96296cfdcf4"},
+    {file = "ministryofjustice_data_platform_catalogue-0.7.0.tar.gz", hash = "sha256:7858d43e71e2edb409cd6fb78fb8ee2db3e87649eeaef6167c3ad575e0d44916"},
 ]
 
 [package.dependencies]
@@ -4078,4 +4078,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "99ef9682dfa858021d04ac155525bcbec5ff7d7b0c32f4a09e16c02ca1716c41"
+content-hash = "d8a09e801ec8d36fbc604eea61ebd079532d2952959ec671b1c9857a66f85de2"

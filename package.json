@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@ministryofjustice/frontend": "^2.0.1",
+    "@ministryofjustice/frontend": "^2.1.0",
     "govuk-frontend": "^5.0.0",
     "sass": "^1.70.0"
   },
