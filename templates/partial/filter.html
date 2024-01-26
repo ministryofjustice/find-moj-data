@@ -1,7 +1,8 @@
 <script>
   function clearFiltersCallback() {
       // Your custom JavaScript logic to handle the click event
-      alert("Clear filters clicked!");
+      console.log("Clear filters clicked!");
+      
   }
 </script>
 <div class="govuk-grid-column-one-third">
@@ -23,28 +24,36 @@
             <div class="moj-filter__heading-action">
               <p>
                 <a class="govuk-link govuk-link--no-visited-state"
-                   href="#"
-                   value="clear"
-                   id="clear_filter"
-                   hx-trigger="click"
-                   hx-post="{% url 'home:result_view' %}"
-                   hx-target="#search_result"
-                   hx-data='{"href_value": "clear-filter"}'
-                   hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                  >
-                    Clear filters
-                </a>
+              href="#"
+              value="clear"
+              id="clear_filter"
+              hx-trigger="click"
+              hx-target="body"
+              hx-get="{% url 'home:result_view' %}"
+              hx-trigger-callback="clearFiltersCallback()"
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            >
+                Clear filter
+            </a>
             </p>
             </div>
           </div>
+          {% if selected_domain %}
           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
           <ul class="moj-filter-tags">
-            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> HMPPS</a></li>
+            {% for d in selected_domain %}
+            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> {{d}}</a></li>
+            {% endfor %}
           </ul>
+          {% endif %}
+          {% if selected_dpia %}
           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">DPIA Status</h3>
+          {% for dpia in selected_dpia %}
           <ul class="moj-filter-tags">
-            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> Completed</a></li>
+            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> {{dpia}}</a></li>
           </ul>
+          {% endfor %}
+          {% endif %}
         </div>
         <div class="moj-filter__options">
           <form action="{% url 'home:filter' %}" method="post" >

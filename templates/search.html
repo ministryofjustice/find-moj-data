@@ -24,21 +24,7 @@
     <div class="govuk-grid-row">
       {% include "partial/filter.html" %}
       <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-heading-l govuk-!-display-inline-block">{{total}} Results</h2>
-          <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-left-5">
-            <label class="govuk-label" for="sort">
-              Sort by
-            </label>
-            <select class="govuk-select" id="sort" name="sort" >
-              <option value="database" selected>Database name</option>
-              <option value="updated">First created </option>
-              <option value="comments">Most comments</option>
-            </select>
-          </div>
-
-          {% for result in results %}
           {% include "partial/search_result.html" %}
-          {%endfor%}
           {% include "partial/pagination.html" %}
         </div>
         

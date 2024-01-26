@@ -1,69 +1,68 @@
+{% for result in results %}
 
 <div class="govuk-grid-row" id="search_result">
-      <div class="govuk-grid-column-full">
-        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-            <a href="/dataset" class="govuk-link">{{result.title}}</a>
-        </h3>
+    <div class="govuk-grid-column-full">
+      <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+          <a href="{% url 'home:details' %}" class="govuk-link">{{result.title}}</a>
+      </h3>
+      <p class="govuk-body-m">{{result.summary}}</p>
+      
+      <dl class="govuk-summary-list">
 
-        <p class="govuk-body-m">{{result.summary}}</p>
-        
-        <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Registered by</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.registered_by}}
+          </dd>
+        </div>
 
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Registered by</dt>
-            <dd class="govuk-summary-list__value">
-            {{result.registered_by}}
-            </dd>
-          </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Domain name</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.domain_name}}
+          </dd>
+        </div>
 
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Domain name</dt>
-            <dd class="govuk-summary-list__value">
-            {{result.domain_name}}
-            </dd>
-          </div>
-
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Database name</dt>
-            <dd class="govuk-summary-list__value">
-            {{result.database_name}}
-            </dd>
-          </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Database name</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.database_name}}
+          </dd>
+        </div>
 
 
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">First created</dt>
-            <dd class="govuk-summary-list__value">
-            {{result.first_created}}
-            </dd>
-          </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">First created</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.first_created}}
+          </dd>
+        </div>
 
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Refresh period</dt>
-            <dd class="govuk-summary-list__value">
-            {{result.refresh_period}}
-            </dd>
-          </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Refresh period</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.refresh_period}}
+          </dd>
+        </div>
 
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Retention period</dt>
-            <dd class="govuk-summary-list__value">
-            {{result.retention_period}}
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">DPIA Status </dt>
-            <dd class="govuk-summary-list__value">
-            {{result.dpia}}
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Tags</dt>
-            <dd class="govuk-summary-list__value">
-            {{ result.tags |join:", " }}
-            </dd>
-          </div>
-      </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Retention period</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.retention_period}}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">DPIA Status </dt>
+          <dd class="govuk-summary-list__value">
+          {{result.dpia}}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Tags</dt>
+          <dd class="govuk-summary-list__value">
+          {{ result.tags |join:", " }}
+          </dd>
+        </div>
     </div>
-
-  
+  </div>
+{%endfor%}

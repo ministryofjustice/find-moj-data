@@ -1,0 +1,126 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="govuk-width-container">
+  <a href="#" class="govuk-back-link">Back</a>
+      <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">            
+          <h2 class="govuk-heading-l">{{result.title}}</h2>
+          <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-summary-card__title-wrapper" >
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Registered by</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.registered_by}}
+                </dd>
+              </div>
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Domain name</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.domain_name}}
+                </dd>
+              </div>
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Database name</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.database_name}}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">First created</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.first_created}}
+                </dd>
+              </div>
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Refresh period</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.refresh_period}}
+                </dd>
+              </div>
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Retention period</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.retention_period}}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">DPIA Status </dt>
+                <dd class="govuk-summary-list__value">
+                {{result.dpia}}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Tags</dt>
+                <dd class="govuk-summary-list__value">
+                {{ result.tags |join:", " }}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Description</dt>
+                <dd class="govuk-summary-list__value">
+                  {{result.summary}}
+                </dd>
+              </div>
+            </dl>
+            </div>
+            <br/>
+            <table class="govuk-table">
+              <caption class="govuk-table__caption govuk-table__caption--m">Database content</caption>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header app-custom-class">Table name</th>
+                  <th scope="col" class="govuk-table__header app-custom-class">Description</th>
+                  <th scope="col" class="govuk-table__header app-custom-class">Schema Details</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">First 6 weeks</th>
+                  <td class="govuk-table__cell">£109.80 per week</td>
+                  <td class="govuk-table__cell">£59.10 per week</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Next 33 weeks</th>
+                  <td class="govuk-table__cell">£159.80 per week</td>
+                  <td class="govuk-table__cell">£89.10 per week</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Total estimated pay</th>
+                  <td class="govuk-table__cell">£4,282.20</td>
+                  <td class="govuk-table__cell">£2,182.20</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="govuk-grid-column-one-third">
+
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Registered by</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.registered_by}}
+                </dd>
+              </div>
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Domain name</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.domain_name}}
+                </dd>
+              </div>
+              </dl>
+          </div>
+        </div>
+      </main>
+</div>
+{% endblock content %}

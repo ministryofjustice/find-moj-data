@@ -13,10 +13,20 @@ def home_view(request):
     context = {}
     return render(request, "home.html", context)
 
+def details_view(request):
+    context = {}
+    context.update(settings.SAMPLE_SEARCH_RESULTS)
+    context.update(
+            {"result": context["results"][1]}
+        )
+    return render(request, "details.html", context)
+
 def result_view(request):
     context = {}
     context.update(settings.SAMPLE_SEARCH_RESULTS)
-    return render (request, "partial/search_result.html", context)
+    context.update(domainlist)
+    context.update(dpia_list)
+    return render (request, "search.html", context)
 
 def filter_view(request):
    
@@ -61,8 +71,6 @@ def search_view(request):
     search_context.update(settings.SAMPLE_SEARCH_RESULTS)
     search_context.update(domainlist)
     search_context.update(dpia_list)
-    search_context.update(selected_domain)
-    search_context.update(selected_dpia)
 
     sorted_results=sorted(search_context['results'], key=lambda x: x.get("database_name", ""), reverse=False)
     search_context.update(
