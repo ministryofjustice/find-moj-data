@@ -1,0 +1,25 @@
+default_stages: [commit]
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: requirements-txt-fixer
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: tf$|j2$
+      - id: trailing-whitespace
+        exclude: tf$|j2$
+
+  - repo: https://github.com/psf/black
+    rev: 23.11.0
+    hooks:
+      - id: black
+        name: black formatting
+        args: [--config=./pyproject.toml]
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: package.lock.json
