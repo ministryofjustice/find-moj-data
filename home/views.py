@@ -1,11 +1,9 @@
 from django.conf import settings
 from django.shortcuts import render
 from .services import get_catalogue_client
+from data_platform_catalogue.search_types import MultiSelectFilter
 
-domainlist = {"domainlist": ["HMPPS", "OPG", "HMCTS", "LAA", "Platforms"]}
-dpia_list = {"dpia_list": ["Approved", "In progress", "Not required"]}
-selected_domain = {"selected_domain": ["HMPPS"]}
-selected_dpia = {"selected_dpia": ["Approved"]}
+
 
 # Create your views here.
 def home_view(request):
@@ -34,8 +32,6 @@ def filter_view(request):
     data.update(settings.SAMPLE_SEARCH_RESULTS)
 
     search_context = {}
-    search_context.update(domainlist)
-    search_context.update(dpia_list)
    
     if request.method == "POST":
         # data = json.loads(request.body.decode('utf-8'))
@@ -72,19 +68,19 @@ def search_view(request):
     search_results = client.search(query=query, page=page)
    
     context = {}
-    context.update(domainlist)
-    context.update(dpia_list)
+    domain_list=search_results.facets['domains']
+    context["domainlist"]=domain_list
+
+    context['selected_domain'] = {domain_list[0].value: domain_list[0].label}
+
+    search_results = client.search(query=query, page=page, filters=[MultiSelectFilter("domains", [domain_list[0].value])])
 
     context["query"] = query
     context["service_name"] = "Daap Data Catalogue"
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
     return render(request, "search.html", context)
-    # # For search  page
-    # search_context = {}
-    # search_context.update(settings.SAMPLE_SEARCH_RESULTS)
-  
-
+   
     # sorted_results=sorted(search_context['results'], key=lambda x: x.get("database_name", ""), reverse=False)
     # search_context.update(
     #         {"results": sorted_results, "total": len(sorted_results)}
