@@ -12,7 +12,7 @@ def home_view(request):
 
 
 def details_view(request, id):
-    
+
     context = {}
     client = get_catalogue_client()
     filter_value = [MultiSelectFilter("urn", id)]

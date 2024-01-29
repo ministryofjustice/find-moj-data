@@ -6,7 +6,7 @@ You will need npm (for javascript dependencies) and poetry (for python dependenc
 2. Copy `.env.example` to `.env`.
 3. You wil need to obtain an access token from Datahub catalogue and populate the `CATALOGUE_TOKEN` var in .env to be able to retrieve search data.
    https://datahub.apps-tools.development.data-platform.service.justice.gov.uk/settings/tokens
-5. Run `poetry run python manage.py runserver`
+4. Run `poetry run python manage.py runserver`
 
 Run `npm install` and then `npm run sass` to compile the stylesheets.
 
