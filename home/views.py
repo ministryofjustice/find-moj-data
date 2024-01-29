@@ -32,7 +32,7 @@ def search_view(request):
 
     client = get_catalogue_client()
     
-    search_results = client.search(query=query, page=page, filters=filter_value)
+    search_results = client.search(query=query, page=page)
     context = {}
     domain_list=search_results.facets['domains']
     context["domainlist"]=domain_list
