@@ -1,9 +1,6 @@
-def filter_json_dict(json_dict, target_value):
-    filtered_dict = {
-        key: value for key, value in json_dict.items() if value == target_value
-    }
-    return filtered_dict
-
-
-def sort_output(json_dict, sortvalue):
-    return None
+def filter_seleted_domains(domain_list, domains):
+    selected_domain = {}
+    for domain in domain_list:
+        if domain.value in domains:
+            selected_domain[domain.value] = domain.label
+    return selected_domain

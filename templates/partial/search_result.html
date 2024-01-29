@@ -4,7 +4,7 @@
 <div class="govuk-grid-row" id="search_result">
     <div class="govuk-grid-column-full">
       <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-          <a href="{% url 'home:details' %}?id={{result.id}}" class="govuk-link">{{result.name}}</a>
+          <a href="{% url 'home:details' id=result.id %}" class="govuk-link">{{result.name}}</a>
           {% if result.result_type.name == "DATA_PRODUCT" %}
           <strong class="govuk-tag govuk-!-margin-left-2">
             Data product

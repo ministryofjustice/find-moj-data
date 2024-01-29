@@ -1,15 +1,8 @@
 from django.conf import settings
 from django.shortcuts import render
 from .services import get_catalogue_client
+from .helper import filter_seleted_domains
 from data_platform_catalogue.search_types import MultiSelectFilter
-
-
-def filter_seleted_domains(domain_list, domains):
-    selected_domain = {}
-    for domain in domain_list:
-        if domain.value in domains:
-            selected_domain[domain.value] = domain.label
-    return selected_domain
 
 
 # Create your views here.
@@ -18,10 +11,9 @@ def home_view(request):
     return render(request, "home.html", context)
 
 
-def details_view(request):
-    id = request.GET.get('id')
+def details_view(request, id):
+    
     context = {}
-
     client = get_catalogue_client()
     filter_value = [MultiSelectFilter("urn", id)]
     search_results = client.search(query="", page=None, filters=filter_value)
