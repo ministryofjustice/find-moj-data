@@ -30,7 +30,7 @@
           <ul class="moj-filter-tags">
             <input type="hidden" name="clear_label" value="">
             {% for value, label in selected_domain.items %}
-            <li><a class="moj-filter__tag govuk-link" href="{% url 'home:search' %}"><span class="govuk-visually-hidden">Remove this filter</span> {{label}}</a></li>
+            <li><a class="moj-filter__tag govuk-link" href="{% url 'home:search' %}?clear_label=True&value={{value}}" onclick="document.getElementById('search_form').submit();"><span class="govuk-visually-hidden">Remove this filter</span> {{label}}</a></li>
             {% endfor %}
           </ul>
           {% endif %}
