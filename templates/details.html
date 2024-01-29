@@ -108,24 +108,25 @@
           </div>
           
           <div class="govuk-grid-column-one-third">
-
-            
-
-              <div class="govuk-summary-list__row">
-                <p class="govuk-summary-list__key">IAO or Data Owner<br/></p>
-                <p class="govuk-summary-list__value">
-                  {{result.metadata.owner}}<br/>
+              <div class="govuk-body">
+                <p class="govuk-heading-s">IAO or Data Owner</p>
+                <span class="govuk-body">
+                  {{result.metadata.owner}}
+                </span>
+              </div>
+              <div class="govuk-body">
+                <p class="govuk-heading-s">Contact for Access requirement</p>
+                <span class="govuk-body">
                   {{result.metadata.owner_email}}
-                </p>
+                </span>
               </div>
-
-              <div class="govuk-summary-list__row">
-                <p class="govuk-summary-list__key">Contact for Access requirement</p>
-                <p class="govuk-summary-list__value">
-                {{result.domain_name}}
-                </p>
+              <div class="govuk-body">
+                <p class="govuk-heading-s">Access requirement</p>
+                <span class="govuk-body">
+                  Processing the data might require 
+                  permission from IAO or Data ownwer
+                </span>
               </div>
-       
           </div>
         </div>
       </main>
