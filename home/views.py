@@ -79,9 +79,12 @@ def search_view(request):
         domains = request.session.get('domains', None)
         # Preserve filter
         selected_domain = filter_seleted_domains(domain_list, domains)
-        context['selected_domain'] = selected_domain
-        context['domains'] = domains
-        filter_value = [MultiSelectFilter("domains", domains)]
+        if not domains:
+            filter_value = []
+        else: 
+            context['selected_domain'] = selected_domain
+            context['domains'] = domains
+            filter_value = [MultiSelectFilter("domains", domains)]
     else:
         filter_value = []
         context['selected_domain'] = {}
