@@ -17,13 +17,8 @@
             <div class="moj-filter__heading-action">
               <p>
                 <a class="govuk-link govuk-link--no-visited-state"
-              href="#"
-              value="clear"
+              href="{% url 'home:search' %}?clear_filter=True"
               id="clear_filter"
-              hx-trigger="click"
-              hx-target="body"
-              hx-get="{% url 'home:search' %}?clear_filter=True"
-              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             >
                 Clear filter
             </a>
@@ -33,14 +28,15 @@
           {% if selected_domain %}
           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
           <ul class="moj-filter-tags">
+            <input type="hidden" name="clear_label" value="">
             {% for value, label in selected_domain.items %}
-            <li><a class="moj-filter__tag govuk-link" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> {{label}}</a></li>
+            <li><a class="moj-filter__tag govuk-link" href="#" onclick="document.getElementById('clear_label')='{{value}}';document.getElementById('search_form').submit();"><span class="govuk-visually-hidden">Remove this filter</span> {{label}}</a></li>
             {% endfor %}
           </ul>
           {% endif %}
         </div>
         <div class="moj-filter__options">
-          <form action="{% url 'home:search' %}" method="get" >
+          <form action="{% url 'home:search' %}" method="get"  id="search_form">
             {% csrf_token %}
             <button type="submit" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
               Apply filters

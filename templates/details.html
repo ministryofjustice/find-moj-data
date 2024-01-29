@@ -1,12 +1,15 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load markdown %}
 
 {% block content %}
 <div class="govuk-width-container">
+
   <a onclick="history.back()" class="govuk-back-link">Back</a>
       <main class="govuk-main-wrapper">
-        <div class="govuk-grid-row">            
-          <h2 class="govuk-heading-l">{{result.title}}</h2>
+        <div class="govuk-grid-row">  
+          dsadsadsadsa{{result}}          
+          <h2 class="govuk-heading-l">{{result.name}}</h2>
           <div class="govuk-grid-column-two-thirds">
             <div class="govuk-summary-card__title-wrapper" >
             <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -66,7 +69,7 @@
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Description</dt>
                 <dd class="govuk-summary-list__value">
-                  {{result.summary}}
+                  {{result.description}}
                 </dd>
               </div>
             </dl>
