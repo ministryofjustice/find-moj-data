@@ -25,7 +25,19 @@
     </div>
     <div class="govuk-grid-row">
       {% include "partial/filter.html" %}
-      <div class="govuk-grid-column-two-thirds">        
+      <div class="govuk-grid-column-two-thirds">  
+        <h2 class="govuk-heading-l govuk-!-display-inline-block">{{total_results}} Results</h2>
+          <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-left-5">
+            <label class="govuk-label" for="sort">
+              Sort by
+            </label>
+            <select class="govuk-select" id="sort" name="sort">
+              <option value="published">Recently published</option>
+              <option value="updated" selected>Recently updated</option>
+              <option value="views">Most views</option>
+              <option value="comments">Most comments</option>
+            </select>
+          </div>      
           {% include "partial/search_result.html" %}
           {% include "partial/pagination.html" %}
         </div>
