@@ -43,7 +43,13 @@ def search_view(request):
     domain_list = search_results.facets['domains']
     context["domainlist"] = domain_list
 
-    if request.GET.getlist("domain"):
+  domains = request.GET.getlist("domain", [])
+  if domains:
+      selected_domain = filter_seleted_domains(domain_list, domains)
+      context['selected_domain'] = selected_domain
+      request.session['selected_domain'] = selected_domain
+      request.session['domains'] = domains
+      filter_value = [MultiSelectFilter("domains", domains)]
         domains = request.GET.getlist("domain")
         selected_domain = filter_seleted_domains(domain_list, domains)
         context['selected_domain'] = selected_domain
