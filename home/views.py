@@ -30,25 +30,19 @@ def search_view(request):
     client = get_catalogue_client()
 
     # Fetch domainlist without query
+    # This will be replaced ater matt creates a new function
     search_results = client.search(query="", page=None)
     context = {}
     domain_list = search_results.facets['domains']
     context["domainlist"] = domain_list
 
-  domains = request.GET.getlist("domain", [])
-  if domains:
+    domains = request.GET.getlist("domain", [])
+    if domains:
       selected_domain = filter_seleted_domains(domain_list, domains)
       context['selected_domain'] = selected_domain
       request.session['selected_domain'] = selected_domain
       request.session['domains'] = domains
       filter_value = [MultiSelectFilter("domains", domains)]
-        domains = request.GET.getlist("domain")
-        selected_domain = filter_seleted_domains(domain_list, domains)
-        context['selected_domain'] = selected_domain
-        request.session['selected_domain'] = selected_domain
-        request.session['domains'] = domains
-        filter_value = [MultiSelectFilter("domains", domains)]
-
     elif request.GET.get('clear_filter') == "True":
         filter_value = []
         context['selected_domain'] = {}
