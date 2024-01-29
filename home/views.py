@@ -11,11 +11,24 @@ def home_view(request):
     return render(request, "home.html", context)
 
 def details_view(request):
+    # query = request.GET.get("query", "")
+    # page = request.GET.get("page", None)
+    # id=request.GET.get('id')
+    # context = {}
+
+    # client = get_catalogue_client()
+    # print(id)
+    # filter_value = [MultiSelectFilter("id",id )]
+    # search_results = client.search(query=query, page=page)
+    # context["query"] = query
+    # context["results"] = search_results.page_results
+    # print(search_results.page_results)
     context = {}
     context.update(settings.SAMPLE_SEARCH_RESULTS)
     context.update(
             {"result": context["results"][1]}
         )
+
     return render(request, "details.html", context)
 
 def search_view(request):
@@ -29,10 +42,10 @@ def search_view(request):
     context = {}
     domain_list=search_results.facets['domains']
     context["domainlist"]=domain_list
-    print(request.GET.get('clear_filter'))
-
+ 
     if request.GET.getlist("domain"):
         domains=request.GET.getlist("domain")
+        print(domains)
         selected_domain={}
         for domain in domain_list:
             if domain.value in domains:
@@ -57,10 +70,6 @@ def search_view(request):
     context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
+ 
     return render(request, "search.html", context)
    
-    # sorted_results=sorted(search_context['results'], key=lambda x: x.get("database_name", ""), reverse=False)
-    # search_context.update(
-    #         {"results": sorted_results, "total": len(sorted_results)}
-    #     )
-    # return render(request, "search.html", search_context)

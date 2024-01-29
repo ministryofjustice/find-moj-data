@@ -1,11 +1,15 @@
+{% load markdown %}
 {% for result in results %}
 
 <div class="govuk-grid-row" id="search_result">
     <div class="govuk-grid-column-full">
       <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-          <a href="{% url 'home:details' %}" class="govuk-link">{{result.name}}</a>
+          <a href="{% url 'home:details' %}?id={{result.id}}" class="govuk-link">{{result.name}}</a>
       </h3>
-      <p class="govuk-body-m">{{result.description}}</p>
+      {% if result.description %}
+      <div class="govuk-body-m">{{result.description|markdown}}</div>
+      {% endif %}
+
       
       <dl class="govuk-summary-list">
 

@@ -51,7 +51,7 @@
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                   {% for option in domainlist%}
                       <div class="govuk-checkboxes__item">
-                          <input class="govuk-checkboxes__input" id="domain-{{ option|lower }}" name="domain" type="checkbox" value="{{ option.value|lower }}" {% if option.value in selected_domain.keys %}checked{% endif %}>
+                          <input class="govuk-checkboxes__input" id="domain-{{ option|lower }}" name="domain" type="checkbox" value="{{ option.value }}" {% if option.value in selected_domain.keys %}checked{% endif %}>
                           <label class="govuk-label govuk-checkboxes__label" for="domain-{{ option.value|lower }}">{{ option.label }}</label>
                       </div>
                   {% endfor %}
