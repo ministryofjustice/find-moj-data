@@ -11,24 +11,18 @@ def home_view(request):
     return render(request, "home.html", context)
 
 def details_view(request):
-    # query = request.GET.get("query", "")
-    # page = request.GET.get("page", None)
-    # id=request.GET.get('id')
-    # context = {}
-
-    # client = get_catalogue_client()
-    # print(id)
-    # filter_value = [MultiSelectFilter("id",id )]
-    # search_results = client.search(query=query, page=page)
-    # context["query"] = query
-    # context["results"] = search_results.page_results
-    # print(search_results.page_results)
+    query = request.GET.get("query", "")
+    page = request.GET.get("page", None)
+    id=request.GET.get('id')
     context = {}
-    context.update(settings.SAMPLE_SEARCH_RESULTS)
-    context.update(
-            {"result": context["results"][1]}
-        )
 
+    client = get_catalogue_client()
+    print(id)
+    filter_value = [MultiSelectFilter("id",id )]
+    search_results = client.search(query=query, page=page, filters=filter_value)
+    context["query"] = query
+    context["results"] = search_results.page_results
+    print(search_results.page_results)
     return render(request, "details.html", context)
 
 def search_view(request):
@@ -38,7 +32,7 @@ def search_view(request):
 
     client = get_catalogue_client()
     
-    search_results = client.search(query=query, page=page)
+    search_results = client.search(query=query, page=page, filters=filter_value)
     context = {}
     domain_list=search_results.facets['domains']
     context["domainlist"]=domain_list
