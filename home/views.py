@@ -81,7 +81,7 @@ def search_view(request):
         selected_domain = filter_seleted_domains(domain_list, domains)
         if not domains:
             filter_value = []
-        else: 
+        else:
             context['selected_domain'] = selected_domain
             context['domains'] = domains
             filter_value = [MultiSelectFilter("domains", domains)]
