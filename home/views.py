@@ -38,11 +38,11 @@ def search_view(request):
 
     domains = request.GET.getlist("domain", [])
     if domains:
-      selected_domain = filter_seleted_domains(domain_list, domains)
-      context['selected_domain'] = selected_domain
-      request.session['selected_domain'] = selected_domain
-      request.session['domains'] = domains
-      filter_value = [MultiSelectFilter("domains", domains)]
+        selected_domain = filter_seleted_domains(domain_list, domains)
+        context['selected_domain'] = selected_domain
+        request.session['selected_domain'] = selected_domain
+        request.session['domains'] = domains
+        filter_value = [MultiSelectFilter("domains", domains)]
     elif request.GET.get('clear_filter') == "True":
         filter_value = []
         context['selected_domain'] = {}
