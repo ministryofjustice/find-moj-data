@@ -7,8 +7,7 @@
 
   <a onclick="history.back()" class="govuk-back-link">Back</a>
       <main class="govuk-main-wrapper">
-        <div class="govuk-grid-row">  
-          dsadsadsadsa{{result}}          
+        <div class="govuk-grid-row">          
           <h2 class="govuk-heading-l">{{result.name}}</h2>
           <div class="govuk-grid-column-two-thirds">
             <div class="govuk-summary-card__title-wrapper" >
@@ -17,47 +16,50 @@
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Registered by</dt>
                 <dd class="govuk-summary-list__value">
-                {{result.registered_by}}
+                  {{result.metadata.owner}}
                 </dd>
               </div>
 
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Owner email</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.metadata.owner_email}}
+                </dd>
+              </div>
+      
+      
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Domain name</dt>
                 <dd class="govuk-summary-list__value">
-                {{result.domain_name}}
+                {{result.metadata.domain.properties.name}}
                 </dd>
               </div>
-
+      
+             
               <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Database name</dt>
+                <dt class="govuk-summary-list__key">Last updated date</dt>
                 <dd class="govuk-summary-list__value">
-                {{result.database_name}}
+                  {{result.last_updated}}
                 </dd>
               </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">First created</dt>
-                <dd class="govuk-summary-list__value">
-                {{result.first_created}}
-                </dd>
-              </div>
-
+      
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Refresh period</dt>
                 <dd class="govuk-summary-list__value">
-                {{result.refresh_period}}
+                
                 </dd>
               </div>
-
+      
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Retention period</dt>
                 <dd class="govuk-summary-list__value">
-                {{result.retention_period}}
+               
                 </dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">DPIA Status </dt>
                 <dd class="govuk-summary-list__value">
-                {{result.dpia}}
+               
                 </dd>
               </div>
               <div class="govuk-summary-list__row">
@@ -106,22 +108,23 @@
           
           <div class="govuk-grid-column-one-third">
 
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
+            
 
               <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Registered by</dt>
-                <dd class="govuk-summary-list__value">
-                {{result.registered_by}}
-                </dd>
+                <p class="govuk-summary-list__key">IAO or Data Owner<br/></p>
+                <p class="govuk-summary-list__value">
+                  {{result.metadata.owner}}<br/>
+                  {{result.metadata.owner_email}}
+                </p>
               </div>
 
               <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Domain name</dt>
-                <dd class="govuk-summary-list__value">
+                <p class="govuk-summary-list__key">Contact for Access requirement</p>
+                <p class="govuk-summary-list__value">
                 {{result.domain_name}}
-                </dd>
+                </p>
               </div>
-              </dl>
+       
           </div>
         </div>
       </main>

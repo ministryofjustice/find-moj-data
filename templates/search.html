@@ -8,7 +8,8 @@
   <main class="govuk-main-wrapper">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <form action="{% url 'home:search' %}" method="post" role="search" class="search__form govuk-!-margin-bottom-4">
+          <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+            {% csrf_token %}
             <div class="govuk-form-group">
               <h1 class="govuk-heading-xl">Find MOJ Data</h1>
               <div class="search-container">

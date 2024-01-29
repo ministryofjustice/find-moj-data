@@ -15,11 +15,10 @@ def details_view(request):
     context = {}
 
     client = get_catalogue_client()
-    print(id)
     filter_value = [MultiSelectFilter("urn",id )]
     search_results = client.search(query="", page=None, filters=filter_value)
-    context["results"] = search_results.page_results[0]
-    print(search_results.page_results[0])
+    context["result"] = search_results.page_results[0]
+   
     return render(request, "details.html", context)
 
 def search_view(request):
@@ -36,31 +35,32 @@ def search_view(request):
  
     if request.GET.getlist("domain"):
         domains=request.GET.getlist("domain")
-        print(domains)
         selected_domain={}
-        if request.GET.get('clear_label') == "True": 
-            print("clear label")
-            label_value=request.GET.getlist("value")
-            print(label_value)
        
         for domain in domain_list:
             if domain.value in domains:
                 selected_domain[domain.value]=domain.label
        
         context['selected_domain'] = selected_domain
+        
         filter_value = [MultiSelectFilter("domains",domains )]
 
     elif request.GET.get('clear_filter') == "True": 
         print("clear_filter")
         filter_value =[]
         context['selected_domain'] ={}
+    elif request.GET.get('clear_label'): 
+            print("clear label")
+            filter_value =[]
+            label_value=request.GET.getlist("value")
+            print(label_value)
     else: 
         filter_value =[]
         context['selected_domain'] ={}
       
     
     search_results = client.search(query=query, page=page, filters=filter_value)
-    print(context['selected_domain'] )
+   
 
     context["query"] = query
     context["results"] = search_results.page_results
