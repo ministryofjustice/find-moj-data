@@ -24,7 +24,7 @@
     <div class="govuk-grid-row">
       {% include "partial/filter.html" %}
       <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-heading-l govuk-!-display-inline-block">236 Results</h2>
+          <h2 class="govuk-heading-l govuk-!-display-inline-block">{{num_data_products}} Results</h2>
           <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-left-5">
             <label class="govuk-label" for="sort">
               Sort by
@@ -37,63 +37,47 @@
             </select>
           </div>
 
-          {% for result in results %}
+          {% for data_product in all_data_products %}
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
               <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-                  <a href="/dataset">{{result.title}}</a>
+                  <a href="/dataset">{{data_product.entity.properties.name}}</a>
               </h3>
-      
-              <p class="govuk-body-m">{{result.summary}}</p>
-              
+
+              <p class="govuk-body-m">{{data_product.entity.properties.description}}</p>
+
               <dl class="govuk-summary-list">
-  
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Registered by</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.registered_by}}
-                  </dd>
-                </div>
-   
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Database Name</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.database_name}}
-                  </dd>
-                </div>
-   
 
                 <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">First created</dt>
+                  <dt class="govuk-summary-list__key">Assets Contained</dt>
                   <dd class="govuk-summary-list__value">
-                  {{result.first_created}}
-                  </dd>
-                </div>
-   
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Refresh period</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.refresh_period}}
+                  {{data_product.entity.properties.numAssets}}
                   </dd>
                 </div>
 
+
                 <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Retention period</dt>
+                  <dt class="govuk-summary-list__key">Domain</dt>
                   <dd class="govuk-summary-list__value">
-                  {{result.retention_period}}
+                  {{data_product.entity.domain.domain.properties.name}}
                   </dd>
                 </div>
+
                 <div class="govuk-summary-list__row">
                   <dt class="govuk-summary-list__key">Tags</dt>
                   <dd class="govuk-summary-list__value">
-                  {{ result.tags |join:", " }}
+                  {% for tag in data_product.entity.tags.tags %}
+                  <strong class="govuk-tag">
+                    {{tag.tag.properties.name}}
+                  </strong>
+                  {% endfor %}
                   </dd>
                 </div>
             </div>
           </div>
           <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-          {%endfor%}
+          {% endfor %}
       </div>
     </div>
   </main>
