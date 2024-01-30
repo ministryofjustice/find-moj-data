@@ -1,0 +1,134 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load markdown %}
+
+{% block content %}
+<div class="govuk-width-container">
+
+  <a onclick="history.back()" class="govuk-back-link">Back</a>
+      <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row"> 
+          <span class="govuk-caption-l">{{result.result_type.name}}</span>        
+          <h2 class="govuk-heading-l">{{result.name}}</h2>
+          <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-summary-card__title-wrapper" >
+            <dl class="govuk-summary-list govuk-summary-list--no-border">
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Registered by</dt>
+                <dd class="govuk-summary-list__value">
+                  {{result.metadata.owner}}
+                </dd>
+              </div>
+
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Owner email</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.metadata.owner_email}}
+                </dd>
+              </div>
+      
+      
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Domain name</dt>
+                <dd class="govuk-summary-list__value">
+                {{result.metadata.domain.properties.name}}
+                </dd>
+              </div>
+      
+             
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Last updated date</dt>
+                <dd class="govuk-summary-list__value">
+                  {{result.last_updated}}
+                </dd>
+              </div>
+      
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Refresh period</dt>
+                <dd class="govuk-summary-list__value">
+                
+                </dd>
+              </div>
+      
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Retention period</dt>
+                <dd class="govuk-summary-list__value">
+               
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">DPIA Status </dt>
+                <dd class="govuk-summary-list__value">
+               
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Tags</dt>
+                <dd class="govuk-summary-list__value">
+                {{ result.tags |join:", " }}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Description</dt>
+                <dd class="govuk-summary-list__value">
+                  {{result.description}}
+                </dd>
+              </div>
+            </dl>
+            </div>
+            <br/>
+            <table class="govuk-table">
+              <caption class="govuk-table__caption govuk-table__caption--m">Database content</caption>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header app-custom-class">Table name</th>
+                  <th scope="col" class="govuk-table__header app-custom-class">Description</th>
+                  <th scope="col" class="govuk-table__header app-custom-class">Schema Details</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Table 1</th>
+                  <td class="govuk-table__cell">This is description about the table</td>
+                  <td class="govuk-table__cell">  <a href="#" class="govuk-link">Schema details</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Table 2</th>
+                  <td class="govuk-table__cell">This is description about the table</td>
+                  <td class="govuk-table__cell">  <a href="#" class="govuk-link">Schema details</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">Table 3</th>
+                  <td class="govuk-table__cell">This is description about the table</td>
+                  <td class="govuk-table__cell">  <a href="#" class="govuk-link">Schema details</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="govuk-grid-column-one-third">
+              <div class="govuk-body">
+                <p class="govuk-heading-s">IAO or Data Owner</p>
+                <span class="govuk-body">
+                  {{result.metadata.owner}}
+                </span>
+              </div>
+              <div class="govuk-body">
+                <p class="govuk-heading-s">Contact for Access requirement</p>
+                <span class="govuk-body">
+                  {{result.metadata.owner_email}}
+                </span>
+              </div>
+              <div class="govuk-body">
+                <p class="govuk-heading-s">Access requirement</p>
+                <span class="govuk-body">
+                  Processing the data might require 
+                  permission from IAO or Data owner
+                </span>
+              </div>
+          </div>
+        </div>
+      </main>
+</div>
+{% endblock content %}

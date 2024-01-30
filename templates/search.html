@@ -4,11 +4,12 @@
 
 {% block content %}
 <div class="govuk-width-container">
-  <a href="#" class="govuk-back-link">Back</a>
+  <a onclick="history.back()" class="govuk-back-link">Back</a>
   <main class="govuk-main-wrapper">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <form action="/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+          <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+            {% csrf_token %}
             <div class="govuk-form-group">
               <h1 class="govuk-heading-xl">Find MOJ Data</h1>
               <div class="search-container">
@@ -24,8 +25,8 @@
     </div>
     <div class="govuk-grid-row">
       {% include "partial/filter.html" %}
-      <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-heading-l govuk-!-display-inline-block">236 Results</h2>
+      <div class="govuk-grid-column-two-thirds">  
+        <h2 class="govuk-heading-l govuk-!-display-inline-block">{{total_results}} Results</h2>
           <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-left-5">
             <label class="govuk-label" for="sort">
               Sort by
@@ -36,60 +37,11 @@
               <option value="views">Most views</option>
               <option value="comments">Most comments</option>
             </select>
-          </div>
-
-          {% for result in results %}
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-              <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-                <a href="/dataset/{{result.id}}">{{result.name}}</a>
-                {% if result.result_type.name == "DATA_PRODUCT" %}
-                <strong class="govuk-tag govuk-!-margin-left-2">
-                  Data product
-                </strong>
-                {% elif result.result_type.name == "TABLE" %}
-                <strong class="govuk-tag govuk-!-margin-left-2">
-                  Table
-                </strong>
-                {% endif %}
-              </h3>
-
-              {% if result.description %}
-              <div class="govuk-body-m">{{result.description|markdown}}</div>
-              {% endif %}
-
-              <dl class="govuk-summary-list">
-                {% if result.metadata.domain %}
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Domain</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.metadata.domain.properties.name}}
-                  </dd>
-                </div>
-                {% endif %}
-                {% if result.metadata.owner %}
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Registered by</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{result.metadata.owner}}
-                  </dd>
-                </div>
-                {% endif %}
-                {% if result.tags %}
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">Tags</dt>
-                  <dd class="govuk-summary-list__value">
-                  {{ result.tags |join:", " }}
-                  </dd>
-                </div>
-                {% endif %}
-            </div>
-          </div>
-          <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-          {%endfor%}
-      </div>
-    </div>
+          </div>      
+          {% include "partial/search_result.html" %}
+          {% include "partial/pagination.html" %}
+        </div>
+    </div> 
   </main>
 </div>
 {% endblock content %}

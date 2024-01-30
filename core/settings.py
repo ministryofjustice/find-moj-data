@@ -129,7 +129,9 @@ SAMPLE_SEARCH_RESULTS_FILENAME = BASE_DIR / \
 with open(SAMPLE_SEARCH_RESULTS_FILENAME) as f:
     SAMPLE_SEARCH_RESULTS = yaml.safe_load(f)
 
-
 # Catalog settings
 CATALOGUE_URL = os.environ.get("CATALOGUE_URL")
 CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
+
+# session
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
