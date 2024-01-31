@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% load markdown %}
+{% load humanize %}
 
 {% block content %}
 <div class="govuk-width-container">
@@ -40,7 +41,7 @@
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Last updated date</dt>
                 <dd class="govuk-summary-list__value">
-                  {{result.last_updated}}
+                  {{result.last_updated|naturaltime}}
                 </dd>
               </div>
       
