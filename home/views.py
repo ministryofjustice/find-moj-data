@@ -1,4 +1,4 @@
-from data_platform_catalogue.search_types import MultiSelectFilter
+from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
 from django.conf import settings
 from django.shortcuts import render
 
@@ -19,6 +19,9 @@ def details_view(request, id):
     search_results = client.search(query="", page=None, filters=filter_value)
     result = search_results.page_results[0]
     context["result"] = result
+    context["result_type"] = (
+        "Data product" if result.result_type == ResultType.DATA_PRODUCT else "Table"
+    )
     context["page_title"] = f"{result.name} - Data catalogue"
 
     return render(request, "details.html", context)
@@ -81,8 +84,7 @@ def search_view(request):
         context["selected_domain"] = {}
 
     # Search with filter
-    search_results = client.search(
-        query=query, page=page, filters=filter_value)
+    search_results = client.search(query=query, page=page, filters=filter_value)
     context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
