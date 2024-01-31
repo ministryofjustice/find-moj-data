@@ -13,12 +13,13 @@ def home_view(request):
 
 
 def details_view(request, id):
-
     context = {}
     client = get_catalogue_client()
     filter_value = [MultiSelectFilter("urn", id)]
     search_results = client.search(query="", page=None, filters=filter_value)
-    context["result"] = search_results.page_results[0]
+    result = search_results.page_results[0]
+    context["result"] = result
+    context["page_title"] = f"{result.name} - Data catalogue"
 
     return render(request, "details.html", context)
 
@@ -85,5 +86,10 @@ def search_view(request):
     context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
+
+    if query:
+        context["page_title"] = f'Search for "{query}" - Data catalogue'
+    else:
+        context["page_title"] = f"Search - Data catalogue"
 
     return render(request, "search.html", context)
