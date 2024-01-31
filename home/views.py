@@ -81,7 +81,8 @@ def search_view(request):
         context["selected_domain"] = {}
 
     # Search with filter
-    search_results = client.search(query=query, page=page, filters=filter_value)
+    search_results = client.search(
+        query=query, page=page, filters=filter_value)
     context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
