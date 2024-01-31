@@ -19,7 +19,7 @@ def details_view(request, id):
     search_results = client.search(query="", page=None, filters=filter_value)
     result = search_results.page_results[0]
     context["result"] = result
-    context["page_title"] = f"Data catalogue - {result.name}"
+    context["page_title"] = f"{result.name} - Data catalogue"
 
     return render(request, "details.html", context)
 
@@ -88,8 +88,8 @@ def search_view(request):
     context["total_results"] = search_results.total_results
 
     if query:
-        context["page_title"] = f'Data catalogue - Search for "{query}"'
+        context["page_title"] = f'Search for "{query}" - Data catalogue'
     else:
-        context["page_title"] = f"Data catalogue - Search"
+        context["page_title"] = f"Search - Data catalogue"
 
     return render(request, "search.html", context)
