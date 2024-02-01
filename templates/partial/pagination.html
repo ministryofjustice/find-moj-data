@@ -1,31 +1,142 @@
 <nav class="govuk-pagination" role="navigation" aria-label="Pagination">
-    <div class="govuk-pagination__prev">
-      <a class="govuk-link govuk-pagination__link" href="#" rel="prev">
+  {% if current_page > 1 %}
+  <div class="govuk-pagination__prev">
+    {% with previous_page as prev_page %}
+      <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=prev_page %}" rel="prev">
         <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
           <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
         </svg>
         <span class="govuk-pagination__link-title">Previous<span class="govuk-visually-hidden"> page</span></span></a>
     </div>
-    <ul class="govuk-pagination__list">
+    {% endwith %}
+  {% endif %}
+    {% if last_page < 2 %}
+    <ul class="govuk-pagination__list govuk-pagination__item--current">
       <li class="govuk-pagination__item">
-        <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 1">
+        <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=1 %}" aria-label="Page 1">
           1
         </a>
       </li>
-      <li class="govuk-pagination__item govuk-pagination__item--current">
-        <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 2" aria-current="page">
-          2
+    {% elif last_page < 7 %}
+    <ul class="govuk-pagination__list">
+      {% if current_page < 2 %}
+        <li class="govuk-pagination__item govuk-pagination__item--current">
+      {% else %}
+        <li class="govuk-pagination__item">
+      {% endif %}
+        <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=1 %}" aria-label="Page 1">
+          1
         </a>
       </li>
+      {% for page in show_pages %}
+        {% if current_page_str == page %}
+        <li class="govuk-pagination__item govuk-pagination__item--current">
+        {% else %}
+        <li class="govuk-pagination__item">
+        {% endif %}
+          <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=page %}" aria-label="Page {{ page }}">
+            {{ page }}
+          </a>
+        </li>
+      {% endfor %}
+    {% elif current_page > no_ellipses_end %}
+      <ul class="govuk-pagination__list">
+        <li class="govuk-pagination__item">
+          <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=1 %}" aria-label="Page 1">
+            1
+          </a>
+        </li>
+        <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
+        {% for page in show_pages %}
+          {% if current_page_str == page %}
+          <li class="govuk-pagination__item govuk-pagination__item--current">
+          {% else %}
+          <li class="govuk-pagination__item">
+          {% endif %}
+            <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=page %}" aria-label="Page {{ page }}">
+              {{ page }}
+            </a>
+          </li>
+        {% endfor %}
+          {% if current_page == last_page %}
+          <li class="govuk-pagination__item govuk-pagination__item--current">
+          {% else %}
+          <li class="govuk-pagination__item">
+          {% endif %}
+          <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=last_page_str %}" aria-label="Page {{ last_page_str }}">
+            {{ last_page_str }}
+          </a>
+        </li>   
+    {% elif current_page > 6 %}
+    <ul class="govuk-pagination__list">
       <li class="govuk-pagination__item">
-        <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page 3">
-          3
+        <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=1 %}" aria-label="Page 1">
+          1
         </a>
       </li>
+      <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
+      {% for page in show_pages %}
+        {% if current_page_str == page %}
+        <li class="govuk-pagination__item govuk-pagination__item--current">
+        {% else %}
+        <li class="govuk-pagination__item">
+        {% endif %}
+          <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=page %}" aria-label="Page {{ page }}">
+            {{ page }}
+          </a>
+        </li>
+      {% endfor %}
+      <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
+      {% with last_page_str as lp %}
+      <li class="govuk-pagination__item">
+        <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=lp %}" aria-label="Page {{ lp }}">
+          {{ lp }}
+        </a>
+      </li>   
+      {% endwith %}
+    {% else %}
+    <ul class="govuk-pagination__list">
+      {% if current_page < 2 %}
+        <li class="govuk-pagination__item govuk-pagination__item--current">
+      {% else %}
+        <li class="govuk-pagination__item">
+      {% endif %}
+        <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=1 %}" aria-label="Page 1">
+          1
+        </a>
+      </li>
+      {% for page in show_pages %}
+        {% if current_page_str == page %}
+        <li class="govuk-pagination__item govuk-pagination__item--current">
+        {% else %}
+        <li class="govuk-pagination__item">
+        {% endif %}
+          <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=page %}" aria-label="Page {{ page }}">
+            {{ page }}
+          </a>
+        </li>
+      {% endfor %}
+      <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
+      {% with last_page_str as lp %}
+        {% if current_page_str == page %}
+        <li class="govuk-pagination__item govuk-pagination__item--current">
+        {% else %}
+        <li class="govuk-pagination__item">
+        {% endif %}
+        <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=lp %}" aria-label="Page {{ lp }}">
+          {{ lp }}
+        </a>
+      </li>   
+      {% endwith %}
+    {% endif %}
     </ul>
+    {% if current_page != last_page %}
+    {% with next_page as next_page %}
     <div class="govuk-pagination__next">
-      <a class="govuk-link govuk-pagination__link" href="#" rel="next"> <span class="govuk-pagination__link-title">Next<span class="govuk-visually-hidden"> page</span></span> <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+      <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=next_page %}" rel="next"> <span class="govuk-pagination__link-title">Next<span class="govuk-visually-hidden"> page</span></span> <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
           <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
         </svg></a>
     </div>
+    {% endwith %}
+    {% endif %}
     </nav>
