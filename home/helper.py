@@ -20,7 +20,7 @@ def set_search_page_contexts(total_pages: int, current_page: str, context: dict)
     mid_end_page = (
         int(current_page) + mid_pages_shown - 1
         if int(current_page) + 1 < total_pages
-        else total_pages + 1
+        else total_pages
     )
     # a fresh search where no page has been selected
     if int(current_page) == 0:
@@ -30,11 +30,13 @@ def set_search_page_contexts(total_pages: int, current_page: str, context: dict)
         context["current_page"] = int(current_page) + 1
         context["show_pages"] = [str(i) for i in range(mid_start_page, mid_end_page)]
 
-    # Here we want to display every page
+    # cos the above logic is not perfect
     if total_pages <= 6:
         context["show_pages"] = [str(i) for i in range(2, total_pages + 1)]
     elif int(current_page) + 1 < 7:
         context["show_pages"] = [str(i) for i in range(2, mid_pages_shown + 2)]
+    elif int(current_page) + 1 > (total_pages - mid_pages_shown):
+        context["show_pages"] = [str(i) for i in range(mid_start_page, total_pages)]
 
     context["last_page_str"] = str(total_pages)
     context["last_page"] = total_pages
