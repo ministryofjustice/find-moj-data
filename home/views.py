@@ -99,7 +99,8 @@ def search_view(request, page: str = "1"):
         else:
             domains = request.session.get("domains", [])
             filter_value = []
-            context["selected_domain"] = filter_seleted_domains(domain_list, domains)
+            context["selected_domain"] = filter_seleted_domains(
+                domain_list, domains)
             context["domains"] = domains
             query = request.session.get("query", "")
 
