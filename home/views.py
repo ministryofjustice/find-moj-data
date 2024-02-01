@@ -70,7 +70,7 @@ def search_view(request):
             filter_value = [MultiSelectFilter("domains", domains)]
 
     elif request.GET.get("query"):
-        domains = request.session.get("domains", None)
+        domains = request.session.get("domains", [])
         # Preserve filter
         selected_domain = filter_seleted_domains(domain_list, domains)
         if not domains:
