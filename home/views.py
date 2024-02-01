@@ -3,6 +3,7 @@ from django.conf import settings
 from django.shortcuts import render
 
 from .helper import filter_seleted_domains
+from django.core.paginator import Paginator
 from .services import get_catalogue_client
 
 
@@ -27,15 +28,17 @@ def details_view(request, id):
     return render(request, "details.html", context)
 
 
-def search_view(request):
+def search_view(request, page: str = "1"):
     query = request.GET.get("query", "")
-    page = request.GET.get("page", None)
 
+    page_for_search = str(int(page) - 1)
     client = get_catalogue_client()
 
     facets = client.search_facets()
     context = {}
+
     domain_list = facets.options("domains")
+
     context["domainlist"] = domain_list
 
     domains = request.GET.getlist("domain", [])
@@ -45,9 +48,13 @@ def search_view(request):
         request.session["selected_domain"] = selected_domain
         request.session["domains"] = domains
         filter_value = [MultiSelectFilter("domains", domains)]
+        query = request.session.get("query", "")
     elif request.GET.get("clear_filter") == "True":
         filter_value = []
         context["selected_domain"] = {}
+        request.session["selected_domain"] = {}
+        request.session["domains"] = []
+        query = request.session.get("query", "")
     elif request.GET.get("clear_label") == "True":
         # Value to clear
         label_value = request.GET.getlist("value")
@@ -55,7 +62,6 @@ def search_view(request):
         # Remove the selected value from list
         domains = request.session.get("domains", None)
         domains = list(set(domains) - set(label_value))
-
         # Populated selected domain
         selected_domain = filter_seleted_domains(domain_list, domains)
         context["domains"] = domains
@@ -64,13 +70,18 @@ def search_view(request):
         # Reassign to session
         request.session["selected_domain"] = selected_domain
         request.session["domains"] = domains
+        query = request.session.get("query", "")
+
         if not domains:
             filter_value = []
         else:
             filter_value = [MultiSelectFilter("domains", domains)]
 
     elif request.GET.get("query"):
+        domains = request.session.get("domains", None)
+        request.session["query"] = query
         domains = request.session.get("domains", [])
+
         # Preserve filter
         selected_domain = filter_seleted_domains(domain_list, domains)
         if not domains:
@@ -80,19 +91,40 @@ def search_view(request):
             context["domains"] = domains
             filter_value = [MultiSelectFilter("domains", domains)]
     else:
-        filter_value = []
-        context["selected_domain"] = {}
+        if page is None:
+            filter_value = []
+            context["selected_domain"] = {}
+            request.session.clear()
+            request.session["domains"] = domains
+        else:
+            domains = request.session.get("domains", [])
+            filter_value = []
+            context["selected_domain"] = filter_seleted_domains(
+                domain_list, domains)
+            context["domains"] = domains
+            query = request.session.get("query", "")
 
     # Search with filter
     search_results = client.search(
-        query=query, page=page, filters=filter_value)
+        query=query, page=page_for_search, filters=filter_value
+    )
+
+    items_per_page = 20
+    pages_list = list(range(search_results.total_results))
+    paginator = Paginator(pages_list, items_per_page)
+
     context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
+    context["page_obj"] = paginator.get_page(page)
+    context["page_range"] = paginator.get_elided_page_range(
+        page, on_each_side=2, on_ends=1
+    )
+    context["paginator"] = paginator
 
     if query:
         context["page_title"] = f'Search for "{query}" - Data catalogue'
     else:
-        context["page_title"] = f"Search - Data catalogue"
+        context["page_title"] = "Search - Data catalogue"
 
     return render(request, "search.html", context)
