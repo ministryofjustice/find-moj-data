@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.shortcuts import render
 from .services import get_catalogue_client
-from .helper import filter_seleted_domains, set_search_page_contexts
+from .helper import filter_seleted_domains
 from data_platform_catalogue.search_types import MultiSelectFilter
-import math
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -22,9 +22,10 @@ def details_view(request, id):
     return render(request, "details.html", context)
 
 
-def search_view(request, page: str | None = None):
+def search_view(request, page: str = "1"):
     query = request.GET.get("query", "")
-    page_for_search = str(int(page) - 1) if page is not None else None
+
+    page_for_search = str(int(page) - 1)
     client = get_catalogue_client()
 
     # Fetch domainlist without query
@@ -97,11 +98,18 @@ def search_view(request, page: str | None = None):
     search_results = client.search(
         query=query, page=page_for_search, filters=filter_value
     )
-    total_pages = math.ceil(search_results.total_results / 20)
+    # total_pages = math.ceil(search_results.total_results / 20)
+    items_per_page = 20
+    pages_list = list(range(search_results.total_results))
+    paginator = Paginator(pages_list, items_per_page)
+
     context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
-
-    context = set_search_page_contexts(total_pages, page_for_search, context)
+    context["page_obj"] = paginator.get_page(page)
+    context["page_range"] = paginator.get_elided_page_range(
+        page, on_each_side=2, on_ends=1
+    )
+    context["paginator"] = paginator
 
     return render(request, "search.html", context)
