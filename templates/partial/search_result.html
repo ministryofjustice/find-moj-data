@@ -1,4 +1,5 @@
 {% load markdown %}
+{% load humanize %}
 {% for result in results %}
 
 <div class="govuk-grid-row" id="search_result">
@@ -37,7 +38,9 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Last updated date</dt>
           <dd class="govuk-summary-list__value">
-            {{result.last_updated}}
+            {% if result.last_updated %}
+            {{result.last_updated | date:"jS F Y"}} ({{result.last_updated|naturaltime}})
+            {% endif %}
           </dd>
         </div>
         <div class="govuk-summary-list__row">
