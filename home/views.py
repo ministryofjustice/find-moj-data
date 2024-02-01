@@ -1,4 +1,6 @@
-from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
+from data_platform_catalogue.search_types import(
+    MultiSelectFilter, ResultType, SortOption
+)
 from django.conf import settings
 from django.shortcuts import render
 
@@ -42,6 +44,14 @@ def search_view(request, page: str = "1"):
     context["domainlist"] = domain_list
 
     domains = request.GET.getlist("domain", [])
+    sortby = request.GET.get("sortby", None)
+
+    if sortby=="ascending":
+        sort = SortOption(field="name", ascending=True)
+    elif sortby=="descending":
+        sort = SortOption(field="name", ascending=False)
+    else:
+        sort = None
     if domains:
         selected_domain = filter_seleted_domains(domain_list, domains)
         context["selected_domain"] = selected_domain
@@ -106,7 +116,7 @@ def search_view(request, page: str = "1"):
 
     # Search with filter
     search_results = client.search(
-        query=query, page=page_for_search, filters=filter_value
+        query=query, page=page_for_search, filters=filter_value, sort=sort
     )
 
     items_per_page = 20
@@ -121,6 +131,7 @@ def search_view(request, page: str = "1"):
         page, on_each_side=2, on_ends=1
     )
     context["paginator"] = paginator
+    context["sortby"] = sortby
 
     if query:
         context["page_title"] = f'Search for "{query}" - Data catalogue'
