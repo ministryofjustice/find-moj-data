@@ -3,7 +3,6 @@ from django.conf import settings
 from django.shortcuts import render
 
 from .helper import filter_seleted_domains
-from data_platform_catalogue.search_types import MultiSelectFilter
 from django.core.paginator import Paginator
 from .services import get_catalogue_client
 
@@ -98,10 +97,9 @@ def search_view(request, page: str = "1"):
             request.session.clear()
             request.session["domains"] = domains
         else:
-            domains = request.session["domains"]
+            domains = request.session.get("domains", [])
             filter_value = []
-            context["selected_domain"] = filter_seleted_domains(
-                domain_list, domains)
+            context["selected_domain"] = filter_seleted_domains(domain_list, domains)
             context["domains"] = domains
             query = request.session.get("query", "")
 
@@ -109,7 +107,7 @@ def search_view(request, page: str = "1"):
     search_results = client.search(
         query=query, page=page_for_search, filters=filter_value
     )
-    # total_pages = math.ceil(search_results.total_results / 20)
+
     items_per_page = 20
     pages_list = list(range(search_results.total_results))
     paginator = Paginator(pages_list, items_per_page)
@@ -126,6 +124,6 @@ def search_view(request, page: str = "1"):
     if query:
         context["page_title"] = f'Search for "{query}" - Data catalogue'
     else:
-        context["page_title"] = f"Search - Data catalogue"
+        context["page_title"] = "Search - Data catalogue"
 
     return render(request, "search.html", context)
