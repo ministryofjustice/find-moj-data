@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.shortcuts import render
 from .services import get_catalogue_client
-from .helper import filter_seleted_domains
+from .helper import filter_seleted_domains, set_search_page_contexts
 from data_platform_catalogue.search_types import MultiSelectFilter
+import math
 
 
 # Create your views here.
@@ -12,7 +13,6 @@ def home_view(request):
 
 
 def details_view(request, id):
-
     context = {}
     client = get_catalogue_client()
     filter_value = [MultiSelectFilter("urn", id)]
@@ -22,70 +22,86 @@ def details_view(request, id):
     return render(request, "details.html", context)
 
 
-def search_view(request):
-
+def search_view(request, page: str | None = None):
     query = request.GET.get("query", "")
-    page = request.GET.get("page", None)
-
+    page_for_search = str(int(page) - 1) if page is not None else None
     client = get_catalogue_client()
 
     # Fetch domainlist without query
     # This will be replaced ater matt creates a new function
     search_results = client.search(query="", page=None)
     context = {}
-    domain_list = search_results.facets['domains']
+    domain_list = search_results.facets["domains"]
     context["domainlist"] = domain_list
 
     domains = request.GET.getlist("domain", [])
     if domains:
         selected_domain = filter_seleted_domains(domain_list, domains)
-        context['selected_domain'] = selected_domain
-        request.session['selected_domain'] = selected_domain
-        request.session['domains'] = domains
+        context["selected_domain"] = selected_domain
+        request.session["selected_domain"] = selected_domain
+        request.session["domains"] = domains
         filter_value = [MultiSelectFilter("domains", domains)]
-    elif request.GET.get('clear_filter') == "True":
+        query = request.session.get("query", "")
+    elif request.GET.get("clear_filter") == "True":
         filter_value = []
-        context['selected_domain'] = {}
-    elif request.GET.get('clear_label') == 'True':
+        context["selected_domain"] = {}
+        request.session["selected_domain"] = {}
+        request.session["domains"] = []
+        query = request.session.get("query", "")
+    elif request.GET.get("clear_label") == "True":
         # Value to clear
         label_value = request.GET.getlist("value")
 
         # Remove the selected value from list
-        domains = request.session.get('domains', None)
+        domains = request.session.get("domains", None)
         domains = list(set(domains) - set(label_value))
-
         # Populated selected domain
         selected_domain = filter_seleted_domains(domain_list, domains)
-        context['domains'] = domains
-        context['selected_domain'] = selected_domain
+        context["domains"] = domains
+        context["selected_domain"] = selected_domain
 
         # Reassign to session
-        request.session['selected_domain'] = selected_domain
-        request.session['domains'] = domains
+        request.session["selected_domain"] = selected_domain
+        request.session["domains"] = domains
+        query = request.session.get("query", "")
         if not domains:
             filter_value = []
         else:
             filter_value = [MultiSelectFilter("domains", domains)]
 
-    elif request.GET.get('query'):
-        domains = request.session.get('domains', None)
+    elif request.GET.get("query"):
+        domains = request.session.get("domains", None)
+        request.session["query"] = query
         # Preserve filter
         selected_domain = filter_seleted_domains(domain_list, domains)
         if not domains:
             filter_value = []
         else:
-            context['selected_domain'] = selected_domain
-            context['domains'] = domains
+            context["selected_domain"] = selected_domain
+            context["domains"] = domains
             filter_value = [MultiSelectFilter("domains", domains)]
     else:
-        filter_value = []
-        context['selected_domain'] = {}
+        if page is None:
+            filter_value = []
+            context["selected_domain"] = {}
+            request.session.clear()
+            request.session["domains"] = domains
+        else:
+            domains = request.session["domains"]
+            filter_value = []
+            context["selected_domain"] = filter_seleted_domains(domain_list, domains)
+            context["domains"] = domains
+            query = request.session.get("query", "")
 
     # Search with filter
     search_results = client.search(
-        query=query, page=page, filters=filter_value)
+        query=query, page=page_for_search, filters=filter_value
+    )
+    total_pages = math.ceil(search_results.total_results / 20)
     context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
+
+    context = set_search_page_contexts(total_pages, page_for_search, context)
 
     return render(request, "search.html", context)
