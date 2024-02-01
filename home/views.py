@@ -1,4 +1,4 @@
-from data_platform_catalogue.search_types import(
+from data_platform_catalogue.search_types import (
     MultiSelectFilter, ResultType, SortOption
 )
 from django.conf import settings
@@ -46,9 +46,9 @@ def search_view(request, page: str = "1"):
     domains = request.GET.getlist("domain", [])
     sortby = request.GET.get("sortby", None)
 
-    if sortby=="ascending":
+    if sortby == "ascending":
         sort = SortOption(field="name", ascending=True)
-    elif sortby=="descending":
+    elif sortby == "descending":
         sort = SortOption(field="name", ascending=False)
     else:
         sort = None
