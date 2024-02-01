@@ -29,7 +29,6 @@ def details_view(request, id):
     return render(request, "details.html", context)
 
 
-
 def search_view(request, page: str = "1"):
     query = request.GET.get("query", "")
 
@@ -101,10 +100,10 @@ def search_view(request, page: str = "1"):
         else:
             domains = request.session["domains"]
             filter_value = []
-            context["selected_domain"] = filter_seleted_domains(domain_list, domains)
+            context["selected_domain"] = filter_seleted_domains(
+                domain_list, domains)
             context["domains"] = domains
             query = request.session.get("query", "")
-
 
     # Search with filter
     search_results = client.search(
