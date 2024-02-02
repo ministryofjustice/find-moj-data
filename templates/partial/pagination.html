@@ -15,7 +15,7 @@
             {% else %}
                 <li class="govuk-pagination__item">
             {% endif %}
-                <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=p %}" aria-label="Page {{ p }}">
+                <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=p %}?sortby={{sortby}}" aria-label="Page {{ p }}">
                     {{ p }}
                 </a>
                 </li>

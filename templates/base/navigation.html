@@ -31,7 +31,7 @@
             </a>
           </li>
           <li class="govuk-header__navigation-item {% if request.path == search_url %}govuk-header__navigation-item--active{%endif%}">
-            <a class="govuk-header__link" href="{% url 'home:search' %}">
+            <a class="govuk-header__link" href="{% url 'home:search' %}?new=True">
               Search
             </a>
           </li>
