@@ -33,7 +33,8 @@ class SearchViewTests(SimpleTestCase):
         self.assertEqual(response.context["query"], "")
 
     def test_exposes_query(self):
-        response = self.client.get(reverse("home:search"), data={"query": "foo"})
+        response = self.client.get(
+            reverse("home:search"), data={"query": "foo"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["query"], "foo")
 
@@ -44,7 +45,8 @@ class SearchViewTests(SimpleTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            response.context["selected_domain"], {"urn:li:domain:HMCTS": "HMCTS"}
+            response.context["selected_domain"], {
+                "urn:li:domain:HMCTS": "HMCTS"}
         )
         self.assertEqual(len(response.context["domains"]), 0)
 
@@ -55,6 +57,7 @@ class SearchViewTests(SimpleTestCase):
             data={"domain": ["urn:li:domain:HMCTS"], "query": "courts"},
         )
         self.assertEqual(
-            response.context["selected_domain"], {"urn:li:domain:HMCTS": "HMCTS"}
+            response.context["selected_domain"], {
+                "urn:li:domain:HMCTS": "HMCTS"}
         )
         self.assertEqual(response.context["query"], "courts")
