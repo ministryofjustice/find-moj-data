@@ -14,6 +14,7 @@ whitenoise = "^6.6.0"
 ministryofjustice-data-platform-catalogue = "^0.10.0"
 markdown = "^3.5.2"
 python-dotenv = "^1.0.1"
+faker = "^22.6.0"
 
 [tool.poetry.group.dev] # dev group definition
 
