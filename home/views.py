@@ -1,8 +1,10 @@
-from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
+from data_platform_catalogue.search_types import (
+    MultiSelectFilter, ResultType, SortOption
+)
 from django.conf import settings
 from django.shortcuts import render
 
-from .helper import filter_seleted_domains
+from .helper import filter_seleted_domains, get_domain_list
 from django.core.paginator import Paginator
 from .services import get_catalogue_client
 
@@ -29,19 +31,26 @@ def details_view(request, id):
 
 
 def search_view(request, page: str = "1"):
+    new_search = request.GET.get("new", "")
     query = request.GET.get("query", "")
-
     page_for_search = str(int(page) - 1)
     client = get_catalogue_client()
+    domain_list = get_domain_list(client)
 
-    facets = client.search_facets()
     context = {}
-
-    domain_list = facets.options("domains")
-
     context["domainlist"] = domain_list
 
     domains = request.GET.getlist("domain", [])
+    sortby = request.GET.get("sortby", None)
+    context["sortby"] = sortby
+
+    if sortby == "ascending":
+        sort = SortOption(field="name", ascending=True)
+    elif sortby == "descending":
+        sort = SortOption(field="name", ascending=False)
+    else:
+        sort = None
+
     if domains:
         selected_domain = filter_seleted_domains(domain_list, domains)
         context["selected_domain"] = selected_domain
@@ -78,8 +87,10 @@ def search_view(request, page: str = "1"):
             filter_value = [MultiSelectFilter("domains", domains)]
 
     elif request.GET.get("query"):
+        query = request.GET.get("query")
         domains = request.session.get("domains", None)
         request.session["query"] = query
+        context["query"] = query
         domains = request.session.get("domains", [])
 
         # Preserve filter
@@ -91,11 +102,12 @@ def search_view(request, page: str = "1"):
             context["domains"] = domains
             filter_value = [MultiSelectFilter("domains", domains)]
     else:
-        if page is None:
+        if page == "1" and new_search:
             filter_value = []
-            context["selected_domain"] = {}
             request.session.clear()
             request.session["domains"] = domains
+            context["selected_domain"] = {}
+            context["query"] = ""
         else:
             domains = request.session.get("domains", [])
             filter_value = []
@@ -105,8 +117,9 @@ def search_view(request, page: str = "1"):
             query = request.session.get("query", "")
 
     # Search with filter
+
     search_results = client.search(
-        query=query, page=page_for_search, filters=filter_value
+        query=query, page=page_for_search, filters=filter_value, sort=sort
     )
 
     items_per_page = 20
@@ -121,6 +134,7 @@ def search_view(request, page: str = "1"):
         page, on_each_side=2, on_ends=1
     )
     context["paginator"] = paginator
+    context["sortby"] = sortby
 
     if query:
         context["page_title"] = f'Search for "{query}" - Data catalogue'
