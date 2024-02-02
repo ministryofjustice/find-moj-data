@@ -31,9 +31,8 @@ def details_view(request, id):
 
 
 def search_view(request, page: str = "1"):
-
     new_search = request.GET.get("new", "")
-
+    query=request.GET.get("query", "")
     page_for_search = str(int(page) - 1)
     client = get_catalogue_client()
     domain_list = get_domain_list(client)
@@ -88,8 +87,7 @@ def search_view(request, page: str = "1"):
             filter_value = [MultiSelectFilter("domains", domains)]
 
     elif request.GET.get("query"):
-        query = request.GET.get("query")
-        print("query", query)
+        query=request.GET.get("query")
         domains = request.session.get("domains", None)
         request.session["query"] = query
         context["query"] = query
@@ -106,7 +104,6 @@ def search_view(request, page: str = "1"):
     else:
         if page == "1" and new_search:
             filter_value = []
-
             request.session.clear()
             request.session["domains"] = domains
             context["selected_domain"] = {}
@@ -120,7 +117,7 @@ def search_view(request, page: str = "1"):
             query = request.session.get("query", "")
 
     # Search with filter
-    query = request.GET.get("query", "")
+   
     search_results = client.search(
         query=query, page=page_for_search, filters=filter_value, sort=sort
     )
