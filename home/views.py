@@ -31,7 +31,7 @@ def details_view(request, id):
 
 
 def search_view(request, page: str = "1"):
-    
+
     new_search = request.GET.get("new", "")
 
     page_for_search = str(int(page) - 1)
@@ -43,7 +43,7 @@ def search_view(request, page: str = "1"):
 
     domains = request.GET.getlist("domain", [])
     sortby = request.GET.get("sortby", None)
-    context["sortby"]=sortby
+    context["sortby"] = sortby
 
     if sortby == "ascending":
         sort = SortOption(field="name", ascending=True)
@@ -88,7 +88,7 @@ def search_view(request, page: str = "1"):
             filter_value = [MultiSelectFilter("domains", domains)]
 
     elif request.GET.get("query"):
-        query=request.GET.get("query")
+        query = request.GET.get("query")
         print("query", query)
         domains = request.session.get("domains", None)
         request.session["query"] = query
@@ -104,13 +104,13 @@ def search_view(request, page: str = "1"):
             context["domains"] = domains
             filter_value = [MultiSelectFilter("domains", domains)]
     else:
-        if page=="1" and new_search:
+        if page == "1" and new_search:
             filter_value = []
-           
+
             request.session.clear()
             request.session["domains"] = domains
             context["selected_domain"] = {}
-            context["query"]=""
+            context["query"] = ""
         else:
             domains = request.session.get("domains", [])
             filter_value = []
