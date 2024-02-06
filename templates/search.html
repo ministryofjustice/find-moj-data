@@ -24,35 +24,12 @@
   {% include "partial/filter.html" %}
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-l govuk-!-display-inline-block">{{total_results|intcomma}} Results</h2>
-    <div class="govuk-form-group">
-      <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-          Sort results
-        </legend>
-        <div class="govuk-radios govuk-radios--inline govuk-radios--small" data-module="govuk-radios">
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" form="searchform" id="relevance" name="sortby" type="radio" value="relevance" {% if not sortby or sortby == "relevance" %} checked {% endif %} onchange="document.getElementById('searchform').submit();">
-            <label class="govuk-label govuk-radios__label" for="relevance">
-              Relevance
-            </label>
-          </div>
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" form="searchform" id="ascending" name="sortby" type="radio" value="ascending" {% if sortby == "ascending" %} checked {% endif %} onchange="document.getElementById('searchform').submit();">
-            <label class="govuk-label govuk-radios__label" for="ascending">
-              Ascending
-            </label>
-          </div>
-          <div class="govuk-radios__item">
-            <input class="govuk-radios__input" form="searchform" id="descending" name="sortby" type="radio" value="descending" {% if sortby == "descending" %} checked {% endif %} onchange="document.getElementById('searchform').submit();">
-            <label class="govuk-label govuk-radios__label" for="descending">
-              Descending
-            </label>
-          </div>
-        </div>
-      </fieldset>
-    </div>
-      {% include "partial/search_result.html" %}
-      {% include "partial/pagination.html" %}
+      {% include "partial/sort.html" %}
+      <!-- {% include "partial/search_result.html" %}
+      {% include "partial/pagination.html" %} -->
+      <!-- {% for field in form %}
+         {{field}}
+      {% endfor %} -->
     </div>
 </div>
 {% endblock content %}

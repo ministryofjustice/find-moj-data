@@ -8,8 +8,11 @@ from .helper import filter_seleted_domains, get_domain_list
 from django.core.paginator import Paginator
 from .services import get_catalogue_client
 
+from home.forms.search import SearchForm
 
 # Create your views here.
+
+
 def home_view(request):
     context = {}
     return render(request, "home.html", context)
@@ -32,21 +35,25 @@ def details_view(request, id):
 
 def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
+    if new_search:
+        form = SearchForm()
+    else:
+        form = SearchForm(request.GET)
+    print(form)
     query = request.GET.get("query", "")
     page_for_search = str(int(page) - 1)
     client = get_catalogue_client()
     domain_list = get_domain_list(client)
 
     context = {}
+    context["form"] = form
     context["domainlist"] = domain_list
 
     domains = request.GET.getlist("domain", [])
-    sortby = request.GET.get("sortby", None)
-    context["sortby"] = sortby
 
-    if sortby == "ascending":
+    if form.sort == "ascending":
         sort = SortOption(field="name", ascending=True)
-    elif sortby == "descending":
+    elif form.sort == "descending":
         sort = SortOption(field="name", ascending=False)
     else:
         sort = None
@@ -134,7 +141,7 @@ def search_view(request, page: str = "1"):
         page, on_each_side=2, on_ends=1
     )
     context["paginator"] = paginator
-    context["sortby"] = sortby
+    context["sortby"] = sort
 
     if query:
         context["page_title"] = f'Search for "{query}" - Data catalogue'
