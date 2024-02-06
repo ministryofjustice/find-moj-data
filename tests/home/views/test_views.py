@@ -22,7 +22,8 @@ def generate_page(page_size=20):
         results.append(
             SearchResult(
                 id=fake.unique.name(),
-                result_type=choice((ResultType.DATA_PRODUCT, ResultType.TABLE)),
+                result_type=choice(
+                    (ResultType.DATA_PRODUCT, ResultType.TABLE)),
                 name=fake.name(),
                 description=fake.paragraphs(),
             )
@@ -56,7 +57,8 @@ class SearchViewTests(SimpleTestCase):
         mock_fn = self.patcher.start()
         self.mock_client = MagicMock(spec=BaseCatalogueClient)
         mock_fn.return_value = self.mock_client
-        self.mock_search_response(page_results=generate_page(), total_results=100)
+        self.mock_search_response(
+            page_results=generate_page(), total_results=100)
         self.mock_search_facets_response(domains=generate_options())
 
     def tearDown(self):
@@ -69,7 +71,8 @@ class SearchViewTests(SimpleTestCase):
         self.mock_client.search.return_value = search_response
 
     def mock_search_facets_response(self, domains):
-        self.mock_client.search_facets.return_value = SearchFacets({"domains": domains})
+        self.mock_client.search_facets.return_value = SearchFacets(
+            {"domains": domains})
 
     def test_renders_200(self):
         response = self.client.get(reverse("home:search"), data={})
@@ -86,6 +89,7 @@ class SearchViewTests(SimpleTestCase):
         self.assertEqual(response.context["query"], "")
 
     def test_exposes_query(self):
-        response = self.client.get(reverse("home:search"), data={"query": "foo"})
+        response = self.client.get(
+            reverse("home:search"), data={"query": "foo"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["query"], "foo")
