@@ -41,10 +41,13 @@ def search_view(request, page: str = "1"):
     else:
         form = SearchForm(request.GET)
 
-    # We need to call form.is_valid() to populate the form with the data, I believe this is why the attribute is not present.
+    #  I believe the reason we were receiving the sort attribute error is because we had an unbound form (form with no data). If we return render when new = True we should avoid this scenario.
+
+    # Where we have a populated form, check if the form is valid.
     if not form.is_valid():
         pass
-        # Populate context with form and Return
+        # Return the context and form
+        # context = {"form": form}
         # return render(request, "search.html", context)
 
     # Pass the populated form to the get_search_results service
