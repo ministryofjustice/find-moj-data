@@ -36,9 +36,19 @@ def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
     if new_search:
         form = SearchForm()
+        # I think we could populate context and return render here
+        # return render(request, "search.html", context)
     else:
         form = SearchForm(request.GET)
-    print(form)
+
+    # We need to call form.is_valid() to populate the form with the data, I believe this is why the attribute is not present.
+    if not form.is_valid():
+        pass
+        # Populate context with form and Return
+        # return render(request, "search.html", context)
+
+    # Pass the populated form to the get_search_results service
+
     query = request.GET.get("query", "")
     page_for_search = str(int(page) - 1)
     client = get_catalogue_client()
@@ -117,7 +127,8 @@ def search_view(request, page: str = "1"):
         else:
             domains = request.session.get("domains", [])
             filter_value = []
-            context["selected_domain"] = filter_seleted_domains(domain_list, domains)
+            context["selected_domain"] = filter_seleted_domains(
+                domain_list, domains)
             context["domains"] = domains
             query = request.session.get("query", "")
 
