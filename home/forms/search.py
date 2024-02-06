@@ -16,9 +16,7 @@ class SearchForm(forms.Form):
 
     new = forms.BooleanField(default=False)
     query = forms.CharField(max_length=100, strip=False, required=False)
-    domains = forms.MultipleChoiceField(
-        choices=get_domain_choices, required=False
-    )
+    domains = forms.MultipleChoiceField(choices=get_domain_choices, required=False)
     sort = forms.CharField(max_length=15, default="ascending")
     clear_filter = forms.BooleanField(default=False)
     clear_lable = forms.BooleanField(default=False)
