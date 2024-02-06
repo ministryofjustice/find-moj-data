@@ -1,14 +1,13 @@
-from data_platform_catalogue.search_types import (
-    MultiSelectFilter, ResultType, SortOption
-)
+from data_platform_catalogue.search_types import (MultiSelectFilter,
+                                                  ResultType, SortOption)
 from django.conf import settings
+from django.core.paginator import Paginator
 from django.shortcuts import render
 
-from .helper import filter_seleted_domains, get_domain_list
-from django.core.paginator import Paginator
-from .services import get_catalogue_client
-
 from home.forms.search import SearchForm
+
+from .helper import filter_seleted_domains, get_domain_list
+from .services import get_catalogue_client
 
 # Create your views here.
 
@@ -118,8 +117,7 @@ def search_view(request, page: str = "1"):
         else:
             domains = request.session.get("domains", [])
             filter_value = []
-            context["selected_domain"] = filter_seleted_domains(
-                domain_list, domains)
+            context["selected_domain"] = filter_seleted_domains(domain_list, domains)
             context["domains"] = domains
             query = request.session.get("query", "")
 

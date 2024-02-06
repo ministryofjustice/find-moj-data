@@ -18,7 +18,7 @@ def get_sort_choices():
     return [
         ("relevance", "Relevance"),
         ("ascending", "Ascending"),
-        ("descending", "Descending")
+        ("descending", "Descending"),
     ]
 
 
@@ -27,14 +27,13 @@ class SearchForm(forms.Form):
 
     new = forms.BooleanField(initial=False)
     query = forms.CharField(max_length=100, strip=False, required=False)
-    domains = forms.MultipleChoiceField(
-        choices=get_domain_choices, required=False)
+    domains = forms.MultipleChoiceField(choices=get_domain_choices, required=False)
     sort = forms.ChoiceField(
         choices=get_sort_choices,
         widget=forms.RadioSelect(
             attrs={"class": "govuk-radios__input", "form": "searchform"}
         ),
-        initial="relevance"
+        initial="relevance",
     )
     clear_filter = forms.BooleanField(initial=False)
     clear_label = forms.BooleanField(initial=False)
