@@ -27,7 +27,12 @@ def get_sort_choices():
 class SearchForm(forms.Form):
     """Django form to represent data product search page inputs"""
 
-    query = forms.CharField(max_length=100, strip=False, required=False)
+    query = forms.CharField(
+        max_length=100, strip=False,
+        required=False, widget=forms.TextInput(
+            attrs={"class": "govuk-input search-input"}
+            )
+        )
     domains = forms.MultipleChoiceField(
         choices=get_domain_choices,
         required=False,
@@ -38,7 +43,11 @@ class SearchForm(forms.Form):
     sort = forms.ChoiceField(
         choices=get_sort_choices,
         widget=forms.RadioSelect(
-            attrs={"class": "govuk-radios__input", "form": "searchform"}
+            attrs={
+                "class": "govuk-radios__input",
+                "form": "searchform",
+                "onchange":"document.getElementById('searchform').submit();",
+            }
         ),
         initial="relevance",
         required=False,
