@@ -7,7 +7,7 @@
         <div class="moj-filter__header-action">
         </div>
       </div>
-    
+
       <div class="moj-filter__content">
         <div class="moj-filter__selected">
           <div class="moj-filter__selected-heading">
@@ -25,7 +25,7 @@
             </p>
             </div>
           </div>
-          {% if selected_domain %}
+          <!-- {% if selected_domain %}
           <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
           <ul class="moj-filter-tags">
             <input type="hidden" name="clear_label" value="">
@@ -33,9 +33,22 @@
             <li><a class="moj-filter__tag govuk-link" href="{% url 'home:search' %}?clear_label=True&value={{value}}" onclick="document.getElementById('searchform').submit();"><span class="govuk-visually-hidden">Remove this filter</span> {{label}}</a></li>
             {% endfor %}
           </ul>
+          {% endif %} -->
+
+
+          {% if form.domains.value %}
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
+            <ul class="moj-filter-tags">
+              <input type="hidden" name="clear_label" value="">
+              {% for domain in form.domains.fields %}
+                <!-- {% if domain.data.checked %} -->
+                <li><a class="moj-filter__tag govuk-link" href="{% url 'home:search' %}?clear_label=True&value={{value}}" onclick="document.getElementById('searchform').submit();"><span class="govuk-visually-hidden">Remove this filter</span>{{domain.choice_label}}</a></li>
+                <!-- {% endif %} -->
+              {% endfor %}
+            </ul>
           {% endif %}
         </div>
-        <div class="moj-filter__options">            
+        <div class="moj-filter__options">
             <button form="searchform" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
               Apply filters
             </button>
@@ -43,14 +56,18 @@
               <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                  {% for option in domainlist%}
+                  {% for domain_option in form.domains %}
                       <div class="govuk-checkboxes__item">
-                          <input form="searchform" class="govuk-checkboxes__input" id="domain-{{ option|lower }}" name="domain" type="checkbox" value="{{ option.value }}" {% if option.value in selected_domain.keys %}checked{% endif %}>
-                          <label class="govuk-label govuk-checkboxes__label" for="domain-{{ option.value|lower }}">{{ option.label }}</label>
+                        {{ domain_option.tag}}
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ domain_option.id_for_label }}">
+                          {{domain_option.choice_label}}
+                        </label>
+                          <!-- <input form="searchform" class="govuk-checkboxes__input" id="domain-{{ option|lower }}" name="domain" type="checkbox" value="{{ value }}" {% if option.value in selected_domain.keys %}checked{% endif %}>
+                          <label class="govuk-label govuk-checkboxes__label" for="domain-{{ option.value|lower }}">{{ text }}</label> -->
                       </div>
                   {% endfor %}
                 </div>
-              </fieldset> 
+              </fieldset>
             </div>
         </div>
       </div>

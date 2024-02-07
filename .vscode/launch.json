@@ -10,9 +10,6 @@
             "request": "launch",
             "program": "${workspaceFolder}/manage.py",
             "args": [
-                "poetry",
-                "run",
-                "python",
                 "runserver"
             ],
             "django": true

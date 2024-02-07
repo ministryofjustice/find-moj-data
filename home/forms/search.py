@@ -1,5 +1,7 @@
 from django import forms
 
+# from home.helper import get_domain_list
+
 
 def get_domain_choices():
     """Make API call to obtain domain choices"""
@@ -25,18 +27,24 @@ def get_sort_choices():
 class SearchForm(forms.Form):
     """Django form to represent data product search page inputs"""
 
-    new = forms.BooleanField(initial=False)
     query = forms.CharField(max_length=100, strip=False, required=False)
-    domains = forms.MultipleChoiceField(choices=get_domain_choices, required=False)
+    domains = forms.MultipleChoiceField(
+        choices=get_domain_choices,
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
+        ),
+    )
     sort = forms.ChoiceField(
         choices=get_sort_choices,
         widget=forms.RadioSelect(
             attrs={"class": "govuk-radios__input", "form": "searchform"}
         ),
         initial="relevance",
+        required=False,
     )
-    clear_filter = forms.BooleanField(initial=False)
-    clear_label = forms.BooleanField(initial=False)
+    clear_filter = forms.BooleanField(initial=False, required=False)
+    clear_label = forms.BooleanField(initial=False, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

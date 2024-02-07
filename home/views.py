@@ -34,108 +34,122 @@ def details_view(request, id):
 
 def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
+    client = get_catalogue_client()
+    context = {}
+
     if new_search:
         form = SearchForm()
-        # I think we could populate context and return render here
-        # return render(request, "search.html", context)
-    else:
-        form = SearchForm(request.GET)
+        context["form"] = form
+        search_results = client.search(page=page)
 
-    #  I believe the reason we were receiving the sort attribute error is because we had an unbound form (form with no data). If we return render when new = True we should avoid this scenario.
+        items_per_page = 20
+        pages_list = list(range(search_results.total_results))
+        paginator = Paginator(pages_list, items_per_page)
 
-    # Where we have a populated form, check if the form is valid.
+        context["results"] = search_results.page_results
+        context["total_results"] = search_results.total_results
+        context["page_obj"] = paginator.get_page(page)
+        context["page_range"] = paginator.get_elided_page_range(
+            page, on_each_side=2, on_ends=1
+        )
+        context["paginator"] = paginator
+        return render(request, "search.html", context)
+
+    # Populated search scenario
+    form = SearchForm(request.GET)
     if not form.is_valid():
-        pass
-        # Return the context and form
-        # context = {"form": form}
-        # return render(request, "search.html", context)
+        print("form error on validation")
+        print(form.errors)
 
-    # Pass the populated form to the get_search_results service
+    form_data = form.cleaned_data
+    query = form_data.get("query")
+    sortby = form_data.get("sort")
 
-    query = request.GET.get("query", "")
-    page_for_search = str(int(page) - 1)
-    client = get_catalogue_client()
-    domain_list = get_domain_list(client)
-
-    context = {}
-    context["form"] = form
-    context["domainlist"] = domain_list
-
-    domains = request.GET.getlist("domain", [])
-
-    if form.sort == "ascending":
+    if sortby == "ascending":
         sort = SortOption(field="name", ascending=True)
-    elif form.sort == "descending":
+    elif sortby == "descending":
         sort = SortOption(field="name", ascending=False)
     else:
         sort = None
 
-    if domains:
-        selected_domain = filter_seleted_domains(domain_list, domains)
-        context["selected_domain"] = selected_domain
-        request.session["selected_domain"] = selected_domain
-        request.session["domains"] = domains
-        filter_value = [MultiSelectFilter("domains", domains)]
-        query = request.session.get("query", "")
-    elif request.GET.get("clear_filter") == "True":
-        filter_value = []
-        context["selected_domain"] = {}
-        request.session["selected_domain"] = {}
-        request.session["domains"] = []
-        query = request.session.get("query", "")
-    elif request.GET.get("clear_label") == "True":
-        # Value to clear
-        label_value = request.GET.getlist("value")
+    domains = form_data.get("domains")
+    print(f"Checked domains {domains}")
+    # if domains:
+    #     selected_domain = filter_seleted_domains(domain_list, domains)
+    #     context["selected_domain"] = selected_domain
+    #     request.session["selected_domain"] = selected_domain
+    #     request.session["domains"] = domains
+    #     filter_value = [MultiSelectFilter("domains", domains)]
+    #     query = request.session.get("query", "")
 
-        # Remove the selected value from list
-        domains = request.session.get("domains", None)
-        domains = list(set(domains) - set(label_value))
-        # Populated selected domain
-        selected_domain = filter_seleted_domains(domain_list, domains)
-        context["domains"] = domains
-        context["selected_domain"] = selected_domain
+    page_for_search = str(int(page) - 1)
+    # client = get_catalogue_client()
 
-        # Reassign to session
-        request.session["selected_domain"] = selected_domain
-        request.session["domains"] = domains
-        query = request.session.get("query", "")
+    # elif request.GET.get("clear_filter") == "True":
+    #     filter_value = []
+    #     context["selected_domain"] = {}
+    #     request.session["selected_domain"] = {}
+    #     request.session["domains"] = []
+    #     query = request.session.get("query", "")
+    # elif request.GET.get("clear_label") == "True":
+    #     # Value to clear
+    #     label_value = request.GET.getlist("value")
 
-        if not domains:
-            filter_value = []
-        else:
-            filter_value = [MultiSelectFilter("domains", domains)]
+    #     # Remove the selected value from list
+    #     domains = request.session.get("domains", None)
+    #     domains = list(set(domains) - set(label_value))
+    #     # Populated selected domain
+    #     selected_domain = filter_seleted_domains(domain_list, domains)
+    #     context["domains"] = domains
+    #     context["selected_domain"] = selected_domain
 
-    elif request.GET.get("query"):
-        query = request.GET.get("query")
-        domains = request.session.get("domains", None)
-        request.session["query"] = query
-        context["query"] = query
-        domains = request.session.get("domains", [])
+    #     # Reassign to session
+    #     request.session["selected_domain"] = selected_domain
+    #     request.session["domains"] = domains
+    #     query = request.session.get("query", "")
 
-        # Preserve filter
-        selected_domain = filter_seleted_domains(domain_list, domains)
-        if not domains:
-            filter_value = []
-        else:
-            context["selected_domain"] = selected_domain
-            context["domains"] = domains
-            filter_value = [MultiSelectFilter("domains", domains)]
-    else:
-        if page == "1" and new_search:
-            filter_value = []
-            request.session.clear()
-            request.session["domains"] = domains
-            context["selected_domain"] = {}
-            context["query"] = ""
-        else:
-            domains = request.session.get("domains", [])
-            filter_value = []
-            context["selected_domain"] = filter_seleted_domains(
-                domain_list, domains)
-            context["domains"] = domains
-            query = request.session.get("query", "")
+    #     if not domains:
+    #         filter_value = []
+    #     else:
+    #         filter_value = [MultiSelectFilter("domains", domains)]
+
+    # elif request.GET.get("query"):
+    #     query = request.GET.get("query")
+    #     domains = request.session.get("domains", None)
+    #     request.session["query"] = query
+    #     context["query"] = query
+    #     domains = request.session.get("domains", [])
+
+    #     # Preserve filter
+    #     selected_domain = filter_seleted_domains(domain_list, domains)
+    #     if not domains:
+    #         filter_value = []
+    #     else:
+    #         context["selected_domain"] = selected_domain
+    #         context["domains"] = domains
+    #         filter_value = [MultiSelectFilter("domains", domains)]
+    # else:
+    #     if page == "1" and new_search:
+    #         filter_value = []
+    #         request.session.clear()
+    #         request.session["domains"] = domains
+    #         context["selected_domain"] = {}
+    #         context["query"] = ""
+    #     else:
+    #         domains = request.session.get("domains", [])
+    #         filter_value = []
+    #         context["selected_domain"] = filter_seleted_domains(
+    #             domain_list, domains)
+    #         context["domains"] = domains
+    #         query = request.session.get("query", "")
 
     # Search with filter
+    if domains:
+        filter_value = [MultiSelectFilter("domains", domains)]
+    else:
+        filter_value = None
+
+    page_for_search = str(int(page) - 1)
 
     search_results = client.search(
         query=query, page=page_for_search, filters=filter_value, sort=sort
@@ -145,7 +159,8 @@ def search_view(request, page: str = "1"):
     pages_list = list(range(search_results.total_results))
     paginator = Paginator(pages_list, items_per_page)
 
-    context["query"] = query
+    context["form"] = form
+    # context["query"] = query
     context["results"] = search_results.page_results
     context["total_results"] = search_results.total_results
     context["page_obj"] = paginator.get_page(page)
@@ -153,7 +168,7 @@ def search_view(request, page: str = "1"):
         page, on_each_side=2, on_ends=1
     )
     context["paginator"] = paginator
-    context["sortby"] = sort
+    # context["sortby"] = sort
 
     if query:
         context["page_title"] = f'Search for "{query}" - Data catalogue'
