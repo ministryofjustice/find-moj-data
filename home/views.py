@@ -1,5 +1,8 @@
-from data_platform_catalogue.search_types import (MultiSelectFilter,
-                                                  ResultType, SortOption)
+from data_platform_catalogue.search_types import (
+    MultiSelectFilter,
+    ResultType,
+    SortOption,
+)
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.shortcuts import render
@@ -36,13 +39,13 @@ def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
     client = get_catalogue_client()
     context = {}
+    items_per_page = 2
 
     if new_search:
         form = SearchForm()
         context["form"] = form
-        search_results = client.search(page=page)
+        search_results = client.search(page=page, count=items_per_page)
 
-        items_per_page = 20
         pages_list = list(range(search_results.total_results))
         paginator = Paginator(pages_list, items_per_page)
 
@@ -147,15 +150,17 @@ def search_view(request, page: str = "1"):
     if domains:
         filter_value = [MultiSelectFilter("domains", domains)]
     else:
-        filter_value = None
+        filter_value = []
 
     page_for_search = str(int(page) - 1)
 
     search_results = client.search(
-        query=query, page=page_for_search, filters=filter_value, sort=sort
+        query=query,
+        page=page_for_search,
+        filters=filter_value,
+        sort=sort,
+        count=items_per_page,
     )
-
-    items_per_page = 20
     pages_list = list(range(search_results.total_results))
     paginator = Paginator(pages_list, items_per_page)
 
