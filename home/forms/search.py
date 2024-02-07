@@ -9,10 +9,10 @@ def get_domain_choices():
     # facets = client.search_facets()
     # domain_list = facets.options("domains")
     return [
-        ("HMCTS", "HMCTS"),
-        ("HMPPS", "HMPPS"),
-        ("OPG", "OPG"),
-        ("HQ", "HQ"),
+        ("urn:li:domain:HMCTS", "HMCTS"),
+        ("urn:li:domain:HMPPS", "HMPPS"),
+        ("urn:li:domain:OPG", "OPG"),
+        ("urn:li:domain:HQ", "HQ"),
     ]
 
 
