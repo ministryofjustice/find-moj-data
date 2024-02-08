@@ -30,11 +30,11 @@ class SearchForm(forms.Form):
     """Django form to represent data product search page inputs"""
 
     query = forms.CharField(
-        max_length=100, strip=False,
-        required=False, widget=forms.TextInput(
-            attrs={"class": "govuk-input search-input"}
-            )
-        )
+        max_length=100,
+        strip=False,
+        required=False,
+        widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
+    )
     domains = forms.MultipleChoiceField(
         choices=get_domain_choices,
         required=False,
@@ -48,7 +48,7 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-radios__input",
                 "form": "searchform",
-                "onchange":"document.getElementById('searchform').submit();",
+                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
         initial="relevance",
@@ -65,14 +65,13 @@ class SearchForm(forms.Form):
         """Example clean method to apply custom validation to input fields"""
         return str(self.cleaned_data["query"]).capitalize()
 
-    def link_without_filter(self, filter_to_remove):
+    def encode_without_filter(self, filter_to_remove):
         """Preformat hrefs to drop individual filters"""
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)
 
-        query_params['domains'].remove(filter_to_remove)
-        if len(query_params['domains']) == 0:
+        query_params["domains"].remove(filter_to_remove)
+        if len(query_params["domains"]) == 0:
             query_params.pop("domains")
 
         return f"?{urlencode(query_params, doseq=True)}"
-
