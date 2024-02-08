@@ -18,7 +18,7 @@
             <div class="moj-filter__heading-action">
               <p>
                 <a class="govuk-link govuk-link--no-visited-state"
-              href="{% url 'home:search' %}?clear_filter=True"
+              href="{% url 'home:search' %}{% query_string domains=None %}"
               id="clear_filter"
             >
                 Clear filter
