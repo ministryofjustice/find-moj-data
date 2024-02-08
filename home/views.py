@@ -1,6 +1,9 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from django.shortcuts import render
 
 from home.forms.search import SearchForm
+from home.service.details import DetailsService
 from home.service.search import SearchService
 
 
@@ -10,22 +13,14 @@ def home_view(request):
 
 
 def details_view(request, id):
-    # search_service = SearchService(form)
-    # context = search_service.context
+    try:
+        service = DetailsService(id)
+    except ObjectDoesNotExist:
+        raise Http404("Asset does not exist")
 
-    # context = {}
-    # # client = get_catalogue_client()
-    # filter_value = [MultiSelectFilter("urn", id)]
-    # search_results = client.search(query="", page=None, filters=filter_value)
-    # result = search_results.page_results[0]
-    # context["result"] = result
-    # context["result_type"] = (
-    #     "Data product" if result.result_type == ResultType.DATA_PRODUCT else "Table"
-    # )
-    # context["page_title"] = f"{result.name} - Data catalogue"
+    context = service.context
 
-    # return render(request, "details.html", context)
-    pass
+    return render(request, "details.html", context)
 
 
 def search_view(request, page: str = "1"):
