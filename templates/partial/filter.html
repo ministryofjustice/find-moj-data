@@ -1,3 +1,4 @@
+{% load future %}
 <div class="govuk-grid-column-one-third">
     <div class="moj-filter">
       <div class="moj-filter__header">
@@ -40,11 +41,10 @@
             <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
             <ul class="moj-filter-tags">
               <input type="hidden" name="clear_label" value="">
-              
-              {% for domain in form.domains %}
-                {% if domain.data.selected %}
-                <li><a class="moj-filter__tag govuk-link" href="{% url 'home:search' %}?clear_label=True&value={{value}}"><span class="govuk-visually-hidden">Remove this filter</span>{{domain.choice_label}}</a></li>
-                {% endif %}
+              {% for label, href in label_clear_href.items %}
+                <li><a class="moj-filter__tag govuk-link" href="{{ href }}">
+                  {{label}}<span class="govuk-visually-hidden">Remove this filter</span>
+                </a></li>
               {% endfor %}
             </ul>
           {% endif %}

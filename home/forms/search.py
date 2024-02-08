@@ -1,4 +1,6 @@
+from copy import deepcopy
 from django import forms
+from urllib.parse import urlencode
 
 # from home.helper import get_domain_list
 
@@ -62,3 +64,15 @@ class SearchForm(forms.Form):
     def clean_query(self):
         """Example clean method to apply custom validation to input fields"""
         return str(self.cleaned_data["query"]).capitalize()
+
+    def link_without_filter(self, filter_to_remove):
+        """Preformat hrefs to drop individual filters"""
+        # Deepcopy the cleaned data dict to avoid modifying it inplace
+        query_params = deepcopy(self.cleaned_data)
+
+        query_params['domains'].remove(filter_to_remove)
+        if len(query_params['domains']) == 0:
+            query_params.pop("domains")
+
+        return f"?{urlencode(query_params, doseq=True)}"
+

@@ -76,14 +76,6 @@ def search_view(request, page: str = "1"):
         sort = None
 
     domains = form_data.get("domains")
-    print(f"Checked domains {domains}")
-    # if domains:
-    #     selected_domain = filter_seleted_domains(domain_list, domains)
-    #     context["selected_domain"] = selected_domain
-    #     request.session["selected_domain"] = selected_domain
-    #     request.session["domains"] = domains
-    #     filter_value = [MultiSelectFilter("domains", domains)]
-    #     query = request.session.get("query", "")
 
     page_for_search = str(int(page) - 1)
     # client = get_catalogue_client()
@@ -116,35 +108,6 @@ def search_view(request, page: str = "1"):
     #     else:
     #         filter_value = [MultiSelectFilter("domains", domains)]
 
-    # elif request.GET.get("query"):
-    #     query = request.GET.get("query")
-    #     domains = request.session.get("domains", None)
-    #     request.session["query"] = query
-    #     context["query"] = query
-    #     domains = request.session.get("domains", [])
-
-    #     # Preserve filter
-    #     selected_domain = filter_seleted_domains(domain_list, domains)
-    #     if not domains:
-    #         filter_value = []
-    #     else:
-    #         context["selected_domain"] = selected_domain
-    #         context["domains"] = domains
-    #         filter_value = [MultiSelectFilter("domains", domains)]
-    # else:
-    #     if page == "1" and new_search:
-    #         filter_value = []
-    #         request.session.clear()
-    #         request.session["domains"] = domains
-    #         context["selected_domain"] = {}
-    #         context["query"] = ""
-    #     else:
-    #         domains = request.session.get("domains", [])
-    #         filter_value = []
-    #         context["selected_domain"] = filter_seleted_domains(
-    #             domain_list, domains)
-    #         context["domains"] = domains
-    #         query = request.session.get("query", "")
 
     # Search with filter
     if domains:
@@ -173,6 +136,11 @@ def search_view(request, page: str = "1"):
         page, on_each_side=2, on_ends=1
     )
     context["paginator"] = paginator
+
+    if domains:
+        context["label_clear_href"] = {
+            filter.split(":")[-1] : form.link_without_filter(filter) for filter in domains
+        }
     # context["sortby"] = sort
 
     if query:
