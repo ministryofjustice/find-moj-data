@@ -5,7 +5,7 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/set-identifier: find-moj-data-ingress-${NAMESPACE}-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
-    nginx.ingress.kubernetes.io/whitelist-source-range: 195.59.75.0/24,194.33.192.0/25,194.33.193.0/25,194.33.196.0/25,194.33.197.0/25,51.149.250.0/24,51.149.251.0/24,35.176.93.186
+    nginx.ingress.kubernetes.io/whitelist-source-range: 195.59.75.0/24,194.33.192.0/25,194.33.193.0/25,194.33.196.0/25,194.33.197.0/25,51.149.250.0/24,51.149.251.0/24,35.176.93.186/32
 spec:
   ingressClassName: default
   tls:
