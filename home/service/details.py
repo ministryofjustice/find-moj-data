@@ -10,7 +10,8 @@ class DetailsService(GenericService):
         self.client = self._get_catalogue_client()
 
         filter_value = [MultiSelectFilter("urn", [urn])]
-        search_results = self.client.search(query="", page=None, filters=filter_value)
+        search_results = self.client.search(
+            query="", page=None, filters=filter_value)
 
         if not search_results.page_results:
             raise ObjectDoesNotExist(urn)
