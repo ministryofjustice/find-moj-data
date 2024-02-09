@@ -51,7 +51,6 @@ class SearchForm(forms.Form):
                 "onchange": "document.getElementById('searchform').submit();",
             }
         ),
-        initial="relevance",
         required=False,
     )
     clear_filter = forms.BooleanField(initial=False, required=False)
