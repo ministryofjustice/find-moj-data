@@ -25,7 +25,8 @@ class SearchService(GenericService):
         query = form_data.get("query", "")
         sort = form_data.get("sort", "relevance")
         domains = form_data.get("domains", [])
-        filter_value = [MultiSelectFilter("domains", domains)] if domains else []
+        filter_value = [MultiSelectFilter(
+            "domains", domains)] if domains else []
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
             sort_option = SortOption(field="name", ascending=True)
