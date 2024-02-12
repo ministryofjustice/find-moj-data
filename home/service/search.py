@@ -52,8 +52,8 @@ class SearchService(GenericService):
 
     def _get_context(self) -> dict[str, Any]:
 
-        if self.form["query"].value:
-            page_title = f'Search for "{self.form["query"].value}" - Data catalogue'
+        if self.form["query"].value():
+            page_title = f'Search for "{self.form["query"].value()}" - Data catalogue'
         else:
             page_title = "Search - Data catalogue"
 
