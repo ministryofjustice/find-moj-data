@@ -1,8 +1,9 @@
 {% load markdown %}
 {% load humanize %}
+<div id="search-results">
 {% for result in results %}
 
-<div class="govuk-grid-row" id="search_result">
+<div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
           <a href="{% url 'home:details' id=result.id %}" class="govuk-link">{{result.name}}</a>
@@ -52,3 +53,4 @@
     </div>
   </div>
 {%endfor%}
+</div>
