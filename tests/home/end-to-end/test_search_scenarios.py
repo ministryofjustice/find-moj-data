@@ -55,12 +55,21 @@ class SearchPage:
     def search_bar(self: HasSelenium) -> WebElement:
         return self.selenium.find_element(By.NAME, "query")
 
+    def search_button(self: HasSelenium) -> WebElement:
+        return self.selenium.find_element(By.CLASS_NAME, "search-button")
+
     def checked_domain_checkboxes(self: HasSelenium) -> list[WebElement]:
         return self.selenium.find_elements(
             By.CSS_SELECTOR, "input:checked[name='domains']"
         )
 
+    def checked_sort_option(self: HasSelenium) -> WebElement:
+        return self.selenium.find_element(By.CSS_SELECTOR, "input:checked[name='sort']")
+
     def domain_label(self: HasSelenium, name) -> WebElement:
+        return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
+
+    def sort_label(self: HasSelenium, name) -> WebElement:
         return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
 
     def selected_filter_tags(self: HasSelenium) -> list[WebElement]:
@@ -68,15 +77,35 @@ class SearchPage:
             By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
         )
 
-    def apply_filters_button(self: HasSelenium):
+    def apply_filters_button(self: HasSelenium) -> WebElement:
         return self.selenium.find_element(
             By.CSS_SELECTOR, 'button[data-test-id="apply-filters"]'
         )
+
+    def current_page(self: HasSelenium) -> WebElement:
+        return self.selenium.find_element(
+            By.CLASS_NAME, "govuk-pagination__item--current"
+        )
+
+    def next_page(self: HasSelenium) -> WebElement:
+        return self.selenium.find_element(
+            By.CLASS_NAME, "govuk-pagination__next"
+        ).find_element(By.TAG_NAME, "a")
+
+    def previous_page(self: HasSelenium) -> WebElement:
+        return self.selenium.find_element(
+            By.CLASS_NAME, "govuk-pagination__prev"
+        ).find_element(By.TAG_NAME, "a")
 
 
 class TestSearchWithoutJavascriptAndCss(
     LiveServerTestCase, HomePage, SearchPage, LayoutHelpers
 ):
+    """
+    Test interacting with the search form through the browser,
+    as a user would
+    """
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -93,7 +122,7 @@ class TestSearchWithoutJavascriptAndCss(
         self.assertIn("Data catalogue", self.title)
 
     def start_on_the_search_page(self):
-        self.selenium.get(f"{self.live_server_url}/search")
+        self.selenium.get(f"{self.live_server_url}/search?new=True")
         self.assertIn("Search", self.title)
 
     def click_on_the_search_button(self):
@@ -130,6 +159,12 @@ class TestSearchWithoutJavascriptAndCss(
         for domain in domains:
             self.domain_label(domain).click()
 
+    def click_sort_option(self, sortby):
+        self.sort_label(sortby).click()
+
+    def click_search_button(self):
+        self.search_button().click()
+
     def click_apply_filters(self):
         self.apply_filters_button().click()
 
@@ -152,8 +187,24 @@ class TestSearchWithoutJavascriptAndCss(
         expected = set(domains)
         self.assertEquals(actual, expected)
 
+    def verify_page(self, expected):
+        current_page = self.current_page()
+        self.assertEquals(current_page.text, expected)
+
+    def click_next_page(self):
+        self.next_page().click()
+
+    def click_previous_page(self):
+        self.previous_page().click()
+
+    def verify_sort_selected(self, expected):
+        value = self.checked_sort_option().get_attribute("value") or ""
+        self.assertEquals(value, expected.lower())
+
     def test_browse_to_first_item(self):
         """
+        Browses from the home page -> search -> details page
+
         TODO: incorporate screenshots for debugging
         Convert to pytest
         See if we can stub out the actual catalogue
@@ -168,6 +219,9 @@ class TestSearchWithoutJavascriptAndCss(
         self.verify_i_am_on_the_details_page(item_name)
 
     def test_search_with_query(self):
+        """
+        Types a search query and press enter
+        """
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("nomis")
         self.verify_i_am_on_the_search_page()
@@ -175,6 +229,9 @@ class TestSearchWithoutJavascriptAndCss(
         self.verify_i_have_results()
 
     def test_apply_domain_filters(self):
+        """
+        Interacts with the filters on the left hand side
+        """
         self.start_on_the_search_page()
         self.select_domain(["HMCTS", "HMPPS"])
         self.click_apply_filters()
@@ -182,3 +239,29 @@ class TestSearchWithoutJavascriptAndCss(
         self.verify_i_have_results()
         self.verify_domain_selected(["HMCTS", "HMPPS"])
         self.verify_selected_filters_shown(["HMCTS", "HMPPS"])
+
+    def test_pagination(self):
+        """
+        Interact with the pagination component
+        """
+        self.start_on_the_search_page()
+        self.verify_page("1")
+        self.click_next_page()
+        self.verify_page("2")
+        self.click_previous_page()
+        self.verify_page("1")
+
+    def test_sorting(self):
+        """
+        Interact with the sort control. Note: without javascript, this requires
+        the form to be submitted by pressing a button.
+        """
+        self.start_on_the_search_page()
+
+        # FIXME: this isn't preselected if the `new` query param is missing
+        self.verify_sort_selected("Relevance")
+
+        self.click_sort_option("Ascending")
+        self.click_search_button()
+        self.verify_i_have_results()
+        self.verify_sort_selected("Ascending")
