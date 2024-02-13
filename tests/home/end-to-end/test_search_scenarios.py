@@ -66,35 +66,45 @@ class TestSearchWithoutJavascriptAndCss(
         cls.selenium.quit()
         super().tearDownClass()
 
+    def start_on_the_home_page(self):
+        self.selenium.get(f"{self.live_server_url}")
+        self.assertIn("Data catalogue", self.selenium.title)
+
+    def click_on_the_search_button(self):
+        self.search_nav_link().click()
+
+    def verify_i_am_on_the_search_page(self):
+        self.assertIn("Search", self.selenium.title)
+        self.assertIn("Find MOJ Data", self.primary_heading().text)
+
+    def verify_i_have_results(self):
+        result_count = self.result_count().text
+        self.assertRegex(result_count, r"\d+ Results")
+
+    def click_on_the_first_result(self):
+        first_result = self.first_search_result()
+        self.assertTrue(first_result.text)
+
+        first_link = first_result.link()
+        item_name = first_link.text
+        first_link.click()
+        return item_name
+
+    def verify_i_am_on_the_details_page(self, item_name):
+        self.assertIn(item_name, self.title)
+        secondary_heading_text = self.secondary_heading().text
+        self.assertEquals(secondary_heading_text, item_name)
+
     def test_browse_to_first_item(self):
         """
         TODO: incorporate screenshots for debugging
         Convert to pytest
         Tag the test so it doesn't slow down the main CI job
-        Factor out steps
         """
-        # Navigate to search page
-        self.selenium.get(f"{self.live_server_url}")
-        self.assertIn("Data catalogue", self.selenium.title)
+        self.start_on_the_home_page()
+        self.click_on_the_search_button()
+        self.verify_i_am_on_the_search_page()
+        self.verify_i_have_results()
 
-        self.search_nav_link().click()
-        self.assertIn("Search", self.selenium.title)
-        self.assertIn("Find MOJ Data", self.primary_heading().text)
-
-        # Read number of results
-        result_count = self.result_count().text
-        self.assertRegex(result_count, r"\d+ Results")
-
-        # Read first result
-        first_result = self.first_search_result()
-        self.assertTrue(first_result.text)
-
-        # Click the link
-        first_link = first_result.link()
-        item_name = first_link.text
-        first_link.click()
-
-        # Verify we are on the details page
-        self.assertIn(item_name, self.title)
-        secondary_heading_text = self.secondary_heading().text
-        self.assertEquals(secondary_heading_text, item_name)
+        item_name = self.click_on_the_first_result()
+        self.verify_i_am_on_the_details_page(item_name)
