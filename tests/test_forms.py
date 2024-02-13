@@ -1,6 +1,7 @@
 from home.forms.search import SearchForm
 import pytest
 
+
 @pytest.fixture
 def valid_form():
     valid_form = SearchForm(
@@ -15,6 +16,7 @@ def valid_form():
     assert valid_form.is_valid()
 
     return valid_form
+
 
 class TestSearchForm:
     def test_query_field_length(self):
