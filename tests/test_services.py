@@ -7,7 +7,8 @@ class TestSearchService:
         assert search_context["form"] == valid_form
 
     def test_get_context_search_result(self, mock_catalogue, search_context):
-        assert search_context["results"] == mock_catalogue.search().page_results
+        assert search_context["results"] == mock_catalogue.search(
+        ).page_results
         assert search_context["total_results"] == 100
 
     def test_get_context_paginator(self, search_context):
@@ -26,7 +27,8 @@ class TestSearchService:
 
 class TestDetailsService:
     def test_get_context(self, detail_context, mock_catalogue):
-        assert detail_context["result"] == mock_catalogue.search().page_results[0]
+        assert detail_context["result"] == mock_catalogue.search(
+        ).page_results[0]
         result_type = (
             "Data product"
             if mock_catalogue.search().page_results[0].result_type
