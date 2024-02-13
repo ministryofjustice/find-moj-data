@@ -1,3 +1,4 @@
+import subprocess
 from typing import Protocol
 
 from django.contrib.staticfiles.testing import LiveServerTestCase
@@ -119,6 +120,11 @@ class TestSearchWithoutJavascriptAndCss(
     Test interacting with the search form through the browser,
     as a user would
     """
+
+    def check_for_accessibility_issues(self):
+        command = ["npx", "@axe-core/cli", "-q", self.selenium.current_url]
+        output = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual(output.returncode, 0, output.stdout)
 
     @classmethod
     def setUpClass(cls):
@@ -338,3 +344,11 @@ class TestSearchWithoutJavascriptAndCss(
         self.click_clear_filters()
 
         self.verify_domain_selected([])
+
+    def test_automated_accessibility_home(self):
+        self.start_on_the_home_page()
+        self.check_for_accessibility_issues()
+
+    def test_automated_accessibility_search(self):
+        self.start_on_the_search_page()
+        self.check_for_accessibility_issues()
