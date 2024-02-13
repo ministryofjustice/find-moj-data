@@ -6,6 +6,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class HasSelenium(Protocol):
@@ -77,6 +79,18 @@ class SearchPage:
             By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
         )
 
+    def selected_filter_tag(self: HasSelenium, value) -> WebElement:
+        for result in self.selenium.find_elements(
+            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
+        ):
+            if result.text == value:
+                return result
+
+        raise Exception(f"No selected filter with text {value}")
+
+    def clear_filters(self: HasSelenium) -> WebElement:
+        return self.selenium.find_element(By.ID, "clear_filter")
+
     def apply_filters_button(self: HasSelenium) -> WebElement:
         return self.selenium.find_element(
             By.CSS_SELECTOR, 'button[data-test-id="apply-filters"]'
@@ -116,6 +130,9 @@ class TestSearchWithoutJavascriptAndCss(
     def tearDownClass(cls):
         cls.selenium.quit()
         super().tearDownClass()
+
+    def wait_for_url_change(self, current_url):
+        WebDriverWait(self.selenium, 10).until(EC.url_changes(current_url))
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
@@ -167,6 +184,12 @@ class TestSearchWithoutJavascriptAndCss(
 
     def click_apply_filters(self):
         self.apply_filters_button().click()
+
+    def click_clear_selected_filter(self, name):
+        self.selected_filter_tag(name).click()
+
+    def click_clear_filters(self):
+        self.clear_filters().click()
 
     def verify_the_search_bar_has_value(self, query):
         search_bar = self.search_bar()
@@ -265,3 +288,53 @@ class TestSearchWithoutJavascriptAndCss(
         self.click_search_button()
         self.verify_i_have_results()
         self.verify_sort_selected("Ascending")
+
+    def test_filters_query_and_sort_persist(self):
+        self.start_on_the_search_page()
+        self.select_domain(["HMCTS", "HMPPS"])
+        self.click_apply_filters()
+        self.enter_a_query_and_submit("nomis")
+        self.click_sort_option("Ascending")
+        self.click_search_button()
+
+        self.verify_i_have_results()
+        self.verify_the_search_bar_has_value("nomis")
+        self.verify_domain_selected(["HMCTS", "HMPPS"])
+        self.verify_sort_selected("Ascending")
+
+    def test_adding_a_query_resets_pagination(self):
+        self.start_on_the_search_page()
+        self.click_next_page()
+        self.verify_page("2")
+        current_url = self.selenium.current_url
+
+        self.enter_a_query_and_submit("nomis")
+        self.wait_for_url_change(current_url)
+        self.verify_page("1")
+
+    def test_adding_a_filter_resets_pagination(self):
+        self.start_on_the_search_page()
+        self.click_next_page()
+        self.verify_page("2")
+        current_url = self.selenium.current_url
+
+        self.select_domain(["HMPPS"])
+        self.click_apply_filters()
+        self.wait_for_url_change(current_url)
+        self.verify_page("1")
+
+    def test_clear_single_filter(self):
+        self.start_on_the_search_page()
+        self.select_domain(["HMPPS", "HMCTS"])
+        self.click_apply_filters()
+        self.click_clear_selected_filter("HMPPS")
+
+        self.verify_domain_selected(["HMCTS"])
+
+    def test_clear_all_filters(self):
+        self.start_on_the_search_page()
+        self.select_domain(["HMPPS", "HMCTS"])
+        self.click_apply_filters()
+        self.click_clear_filters()
+
+        self.verify_domain_selected([])
