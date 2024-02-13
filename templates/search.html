@@ -23,7 +23,7 @@
 <div class="govuk-grid-row">
   {% include "partial/filter.html" %}
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-l govuk-!-display-inline-block">{{total_results|intcomma}} Results</h2>
+    <h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{{total_results|intcomma}} Results</h2>
       {% include "partial/sort.html" %}
       {% include "partial/search_result.html" %}
       {% include "partial/pagination.html" %}
