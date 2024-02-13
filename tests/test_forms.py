@@ -1,21 +1,22 @@
-from django.test import TestCase
 from home.forms.search import SearchForm
+import pytest
 
+@pytest.fixture
+def valid_form():
+    valid_form = SearchForm(
+        data={
+            "query": "test",
+            "domains": ["urn:li:domain:HMCTS"],
+            "sort": "ascending",
+            "clear_filter": False,
+            "clear_label": False,
+        }
+    )
+    assert valid_form.is_valid()
 
-class SearchFormTest(TestCase):
-    def setUp(self):
-        self.valid_form = SearchForm(
-            data={
-                "query": "test",
-                "domains": ["urn:li:domain:HMCTS"],
-                "sort": "ascending",
-                "clear_filter": False,
-                "clear_label": False,
-            }
-        )
+    return valid_form
 
-        assert self.valid_form.is_valid()
-
+class TestSearchForm:
     def test_query_field_length(self):
         over_100_characters = "a" * 101
         assert not SearchForm(data={"query": over_100_characters}).is_valid()
@@ -29,8 +30,8 @@ class SearchFormTest(TestCase):
     def test_all_fields_nullable(self):
         assert SearchForm(data={}).is_valid()
 
-    def test_form_encode_without_filter_for_one_filter(self):
-        assert (self.valid_form.encode_without_filter("urn:li:domain:HMCTS") ==
+    def test_form_encode_without_filter_for_one_filter(self, valid_form):
+        assert (valid_form.encode_without_filter("urn:li:domain:HMCTS") ==
                 "?query=test&sort=ascending&clear_filter=False&clear_label=False")
 
     def test_form_encode_without_filter_for_two_filters(self):
