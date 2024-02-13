@@ -2,8 +2,6 @@ from copy import deepcopy
 from django import forms
 from urllib.parse import urlencode
 
-# from home.helper import get_domain_list
-
 
 def get_domain_choices():
     """Make API call to obtain domain choices"""
@@ -59,10 +57,6 @@ class SearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial["sort"] = "relevance"
-
-    def clean_query(self):
-        """Example clean method to apply custom validation to input fields"""
-        return str(self.cleaned_data["query"]).capitalize()
 
     def encode_without_filter(self, filter_to_remove):
         """Preformat hrefs to drop individual filters"""

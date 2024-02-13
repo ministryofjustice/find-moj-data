@@ -60,7 +60,7 @@ class SearchService(GenericService):
         if self.form.is_bound:
             label_clear_href = {
                 filter.split(":")[-1]: self.form.encode_without_filter(filter)
-                for filter in self.form.cleaned_data.get("domains")
+                for filter in self.form.cleaned_data.get("domains", [])
             }
         else:
             label_clear_href = None

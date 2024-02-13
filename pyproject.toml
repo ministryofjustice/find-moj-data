@@ -15,6 +15,9 @@ ministryofjustice-data-platform-catalogue = "^0.10.0"
 markdown = "^3.5.2"
 python-dotenv = "^1.0.1"
 faker = "^22.6.0"
+selenium = "^4.17.2"
+pytest-django = "^4.8.0"
+pytest-cov = "^4.1.0"
 
 [tool.poetry.group.dev] # dev group definition
 
@@ -25,3 +28,7 @@ pre-commit = "^3.6.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
