@@ -45,10 +45,12 @@ def generate_options(num_options=5):
         )
     return results
 
+
 @pytest.fixture(autouse=True)
 def client():
     client = Client()
     return client
+
 
 @pytest.fixture(autouse=True)
 def mock_catalogue():
@@ -56,16 +58,21 @@ def mock_catalogue():
     mock_fn = patcher.start()
     mock_catalogue = MagicMock(spec=BaseCatalogueClient)
     mock_fn.return_value = mock_catalogue
-    mock_search_response(mock_catalogue, page_results=generate_page(), total_results=100)
+    mock_search_response(
+        mock_catalogue, page_results=generate_page(), total_results=100)
     mock_search_facets_response(mock_catalogue, domains=generate_options())
 
     yield mock_catalogue
 
     patcher.stop()
 
+
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
-    search_response = SearchResponse(total_results=total_results, page_results=page_results)
+    search_response = SearchResponse(
+        total_results=total_results, page_results=page_results)
     mock_catalogue.search.return_value = search_response
 
+
 def mock_search_facets_response(mock_catalogue, domains):
-    mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
+    mock_catalogue.search_facets.return_value = SearchFacets(
+        {"domains": domains})

@@ -29,10 +29,9 @@ class SearchFormTest(TestCase):
     def test_all_fields_nullable(self):
         assert SearchForm(data={}).is_valid()
 
-
     def test_form_encode_without_filter_for_one_filter(self):
         assert (self.valid_form.encode_without_filter("urn:li:domain:HMCTS") ==
-            "?query=test&sort=ascending&clear_filter=False&clear_label=False")
+                "?query=test&sort=ascending&clear_filter=False&clear_label=False")
 
     def test_form_encode_without_filter_for_two_filters(self):
         two_filter_form = SearchForm(data={
@@ -42,5 +41,4 @@ class SearchFormTest(TestCase):
         two_filter_form.is_valid()
 
         assert (two_filter_form.encode_without_filter("urn:li:domain:HMCTS") ==
-            "?query=test&domains=urn%3Ali%3Adomain%3AHMPPS&sort=&clear_filter=False&clear_label=False")
-
+                "?query=test&domains=urn%3Ali%3Adomain%3AHMPPS&sort=&clear_filter=False&clear_label=False")
