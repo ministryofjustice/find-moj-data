@@ -1,5 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
 from home.forms.search import SearchForm
@@ -31,8 +31,7 @@ def search_view(request, page: str = "1"):
         # Populated search scenario
         form = SearchForm(request.GET)
         if not form.is_valid():
-            print("form error on validation")
-            print(form.errors)
+            return HttpResponseBadRequest(form.errors)
 
     search_service = SearchService(form=form, page=page)
     return render(request, "search.html", search_service.context)

@@ -1,0 +1,17 @@
+name: test
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: test
+        run: python manage.py test tests
+      - name: Codecov
+        uses: codecov/codecov-action@v4.0.1
