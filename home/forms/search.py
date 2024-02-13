@@ -1,6 +1,7 @@
 from copy import deepcopy
-from django import forms
 from urllib.parse import urlencode
+
+from django import forms
 
 
 def get_domain_choices():
@@ -31,7 +32,9 @@ class SearchForm(forms.Form):
         max_length=100,
         strip=False,
         required=False,
-        widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
+        widget=forms.TextInput(
+            attrs={"class": "govuk-input search-input", "aria-label": "Search"}
+        ),
     )
     domains = forms.MultipleChoiceField(
         choices=get_domain_choices,

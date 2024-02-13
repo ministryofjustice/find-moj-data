@@ -18,7 +18,7 @@
           {% endif %}
       </h3>
       {% if result.description %}
-      <div class="govuk-body-m">{{result.description|markdown}}</div>
+      <div class="govuk-body-m">{{result.metadata.search_summary|markdown}}</div>
       {% endif %}
 
       
