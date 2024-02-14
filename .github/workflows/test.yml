@@ -36,35 +36,10 @@ jobs:
       - run: poetry install --no-interaction --no-root
         if: steps.cache-deps.outputs.cache-hit != 'true'
       - run: poetry install --no-interaction
-      - name: test with coverage
+      - name: run unit tests with coverage
+        id: fast-tests
         run: poetry run pytest --cov -m 'not slow'
-
-  test_with_selenium:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.11.1
-      - name: cache poetry install
-        uses: actions/cache@v2
-        with:
-          path: ~/.local
-          key: poetry-1.7.1-0
-      - uses: snok/install-poetry@v1
-        with:
-          version: 1.7.1
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-      - name: cache deps
-        id: cache-deps
-        uses: actions/cache@v2
-        with:
-          path: .venv
-          key: pydeps-${{ hashFiles('**/poetry.lock') }}
-      - run: poetry install --no-interaction --no-root
-        if: steps.cache-deps.outputs.cache-hit != 'true'
-      - run: poetry install --no-interaction
-      - name: test with coverage
-        run: poetry run pytest --cov -m 'slow'
+      - name: run selenium tests
+        id: slow-tests
+        if: steps.fast-tests.outcome == 'success'
+        run: poetry run pytest -m 'slow'
