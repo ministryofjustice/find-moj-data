@@ -1,7 +1,8 @@
+import re
 import subprocess
 from typing import Protocol
 
-from django.contrib.staticfiles.testing import LiveServerTestCase
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.webdriver import WebDriver
@@ -113,9 +114,7 @@ class SearchPage:
         ).find_element(By.TAG_NAME, "a")
 
 
-class TestSearchWithoutJavascriptAndCss(
-    LiveServerTestCase, HomePage, SearchPage, LayoutHelpers
-):
+class TestSearchWithoutJavascriptAndCss(HomePage, SearchPage, LayoutHelpers):
     """
     Test interacting with the search form through the browser,
     as a user would
@@ -124,44 +123,42 @@ class TestSearchWithoutJavascriptAndCss(
     def check_for_accessibility_issues(self):
         command = ["npx", "@axe-core/cli", "-q", self.selenium.current_url]
         output = subprocess.run(command, capture_output=True, text=True)
-        self.assertEqual(output.returncode, 0, output.stdout)
+        assert output.returncode == 0, output.stdout
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.selenium = WebDriver()
-        cls.selenium.implicitly_wait(10)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.selenium.quit()
-        super().tearDownClass()
+    @pytest.fixture(autouse=True)
+    def setup_selenium(self, live_server):
+        self.selenium = WebDriver()
+        self.selenium.implicitly_wait(10)
+        self.live_server = live_server
+        self.live_server_url = live_server.url
+        yield
+        self.selenium.quit()
 
     def wait_for_url_change(self, current_url):
         WebDriverWait(self.selenium, 10).until(EC.url_changes(current_url))
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
-        self.assertIn("Data catalogue", self.title)
+        assert "Data catalogue" in self.title
 
     def start_on_the_search_page(self):
         self.selenium.get(f"{self.live_server_url}/search?new=True")
-        self.assertIn("Search", self.title)
+        assert "Search" in self.title
 
     def click_on_the_search_button(self):
         self.search_nav_link().click()
 
     def verify_i_am_on_the_search_page(self):
-        self.assertIn("Search", self.selenium.title)
-        self.assertIn("Find MOJ Data", self.primary_heading().text)
+        assert "Search" in self.selenium.title
+        assert "Find MOJ Data" in self.primary_heading().text
 
     def verify_i_have_results(self):
         result_count = self.result_count().text
-        self.assertRegex(result_count, r"[1-9]\d* Results")
+        assert re.match(result_count, r"[1-9]\d* Results")
 
     def click_on_the_first_result(self):
         first_result = self.first_search_result()
-        self.assertTrue(first_result.text)
+        assert first_result.text
 
         first_link = first_result.link()
         item_name = first_link.text
@@ -169,9 +166,11 @@ class TestSearchWithoutJavascriptAndCss(
         return item_name
 
     def verify_i_am_on_the_details_page(self, item_name):
-        self.assertIn(item_name, self.title)
+        assert item_name in self.title
+
         secondary_heading_text = self.secondary_heading().text
-        self.assertEquals(secondary_heading_text, item_name)
+
+        assert secondary_heading_text == item_name
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_bar()
@@ -199,7 +198,8 @@ class TestSearchWithoutJavascriptAndCss(
 
     def verify_the_search_bar_has_value(self, query):
         search_bar = self.search_bar()
-        self.assertEquals(search_bar.get_attribute("value"), query)
+
+        assert search_bar.get_attribute("value") == query
 
     def verify_domain_selected(self, domains):
         expected = set(domains)
@@ -209,16 +209,18 @@ class TestSearchWithoutJavascriptAndCss(
             value = checkbox.get_attribute("value") or ""
             actual.add(value.replace("urn:li:domain:", ""))
 
-        self.assertEquals(actual, expected)
+        assert actual == expected
 
     def verify_selected_filters_shown(self, domains):
         actual = {i.text for i in self.selected_filter_tags()}
         expected = set(domains)
-        self.assertEquals(actual, expected)
+
+        assert actual == expected
 
     def verify_page(self, expected):
         current_page = self.current_page()
-        self.assertEquals(current_page.text, expected)
+
+        assert current_page.text == expected
 
     def click_next_page(self):
         self.next_page().click()
@@ -228,14 +230,13 @@ class TestSearchWithoutJavascriptAndCss(
 
     def verify_sort_selected(self, expected):
         value = self.checked_sort_option().get_attribute("value") or ""
-        self.assertEquals(value, expected.lower())
+        assert value == expected.lower()
 
     def test_browse_to_first_item(self):
         """
         Browses from the home page -> search -> details page
 
         TODO: incorporate screenshots for debugging
-        Convert to pytest
         See if we can stub out the actual catalogue
         Tag the test so it doesn't slow down the main CI job
         """
