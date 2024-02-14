@@ -67,8 +67,6 @@ class SearchResultWrapper:
 
 
 class SearchPage(Page):
-    def __init__(self, selenium):
-        self.selenium = selenium
 
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
