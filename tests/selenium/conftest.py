@@ -2,8 +2,9 @@ from pathlib import Path
 from typing import Any, Generator
 
 import pytest
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -12,7 +13,9 @@ TMP_DIR = Path(__file__).parent / "../../tmp"
 
 @pytest.fixture(scope="session")
 def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
-    selenium = WebDriver()
+    options = ChromeOptions()
+    options.add_argument("headless")
+    selenium = WebDriver(options=options)
     selenium.implicitly_wait(10)
     yield selenium
     selenium.quit()
