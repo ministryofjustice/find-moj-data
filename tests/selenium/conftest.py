@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any, Generator
 
 import pytest
@@ -6,6 +7,8 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
+TMP_DIR = Path(__file__).parent / "../../tmp"
+
 
 @pytest.fixture(scope="session")
 def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
@@ -13,6 +16,22 @@ def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     selenium.implicitly_wait(10)
     yield selenium
     selenium.quit()
+
+
+@pytest.fixture
+def screenshotter(request, selenium: RemoteWebDriver):
+    counter = 1
+    testname = request.node.name
+    test_dir = TMP_DIR / testname
+    test_dir.mkdir(parents=True, exist_ok=True)
+
+    def screenshot(name="screenshot"):
+        nonlocal counter
+        body = selenium.find_element(By.TAG_NAME, "body")
+        body.screenshot(str(test_dir / f"{counter}-{name}.png"))
+        counter += 1
+
+    yield screenshot
 
 
 class DetailsPage:

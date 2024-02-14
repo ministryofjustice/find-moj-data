@@ -33,3 +33,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
