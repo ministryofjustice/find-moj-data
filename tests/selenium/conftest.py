@@ -37,15 +37,17 @@ def screenshotter(request, selenium: RemoteWebDriver):
     yield screenshot
 
 
-class DetailsPage:
+class Page:
     def __init__(self, selenium):
         self.selenium = selenium
 
+
+class DetailsPage(Page):
     def secondary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h2")
 
 
-class HomePage:
+class HomePage(Page):
     def __init__(self, selenium):
         self.selenium = selenium
 
@@ -64,7 +66,7 @@ class SearchResultWrapper:
         return self.element.find_element(By.CSS_SELECTOR, "h3 a")
 
 
-class SearchPage:
+class SearchPage(Page):
     def __init__(self, selenium):
         self.selenium = selenium
 
