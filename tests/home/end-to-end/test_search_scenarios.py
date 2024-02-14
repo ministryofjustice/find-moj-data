@@ -8,8 +8,14 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
+
+
+@pytest.fixture(scope="module")
+def selenium(live_server):
+    selenium = WebDriver()
+    selenium.implicitly_wait(10)
+    yield selenium
+    selenium.quit()
 
 
 class HasSelenium(Protocol):
@@ -126,16 +132,9 @@ class TestSearchWithoutJavascriptAndCss(HomePage, SearchPage, LayoutHelpers):
         assert output.returncode == 0, output.stdout
 
     @pytest.fixture(autouse=True)
-    def setup_selenium(self, live_server):
-        self.selenium = WebDriver()
-        self.selenium.implicitly_wait(10)
-        self.live_server = live_server
+    def setup(self, live_server, selenium):
+        self.selenium = selenium
         self.live_server_url = live_server.url
-        yield
-        self.selenium.quit()
-
-    def wait_for_url_change(self, current_url):
-        WebDriverWait(self.selenium, 10).until(EC.url_changes(current_url))
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
@@ -154,7 +153,7 @@ class TestSearchWithoutJavascriptAndCss(HomePage, SearchPage, LayoutHelpers):
 
     def verify_i_have_results(self):
         result_count = self.result_count().text
-        assert re.match(result_count, r"[1-9]\d* Results")
+        assert re.match(r"[1-9]\d* Results", result_count)
 
     def click_on_the_first_result(self):
         first_result = self.first_search_result()
@@ -175,7 +174,7 @@ class TestSearchWithoutJavascriptAndCss(HomePage, SearchPage, LayoutHelpers):
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_bar()
         search_bar.send_keys(query)
-        search_bar.send_keys(Keys.ENTER)
+        self.click_search_button()
 
     def select_domain(self, domains):
         for domain in domains:
@@ -313,10 +312,7 @@ class TestSearchWithoutJavascriptAndCss(HomePage, SearchPage, LayoutHelpers):
         self.start_on_the_search_page()
         self.click_next_page()
         self.verify_page("2")
-        current_url = self.selenium.current_url
-
         self.enter_a_query_and_submit("nomis")
-        self.wait_for_url_change(current_url)
         self.verify_page("1")
 
     def test_adding_a_filter_resets_pagination(self):
