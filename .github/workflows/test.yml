@@ -3,7 +3,11 @@ name: test
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -32,5 +36,10 @@ jobs:
       - run: poetry install --no-interaction --no-root
         if: steps.cache-deps.outputs.cache-hit != 'true'
       - run: poetry install --no-interaction
-      - name: test with coverage
-        run: poetry run pytest --cov
+      - name: run unit tests with coverage
+        id: fast-tests
+        run: poetry run pytest --cov -m 'not slow'
+      - name: run selenium tests
+        id: slow-tests
+        if: steps.fast-tests.outcome == 'success'
+        run: poetry run pytest -m 'slow'

@@ -15,3 +15,8 @@ Run `npm install` and then `npm run sass` to compile the stylesheets.
 /search
 
 ![Screenshot of the service showing the search page](image.png)
+
+## Testing
+
+- Unit tests: `pytest -m 'not slow'`
+- Selenium tests: `pytest -m 'slow'`

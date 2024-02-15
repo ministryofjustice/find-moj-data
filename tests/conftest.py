@@ -12,9 +12,10 @@ from data_platform_catalogue.search_types import (
 )
 from django.test import Client
 from faker import Faker
-from home.service.search import SearchService
-from home.service.details import DetailsService
+
 from home.forms.search import SearchForm
+from home.service.details import DetailsService
+from home.service.search import SearchService
 
 fake = Faker()
 

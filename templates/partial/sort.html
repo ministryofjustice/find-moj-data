@@ -7,9 +7,7 @@
         {% for radio in form.sort %}
                 <div class="govuk-radios__item">
                     {{radio.tag}}
-                    <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
-                        {{radio.choice_label}}
-                    </label>
+                    <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">{{radio.choice_label}}</label>
                 </div>
             {% endfor %}
         </div>

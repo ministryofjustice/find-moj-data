@@ -24,6 +24,7 @@ pytest-cov = "^4.1.0"
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
 pre-commit = "^3.6.0"
+selenium = ">=4.8.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -32,3 +33,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]

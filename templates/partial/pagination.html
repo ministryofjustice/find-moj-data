@@ -9,6 +9,7 @@
         <span class="govuk-pagination__link-title">Previous<span class="govuk-visually-hidden"> page</span></span></a>
     </div>
     {% endif %}
+    <ul class="govuk-pagination__list">
     {% for p in page_range %}
         {% if paginator.ELLIPSIS != p %}
             {% if page_obj.number == p %}
@@ -20,11 +21,11 @@
                     {{ p }}
                 </a>
                 </li>
-            </ul>
         {% else %}
             <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
         {% endif %}
     {% endfor %}
+    </ul>
     {% if page_obj.has_next %}
     <div class="govuk-pagination__next">
       <a class="govuk-link govuk-pagination__link" href="{% url 'home:pagination' page=page_obj.next_page_number %}{% query_string clear_label=None clear_filter=None value=None new=None %}" rel="next"> <span class="govuk-pagination__link-title">Next<span class="govuk-visually-hidden"> page</span></span> <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
