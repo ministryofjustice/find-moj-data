@@ -1,3 +1,4 @@
+from pytest import CollectReport, StashKey
 import datetime
 from pathlib import Path
 from typing import Any, Generator
@@ -21,8 +22,6 @@ def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     yield selenium
     selenium.quit()
 
-
-from pytest import CollectReport, StashKey
 
 phase_report_key = StashKey[dict[str, CollectReport]]()
 
