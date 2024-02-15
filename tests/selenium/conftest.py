@@ -17,6 +17,7 @@ TMP_DIR = Path(__file__).parent / "../../tmp"
 def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     options = ChromeOptions()
     options.add_argument("headless")
+    options.add_argument("window-size=1280,720")
     selenium = WebDriver(options=options)
     selenium.implicitly_wait(10)
     yield selenium
@@ -52,8 +53,11 @@ def screenshotter(request, selenium: RemoteWebDriver):
     elif ("call" not in report) or report["call"].failed:
         timestamp = datetime.datetime.now().strftime(r"%Y%m%d%H%M%S")
         path = str(TMP_DIR / f"{timestamp}-{testname}-failed.png")
-        body = selenium.find_element(By.TAG_NAME, "body")
-        body.screenshot(path)
+        total_height = selenium.execute_script(
+            "return document.body.parentNode.scrollHeight"
+        )
+        selenium.set_window_size(1920, total_height)
+        selenium.save_screenshot(path)
         print(f"Screenshot saved to {path}")
 
 
