@@ -72,7 +72,6 @@ class DetailsPage(Page):
 
 
 class HomePage(Page):
-        self.selenium = selenium
 
     def search_nav_link(self) -> WebElement:
         return self.selenium.find_element(By.LINK_TEXT, "Search")
