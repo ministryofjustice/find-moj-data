@@ -33,7 +33,7 @@ class SearchForm(forms.Form):
         strip=False,
         required=False,
         widget=forms.TextInput(
-            attrs={"class": "govuk-input search-input", "aria-label": "Search"}
+            attrs={"class": "govuk-input search-input"}
         ),
     )
     domains = forms.MultipleChoiceField(
