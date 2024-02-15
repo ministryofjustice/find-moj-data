@@ -13,15 +13,12 @@ class TestSearchWithoutJavascriptAndCss:
     """
 
     @pytest.fixture(autouse=True)
-    def setup(
-        self, live_server, selenium, home_page, search_page, details_page, screenshotter
-    ):
+    def setup(self, live_server, selenium, home_page, search_page, details_page):
         self.selenium = selenium
         self.live_server_url = live_server.url
         self.home_page = home_page
         self.search_page = search_page
         self.details_page = details_page
-        self.screenshotter = screenshotter
 
     def test_browse_to_first_item(self):
         """
@@ -157,21 +154,17 @@ class TestSearchWithoutJavascriptAndCss:
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
-        self.screenshotter("home-page")
         assert "Data catalogue" in self.selenium.title
 
     def start_on_the_search_page(self):
         self.selenium.get(f"{self.live_server_url}/search?new=True")
-        self.screenshotter("search-page")
         assert "Search" in self.selenium.title
 
     def click_on_the_search_link(self):
         self.home_page.search_nav_link().click()
-        self.screenshotter("click-search")
 
     def click_on_the_search_button(self):
         self.search_page.search_button().click()
-        self.screenshotter("submit-search")
 
     def verify_i_am_on_the_search_page(self):
         assert "Search" in self.selenium.title
@@ -188,7 +181,6 @@ class TestSearchWithoutJavascriptAndCss:
         first_link = first_result.link()
         item_name = first_link.text
         first_link.click()
-        self.screenshotter("click-result")
         return item_name
 
     def verify_i_am_on_the_details_page(self, item_name):
@@ -215,11 +207,9 @@ class TestSearchWithoutJavascriptAndCss:
 
     def click_clear_selected_filter(self, name):
         self.search_page.selected_filter_tag(name).click()
-        self.screenshotter("clear-filter")
 
     def click_clear_filters(self):
         self.search_page.clear_filters().click()
-        self.screenshotter("clear-filters")
 
     def verify_the_search_bar_has_value(self, query):
         search_bar = self.search_page.search_bar()
@@ -244,16 +234,13 @@ class TestSearchWithoutJavascriptAndCss:
 
     def verify_page(self, expected):
         current_page = self.search_page.current_page()
-
         assert current_page.text == expected
 
     def click_next_page(self):
         self.search_page.next_page().click()
-        self.screenshotter("click-next")
 
     def click_previous_page(self):
         self.search_page.previous_page().click()
-        self.screenshotter("click-previous")
 
     def verify_sort_selected(self, expected):
         value = self.search_page.checked_sort_option().get_attribute("value") or ""

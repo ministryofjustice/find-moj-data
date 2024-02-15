@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 from typing import Any, Generator
 
@@ -21,20 +22,40 @@ def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     selenium.quit()
 
 
-@pytest.fixture
+from pytest import CollectReport, StashKey
+
+phase_report_key = StashKey[dict[str, CollectReport]]()
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_makereport(item, call):
+    # execute all other hooks to obtain the report object
+    rep = yield
+
+    # store test results for each phase of a call, which can
+    # be "setup", "call", "teardown"
+    item.stash.setdefault(phase_report_key, {})[rep.when] = rep
+
+    return rep
+
+
+@pytest.fixture(autouse=True)
 def screenshotter(request, selenium: RemoteWebDriver):
-    counter = 1
+    yield
+
     testname = request.node.name
-    test_dir = TMP_DIR / testname
-    test_dir.mkdir(parents=True, exist_ok=True)
+    report = request.node.stash[phase_report_key]
 
-    def screenshot(name="screenshot"):
-        nonlocal counter
+    if report["setup"].failed:
+        # Nothing to screenshot
+        pass
+
+    elif ("call" not in report) or report["call"].failed:
+        timestamp = datetime.datetime.now().strftime(r"%Y%m%d%H%M%S")
+        path = str(TMP_DIR / f"{timestamp}-{testname}-failed.png")
         body = selenium.find_element(By.TAG_NAME, "body")
-        body.screenshot(str(test_dir / f"{counter}-{name}.png"))
-        counter += 1
-
-    yield screenshot
+        body.screenshot(path)
+        print(f"Screenshot saved to {path}")
 
 
 class Page:
