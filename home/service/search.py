@@ -3,9 +3,21 @@ from typing import Any
 from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
 from django.core.paginator import Paginator
 
-from home.forms.search import SearchForm
+from home.forms.search import SearchForm, get_subdomain_choices
 
 from .base import GenericService
+
+
+def domains_with_their_subdomains(domains: list[str]) -> list[str]:
+    """
+    When assets are tagged to subdomains, they are not included in search results if
+    we filter by domain alone. We need to include all possible subdomains in the filter.
+    """
+    return [
+        subdomain
+        for domain in domains
+        for (subdomain, _) in get_subdomain_choices(domain)
+    ] + domains
 
 
 class SearchService(GenericService):
@@ -24,9 +36,8 @@ class SearchService(GenericService):
             form_data = {}
         query = form_data.get("query", "")
         sort = form_data.get("sort", "relevance")
-        domains = form_data.get("domains", [])
-        filter_value = [MultiSelectFilter(
-            "domains", domains)] if domains else []
+        domains = domains_with_their_subdomains(form_data.get("domains", []))
+        filter_value = [MultiSelectFilter("domains", domains)] if domains else []
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
             sort_option = SortOption(field="name", ascending=True)
