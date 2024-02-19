@@ -56,7 +56,6 @@ class SearchService(GenericService):
         return Paginator(pages_list, items_per_page)
 
     def _get_context(self) -> dict[str, Any]:
-
         if self.form["query"].value():
             page_title = f'Search for "{self.form["query"].value()}" - Data catalogue'
         else:
@@ -81,6 +80,7 @@ class SearchService(GenericService):
             "paginator": self.paginator,
             "total_results": self.results.total_results,
             "label_clear_href": label_clear_href,
+            "readable_match_reasons": self._get_match_reason_display_names(),
         }
 
         return context
@@ -101,3 +101,14 @@ class SearchService(GenericService):
             setattr(result, "description", highlighted_description)
 
         return results
+
+    def _get_match_reason_display_names(self):
+        return {
+            "urn": "URN",
+            "id": "ID",
+            "domain": "Domain",
+            "name": "Name",
+            "description": "Description",
+            "fieldPaths": "Column name",
+            "fieldDescriptions": "Column description",
+        }
