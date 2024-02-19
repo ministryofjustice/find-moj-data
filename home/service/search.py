@@ -42,8 +42,13 @@ class SearchService(GenericService):
             sort=sort_option,
             count=items_per_page,
         )
+        highlighted_results = (
+            self._highlight_results(results, query)
+            if query != ""
+            else results
+        )
 
-        return results
+        return highlighted_results
 
     def _get_paginator(self, items_per_page: int) -> Paginator:
         pages_list = list(range(self.results.total_results))
@@ -79,3 +84,20 @@ class SearchService(GenericService):
         }
 
         return context
+
+    def _highlight_results(self, results, string_to_highlight):
+        "Take a SearchResponse and add bold markdown where a string appears"
+        for result in results.page_results:
+            metadata = getattr(result, "metadata")
+            highlighted_search_summary = metadata.get("search_summary", "").replace(
+                string_to_highlight, f"**{string_to_highlight}**"
+            )
+            setattr(result, "metadata", metadata)
+
+            name = getattr(result, "description")
+            highlighted_description = name.replace(
+                string_to_highlight, f"**{string_to_highlight}**"
+            )
+            setattr(result, "description", highlighted_description)
+
+        return results
