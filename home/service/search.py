@@ -1,6 +1,10 @@
 from typing import Any
 
-from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
+from data_platform_catalogue.search_types import (
+    MultiSelectFilter,
+    SingleSelectFilter,
+    SortOption,
+)
 from django.core.paginator import Paginator
 
 from home.forms.search import SearchForm, get_subdomain_choices
@@ -53,7 +57,6 @@ class SearchService(GenericService):
             sort=sort_option,
             count=items_per_page,
         )
-
         return results
 
     def _get_paginator(self, items_per_page: int) -> Paginator:
@@ -69,13 +72,24 @@ class SearchService(GenericService):
             page_title = "Search - Data catalogue"
 
         if self.form.is_bound:
-            label_clear_href = {
-                filter.split(":")[-1]: self.form.encode_without_filter(filter)
-                for filter in self.form.cleaned_data.get("domains", [])
-            }
+            label_clear_href = {}
+            domain = self.form.cleaned_data.get("domain")
+            subdomain = self.form.cleaned_data.get("subdomains")
+            if domain:
+                label_clear_href[domain.split(":")[-1]] = (
+                    self.form.encode_without_filter(
+                        filter_to_remove=self.form.cleaned_data.get("domain")
+                    )
+                )
+            if subdomain:
+                label_clear_href[subdomain.split(":")[-1]] = (
+                    self.form.encode_without_filter(
+                        filter_to_remove=self.form.cleaned_data.get("subdomains")
+                    )
+                )
         else:
             label_clear_href = None
-
+        print(label_clear_href)
         context = {
             "form": self.form,
             "results": self.results.page_results,

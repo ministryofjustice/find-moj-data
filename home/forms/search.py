@@ -10,6 +10,7 @@ def get_domain_choices():
     # facets = client.search_facets()
     # domain_list = facets.options("domains")
     return [
+        ("Default", "Select ..."),
         ("urn:li:domain:HMCTS", "HMCTS"),
         ("urn:li:domain:HMPPS", "HMPPS"),
         ("urn:li:domain:HQ", "HQ"),
@@ -78,8 +79,25 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
     )
-    domains = forms.MultipleChoiceField(
+    domain = forms.ChoiceField(
         choices=get_domain_choices,
+        required=False,
+        widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
+    )
+    subdomains = forms.ChoiceField(
+        choices=get_subdomain_choices,
+        required=False,
+        widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
+    )
+    classifications = forms.MultipleChoiceField(
+        choices=get_classification_choices,
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
+        ),
+    )
+    availabilities = forms.MultipleChoiceField(
+        choices=get_availability_choices(),
         required=False,
         widget=forms.CheckboxSelectMultiple(
             attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
@@ -107,9 +125,8 @@ class SearchForm(forms.Form):
         """Preformat hrefs to drop individual filters"""
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)
-
-        query_params["domains"].remove(filter_to_remove)
-        if len(query_params["domains"]) == 0:
+        if filter_to_remove == query_params.get("domains"):
             query_params.pop("domains")
-
+        elif filter_to_remove == query_params.get("subdomains"):
+            query_params.pop("subdomains")
         return f"?{urlencode(query_params, doseq=True)}"
