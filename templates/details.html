@@ -8,7 +8,7 @@
 
   <a onclick="history.back()" class="govuk-back-link">Back</a>
       <main class="govuk-main-wrapper">
-        <div class="govuk-grid-row"> 
+        <div class="govuk-grid-row">
           <span class="govuk-caption-m">{{result_type}}</span>
           <h2 class="govuk-heading-l">{{result.name}}</h2>
           <div class="govuk-grid-column-two-thirds">
@@ -28,16 +28,16 @@
                 {{result.metadata.owner_email}}
                 </dd>
               </div>
-      
-      
+
+
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Domain name</dt>
                 <dd class="govuk-summary-list__value">
-                {{result.metadata.domain.properties.name}}
+                {{result.metadata.domain.properties.name|markdown}}
                 </dd>
               </div>
-      
-             
+
+
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Last updated date</dt>
                 <dd class="govuk-summary-list__value">
@@ -46,24 +46,24 @@
                   {% endif %}
                 </dd>
               </div>
-      
+
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Refresh period</dt>
                 <dd class="govuk-summary-list__value">
-                
+
                 </dd>
               </div>
-      
+
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Retention period</dt>
                 <dd class="govuk-summary-list__value">
-               
+
                 </dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">DPIA Status </dt>
                 <dd class="govuk-summary-list__value">
-               
+
                 </dd>
               </div>
               <div class="govuk-summary-list__row">
@@ -109,7 +109,7 @@
               </tbody>
             </table>
           </div>
-          
+
           <div class="govuk-grid-column-one-third">
               <div class="govuk-body">
                 <p class="govuk-heading-s">IAO or Data Owner</p>
@@ -126,7 +126,7 @@
               <div class="govuk-body">
                 <p class="govuk-heading-s">Access requirement</p>
                 <span class="govuk-body">
-                  Processing the data might require 
+                  Processing the data might require
                   permission from IAO or Data owner
                 </span>
               </div>
