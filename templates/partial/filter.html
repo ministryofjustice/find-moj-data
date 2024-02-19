@@ -18,7 +18,6 @@
             <div class="govuk-form-group">
               <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
-<<<<<<< HEAD
                   {{form.domain}}
               </fieldset>
             </div>
@@ -44,14 +43,66 @@
                       {{ access_option.tag}}
                       <label class="govuk-label govuk-checkboxes__label" for="{{ access_option.id_for_label }}">{{access_option.choice_label}}</label>
                     </div>
-=======
+                  {% endfor %}
+                </div>
+              </fieldset>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% load future %}
+<div class="govuk-grid-column-one-third">
+    <div class="moj-filter">
+      <div class="moj-filter__header">
+        <div class="moj-filter__header-title">
+          <h2 class="govuk-heading-m">Filter</h2>
+        </div>
+        <div class="moj-filter__header-action">
+        </div>
+      </div>
+
+      <div class="moj-filter__content">
+        <div class="moj-filter__selected">
+          <div class="moj-filter__selected-heading">
+            <div class="moj-filter__heading-title">
+              <h2 class="govuk-heading-m">Selected filters</h2>
+            </div>
+            <div class="moj-filter__heading-action">
+              <p>
+                <a class="govuk-link govuk-link--no-visited-state"
+                href="{% url 'home:search' %}{% query_string domains=None %}"
+                id="clear_filter">
+                Clear filter
+                </a>
+              </p>
+            </div>
+          </div>
+          {% if form.domains.value %}
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
+            <ul class="moj-filter-tags">
+              <input type="hidden" name="clear_label" value="">
+              {% for label, href in label_clear_href.items %}
+                <li><a class="moj-filter__tag govuk-link" href="{{ href }}">
+                  <span data-test-id="selected-domain-label">{{label}}</span> <span class="govuk-visually-hidden">Remove this filter</span>
+                </a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div class="moj-filter__options">
+            <button form="searchform" class="govuk-button" data-module="govuk-button" data-test-id="apply-filters">
+              Apply filters
+            </button>
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                   {% for domain_option in form.domains %}
                       <div class="govuk-checkboxes__item">
                         {{ domain_option.tag}}
                         <label class="govuk-label govuk-checkboxes__label" for="{{ domain_option.id_for_label }}">{{domain_option.choice_label}}</label>
                       </div>
->>>>>>> 730c59e (Revert template - will add backend later)
                   {% endfor %}
                 </div>
               </fieldset>
