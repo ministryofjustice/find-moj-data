@@ -79,7 +79,6 @@ class SearchService(GenericService):
             sort=sort_option,
             count=items_per_page,
         )
-
         return results
 
     def _get_paginator(self, items_per_page: int) -> Paginator:
