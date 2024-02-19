@@ -2,7 +2,7 @@
   "dependencies": {
     "@ministryofjustice/frontend": "^2.1.0",
     "govuk-frontend": "^5.1.0",
-    "sass": "^1.70.0"
+    "sass": "^1.71.0"
   },
   "scripts": {
     "sass": "sass --load-path=. scss:static/assets/css"
