@@ -1,10 +1,8 @@
 from typing import Any
 
-from data_platform_catalogue.search_types import (
-    MultiSelectFilter,
-    SingleSelectFilter,
-    SortOption,
-)
+from data_platform_catalogue.search_types import (MultiSelectFilter,
+                                                  SingleSelectFilter,
+                                                  SortOption)
 from django.core.paginator import Paginator
 
 from home.forms.search import SearchForm, get_subdomain_choices
@@ -65,7 +63,6 @@ class SearchService(GenericService):
         return Paginator(pages_list, items_per_page)
 
     def _get_context(self) -> dict[str, Any]:
-
         if self.form["query"].value():
             page_title = f'Search for "{self.form["query"].value()}" - Data catalogue'
         else:
@@ -76,16 +73,16 @@ class SearchService(GenericService):
             domain = self.form.cleaned_data.get("domain")
             subdomain = self.form.cleaned_data.get("subdomains")
             if domain:
-                label_clear_href[domain.split(":")[-1]] = (
-                    self.form.encode_without_filter(
-                        filter_to_remove=self.form.cleaned_data.get("domain")
-                    )
+                label_clear_href[
+                    domain.split(":")[-1]
+                ] = self.form.encode_without_filter(
+                    filter_to_remove=self.form.cleaned_data.get("domain")
                 )
             if subdomain:
-                label_clear_href[subdomain.split(":")[-1]] = (
-                    self.form.encode_without_filter(
-                        filter_to_remove=self.form.cleaned_data.get("subdomains")
-                    )
+                label_clear_href[
+                    subdomain.split(":")[-1]
+                ] = self.form.encode_without_filter(
+                    filter_to_remove=self.form.cleaned_data.get("subdomains")
                 )
         else:
             label_clear_href = None
