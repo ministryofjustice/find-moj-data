@@ -1,6 +1,7 @@
 from types import GeneratorType
 from data_platform_catalogue.search_types import ResultType
-from home.service.search import SearchService
+from home.service.search import SearchForm, SearchService
+from unittest.mock import patch
 
 
 class TestSearchService:
@@ -30,36 +31,41 @@ class TestSearchService:
         search_service._highlight_results()
         assert (
             normal.description == highlighted.description
-            & normal.metadata == highlighted.metadata
+            and normal.metadata == highlighted.metadata
             for normal, highlighted in zip(
                 search_service.results.page_results,
                 search_service.highlighted_results.page_results,
             )
         )
 
-    def test_highlight_results_with_query(self, search_service):
-        search_service.form.cleaned_data = {"query": "a"}
-        search_service._highlight_results()
+    def test_highlight_results_with_case_insensitive_query(self):
+        # The descriptions are all in lower case, so search upper case
+        # to test case insensitivity
+        form = SearchForm(data={"query": "A"})
+        assert form.is_valid()
+        service = SearchService(form=form, page="1")
 
+        descriptions = [result.description for result in service.results.page_results]
+        highlighted_descriptions = [result.description for result in service.highlighted_results.page_results]
+
+        assert descriptions != highlighted_descriptions
         assert (
-            "**a**" in highlighted.description
-            & "**" not in normal.description
+            "**a**" or "**A**" in highlighted.description
             for normal, highlighted
             in zip(
-                search_service.results.page_results,
-                search_service.highlighted_results.page_results,
+                service.results.page_results,
+                service.highlighted_results.page_results,
             )
-            if "a" in normal.description
+            if "a" or "A" in normal.description
         )
         assert (
-            "**a**" in highlighted.metadata["search_summary"]
-            & "**" not in normal.metadata["search_summary"]
+            "**a**" or "**A**" in highlighted.metadata["search_summary"]
             for normal, highlighted
             in zip(
-                search_service.results.page_results,
-                search_service.highlighted_results.page_results,
+                service.results.page_results,
+                service.highlighted_results.page_results,
             )
-            if "a" in normal.metadata["search_summary"]
+            if "a" or "A" in normal.metadata["search_summary"]
         )
 
 

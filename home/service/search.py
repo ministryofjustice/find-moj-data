@@ -2,6 +2,7 @@ from typing import Any
 from copy import deepcopy
 from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
 from django.core.paginator import Paginator
+import re
 
 from home.forms.search import SearchForm
 
@@ -83,31 +84,30 @@ class SearchService(GenericService):
 
     def _highlight_results(self):
         "Take a SearchResponse and add bold markdown where the query appears"
-        string_to_highlight = self.form.cleaned_data.get("query") if self.form.is_valid() else ""
+        query = self.form.cleaned_data.get("query") if self.form.is_valid() else ""
         highlighted_results = deepcopy(self.results)
 
-        if string_to_highlight == "":
+        if query in ("", "*"):
             return highlighted_results
 
         else:
+            pattern = f'({re.escape(query)})'
             for result in highlighted_results.page_results:
-                metadata = getattr(result, "metadata")
-                metadata["search_summary"] = metadata.get("search_summary", "").replace(
-                    string_to_highlight, f"**{string_to_highlight}**"
-                )
-                setattr(result, "metadata", metadata)
+                metadata = result.metadata
+                if metadata.get("search_summary"):
+                    metadata["search_summary"] = re.sub(
+                        pattern, r'**\1**', metadata["search_summary"], flags=re.IGNORECASE,
+                    )
 
-                name = getattr(result, "description")
-                highlighted_description = name.replace(
-                    string_to_highlight, f"**{string_to_highlight}**"
+                result.description = re.sub(
+                    pattern, r'**\1**', result.description, flags=re.IGNORECASE,
                 )
-                setattr(result, "description", highlighted_description)
 
             return highlighted_results
 
     def _get_match_reason_display_names(self):
         return {
-            "domain": "Domain",
+            "domains": "Domain",
             "name": "Name",
             "description": "Description",
             "fieldPaths": "Column name",
