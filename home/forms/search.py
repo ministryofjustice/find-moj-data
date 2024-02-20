@@ -70,6 +70,19 @@ def get_sort_choices():
     ]
 
 
+def get_classification_choices():
+    return [
+        ("OFFICIAL", "Official"),
+        ("OFFICIAL-SENSITIVE", "Official-Sensitive"),
+        ("SECRET", "Secret"),
+        ("TOP-SECRET", "Top-Secret"),
+    ]
+
+
+def get_where_to_access_choices():
+    return [('"Analytical Platform"', "Analytical Platform")]
+
+
 class SearchForm(forms.Form):
     """Django form to represent data product search page inputs"""
 
@@ -84,11 +97,6 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
     )
-    subdomains = forms.ChoiceField(
-        choices=get_subdomain_choices,
-        required=False,
-        widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
-    )
     classifications = forms.MultipleChoiceField(
         choices=get_classification_choices,
         required=False,
@@ -96,8 +104,8 @@ class SearchForm(forms.Form):
             attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
         ),
     )
-    availabilities = forms.MultipleChoiceField(
-        choices=get_availability_choices(),
+    where_to_access = forms.MultipleChoiceField(
+        choices=get_where_to_access_choices,
         required=False,
         widget=forms.CheckboxSelectMultiple(
             attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
@@ -121,12 +129,43 @@ class SearchForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.initial["sort"] = "relevance"
 
+    def _clean_custom_property(self, custom_property: str, property_name: str):
+        cleaned_properties = []
+        properties = self.cleaned_data.get(custom_property)
+        for option in properties:
+            cleaned_properties.append(f"{property_name}={option}")
+        return cleaned_properties
+
+    def clean_classifications(self):
+        cleaned_classifications = self._clean_custom_property(
+            custom_property="classifications", property_name="sensitivityLevel"
+        )
+        return cleaned_classifications
+
+    def clean_where_to_access(self):
+        cleaned_where_to_access = self._clean_custom_property(
+            custom_property="where_to_access",
+            property_name="whereToAccessDataset",
+        )
+        return cleaned_where_to_access
+
+    # def encode_without_filter(self, filter_to_remove):
+    #     """Preformat hrefs to drop individual filters"""
+    #     # Deepcopy the cleaned data dict to avoid modifying it inplace
+    #     query_params = deepcopy(self.cleaned_data)
+
+    #     query_params["domain"].remove(filter_to_remove)
+    #     if len(query_params["domain"]) == 0:
+    #         query_params.pop("domain")
+
+    #     return f"?{urlencode(query_params, doseq=True)}"
+
     def encode_without_filter(self, filter_to_remove):
         """Preformat hrefs to drop individual filters"""
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)
-        if filter_to_remove == query_params.get("domains"):
-            query_params.pop("domains")
+        if filter_to_remove == query_params.get("domain"):
+            query_params.pop("domain")
         elif filter_to_remove == query_params.get("subdomains"):
             query_params.pop("subdomains")
         return f"?{urlencode(query_params, doseq=True)}"
