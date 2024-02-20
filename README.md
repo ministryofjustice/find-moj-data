@@ -28,5 +28,6 @@ Run `pre-commit install` from inside the poetry environment to set up pre commit
 
 ## Testing
 
-- Unit tests: `pytest -m 'not slow'`
+- Python unit tests: `pytest -m 'not slow'`
+- Javascript unit tests: `npm test`
 - Selenium tests: `pytest -m 'slow'`
