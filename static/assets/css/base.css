@@ -10837,4 +10837,8 @@ span.moj-header__link:hover {
   }
 }
 
+.js-required {
+  display: none;
+}
+
 /*# sourceMappingURL=base.css.map */
