@@ -107,8 +107,6 @@ class SearchService(GenericService):
 
     def _get_match_reason_display_names(self):
         return {
-            "urn": "URN",
-            "id": "ID",
             "domain": "Domain",
             "name": "Name",
             "description": "Description",
