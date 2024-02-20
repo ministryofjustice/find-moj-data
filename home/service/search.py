@@ -1,5 +1,5 @@
 from typing import Any
-
+from copy import deepcopy
 from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
 from django.core.paginator import Paginator
 
@@ -14,6 +14,7 @@ class SearchService(GenericService):
         self.page = page
         self.client = self._get_catalogue_client()
         self.results = self._get_search_results(page, items_per_page)
+        self.highlighted_results = self._highlight_results()
         self.paginator = self._get_paginator(items_per_page)
         self.context = self._get_context()
 
@@ -42,13 +43,8 @@ class SearchService(GenericService):
             sort=sort_option,
             count=items_per_page,
         )
-        highlighted_results = (
-            self._highlight_results(results, query)
-            if query != ""
-            else results
-        )
 
-        return highlighted_results
+        return results
 
     def _get_paginator(self, items_per_page: int) -> Paginator:
         pages_list = list(range(self.results.total_results))
@@ -85,22 +81,29 @@ class SearchService(GenericService):
 
         return context
 
-    def _highlight_results(self, results, string_to_highlight):
-        "Take a SearchResponse and add bold markdown where a string appears"
-        for result in results.page_results:
-            metadata = getattr(result, "metadata")
-            highlighted_search_summary = metadata.get("search_summary", "").replace(
-                string_to_highlight, f"**{string_to_highlight}**"
-            )
-            setattr(result, "metadata", metadata)
+    def _highlight_results(self):
+        "Take a SearchResponse and add bold markdown where the query appears"
+        string_to_highlight = self.form.cleaned_data.get("query") if self.form.is_valid() else ""
+        highlighted_results = deepcopy(self.results)
 
-            name = getattr(result, "description")
-            highlighted_description = name.replace(
-                string_to_highlight, f"**{string_to_highlight}**"
-            )
-            setattr(result, "description", highlighted_description)
+        if string_to_highlight == "":
+            return highlighted_results
 
-        return results
+        else:
+            for result in highlighted_results.page_results:
+                metadata = getattr(result, "metadata")
+                metadata["search_summary"] = metadata.get("search_summary", "").replace(
+                    string_to_highlight, f"**{string_to_highlight}**"
+                )
+                setattr(result, "metadata", metadata)
+
+                name = getattr(result, "description")
+                highlighted_description = name.replace(
+                    string_to_highlight, f"**{string_to_highlight}**"
+                )
+                setattr(result, "description", highlighted_description)
+
+            return highlighted_results
 
     def _get_match_reason_display_names(self):
         return {

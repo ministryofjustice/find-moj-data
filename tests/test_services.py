@@ -1,5 +1,6 @@
 from types import GeneratorType
 from data_platform_catalogue.search_types import ResultType
+from home.service.search import SearchService
 
 
 class TestSearchService:
@@ -23,6 +24,43 @@ class TestSearchService:
         assert search_context["label_clear_href"] == {
             "HMCTS": "?query=test&sort=ascending&clear_filter=False&clear_label=False"
         }
+
+    def test_highlight_results_no_query(self, search_service):
+        search_service.form.cleaned_data = {"query": ""}
+        search_service._highlight_results()
+        assert (
+            normal.description == highlighted.description
+            & normal.metadata == highlighted.metadata
+            for normal, highlighted in zip(
+                search_service.results.page_results,
+                search_service.highlighted_results.page_results,
+            )
+        )
+
+    def test_highlight_results_with_query(self, search_service):
+        search_service.form.cleaned_data = {"query": "a"}
+        search_service._highlight_results()
+
+        assert (
+            "**a**" in highlighted.description
+            & "**" not in normal.description
+            for normal, highlighted
+            in zip(
+                search_service.results.page_results,
+                search_service.highlighted_results.page_results,
+            )
+            if "a" in normal.description
+        )
+        assert (
+            "**a**" in highlighted.metadata["search_summary"]
+            & "**" not in normal.metadata["search_summary"]
+            for normal, highlighted
+            in zip(
+                search_service.results.page_results,
+                search_service.highlighted_results.page_results,
+            )
+            if "a" in normal.metadata["search_summary"]
+        )
 
 
 class TestDetailsService:
