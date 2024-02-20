@@ -44,7 +44,7 @@ def dataset_details(request, id):
 
 
 def search_view(request, page: str = "1"):
-    print(request.GET)
+    # print(request.GET)
     new_search = request.GET.get("new", "")
     if new_search:
         form = SearchForm()

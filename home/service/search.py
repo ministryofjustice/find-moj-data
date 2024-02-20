@@ -73,12 +73,13 @@ class SearchService(GenericService):
             sort_option = None
 
         results = self.client.search(
-            query=query,
+            query=full_query,
             page=page_for_search,
             filters=filter_value,
             sort=sort_option,
             count=items_per_page,
         )
+
         return results
 
     def _get_paginator(self, items_per_page: int) -> Paginator:
@@ -129,6 +130,25 @@ class SearchService(GenericService):
         else:
             page_title = "Search - Data catalogue"
 
+        if self.form.is_bound:
+            label_clear_href = {}
+            domain = self.form.cleaned_data.get("domain")
+            subdomain = self.form.cleaned_data.get("subdomains")
+            if domain:
+                label_clear_href[domain.split(":")[-1]] = (
+                    self.form.encode_without_filter(
+                        filter_to_remove=self.form.cleaned_data.get("domain")
+                    )
+                )
+            if subdomain:
+                label_clear_href[subdomain.split(":")[-1]] = (
+                    self.form.encode_without_filter(
+                        filter_to_remove=self.form.cleaned_data.get("subdomains")
+                    )
+                )
+        else:
+            label_clear_href = None
+        print(label_clear_href)
         context = {
             "form": self.form,
             "results": self.results.page_results,
@@ -176,3 +196,19 @@ class SearchService(GenericService):
             "fieldPaths": "Column name",
             "fieldDescriptions": "Column description",
         }
+
+    @staticmethod
+    def _query_builder(query: str, custom_properties: dict[str, list[str | None]]):
+        custom_property_query: str = "/q customProperties: "
+        custom_property_strings: list[str] = []
+
+        for _, value in custom_properties.items():
+            if value:
+                custom_property_strings.append(" OR ".join(value))
+
+        if query != "":
+            custom_property_strings.append(query)
+
+        final_query = " AND ".join(custom_property_strings)
+
+        return f"{custom_property_query} {final_query}" if final_query else "*"
