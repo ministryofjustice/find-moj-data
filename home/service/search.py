@@ -102,17 +102,33 @@ class SearchService(GenericService):
         return context
 
     @staticmethod
-    def _query_builder(query: str, custom_properties: dict[str, list[str | None]]):
+    def _query_builder(query: str, custom_properties: dict[str, list[str]]) -> str:
+        """Construct a valid DataHub search query using the input query and the passed
+        customProperties.
+
+        Args:
+            query (str): User search string
+            custom_properties (dict[str, list[str  |  None]]): Dictionary of custom
+            property name and custom property values selected to filter on.
+
+        Returns:
+            str: advanced query string to pass to DataHub that will include 'filtering'
+            logic for custom properties
+        """
+        # ref: https://datahubproject.io/docs/how/search/#advanced-queries
         custom_property_query: str = "/q customProperties: "
         custom_property_strings: list[str] = []
 
         for _, value in custom_properties.items():
             if value:
-                custom_property_strings.append(" OR ".join(value))
+                # within-filter options are inclusive OR
+                custom_property_string = " OR ".join(value)
+                custom_property_strings.append(custom_property_string)
 
         if query != "":
             custom_property_strings.append(query)
 
+        # cross-filter options are exclusive AND
         final_query = " AND ".join(custom_property_strings)
 
         return f"{custom_property_query} {final_query}" if final_query else "*"

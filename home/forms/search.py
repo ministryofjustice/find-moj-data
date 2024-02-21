@@ -129,9 +129,24 @@ class SearchForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.initial["sort"] = "relevance"
 
-    def _clean_custom_property(self, custom_property: str, property_name: str):
+    def _clean_custom_property(
+        self, custom_property: str, property_name: str
+    ) -> list[str]:
+        """Helper function to style DataHub customProperties into their search syntax
+        (customPropertyName="custom property"). Reformats the 'cleaned_data' list for a
+        property.
+
+        ref: https://datahubproject.io/docs/how/search/#advanced-queries
+
+        Args:
+            custom_property (str): Name of the custom property object in this codebase
+            property_name (str): Name of the custom property in DataHub
+
+        Returns:
+            list[str]: List of reformatted custom properties.
+        """
         cleaned_properties = []
-        properties = self.cleaned_data.get(custom_property)
+        properties = self.cleaned_data.get(custom_property, [])
         for option in properties:
             cleaned_properties.append(f"{property_name}={option}")
         return cleaned_properties
