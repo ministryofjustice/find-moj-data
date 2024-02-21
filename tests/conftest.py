@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client import BaseCatalogueClient
+from data_platform_catalogue.client.datahub.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -14,13 +15,18 @@ from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
-from home.service.details import DetailsService
+from home.service.details import DetailsDataProductService
 from home.service.search import SearchService
+
+from datahub.metadata.schema_classes import (
+    DataProductPropertiesClass,
+    DataProductAssociationClass,
+)
 
 fake = Faker()
 
 
-def generate_page(page_size=20):
+def generate_page(page_size=20, result_type: ResultType = None):
     """
     Generate a fake search page
     """
@@ -29,8 +35,11 @@ def generate_page(page_size=20):
         results.append(
             SearchResult(
                 id=fake.unique.name(),
-                result_type=choice(
-                    (ResultType.DATA_PRODUCT, ResultType.TABLE)),
+                result_type=(
+                    choice((ResultType.DATA_PRODUCT, ResultType.TABLE))
+                    if result_type is None
+                    else result_type
+                ),
                 name=fake.name(),
                 description=fake.paragraph(),
                 metadata={"search_summary":"a"},
@@ -71,7 +80,12 @@ def mock_catalogue():
         mock_catalogue, page_results=generate_page(), total_results=100
     )
     mock_search_facets_response(mock_catalogue, domains=generate_options())
-
+    mock_list_data_product_response(
+        mock_catalogue,
+        page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
+        total_results=1,
+    )
+    # mock_get_dataproduct_aspect(mock_catalogue)
     yield mock_catalogue
 
     patcher.stop()
@@ -85,8 +99,26 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 
 def mock_search_facets_response(mock_catalogue, domains):
-    mock_catalogue.search_facets.return_value = SearchFacets(
-        {"domains": domains})
+    mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
+
+
+def mock_list_data_product_response(mock_catalogue, total_results, page_results=()):
+    search_response = SearchResponse(
+        total_results=total_results, page_results=page_results
+    )
+    mock_catalogue.list_data_product_assets.return_value = search_response
+
+
+def mock_get_dataproduct_aspect(mock_catalogue):
+    data_product_association = DataProductAssociationClass(
+        destinationUrn="urn:li:dataset:(urn:li:dataPlatform:glue,test.test,PROD)",
+        sourceUrn="urn:li:dataProduct:test",
+    )
+
+    response = DataProductPropertiesClass(
+        name="test", assets=[data_product_association], description="test"
+    )
+    mock_catalogue.graph.get_aspect.return_value = response
 
 
 @pytest.fixture
@@ -115,10 +147,15 @@ def search_context(search_service):
 
 
 @pytest.fixture
-def detail_context(mock_catalogue):
+def detail_dataproduct_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
         total_results=1, page_results=generate_page(page_size=1)
     )
-    details_service = DetailsService(urn="urn:li:dataProduct:test")
+    # mock_catalogue.list_data_product_assets.return_value = SearchResponse(
+    #     total_results=1,
+    #     page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
+    # )
+    # with patch():
+    details_service = DetailsDataProductService(urn="urn:li:dataProduct:test")
     context = details_service._get_context()
     return context

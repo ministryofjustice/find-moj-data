@@ -1,4 +1,3 @@
-
 from data_platform_catalogue.search_types import SearchResponse
 from django.urls import reverse
 
@@ -33,16 +32,25 @@ class TestSearchView:
 
 
 class TestDetailsView:
-    def test_details(self, client):
+    def test_details_data_product(self, client):
         response = client.get(
-            reverse("home:details", kwargs={
-                    "id": "urn:li:dataProduct:common-platform"})
+            reverse(
+                "home:details",
+                kwargs={
+                    "id": "urn:li:dataProduct:common-platform",
+                    "result_type": "data_product",
+                },
+            )
         )
         assert response.status_code == 200
 
-    def test_details_not_found(self, client, mock_catalogue):
+    def test_details_data_product_not_found(self, client, mock_catalogue):
         mock_catalogue.search.return_value = SearchResponse(
             total_results=0, page_results=[]
         )
-        response = client.get(reverse("home:details", kwargs={"id": "fake"}))
+        response = client.get(
+            reverse(
+                "home:details", kwargs={"id": "fake", "result_type": "data_product"}
+            )
+        )
         assert response.status_code == 404
