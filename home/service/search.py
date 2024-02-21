@@ -68,7 +68,7 @@ class SearchService(GenericService):
 
         context = {
             "form": self.form,
-            "results": self.results.page_results,
+            "results": self.highlighted_results.page_results,
             "page_title": page_title,
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(
