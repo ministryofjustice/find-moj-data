@@ -42,17 +42,17 @@
               Apply filters
             </button>
             <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset">
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
-                  <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    {% for domain_option in form.domains %}
-                        <div class="govuk-checkboxes__item">
-                          {{ domain_option.tag}}
-                          <label class="govuk-label govuk-checkboxes__label" for="{{ domain_option.id_for_label }}">{{domain_option.choice_label}}</label>
-                        </div>
-                    {% endfor %}
-                  </div>
-                </fieldset>
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                  {% for domain_option in form.domains %}
+                      <div class="govuk-checkboxes__item">
+                        {{ domain_option.tag}}
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ domain_option.id_for_label }}">{{domain_option.choice_label}}</label>
+                      </div>
+                  {% endfor %}
+                </div>
+              </fieldset>
             </div>
             <div class="govuk-form-group">
               <fieldset class="govuk-fieldset">
