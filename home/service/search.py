@@ -103,10 +103,13 @@ class SearchService(GenericService):
             return highlighted_results
 
         else:
-            pattern = f'({re.escape(query)})'
+            pattern = f"({re.escape(query)})"
             for result in highlighted_results.page_results:
                 result.description = re.sub(
-                    pattern, r'**\1**', result.description, flags=re.IGNORECASE,
+                    pattern,
+                    r"**\1**",
+                    result.description,
+                    flags=re.IGNORECASE,
                 )
 
             return highlighted_results
