@@ -18,7 +18,13 @@
           {% endif %}
       </h3>
       {% if result.description %}
-      <div class="govuk-body-m">{{result.metadata.search_summary|markdown}}</div>
+      <div class="govuk-body-m">
+        {% if result.description|length > 200 %}
+          {{ result.description|slice:":200"|add:"..."|markdown }}
+        {% else %}
+          {{ result.description|markdown }}
+        {% endif %}
+      </div>
       {% endif %}
 
 
