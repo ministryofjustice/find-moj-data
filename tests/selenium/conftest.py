@@ -1,9 +1,9 @@
-from pytest import CollectReport, StashKey
 import datetime
 from pathlib import Path
 from typing import Any, Generator
 
 import pytest
+from pytest import CollectReport, StashKey
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -72,7 +72,6 @@ class DetailsPage(Page):
 
 
 class HomePage(Page):
-
     def search_nav_link(self) -> WebElement:
         return self.selenium.find_element(By.LINK_TEXT, "Search")
 
@@ -89,7 +88,6 @@ class SearchResultWrapper:
 
 
 class SearchPage(Page):
-
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
 

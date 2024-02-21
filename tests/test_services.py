@@ -24,7 +24,12 @@ class TestSearchService:
 
     def test_get_context_label_clear_href(self, search_context):
         assert search_context["label_clear_href"] == {
-            "HMCTS": "?query=test&sort=ascending&clear_filter=False&clear_label=False"
+            "HMCTS": (
+                "?query=test&"
+                "sort=ascending&"
+                "clear_filter=False&"
+                "clear_label=False"
+            )
         }
 
 

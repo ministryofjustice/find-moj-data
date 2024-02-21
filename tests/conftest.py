@@ -29,8 +29,7 @@ def generate_page(page_size=20):
         results.append(
             SearchResult(
                 id=fake.unique.name(),
-                result_type=choice(
-                    (ResultType.DATA_PRODUCT, ResultType.TABLE)),
+                result_type=choice((ResultType.DATA_PRODUCT, ResultType.TABLE)),
                 name=fake.name(),
                 description=fake.paragraphs(),
             )
@@ -84,8 +83,7 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 
 def mock_search_facets_response(mock_catalogue, domains):
-    mock_catalogue.search_facets.return_value = SearchFacets(
-        {"domains": domains})
+    mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
 
 
 @pytest.fixture

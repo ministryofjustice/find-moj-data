@@ -1,9 +1,6 @@
 from typing import Any
 
-from data_platform_catalogue.search_types import (
-    MultiSelectFilter,
-    SortOption,
-)
+from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
 from django.core.paginator import Paginator
 
 from home.forms.search import SearchForm, get_subdomain_choices
