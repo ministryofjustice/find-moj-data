@@ -14,17 +14,17 @@ whitenoise = "^6.6.0"
 ministryofjustice-data-platform-catalogue = "^0.10.0"
 markdown = "^3.5.2"
 python-dotenv = "^1.0.1"
-faker = "^22.6.0"
-selenium = "^4.17.2"
-pytest-django = "^4.8.0"
-pytest-cov = "^4.1.0"
-
-[tool.poetry.group.dev] # dev group definition
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
 pre-commit = "^3.6.0"
-selenium = ">=4.8.0"
+selenium = "^4.17.2"
+flake8 = ">=6.1.0"
+pytest-django = "^4.8.0"
+pytest-cov = "^4.1.0"
+faker = "^22.6.0"
+isort = "^5.13.2"
+pyproject-flake8 = "^6.1.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -34,3 +34,6 @@ build-backend = "poetry.core.masonry.api"
 DJANGO_SETTINGS_MODULE = "core.settings"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
 markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+
+[tool.isort]
+profile = "black"
