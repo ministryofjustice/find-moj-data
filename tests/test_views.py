@@ -34,8 +34,7 @@ class TestSearchView:
 class TestDetailsView:
     def test_details(self, client):
         response = client.get(
-            reverse("home:details", kwargs={
-                    "id": "urn:li:dataProduct:common-platform"})
+            reverse("home:details", kwargs={"id": "urn:li:dataProduct:common-platform"})
         )
         assert response.status_code == 200
 
