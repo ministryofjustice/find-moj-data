@@ -93,12 +93,6 @@ class SearchService(GenericService):
         else:
             pattern = f'({re.escape(query)})'
             for result in highlighted_results.page_results:
-                metadata = result.metadata
-                if metadata.get("search_summary"):
-                    metadata["search_summary"] = re.sub(
-                        pattern, r'**\1**', metadata["search_summary"], flags=re.IGNORECASE,
-                    )
-
                 result.description = re.sub(
                     pattern, r'**\1**', result.description, flags=re.IGNORECASE,
                 )

@@ -58,16 +58,6 @@ class TestSearchService:
             )
             if "a" or "A" in normal.description
         )
-        assert (
-            "**a**" or "**A**" in highlighted.metadata["search_summary"]
-            for normal, highlighted
-            in zip(
-                service.results.page_results,
-                service.highlighted_results.page_results,
-            )
-            if "a" or "A" in normal.metadata["search_summary"]
-        )
-
 
 class TestDetailsService:
     def test_get_context(self, detail_context, mock_catalogue):
