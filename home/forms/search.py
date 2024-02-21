@@ -92,7 +92,7 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
     )
-    domain = forms.ChoiceField(
+    domains = forms.MultipleChoiceField(
         choices=get_domain_choices,
         required=False,
         widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
@@ -149,23 +149,11 @@ class SearchForm(forms.Form):
         )
         return cleaned_where_to_access
 
-    # def encode_without_filter(self, filter_to_remove):
-    #     """Preformat hrefs to drop individual filters"""
-    #     # Deepcopy the cleaned data dict to avoid modifying it inplace
-    #     query_params = deepcopy(self.cleaned_data)
-
-    #     query_params["domain"].remove(filter_to_remove)
-    #     if len(query_params["domain"]) == 0:
-    #         query_params.pop("domain")
-
-    #     return f"?{urlencode(query_params, doseq=True)}"
-
     def encode_without_filter(self, filter_to_remove):
         """Preformat hrefs to drop individual filters"""
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)
-        if filter_to_remove == query_params.get("domain"):
-            query_params.pop("domain")
-        elif filter_to_remove == query_params.get("subdomains"):
-            query_params.pop("subdomains")
+        query_params["domains"].remove(filter_to_remove)
+        if len(query_params["domains"]) == 0:
+            query_params.pop("domains")
         return f"?{urlencode(query_params, doseq=True)}"

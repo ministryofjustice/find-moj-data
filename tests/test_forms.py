@@ -31,7 +31,7 @@ class TestSearchForm:
 
         assert two_filter_form.encode_without_filter("urn:li:domain:HMCTS") == (
             "?query=test&"
-            "domain=urn%3Ali%3Adomain%3AHMPPS&"
+            "domains=urn%3Ali%3Adomain%3AHMPPS&"
             "sort=&"
             "clear_filter=False&"
             "clear_label=False"

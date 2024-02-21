@@ -8,16 +8,16 @@ from home.forms.search import SearchForm, get_subdomain_choices
 from .base import GenericService
 
 
-def domain_with_their_subdomains(domain: str) -> list[str]:
+def domains_with_their_subdomains(domains: list[str]) -> list[str]:
     """
     When assets are tagged to subdomains, they are not included in search results if
     we filter by domain alone. We need to include all possible subdomains in the filter.
     """
-    domain_and_subdomains = [
-        subdomain[0] for subdomain in get_subdomain_choices(domain)
-    ]
-    domain_and_subdomains.append(domain)
-    return domain_and_subdomains
+    return [
+        subdomain
+        for domain in domains
+        for (subdomain, _) in get_subdomain_choices(domain)
+    ] + domains
 
 
 class SearchService(GenericService):
@@ -37,8 +37,8 @@ class SearchService(GenericService):
 
         query = form_data.get("query", "")
         sort = form_data.get("sort", "relevance")
-        domain = form_data.get("domain")
-        domain = domain if domain != "Default" else ""
+        domains = domains_with_their_subdomains(form_data.get("domains", []))
+        filter_value = [MultiSelectFilter("domains", domains)] if domains else []
 
         classifications = form_data.get("classifications", [])
         where_to_access = form_data.get("where_to_access", [])
@@ -49,16 +49,6 @@ class SearchService(GenericService):
         }
 
         full_query = self._query_builder(query, custom_properties)
-        filter_value = (
-            [
-                MultiSelectFilter(
-                    filter_name="domains",
-                    included_values=(domain_with_their_subdomains(domain=domain)),
-                )
-            ]
-            if domain
-            else []
-        )
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
             sort_option = SortOption(field="name", ascending=True)
@@ -88,21 +78,11 @@ class SearchService(GenericService):
         else:
             page_title = "Search - Data catalogue"
 
-        # if self.form.is_bound:
-        #     label_clear_href = {
-        #         filter.split(":")[-1]: self.form.encode_without_filter(filter)
-        #         for filter in self.form.cleaned_data.get("domain", [])
-        #     }
-        # else:
-        #     label_clear_href = None
-
         if self.form.is_bound:
-            label_clear_href = {}
-            domain = self.form.cleaned_data.get("domain")
-            if domain:
-                label_clear_href[domain.split(":")[-1]] = (
-                    self.form.encode_without_filter(filter_to_remove=domain)
-                )
+            label_clear_href = {
+                filter.split(":")[-1]: self.form.encode_without_filter(filter)
+                for filter in self.form.cleaned_data.get("domains", [])
+            }
         else:
             label_clear_href = None
         # print(f"label clear ref: {label_clear_href}")
