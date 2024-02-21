@@ -92,7 +92,7 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
     )
-    domain = forms.ChoiceField(
+    domains = forms.MultipleChoiceField(
         choices=get_domain_choices,
         required=False,
         widget=forms.Select(
