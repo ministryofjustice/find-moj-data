@@ -1,4 +1,3 @@
-
 from data_platform_catalogue.search_types import SearchResponse
 from django.urls import reverse
 

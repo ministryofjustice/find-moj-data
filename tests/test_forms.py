@@ -16,9 +16,8 @@ class TestSearchForm:
         assert SearchForm(data={}).is_valid()
 
     def test_form_encode_without_filter_for_one_filter(self, valid_form):
-        assert (
-            valid_form.encode_without_filter("urn:li:domain:HMCTS")
-            == "?query=test&sort=ascending&clear_filter=False&clear_label=False"
+        assert valid_form.encode_without_filter("urn:li:domain:HMCTS") == (
+            "?query=test&" "sort=ascending&" "clear_filter=False&" "clear_label=False"
         )
 
     def test_form_encode_without_filter_for_two_filters(self):
@@ -30,7 +29,10 @@ class TestSearchForm:
         )
         two_filter_form.is_valid()
 
-        assert (
-            two_filter_form.encode_without_filter("urn:li:domain:HMCTS")
-            == "?query=test&domains=urn%3Ali%3Adomain%3AHMPPS&sort=&clear_filter=False&clear_label=False"
+        assert two_filter_form.encode_without_filter("urn:li:domain:HMCTS") == (
+            "?query=test&"
+            "domain=urn%3Ali%3Adomain%3AHMPPS&"
+            "sort=&"
+            "clear_filter=False&"
+            "clear_label=False"
         )
