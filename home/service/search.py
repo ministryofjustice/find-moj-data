@@ -1,7 +1,8 @@
 from typing import Any
-
+from copy import deepcopy
 from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
 from django.core.paginator import Paginator
+import re
 
 from home.forms.search import SearchForm, get_subdomain_choices
 
@@ -26,6 +27,7 @@ class SearchService(GenericService):
         self.page = page
         self.client = self._get_catalogue_client()
         self.results = self._get_search_results(page, items_per_page)
+        self.highlighted_results = self._highlight_results()
         self.paginator = self._get_paginator(items_per_page)
         self.context = self._get_context()
 
@@ -62,7 +64,6 @@ class SearchService(GenericService):
         return Paginator(pages_list, items_per_page)
 
     def _get_context(self) -> dict[str, Any]:
-
         if self.form["query"].value():
             page_title = f'Search for "{self.form["query"].value()}" - Data catalogue'
         else:
@@ -79,6 +80,7 @@ class SearchService(GenericService):
         context = {
             "form": self.form,
             "results": self.results.page_results,
+            "highlighted_results": self.highlighted_results.page_results,
             "page_title": page_title,
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(
@@ -87,6 +89,35 @@ class SearchService(GenericService):
             "paginator": self.paginator,
             "total_results": self.results.total_results,
             "label_clear_href": label_clear_href,
+            "readable_match_reasons": self._get_match_reason_display_names(),
         }
 
         return context
+
+    def _highlight_results(self):
+        "Take a SearchResponse and add bold markdown where the query appears"
+        query = self.form.cleaned_data.get("query") if self.form.is_valid() else ""
+        highlighted_results = deepcopy(self.results)
+
+        if query in ("", "*"):
+            return highlighted_results
+
+        else:
+            pattern = f'({re.escape(query)})'
+            for result in highlighted_results.page_results:
+                result.description = re.sub(
+                    pattern, r'**\1**', result.description, flags=re.IGNORECASE,
+                )
+
+            return highlighted_results
+
+    def _get_match_reason_display_names(self):
+        return {
+            "id": "ID",
+            "urn": "URN",
+            "domains": "Domain",
+            "name": "Name",
+            "description": "Description",
+            "fieldPaths": "Column name",
+            "fieldDescriptions": "Column description",
+        }
