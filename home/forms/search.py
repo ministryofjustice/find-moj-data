@@ -92,7 +92,7 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
     )
-    domains = forms.MultipleChoiceField(
+    domain = forms.ChoiceField(
         choices=get_domain_choices,
         required=False,
         widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
@@ -168,7 +168,10 @@ class SearchForm(forms.Form):
         """Preformat hrefs to drop individual filters"""
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)
-        query_params["domains"].remove(filter_to_remove)
-        if len(query_params["domains"]) == 0:
-            query_params.pop("domains")
+        domain = query_params.get("domain")
+        classifications = query_params.get("classifications")
+        if domain == filter_to_remove:
+            query_params.pop("domain")
+        elif filter_to_remove in classifications:
+            query_params["classifications"].remove(filter_to_remove)
         return f"?{urlencode(query_params, doseq=True)}"

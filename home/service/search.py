@@ -8,16 +8,13 @@ from home.forms.search import SearchForm, get_subdomain_choices
 from .base import GenericService
 
 
-def domains_with_their_subdomains(domains: list[str]) -> list[str]:
+def domains_with_their_subdomains(domain: str) -> list[str]:
     """
     When assets are tagged to subdomains, they are not included in search results if
     we filter by domain alone. We need to include all possible subdomains in the filter.
     """
-    return [
-        subdomain
-        for domain in domains
-        for (subdomain, _) in get_subdomain_choices(domain)
-    ] + domains
+    subdomains = get_subdomain_choices(domain)
+    return [domain, *subdomains] if subdomains else subdomains
 
 
 class SearchService(GenericService):
@@ -37,8 +34,13 @@ class SearchService(GenericService):
 
         query = form_data.get("query", "")
         sort = form_data.get("sort", "relevance")
-        domains = domains_with_their_subdomains(form_data.get("domains", []))
-        filter_value = [MultiSelectFilter("domains", domains)] if domains else []
+        domain = form_data.get("domain", "")
+        domains_and_subdomains = domains_with_their_subdomains(domain)
+        filter_value = (
+            [MultiSelectFilter("domains", domains_and_subdomains)]
+            if domains_and_subdomains
+            else []
+        )
 
         classifications = form_data.get("classifications", [])
         where_to_access = form_data.get("where_to_access", [])
@@ -79,13 +81,23 @@ class SearchService(GenericService):
             page_title = "Search - Data catalogue"
 
         if self.form.is_bound:
-            label_clear_href = {
-                filter.split(":")[-1]: self.form.encode_without_filter(filter)
-                for filter in self.form.cleaned_data.get("domains", [])
-            }
+            domain = self.form.cleaned_data.get("domain", "")
+            classifications = self.form.cleaned_data.get("classifications", [])
+            label_clear_href = {}
+            if domain:
+                label_clear_href["domain"] = {
+                    domain.split(":")[-1]: (self.form.encode_without_filter(domain))
+                }
+            if classifications:
+                classifications_clear_href = {}
+                for classification in classifications:
+                    classifications_clear_href[
+                        classification.split("=")[1]
+                    ] = self.form.encode_without_filter(classification)
+                label_clear_href["classifications"] = classifications_clear_href
         else:
             label_clear_href = None
-        # print(f"label clear ref: {label_clear_href}")
+        print(f"label clear ref: {label_clear_href}")
         context = {
             "form": self.form,
             "results": self.results.page_results,
