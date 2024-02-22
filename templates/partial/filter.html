@@ -18,6 +18,7 @@
             <div class="govuk-form-group">
               <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
+<<<<<<< HEAD
                   {{form.domain}}
               </fieldset>
             </div>
@@ -43,6 +44,14 @@
                       {{ access_option.tag}}
                       <label class="govuk-label govuk-checkboxes__label" for="{{ access_option.id_for_label }}">{{access_option.choice_label}}</label>
                     </div>
+=======
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                  {% for domain_option in form.domains %}
+                      <div class="govuk-checkboxes__item">
+                        {{ domain_option.tag}}
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ domain_option.id_for_label }}">{{domain_option.choice_label}}</label>
+                      </div>
+>>>>>>> 730c59e (Revert template - will add backend later)
                   {% endfor %}
                 </div>
               </fieldset>
