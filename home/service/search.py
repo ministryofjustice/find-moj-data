@@ -131,6 +131,8 @@ class SearchService(GenericService):
             page_title = "Search - Data catalogue"
 
         if self.form.is_bound:
+            domain = self.form.cleaned_data.get("domain", "")
+            classifications = self.form.cleaned_data.get("classifications", [])
             label_clear_href = {}
             domain = self.form.cleaned_data.get("domain")
             subdomain = self.form.cleaned_data.get("subdomains")
