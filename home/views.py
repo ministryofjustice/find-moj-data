@@ -35,3 +35,28 @@ def search_view(request, page: str = "1"):
 
     search_service = SearchService(form=form, page=page)
     return render(request, "search.html", search_service.context)
+
+def glossary_view(request):
+    context = {
+        "results": {
+            "Key concepts": {
+                "description": "Explanation of key concepts used in the catalogue",
+                "members": [
+                    {
+                        "name": "Data Steward",
+                        "description": "I am a data steward",
+                    },
+                ],
+            },
+            "Data governance terms": {
+                "description": "Data governance terms, people and processes referenced in the catalogue.",
+                "members": [
+                    {
+                        "name": "Data Product",
+                        "description": "Data Products are logical groupings of other data",
+                    },
+                ],
+            },
+        }
+    }
+    return render(request, "glossary.html", context)

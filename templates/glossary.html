@@ -1,0 +1,44 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-quarter">
+    <h1 class="govuk-heading-l">Glossary</h1>
+  </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <ul class="govuk-list">
+            {% for parent_term, parent_term_details in results.items %}
+            <li>
+                <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ parent_term }}">
+                    <strong>{{ parent_term }}</strong>
+                </a></div>
+                {% for member in parent_term_details.members %}
+                    <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ member.name }}">
+                        {{ member.name }}
+                    </a></div>
+                {%endfor%}
+                <br>
+            </li>
+            {%endfor%}
+        </ul>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+        <p class="govuk-body-l">Key concepts used in the data catalog.</p>
+        {% for parent_term, parent_term_details in results.items %}
+        <div>
+            <h1 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term }}</h1>
+            <p class="govuk-body-l">{{ parent_term_details.description }}</p>
+        </div>
+            {% for member in parent_term_details.members %}
+            <div>
+                <h2 class="govuk-heading-m" id="{{ member.name }}">{{ member.name }}</h2>
+                <p class="govuk-body">{{ member.description }}</p>
+            </div>
+            {%endfor%}
+        {%endfor%}
+    </div>
+</div>
+
+{% endblock content %}
