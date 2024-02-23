@@ -11,6 +11,7 @@ from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
+
 TMP_DIR = Path(__file__).parent / "../../tmp"
 
 
@@ -67,7 +68,7 @@ class Page:
         self.selenium = selenium
 
 
-class DetailsDataProductPage(Page):
+class DataProductDetailsPage(Page):
     def secondary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h2")
 
@@ -106,14 +107,6 @@ class SearchPage(Page):
             self.selenium.find_element(By.ID, "search-results").find_element(
                 By.CSS_SELECTOR, ".govuk-grid-row"
             )
-        )
-
-    def first_search_result_type(self) -> str:
-        return (
-            self.selenium.find_element(By.ID, "search-results")
-            .find_element(By.CSS_SELECTOR, ".govuk-grid-row")
-            .find_element(By.ID, "result-type")
-            .text
         )
 
     def search_bar(self) -> WebElement:
@@ -196,5 +189,5 @@ def search_page(selenium) -> SearchPage:
 
 
 @pytest.fixture
-def details_data_product_page(selenium) -> DetailsDataProductPage:
-    return DetailsDataProductPage(selenium)
+def details_data_product_page(selenium) -> DataProductDetailsPage:
+    return DataProductDetailsPage(selenium)

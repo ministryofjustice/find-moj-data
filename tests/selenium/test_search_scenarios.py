@@ -3,6 +3,8 @@ import re
 import pytest
 
 from .helpers import check_for_accessibility_issues
+from tests.conftest import mock_search_response, generate_page
+from data_platform_catalogue.search_types import ResultType
 
 
 @pytest.mark.slow
@@ -22,19 +24,22 @@ class TestSearchWithoutJavascriptAndCss:
         self.search_page = search_page
         self.details_data_product_page = details_data_product_page
 
-    def test_browse_to_first_item_data_product(self):
+    def test_browse_to_first_item_data_product(self, mock_catalogue):
         """
         Browses from the home page -> search -> details page
         """
-        while True:
-            self.start_on_the_home_page()
-            self.click_on_the_search_link()
-            result_type = self.get_search_first_result_type()
-            if result_type.lower() == "data product":
-                break
+        # we need to mock search response to be data products
+        mock_search_response(
+            mock_catalogue=mock_catalogue,
+            page_results=generate_page(result_type=ResultType.DATA_PRODUCT),
+            total_results=100,
+        )
+
+        self.start_on_the_home_page()
+        self.click_on_the_search_link()
+
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
-
         item_name = self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page(item_name)
 
@@ -161,23 +166,21 @@ class TestSearchWithoutJavascriptAndCss:
         self.start_on_the_search_page()
         check_for_accessibility_issues(self.selenium.current_url)
 
-    def test_search_to_data_product_details(self):
+    def test_search_to_data_product_details(self, mock_catalogue):
         """
         Users can search a data product and got to its details page
         """
+        mock_search_response(
+            mock_catalogue=mock_catalogue,
+            page_results=generate_page(result_type=ResultType.DATA_PRODUCT),
+            total_results=100,
+        )
         self.start_on_the_search_page()
-        while True:
-            self.enter_a_query_and_submit("court timeliness data product")
-            result_type = self.get_search_first_result_type()
-            if result_type.lower() == "data product":
-                break
+        self.enter_a_query_and_submit("court timeliness")
         item_name = self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page(item_name)
         self.verify_data_product_details()
         self.verify_data_product_tables_listed()
-
-    def get_search_first_result_type(self):
-        return self.search_page.first_search_result_type()
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
