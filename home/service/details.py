@@ -17,7 +17,6 @@ class DataProductDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         self.result = search_results.page_results[0]
-        self.data_product_name = self.result.name
         self.assets_in_data_product = self._get_data_product_entities()
         self.context = self._get_context()
 
@@ -36,7 +35,7 @@ class DataProductDetailsService(GenericService):
                 {
                     "name": (
                         result.name
-                        if not result.name.split(".")[0] == self.data_product_name
+                        if not result.name.split(".")[0] == self.result.name
                         else result.name.split(".")[1]
                     ),
                     "urn": result.id,
