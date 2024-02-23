@@ -108,6 +108,14 @@ class SearchPage(Page):
             )
         )
 
+    def first_search_result_type(self) -> str:
+        return (
+            self.selenium.find_element(By.ID, "search-results")
+            .find_element(By.CSS_SELECTOR, ".govuk-grid-row")
+            .find_element(By.ID, "result-type")
+            .text
+        )
+
     def search_bar(self) -> WebElement:
         return self.selenium.find_element(By.NAME, "query")
 
