@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .base import GenericService
 
 
-class DetailsDataProductService(GenericService):
+class DataProductDetailsService(GenericService):
     def __init__(self, urn: str):
         self.urn = urn
         self.client = self._get_catalogue_client()
@@ -62,3 +62,11 @@ class DetailsDataProductService(GenericService):
         }
 
         return context
+
+
+class DatasetDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.context = self._get_context()
+
+    def _get_context(self):
+        return {}
