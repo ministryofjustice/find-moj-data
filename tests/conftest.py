@@ -3,7 +3,6 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client import BaseCatalogueClient
-from data_platform_catalogue.client.datahub.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -15,7 +14,7 @@ from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
-from home.service.details import DetailsDataProductService
+from home.service.details import DataProductDetailsService
 from home.service.search import SearchService
 
 from datahub.metadata.schema_classes import (
@@ -42,7 +41,7 @@ def generate_page(page_size=20, result_type: ResultType = None):
                 ),
                 name=fake.name(),
                 description=fake.paragraph(),
-                metadata={"search_summary":"a"},
+                metadata={"search_summary": "a"},
             )
         )
     return results
@@ -85,7 +84,7 @@ def mock_catalogue():
         page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
         total_results=1,
     )
-    # mock_get_dataproduct_aspect(mock_catalogue)
+
     yield mock_catalogue
 
     patcher.stop()
@@ -141,6 +140,7 @@ def valid_form():
 def search_service(valid_form):
     return SearchService(form=valid_form, page="1")
 
+
 @pytest.fixture
 def search_context(search_service):
     return search_service.context
@@ -151,11 +151,7 @@ def detail_dataproduct_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
         total_results=1, page_results=generate_page(page_size=1)
     )
-    # mock_catalogue.list_data_product_assets.return_value = SearchResponse(
-    #     total_results=1,
-    #     page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
-    # )
-    # with patch():
-    details_service = DetailsDataProductService(urn="urn:li:dataProduct:test")
+
+    details_service = DataProductDetailsService(urn="urn:li:dataProduct:test")
     context = details_service._get_context()
     return context

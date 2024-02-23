@@ -3,7 +3,6 @@ from types import GeneratorType
 import pytest
 from data_platform_catalogue.search_types import ResultType
 from home.service.search import SearchForm, SearchService
-from unittest.mock import patch
 
 from home.service.search import domains_with_their_subdomains
 
