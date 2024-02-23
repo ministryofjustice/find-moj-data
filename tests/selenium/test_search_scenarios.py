@@ -22,12 +22,16 @@ class TestSearchWithoutJavascriptAndCss:
         self.search_page = search_page
         self.details_data_product_page = details_data_product_page
 
-    def test_browse_to_first_item(self):
+    def test_browse_to_first_item_data_product(self):
         """
         Browses from the home page -> search -> details page
         """
-        self.start_on_the_home_page()
-        self.click_on_the_search_link()
+        while True:
+            self.start_on_the_home_page()
+            self.click_on_the_search_link()
+            result_type = self.get_search_first_result_type()
+            if result_type.lower() == "data product":
+                break
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
 
@@ -159,11 +163,18 @@ class TestSearchWithoutJavascriptAndCss:
         Users can search a data product and got to its details page
         """
         self.start_on_the_search_page()
-        self.enter_a_query_and_submit("court timeliness data product")
+        while True:
+            self.enter_a_query_and_submit("court timeliness data product")
+            result_type = self.get_search_first_result_type()
+            if result_type.lower() == "data product":
+                break
         item_name = self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page(item_name)
         self.verify_data_product_details()
         self.verify_data_product_tables_listed()
+
+    def get_search_first_result_type(self):
+        return self.search_page.first_search_result_type()
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
