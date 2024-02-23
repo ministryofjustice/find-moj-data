@@ -95,7 +95,13 @@
                 {% with table_type=table.type|lower %}
                   <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header">{{table.name}}</th>
-                    <td class="govuk-table__cell">{{table.description}}</td>
+                    <td class="govuk-table__cell">
+                      {% if table.description|length > 200 %}
+                        {{ table.description|slice:":200"|add:"..."|markdown }}
+                      {% else %}
+                        {{ table.description|markdown }}
+                      {% endif %}
+                    </td>
                     <td class="govuk-table__cell">  <a href="{% url 'home:details' result_type=table_type id=table.urn %}" class="govuk-link">Schema details</a></td>
                   </tr>       
                 {% endwith %} 
