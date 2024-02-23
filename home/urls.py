@@ -8,7 +8,7 @@ urlpatterns = [
     path("search", views.search_view, name="search"),
     path(
         "details/<str:result_type>/<str:id>",
-        views.redirect_details_view,
+        views.details_view,
         name="details",
     ),
     path("pagination/<str:page>", views.search_view, name="pagination"),
