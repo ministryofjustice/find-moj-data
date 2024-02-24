@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@ministryofjustice/frontend": "^2.1.0",
+    "axe": "^12.2.3",
     "govuk-frontend": "^5.0.0",
     "sass": "^1.70.0"
   },
