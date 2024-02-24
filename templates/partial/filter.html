@@ -9,46 +9,8 @@
         <div class="moj-filter__header-action">
         </div>
       </div>
-
       <div class="moj-filter__content">
-        <div class="moj-filter__selected">
-          <div class="moj-filter__selected-heading">
-            <div class="moj-filter__heading-title">
-              <h2 class="govuk-heading-m">Selected filters</h2>
-            </div>
-            <div class="moj-filter__heading-action">
-              <p>
-                <a class="govuk-link govuk-link--no-visited-state"
-                href="{% url 'home:search' %}{% query_string domain=None classifications=None where_to_access=None %}"
-                id="clear_filter">
-                Clear filter
-                </a>
-              </p>
-            </div>
-          </div>
-          {% if label_clear_href|get_item:"domain"|length > 0 %}
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Domain</h3>
-            <ul class="moj-filter-tags">
-              <input type="hidden" name="clear_label" value="">
-              {% for label, href in label_clear_href|get_items:"domain" %}
-                <li><a class="moj-filter__tag govuk-link" href="{{ href }}">
-                  <span data-test-id="selected-domain-label">{{label}}</span> <span class="govuk-visually-hidden">Remove this filter</span>
-                </a></li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-          {% if label_clear_href|get_item:"classifications"|length > 0 %}
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Security Classifications</h3>
-            <ul class="moj-filter-tags">
-              <input type="hidden" name="clear_label" value="">
-              {% for label, href in label_clear_href|get_items:"classifications" %}
-                <li><a class="moj-filter__tag govuk-link" href="{{ href }}">
-                  <span data-test-id="selected-domain-label">{{label}}</span> <span class="govuk-visually-hidden">Remove this filter</span>
-                </a></li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
+        {% include "partial/selected_filters.html" %}
         <div class="moj-filter__options">
             <button form="searchform" class="govuk-button" data-module="govuk-button" data-test-id="apply-filters">
               Apply filters
@@ -56,9 +18,7 @@
             <div class="govuk-form-group">
               <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                   {{form.domain}}
-                </div>
               </fieldset>
             </div>
             <div class="govuk-form-group">
