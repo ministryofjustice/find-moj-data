@@ -15,7 +15,7 @@ def domains_with_their_subdomains(domain: str) -> list[str]:
     """
     subdomains = get_subdomain_choices(domain)
     subdomains = [subdomain[0] for subdomain in subdomains]
-    return [domain, *subdomains] if subdomains else [domain]
+    return [domain, *subdomains] if subdomains else []
 
 
 class SearchService(GenericService):
