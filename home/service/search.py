@@ -27,6 +27,16 @@ class SearchService(GenericService):
         self.paginator = self._get_paginator(items_per_page)
         self.context = self._get_context()
 
+    @staticmethod
+    def _build_filter_strings(
+        filter_param: str, filter_value_list: list[str]
+    ) -> list[str]:
+        return (
+            [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
+            if filter_value_list
+            else []
+        )
+
     def _get_search_results(self, page: str, items_per_page: int):
         if self.form.is_bound:
             form_data = self.form.cleaned_data
