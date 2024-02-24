@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 
 TMP_DIR = Path(__file__).parent / "../../tmp"
 
@@ -115,8 +116,19 @@ class SearchPage(Page):
     def checked_sort_option(self) -> WebElement:
         return self.selenium.find_element(By.CSS_SELECTOR, "input:checked[name='sort']")
 
-    def domain_label(self, name) -> WebElement:
-        return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
+    def domain_select(self) -> WebElement:
+        return Select(self.selenium.find_element(By.ID, "id_domain"))
+
+    def select_domain(self, domain) -> WebElement:
+        select = self.domain_select()
+        return select.select_by_visible_text(domain)
+
+    def get_selected_domain(self) -> WebElement:
+        select = self.domain_select()
+        return select.first_selected_option
+
+    def domain_option(self, name) -> WebElement:
+        return self.selenium.find_element(By.XPATH, f"//option[ text() = '{name}' ]")
 
     def sort_label(self, name) -> WebElement:
         return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
