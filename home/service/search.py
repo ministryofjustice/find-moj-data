@@ -14,7 +14,8 @@ def domains_with_their_subdomains(domain: str) -> list[str]:
     we filter by domain alone. We need to include all possible subdomains in the filter.
     """
     subdomains = get_subdomain_choices(domain)
-    return [domain, *subdomains] if subdomains else subdomains
+    subdomains = [subdomain[0] for subdomain in subdomains]
+    return [domain, *subdomains] if subdomains else [domain]
 
 
 class SearchService(GenericService):

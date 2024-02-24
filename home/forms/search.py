@@ -10,7 +10,7 @@ def get_domain_choices() -> list[tuple[str, str]]:
     # facets = client.search_facets()
     # domain_list = facets.options("domains")
     return [
-        ("", "Select ..."),
+        ("", "All Domains"),
         ("urn:li:domain:HMCTS", "HMCTS"),
         ("urn:li:domain:HMPPS", "HMPPS"),
         ("urn:li:domain:HQ", "HQ"),
@@ -80,7 +80,7 @@ def get_classification_choices():
 
 
 def get_where_to_access_choices():
-    return [("Analytical_Platform", "Analytical Platform")]
+    return [("analytical_platform", "Analytical Platform")]
 
 
 class SearchForm(forms.Form):
