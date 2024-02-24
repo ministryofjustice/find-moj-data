@@ -73,7 +73,7 @@ class SearchService(GenericService):
             sort_option = None
 
         results = self.client.search(
-            query=full_query,
+            query=query,
             page=page_for_search,
             filters=filter_value,
             sort=sort_option,
