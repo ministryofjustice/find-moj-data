@@ -84,30 +84,49 @@ class SearchService(GenericService):
 
         return Paginator(pages_list, items_per_page)
 
+    def _generate_label_clear_ref(self) -> dict[str, dict[str, str]]:
+        if self.form.is_bound:
+            domain = self.form.cleaned_data.get("domain", "")
+            classifications = self.form.cleaned_data.get("classifications", [])
+            where_to_access = self.form.cleaned_data.get("where_to_access", [])
+            label_clear_href = {}
+            if domain:
+                label_clear_href["domain"] = {
+                    domain.split(":")[-1]: (
+                        self.form.encode_without_filter(
+                            filter_name="domain", filter_value=domain
+                        )
+                    )
+                }
+            if classifications:
+                classifications_clear_href = {}
+                for classification in classifications:
+                    classifications_clear_href[
+                        classification
+                    ] = self.form.encode_without_filter(
+                        filter_name="classifications", filter_value=classification
+                    )
+                label_clear_href["classifications"] = classifications_clear_href
+
+            if where_to_access:
+                where_to_access_clear_href = {}
+                for access in where_to_access:
+                    where_to_access_clear_href[
+                        access
+                    ] = self.form.encode_without_filter(
+                        filter_name="where_to_access", filter_value=access
+                    )
+                label_clear_href["availability"] = where_to_access_clear_href
+        else:
+            label_clear_href = None
+        return label_clear_href
+
     def _get_context(self) -> dict[str, Any]:
         if self.form["query"].value():
             page_title = f'Search for "{self.form["query"].value()}" - Data catalogue'
         else:
             page_title = "Search - Data catalogue"
 
-        if self.form.is_bound:
-            domain = self.form.cleaned_data.get("domain", "")
-            classifications = self.form.cleaned_data.get("classifications", [])
-            label_clear_href = {}
-            if domain:
-                label_clear_href["domain"] = {
-                    domain.split(":")[-1]: (self.form.encode_without_filter(domain))
-                }
-            if classifications:
-                classifications_clear_href = {}
-                for classification in classifications:
-                    classifications_clear_href[
-                        classification.split("=")[1]
-                    ] = self.form.encode_without_filter(classification)
-                label_clear_href["classifications"] = classifications_clear_href
-        else:
-            label_clear_href = None
-        print(f"label clear ref: {label_clear_href}")
         context = {
             "form": self.form,
             "results": self.results.page_results,
@@ -118,39 +137,7 @@ class SearchService(GenericService):
             ),
             "paginator": self.paginator,
             "total_results": self.results.total_results,
-            "label_clear_href": label_clear_href,
+            "label_clear_href": self._generate_label_clear_ref(),
         }
 
         return context
-
-    @staticmethod
-    def _query_builder(query: str, custom_properties: dict[str, list[str]]) -> str:
-        """Construct a valid DataHub search query using the input query and the passed
-        customProperties.
-
-        Args:
-            query (str): User search string
-            custom_properties (dict[str, list[str  |  None]]): Dictionary of custom
-            property name and custom property values selected to filter on.
-
-        Returns:
-            str: advanced query string to pass to DataHub that will include 'filtering'
-            logic for custom properties
-        """
-        # ref: https://datahubproject.io/docs/how/search/#advanced-queries
-        custom_property_query: str = "/q customProperties: "
-        custom_property_strings: list[str] = []
-
-        for _, value in custom_properties.items():
-            if value:
-                # within-filter options are inclusive OR
-                custom_property_string = " OR ".join(value)
-                custom_property_strings.append(custom_property_string)
-
-        if query != "":
-            custom_property_strings.append(query)
-
-        # cross-filter options are exclusive AND
-        final_query = " AND ".join(custom_property_strings)
-
-        return f"{custom_property_query} {final_query}" if final_query else "*"
