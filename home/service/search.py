@@ -47,21 +47,20 @@ class SearchService(GenericService):
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         domains_and_subdomains = domains_with_their_subdomains(domain)
-        filter_value = (
-            [MultiSelectFilter("domains", domains_and_subdomains)]
-            if domains_and_subdomains
-            else []
+        classifications = self._build_filter_strings(
+            "sensitivityLevel=", form_data.get("classifications", [])
         )
+        where_to_access = self._build_filter_strings(
+            "whereToAccessDataset=", form_data.get("where_to_access", [])
+        )
+        filter_value = []
+        if domains_and_subdomains:
+            filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
+        if classifications:
+            filter_value.append(MultiSelectFilter("customProperties", classifications))
+        if where_to_access:
+            filter_value.append(MultiSelectFilter("customProperties", where_to_access))
 
-        classifications = form_data.get("classifications", [])
-        where_to_access = form_data.get("where_to_access", [])
-
-        custom_properties = {
-            "classifications": classifications,
-            "where_to_access": where_to_access,
-        }
-
-        full_query = self._query_builder(query, custom_properties)
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
             sort_option = SortOption(field="name", ascending=True)
@@ -71,7 +70,7 @@ class SearchService(GenericService):
             sort_option = None
 
         results = self.client.search(
-            query=full_query,
+            query=query,
             page=page_for_search,
             filters=filter_value,
             sort=sort_option,
