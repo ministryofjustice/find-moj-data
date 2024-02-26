@@ -10,17 +10,16 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
+from datahub.metadata.schema_classes import (
+    DataProductAssociationClass,
+    DataProductPropertiesClass,
+)
 from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
 from home.service.details import DataProductDetailsService
 from home.service.search import SearchService
-
-from datahub.metadata.schema_classes import (
-    DataProductPropertiesClass,
-    DataProductAssociationClass,
-)
 
 fake = Faker()
 
@@ -104,6 +103,25 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 def mock_search_facets_response(mock_catalogue, domains):
     mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
+
+
+def mock_list_data_product_response(mock_catalogue, total_results, page_results=()):
+    search_response = SearchResponse(
+        total_results=total_results, page_results=page_results
+    )
+    mock_catalogue.list_data_product_assets.return_value = search_response
+
+
+def mock_get_dataproduct_aspect(mock_catalogue):
+    data_product_association = DataProductAssociationClass(
+        destinationUrn="urn:li:dataset:(urn:li:dataPlatform:glue,test.test,PROD)",
+        sourceUrn="urn:li:dataProduct:test",
+    )
+
+    response = DataProductPropertiesClass(
+        name="test", assets=[data_product_association], description="test"
+    )
+    mock_catalogue.graph.get_aspect.return_value = response
 
 
 @pytest.fixture

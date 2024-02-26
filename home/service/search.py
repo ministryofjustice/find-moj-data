@@ -58,7 +58,7 @@ class SearchService(GenericService):
         )
         filter_value = []
         if domains_and_subdomains:
-            filter_value.append(MultiSelectFilter("domain", domains_and_subdomains))
+            filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
         if classifications:
             filter_value.append(MultiSelectFilter("customProperties", classifications))
         if where_to_access:
@@ -104,62 +104,20 @@ class SearchService(GenericService):
             if classifications:
                 classifications_clear_href = {}
                 for classification in classifications:
-                    classifications_clear_href[classification] = (
-                        self.form.encode_without_filter(
-                            filter_name="classifications", filter_value=classification
-                        )
+                    classifications_clear_href[
+                        classification
+                    ] = self.form.encode_without_filter(
+                        filter_name="classifications", filter_value=classification
                     )
                 label_clear_href["classifications"] = classifications_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}
                 for access in where_to_access:
-                    where_to_access_clear_href[access] = (
-                        self.form.encode_without_filter(
-                            filter_name="where_to_access", filter_value=access
-                        )
-                    )
-                label_clear_href["availability"] = where_to_access_clear_href
-        else:
-            label_clear_href = None
-        return label_clear_href
-
-    def _get_context(self) -> dict[str, Any]:
-        if self.form["query"].value():
-            page_title = f'Search for "{self.form["query"].value()}" - Data catalogue'
-        else:
-            page_title = "Search - Data catalogue"
-
-        if self.form.is_bound:
-            domain = self.form.cleaned_data.get("domain", "")
-            classifications = self.form.cleaned_data.get("classifications", [])
-            where_to_access = self.form.cleaned_data.get("where_to_access", [])
-            label_clear_href = {}
-            domain = self.form.cleaned_data.get("domain")
-            subdomain = self.form.cleaned_data.get("subdomains")
-            if domain:
-                label_clear_href["domain"] = {
-                    domain.split(":")[-1]: (
-                        self.form.encode_without_filter(
-                            filter_name="domain", filter_value=domain
-                        )
-                    )
-                }
-            if classifications:
-                classifications_clear_href = {}
-                for classification in classifications:
-                    classifications_clear_href[classification.split("=")[1]] = (
-                        self.form.encode_without_filter(classification)
-                    )
-                label_clear_href["classifications"] = classifications_clear_href
-
-            if where_to_access:
-                where_to_access_clear_href = {}
-                for access in where_to_access:
-                    where_to_access_clear_href[access] = (
-                        self.form.encode_without_filter(
-                            filter_name="where_to_access", filter_value=access
-                        )
+                    where_to_access_clear_href[
+                        access
+                    ] = self.form.encode_without_filter(
+                        filter_name="where_to_access", filter_value=access
                     )
                 label_clear_href["availability"] = where_to_access_clear_href
         else:
