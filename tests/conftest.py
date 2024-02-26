@@ -31,7 +31,8 @@ def generate_page(page_size=20):
                 id=fake.unique.name(),
                 result_type=choice((ResultType.DATA_PRODUCT, ResultType.TABLE)),
                 name=fake.name(),
-                description=fake.paragraphs(),
+                description=fake.paragraph(),
+                metadata={"search_summary":"a"},
             )
         )
     return results
@@ -105,10 +106,12 @@ def valid_form():
 
 
 @pytest.fixture
-def search_context(valid_form):
-    search_service = SearchService(form=valid_form, page="1")
-    context = search_service._get_context()
-    return context
+def search_service(valid_form):
+    return SearchService(form=valid_form, page="1")
+
+@pytest.fixture
+def search_context(search_service):
+    return search_service.context
 
 
 @pytest.fixture

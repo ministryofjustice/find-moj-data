@@ -2,6 +2,8 @@ from types import GeneratorType
 
 import pytest
 from data_platform_catalogue.search_types import ResultType
+from home.service.search import SearchForm, SearchService
+from unittest.mock import patch
 
 from home.service.search import domains_with_their_subdomains
 
@@ -56,6 +58,38 @@ class TestSearchService:
             )
         }
 
+    def test_highlight_results_no_query(self, search_service):
+        search_service.form.cleaned_data = {"query": ""}
+        search_service._highlight_results()
+        assert (
+            normal.description == highlighted.description
+            and normal.metadata == highlighted.metadata
+            for normal, highlighted in zip(
+                search_service.results.page_results,
+                search_service.highlighted_results.page_results,
+            )
+        )
+
+    def test_highlight_results_with_case_insensitive_query(self):
+        # The descriptions are all in lower case, so search upper case
+        # to test case insensitivity
+        form = SearchForm(data={"query": "A"})
+        assert form.is_valid()
+        service = SearchService(form=form, page="1")
+
+        descriptions = [result.description for result in service.results.page_results]
+        highlighted_descriptions = [result.description for result in service.highlighted_results.page_results]
+
+        assert descriptions != highlighted_descriptions
+        assert (
+            "**a**" or "**A**" in highlighted.description
+            for normal, highlighted
+            in zip(
+                service.results.page_results,
+                service.highlighted_results.page_results,
+            )
+            if "a" or "A" in normal.description
+        )
 
 class TestDetailsService:
     def test_get_context(self, detail_context, mock_catalogue):
