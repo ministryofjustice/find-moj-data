@@ -1,10 +1,18 @@
 {
   "dependencies": {
+    "@babel/preset-env": "^7.23.9",
     "@ministryofjustice/frontend": "^2.1.0",
+    "babel-jest": "^29.7.0",
     "govuk-frontend": "^5.1.0",
+    "jest-environment-jsdom": "^29.7.0",
     "sass": "^1.70.0"
   },
   "scripts": {
-    "sass": "sass --load-path=. scss:static/assets/css"
+    "sass": "sass --load-path=. scss:static/assets/css",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "jest": "^29.7.0"
   }
 }

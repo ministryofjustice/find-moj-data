@@ -1,9 +1,9 @@
-from pytest import CollectReport, StashKey
 import datetime
 from pathlib import Path
 from typing import Any, Generator
 
 import pytest
+from pytest import CollectReport, StashKey
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By

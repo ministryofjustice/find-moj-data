@@ -20,6 +20,15 @@ from home.service.search import SearchService
 fake = Faker()
 
 
+def pytest_addoption(parser):
+    parser.addoption("--chromedriver-path", action="store")
+
+
+@pytest.fixture
+def chromedriver_path(request):
+    return request.config.getoption("--chromedriver-path")
+
+
 def generate_page(page_size=20):
     """
     Generate a fake search page
@@ -29,11 +38,10 @@ def generate_page(page_size=20):
         results.append(
             SearchResult(
                 id=fake.unique.name(),
-                result_type=choice(
-                    (ResultType.DATA_PRODUCT, ResultType.TABLE)),
+                result_type=choice((ResultType.DATA_PRODUCT, ResultType.TABLE)),
                 name=fake.name(),
                 description=fake.paragraph(),
-                metadata={"search_summary":"a"},
+                metadata={"search_summary": "a"},
             )
         )
     return results
@@ -85,8 +93,7 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 
 def mock_search_facets_response(mock_catalogue, domains):
-    mock_catalogue.search_facets.return_value = SearchFacets(
-        {"domains": domains})
+    mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
 
 
 @pytest.fixture
@@ -108,6 +115,7 @@ def valid_form():
 @pytest.fixture
 def search_service(valid_form):
     return SearchService(form=valid_form, page="1")
+
 
 @pytest.fixture
 def search_context(search_service):
