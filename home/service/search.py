@@ -199,7 +199,6 @@ class SearchService(GenericService):
 
         else:
             pattern = f"({re.escape(query)})"
-            pattern = f"({re.escape(query)})"
             for result in highlighted_results.page_results:
                 result.description = re.sub(
                     pattern,
@@ -207,6 +206,7 @@ class SearchService(GenericService):
                     result.description,
                     flags=re.IGNORECASE,
                 )
+
             return highlighted_results
 
     def _get_match_reason_display_names(self):
@@ -219,19 +219,3 @@ class SearchService(GenericService):
             "fieldPaths": "Column name",
             "fieldDescriptions": "Column description",
         }
-
-    @staticmethod
-    def _query_builder(query: str, custom_properties: dict[str, list[str | None]]):
-        custom_property_query: str = "/q customProperties: "
-        custom_property_strings: list[str] = []
-
-        for _, value in custom_properties.items():
-            if value:
-                custom_property_strings.append(" OR ".join(value))
-
-        if query != "":
-            custom_property_strings.append(query)
-
-        final_query = " AND ".join(custom_property_strings)
-
-        return f"{custom_property_query} {final_query}" if final_query else "*"
