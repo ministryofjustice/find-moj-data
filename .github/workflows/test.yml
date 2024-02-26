@@ -40,10 +40,18 @@ jobs:
         id: fast-tests
         run: poetry run pytest --cov -m 'not slow'
 
+      - name: Get Chromium version 🌐
+        run: |
+          CHROMIUM_VERSION=$(google-chrome --product-version)
+          echo "Chromium version: $CHROMIUM_VERSION"
+          echo "CHROMIUM_VERSION=$CHROMIUM_VERSION" >> $GITHUB_ENV
+      - name: Install chromedriver 🚗
+        run: |
+          npm install -g chromedriver@${CHROMIUM_VERSION%.*.*}
       - name: run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: poetry run pytest -m 'slow'
+        run: poetry run pytest -m 'slow' --chromedriver-path=$(npm root -g)/chromedriver/bin/chromedriver
 
   test_javascript:
     runs-on: ubuntu-latest
