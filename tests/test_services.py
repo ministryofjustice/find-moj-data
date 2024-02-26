@@ -28,8 +28,37 @@ class TestSearchService:
         assert search_context["page_title"] == 'Search for "test" - Data catalogue'
 
     def test_get_context_label_clear_href(self, search_context):
-        assert search_context["label_clear_href"] == {
-            "HMCTS": "?query=test&sort=ascending&clear_filter=False&clear_label=False"
+        assert search_context["label_clear_href"]["domain"] == {
+            "HMCTS": (
+                "?query=test&"
+                "classifications=OFFICIAL&"
+                "where_to_access=analytical_platform&"
+                "sort=ascending&"
+                "clear_filter=False&"
+                "clear_label=False"
+            )
+        }
+
+        assert search_context["label_clear_href"]["availability"] == {
+            "analytical_platform": (
+                "?query=test&"
+                "domain=urn%3Ali%3Adomain%3AHMCTS&"
+                "classifications=OFFICIAL&"
+                "sort=ascending&"
+                "clear_filter=False&"
+                "clear_label=False"
+            )
+        }
+
+        assert search_context["label_clear_href"]["classifications"] == {
+            "OFFICIAL": (
+                "?query=test&"
+                "domain=urn%3Ali%3Adomain%3AHMCTS&"
+                "where_to_access=analytical_platform&"
+                "sort=ascending&"
+                "clear_filter=False&"
+                "clear_label=False"
+            )
         }
 
     def test_highlight_results_no_query(self, search_service):
@@ -174,16 +203,16 @@ class TestGlossaryService:
 @pytest.mark.parametrize(
     "domain, expected_subdomains",
     [
-        ("does-not-exist", ["does-not-exist"]),
+        ("does-not-exist", []),
         (
             "urn:li:domain:HMPPS",
             [
+                "urn:li:domain:HMPPS",
                 "urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9",
                 "urn:li:domain:abe153c1-416b-4abb-be7f-6accf2abb10a",
-                "urn:li:domain:HMPPS",
             ],
         ),
     ],
 )
 def test_domain_expansion(domain, expected_subdomains):
-    assert domains_with_their_subdomains([domain]) == expected_subdomains
+    assert domains_with_their_subdomains(domain) == expected_subdomains

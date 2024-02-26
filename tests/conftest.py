@@ -10,6 +10,10 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
+from datahub.metadata.schema_classes import (
+    DataProductAssociationClass,
+    DataProductPropertiesClass,
+)
 from django.test import Client
 from faker import Faker
 
@@ -36,7 +40,6 @@ def chromedriver_path(request):
 
 
 def generate_page(page_size=20, result_type: ResultType = None):
-
     """
     Generate a fake search page
     """
@@ -182,7 +185,9 @@ def valid_form():
     valid_form = SearchForm(
         data={
             "query": "test",
-            "domains": ["urn:li:domain:HMCTS"],
+            "domain": "urn:li:domain:HMCTS",
+            "classifications": ["OFFICIAL"],
+            "where_to_access": ["analytical_platform"],
             "sort": "ascending",
             "clear_filter": False,
             "clear_label": False,
