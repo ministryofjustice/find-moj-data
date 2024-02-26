@@ -4,12 +4,13 @@ from urllib.parse import urlencode
 from django import forms
 
 
-def get_domain_choices():
+def get_domain_choices() -> list[tuple[str, str]]:
     """Make API call to obtain domain choices"""
     # TODO: pull in the domains from the catalogue client
     # facets = client.search_facets()
     # domain_list = facets.options("domains")
     return [
+        ("", "All Domains"),
         ("urn:li:domain:HMCTS", "HMCTS"),
         ("urn:li:domain:HMPPS", "HMPPS"),
         ("urn:li:domain:HQ", "HQ"),
@@ -69,6 +70,18 @@ def get_sort_choices():
     ]
 
 
+def get_classification_choices():
+    return [
+        ("OFFICIAL", "Official"),
+        ("SECRET", "Secret"),
+        ("TOP-SECRET", "Top-Secret"),
+    ]
+
+
+def get_where_to_access_choices():
+    return [("analytical_platform", "Analytical Platform")]
+
+
 class SearchForm(forms.Form):
     """Django form to represent data product search page inputs"""
 
@@ -78,8 +91,26 @@ class SearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
     )
-    domains = forms.MultipleChoiceField(
+    domain = forms.ChoiceField(
         choices=get_domain_choices,
+        required=False,
+        widget=forms.Select(
+            attrs={
+                "form": "searchform",
+                "class": "govuk-select",
+                "aria-label": "domain",
+            }
+        ),
+    )
+    classifications = forms.MultipleChoiceField(
+        choices=get_classification_choices,
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
+        ),
+    )
+    where_to_access = forms.MultipleChoiceField(
+        choices=get_where_to_access_choices,
         required=False,
         widget=forms.CheckboxSelectMultiple(
             attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
@@ -103,13 +134,13 @@ class SearchForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.initial["sort"] = "relevance"
 
-    def encode_without_filter(self, filter_to_remove):
+    def encode_without_filter(self, filter_name: str, filter_value: str):
         """Preformat hrefs to drop individual filters"""
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)
-
-        query_params["domains"].remove(filter_to_remove)
-        if len(query_params["domains"]) == 0:
-            query_params.pop("domains")
-
+        value = query_params.get(filter_name)
+        if isinstance(value, list) and filter_value in value:
+            value.remove(filter_value)
+        elif isinstance(value, str) and filter_value == value:
+            query_params.pop(filter_name)
         return f"?{urlencode(query_params, doseq=True)}"

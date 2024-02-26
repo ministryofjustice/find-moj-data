@@ -11,17 +11,30 @@ repos:
         exclude: tf$|j2$
 
   - repo: https://github.com/psf/black
-    rev: 23.11.0
+    rev: 23.12.1
     hooks:
       - id: black
         name: black formatting
         # args: [--config=./pyproject.toml]
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
+    rev: 7.0.0
     hooks:
       - id: flake8
         name: flake8 lint
+        args: [
+          '--ignore=E203,E266,W503,F403',
+          '--exclude=".git, .mypy_cache, .pytest_cache, build, dist"',
+          '--max-line-length=89',
+          '--max-complexity=18',
+          '--select="B,C,E,F,W,T4,B9"'
+        ]
+        additional_dependencies:
+          - flake8-broken-line
+          - flake8-bugbear
+          - flake8-comprehensions
+          - flake8-debugger
+          - flake8-string-format
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
@@ -31,7 +44,14 @@ repos:
         exclude: package.lock.json
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
         name: isort (python)
+        additional_dependencies: ["toml"]
+
+  - repo: https://github.com/floatingpurr/sync_with_poetry
+    rev: "1.1.0"
+    hooks:
+      - id: sync_with_poetry
+        args: []

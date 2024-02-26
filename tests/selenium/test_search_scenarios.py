@@ -28,7 +28,8 @@ class TestSearchWithoutJavascriptAndCss:
         self.live_server_url = live_server.url
         self.home_page = home_page
         self.search_page = search_page
-
+        self.details_data_product_page = details_data_product_page
+        self.chromedriver_path = chromedriver_path
         self.details_data_product_page = details_data_product_page
         self.chromedriver_path = chromedriver_path
 
@@ -65,13 +66,13 @@ class TestSearchWithoutJavascriptAndCss:
         """
         Interacts with the filters on the left hand side
         """
+        domain = "HMPPS"
         self.start_on_the_search_page()
-        self.select_domain(["HMCTS", "HMPPS"])
+        self.select_domain(domain)
         self.click_apply_filters()
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
-        self.verify_domain_selected(["HMCTS", "HMPPS"])
-        self.verify_selected_filters_shown(["HMCTS", "HMPPS"])
+        self.verify_domain_selected(domain)
 
     def test_pagination(self):
         """
@@ -104,8 +105,9 @@ class TestSearchWithoutJavascriptAndCss:
         Search settings persist as the user continues to
         interact with the search page.
         """
+        domain = "HMPPS"
         self.start_on_the_search_page()
-        self.select_domain(["HMCTS", "HMPPS"])
+        self.select_domain(domain)
         self.click_apply_filters()
         self.enter_a_query_and_submit("nomis")
         self.click_sort_option("Ascending")
@@ -113,7 +115,7 @@ class TestSearchWithoutJavascriptAndCss:
 
         self.verify_i_have_results()
         self.verify_the_search_bar_has_value("nomis")
-        self.verify_domain_selected(["HMCTS", "HMPPS"])
+        self.verify_domain_selected(domain)
         self.verify_sort_selected("Ascending")
 
     def test_adding_a_query_resets_pagination(self):
@@ -136,7 +138,7 @@ class TestSearchWithoutJavascriptAndCss:
         self.click_next_page()
         self.verify_page("2")
 
-        self.select_domain(["HMPPS"])
+        self.select_domain("HMPPS")
         self.click_apply_filters()
         self.verify_page("1")
 
@@ -145,23 +147,25 @@ class TestSearchWithoutJavascriptAndCss:
         Users can clear a filter by clicking on it within the "selected filters"
         panel.
         """
+        domain = "HMPPS"
         self.start_on_the_search_page()
-        self.select_domain(["HMPPS", "HMCTS"])
+        self.select_domain(domain)
         self.click_apply_filters()
-        self.click_clear_selected_filter("HMPPS")
-
-        self.verify_domain_selected(["HMCTS"])
+        self.verify_domain_selected(domain)
+        self.click_clear_selected_filter(domain)
+        self.verify_unselected_domain()
 
     def test_clear_all_filters(self):
         """
         Users can click a button to clear all filters.
         """
+        domain = "HMCTS"
         self.start_on_the_search_page()
-        self.select_domain(["HMPPS", "HMCTS"])
+        self.select_domain(domain)
         self.click_apply_filters()
+        self.verify_domain_selected(domain)
         self.click_clear_filters()
-
-        self.verify_domain_selected([])
+        self.verify_unselected_domain()
 
     def test_automated_accessibility_home(self):
         self.start_on_the_home_page()
@@ -234,9 +238,8 @@ class TestSearchWithoutJavascriptAndCss:
         search_bar.send_keys(query)
         self.click_on_the_search_button()
 
-    def select_domain(self, domains):
-        for domain in domains:
-            self.search_page.domain_label(domain).click()
+    def select_domain(self, domain):
+        self.search_page.select_domain(domain)
 
     def click_sort_option(self, sortby):
         self.search_page.sort_label(sortby).click()
@@ -255,15 +258,13 @@ class TestSearchWithoutJavascriptAndCss:
 
         assert search_bar.get_attribute("value") == query
 
-    def verify_domain_selected(self, domains):
-        expected = set(domains)
-        checkboxes = self.search_page.checked_domain_checkboxes()
-        actual = set()
-        for checkbox in checkboxes:
-            value = checkbox.get_attribute("value") or ""
-            actual.add(value.replace("urn:li:domain:", ""))
+    def verify_domain_selected(self, domain):
+        selected_domain = self.search_page.get_selected_domain().text
+        assert selected_domain == domain
 
-        assert actual == expected
+    def verify_unselected_domain(self):
+        selected_domain = self.search_page.get_selected_domain().text
+        assert selected_domain == "All Domains"
 
     def verify_selected_filters_shown(self, domains):
         actual = {i.text for i in self.search_page.selected_filter_tags()}

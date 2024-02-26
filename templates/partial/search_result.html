@@ -33,23 +33,41 @@
       <dl class="govuk-summary-list">
 
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Registered by</dt>
+          <dt class="govuk-summary-list__key">Registered by:</dt>
           <dd class="govuk-summary-list__value">
-          {{result.metadata.owner}}
+          {{result.metadata.maintainer_display_name}}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Database name:</dt>
+          <dd class="govuk-summary-list__value">
+          TBC
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">First created:</dt>
+          <dd class="govuk-summary-list__value">
+            {% if result.metadata.creation_date %}
+            {{result.metadata.creation_date | date:"jS F Y"}} ({{result.metadata.creation_date|naturaltime}})
+            {% endif %}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Refresh period:</dt>
+          <dd class="govuk-summary-list__value">
+          TBC
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Retention period:</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.metadata.retention_period_in_days}}
           </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Domain name</dt>
           <dd class="govuk-summary-list__value">
           {{result.metadata.domain_name}}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Last updated date</dt>
-          <dd class="govuk-summary-list__value">
-            {% if result.last_updated %}
-            {{result.last_updated | date:"jS F Y"}} ({{result.last_updated|naturaltime}})
-            {% endif %}
           </dd>
         </div>
         <div class="govuk-summary-list__row">

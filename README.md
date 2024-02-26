@@ -4,8 +4,8 @@ You will need npm (for javascript dependencies) and poetry (for python dependenc
 
 1. Run `poetry install` to install python dependencies
 2. Copy `.env.example` to `.env`.
-3. You wil need to obtain an access token from Datahub catalogue and populate the `CATALOGUE_TOKEN` var in .env to be able to retrieve search data.
-   https://datahub.apps-tools.development.data-platform.service.justice.gov.uk/settings/tokens
+3. You wil need to obtain an access token from Datahub catalogue and populate the
+`CATALOGUE_TOKEN` var in .env to be able to retrieve search data.
 4. Run `poetry run python manage.py runserver`
 
 Run `npm install` and then `npm run sass` to compile the stylesheets.
@@ -15,6 +15,16 @@ Run `npm install` and then `npm run sass` to compile the stylesheets.
 /search
 
 ![Screenshot of the service showing the search page](image.png)
+
+## Contributing
+
+Run `pre-commit install` from inside the poetry environment to set up pre commit hooks.
+
+- Linting and formatting handled by `black`, `flake8`, `pre-commit`, and `isort`
+  - `isort` is configured in `pyproject.toml`
+- `detect-secrets` is used to prevent leakage of secrets
+- `sync_with_poetry` ensures the versions of the modules in the pre-commit specification
+  are kept in line with those in the `pyproject.toml` config.
 
 ## Testing
 
