@@ -30,6 +30,8 @@ class TestSearchWithoutJavascriptAndCss:
         self.search_page = search_page
         self.details_data_product_page = details_data_product_page
         self.chromedriver_path = chromedriver_path
+        self.details_data_product_page = details_data_product_page
+        self.chromedriver_path = chromedriver_path
 
     def test_browse_to_first_item_data_product(self, mock_catalogue):
         """

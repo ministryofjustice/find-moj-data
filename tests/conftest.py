@@ -21,6 +21,11 @@ from home.forms.search import SearchForm
 from home.service.details import DataProductDetailsService
 from home.service.search import SearchService
 
+from datahub.metadata.schema_classes import (
+    DataProductPropertiesClass,
+    DataProductAssociationClass,
+)
+
 fake = Faker()
 
 
@@ -43,6 +48,11 @@ def generate_page(page_size=20, result_type: ResultType = None):
             SearchResult(
                 id=fake.unique.name(),
                 result_type=choice((ResultType.DATA_PRODUCT, ResultType.TABLE)),
+                result_type=(
+                    choice((ResultType.DATA_PRODUCT, ResultType.TABLE))
+                    if result_type is None
+                    else result_type
+                ),
                 name=fake.name(),
                 description=fake.paragraph(),
                 metadata={"search_summary": "a"},
