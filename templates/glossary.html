@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load markdown %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -9,12 +10,12 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-quarter">
         <ul class="govuk-list">
-            {% for parent_term, parent_term_details in results.items %}
+            {% for parent_term in results %}
             <li>
                 <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ parent_term }}">
-                    <strong>{{ parent_term }}</strong>
+                    <strong>{{ parent_term.name }}</strong>
                 </a></div>
-                {% for member in parent_term_details.members %}
+                {% for member in parent_term.members %}
                     <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ member.name }}">
                         {{ member.name }}
                     </a></div>
@@ -25,15 +26,15 @@
         </ul>
     </div>
     <div class="govuk-grid-column-three-quarters">
-        {% for parent_term, parent_term_details in results.items %}
+        {% for parent_term in results %}
         <div>
-            <h1 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term }}</h1>
-            <p class="govuk-body-l">{{ parent_term_details.description }}</p>
+            <h1 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term.name }}</h1>
+            <p class="govuk-body-l">{{ parent_term.description }}</p>
         </div>
-            {% for member in parent_term_details.members %}
+            {% for member in parent_term.members %}
             <div>
                 <h2 class="govuk-heading-m" id="{{ member.name }}">{{ member.name }}</h2>
-                <p class="govuk-body">{{ member.description }}</p>
+                <p class="govuk-body">{{ member.description|markdown }}</p>
             </div>
             {%endfor%}
         {%endfor%}
