@@ -129,41 +129,6 @@ class SearchForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.initial["sort"] = "relevance"
 
-    # def _clean_custom_property(
-    #     self, custom_property: str, property_name: str
-    # ) -> list[str]:
-    #     """Helper function to style DataHub customProperties into their search syntax
-    #     (customPropertyName="custom property"). Reformats the 'cleaned_data' list for a
-    #     property.
-
-    #     ref: https://datahubproject.io/docs/how/search/#advanced-queries
-
-    #     Args:
-    #         custom_property (str): Name of the custom property object in this codebase
-    #         property_name (str): Name of the custom property in DataHub
-
-    #     Returns:
-    #         list[str]: List of reformatted custom properties.
-    #     """
-    #     cleaned_properties = []
-    #     properties = self.cleaned_data.get(custom_property, [])
-    #     for option in properties:
-    #         cleaned_properties.append(f"{property_name}={option}")
-    #     return cleaned_properties
-
-    # def clean_classifications(self):
-    #     cleaned_classifications = self._clean_custom_property(
-    #         custom_property="classifications", property_name="sensitivityLevel"
-    #     )
-    #     return cleaned_classifications
-
-    # def clean_where_to_access(self):
-    #     cleaned_where_to_access = self._clean_custom_property(
-    #         custom_property="where_to_access",
-    #         property_name="whereToAccessDataset",
-    #     )
-    #     return cleaned_where_to_access
-
     def encode_without_filter(self, filter_name: str, filter_value: str):
         """Preformat hrefs to drop individual filters"""
         # Deepcopy the cleaned data dict to avoid modifying it inplace
@@ -173,10 +138,4 @@ class SearchForm(forms.Form):
             value.remove(filter_value)
         elif isinstance(value, str) and filter_value == value:
             query_params.pop(filter_name)
-        # domain = query_params.get("domain")
-        # classifications = query_params.get("classifications")
-        # if domain == filter_to_remove:
-        #     query_params.pop("domain")
-        # elif filter_to_remove in classifications:
-        #     query_params["classifications"].remove(filter_to_remove)
         return f"?{urlencode(query_params, doseq=True)}"
