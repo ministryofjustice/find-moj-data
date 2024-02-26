@@ -33,3 +33,9 @@
     </div>
 </div>
 {% endblock content %}
+{% block scripts %}
+<script type="module">
+  import {initDomainFilter} from "{% static 'assets/js/enhanced-search.js' %}"
+  initDomainFilter();
+</script>
+{% endblock scripts %}
