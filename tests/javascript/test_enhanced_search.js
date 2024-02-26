@@ -12,6 +12,7 @@ const widget_html = `
                 <option value="*">All domains</option>
                 <option value="a">Domain A</option>
                 <option value="b">Domain B</option>
+                <option value="c">Domain C</option>
             </select>
         </div>
         <div class="govuk-form-group js-required">
@@ -46,6 +47,47 @@ describe("initialisation", () => {
 
   test("the only option is 'all subdomains'", () => {
     expect(subdomainFilter).toHaveLength(1);
+  });
+});
+
+describe("after selecting a domain with no subdomains", () => {
+  beforeEach(() => {
+    document.body.innerHTML = widget_html;
+
+    subdomainFilter = document.querySelector("#subdomains-filter");
+    domainFilter = document.querySelector("#domains-filter");
+
+    initDomainFilter();
+
+    // Listen to outgoing events
+    domainFilter.parentElement.addEventListener(
+      "domain-filter-updates",
+      eventSpy
+    );
+
+    // Emulate selecting a domain
+    domainFilter.value = "c";
+    domainFilter.dispatchEvent(new Event("change"));
+  });
+
+  test("selects all subdomains", () => {
+    expect(subdomainFilter.value).toEqual("*");
+  });
+
+  test("only the all subdomains option is available", () => {
+    const options = subdomainFilter.querySelectorAll("option");
+
+    const values = Array.from(options).map((el) => el.value);
+
+    expect(values).toEqual(["*"]);
+  });
+
+  test("fires an event with the selected domain/subdomain pair", () => {
+    expect(eventSpy.mock.calls[0][0].detail).toEqual({
+      topLevelDomainValue: "c",
+      subdomainValue: null,
+      label: "Domain C",
+    });
   });
 });
 
@@ -162,5 +204,3 @@ describe("after selecting a domain", () => {
     });
   });
 });
-
-// TODO: clear selected subdomain when choosing parent domain
