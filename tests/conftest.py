@@ -16,6 +16,7 @@ from faker import Faker
 from home.forms.search import SearchForm
 from home.service.details import DetailsService
 from home.service.search import SearchService
+from home.service.glossary import GlossaryService
 
 fake = Faker()
 
@@ -70,6 +71,7 @@ def mock_catalogue():
         mock_catalogue, page_results=generate_page(), total_results=100
     )
     mock_search_facets_response(mock_catalogue, domains=generate_options())
+    mock_get_glossary_terms_response(mock_catalogue)
 
     yield mock_catalogue
 
@@ -87,6 +89,51 @@ def mock_search_facets_response(mock_catalogue, domains):
     mock_catalogue.search_facets.return_value = SearchFacets(
         {"domains": domains})
 
+def mock_get_glossary_terms_response(mock_catalogue):
+    mock_catalogue.get_glossary_terms.return_value = SearchResponse(
+        total_results=3,
+        page_results=[
+            SearchResult(
+                id="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
+                name="IAO",
+                description="Information asset owner.\n",
+                metadata={
+                    "parentNodes": [
+                        {
+                            "properties": {
+                                "name": "Data protection terms",
+                                "description": "Data protection terms",
+                            }
+                        }
+                    ]
+                },
+                result_type="GLOSSARY_TERM",
+            ),
+            SearchResult(
+                id="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
+                name="Other term",
+                description="Term description to test groupings work",
+                metadata={
+                    "parentNodes": [
+                        {
+                            "properties": {
+                                "name": "Data protection terms",
+                                "description": "Data protection terms",
+                            }
+                        }
+                    ]
+                },
+                result_type="GLOSSARY_TERM",
+            ),
+            SearchResult(
+                id="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
+                name="Security classification",
+                description="Only data that is 'official'",
+                metadata={"parentNodes": []},
+                result_type="GLOSSARY_TERM",
+            ),
+        ],
+    )
 
 @pytest.fixture
 def valid_form():
@@ -119,3 +166,11 @@ def detail_context(mock_catalogue):
     details_service = DetailsService(urn="urn:li:dataProduct:test")
     context = details_service._get_context()
     return context
+
+# @pytest.fixture
+# def glossary_context(mock_catalogue):
+#     mock_catalogue.search.return_value = SearchResponse(
+#         total_results=1, page_results=generate_page(page_size=1)
+#     )
+#     glossary_service = GlossaryService()
+#     return glossary_service.context

@@ -30,6 +30,7 @@
         <div>
             <h1 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term.name }}</h1>
             <p class="govuk-body-l">{{ parent_term.description }}</p>
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         </div>
             {% for member in parent_term.members %}
             <div>
@@ -37,6 +38,7 @@
                 <p class="govuk-body">{{ member.description|markdown }}</p>
             </div>
             {%endfor%}
+            <br>
         {%endfor%}
     </div>
 </div>
