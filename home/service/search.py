@@ -1,8 +1,9 @@
-from typing import Any
+import re
 from copy import deepcopy
+from typing import Any
+
 from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
 from django.core.paginator import Paginator
-import re
 
 from home.forms.search import SearchForm, get_subdomain_choices
 
@@ -155,12 +156,11 @@ class SearchService(GenericService):
             return highlighted_results
 
         else:
-            pattern = f'({re.escape(query)})'
+            pattern = f"({re.escape(query)})"
             for result in highlighted_results.page_results:
                 result.description = re.sub(
-                    pattern, r'**\1**', result.description, flags=re.IGNORECASE,
+                    pattern, r"**\1**", result.description, flags=re.IGNORECASE
                 )
-
             return highlighted_results
 
     def _get_match_reason_display_names(self):
