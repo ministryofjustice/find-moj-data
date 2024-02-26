@@ -172,4 +172,5 @@ class SearchService(GenericService):
             "description": "Description",
             "fieldPaths": "Column name",
             "fieldDescriptions": "Column description",
+            "customProperties": "Custom properties",
         }
