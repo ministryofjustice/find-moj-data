@@ -5,7 +5,7 @@
     "babel-jest": "^29.7.0",
     "govuk-frontend": "^5.1.0",
     "jest-environment-jsdom": "^29.7.0",
-    "sass": "^1.70.0"
+    "sass": "^1.71.1"
   },
   "scripts": {
     "sass": "sass --load-path=. scss:static/assets/css",
