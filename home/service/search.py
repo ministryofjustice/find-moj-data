@@ -55,7 +55,7 @@ class SearchService(GenericService):
         )
         filter_value = []
         if domains_and_subdomains:
-            filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
+            filter_value.append(MultiSelectFilter("domain", domains_and_subdomains))
         if classifications:
             filter_value.append(MultiSelectFilter("customProperties", classifications))
         if where_to_access:

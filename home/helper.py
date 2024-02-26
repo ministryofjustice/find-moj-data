@@ -8,5 +8,5 @@ def filter_seleted_domains(domain_list, domains):
 
 def get_domain_list(client):
     facets = client.search_facets()
-    domain_list = facets.options("domains")
+    domain_list = facets.options("domain")
     return domain_list

@@ -8,7 +8,7 @@ def get_domain_choices() -> list[tuple[str, str]]:
     """Make API call to obtain domain choices"""
     # TODO: pull in the domains from the catalogue client
     # facets = client.search_facets()
-    # domain_list = facets.options("domains")
+    # domain_list = facets.options("domain")
     return [
         ("", "All Domains"),
         ("urn:li:domain:HMCTS", "HMCTS"),
@@ -95,7 +95,13 @@ class SearchForm(forms.Form):
     domain = forms.ChoiceField(
         choices=get_domain_choices,
         required=False,
-        widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
+        widget=forms.Select(
+            attrs={
+                "form": "searchform",
+                "class": "govuk-select",
+                "aria-label": "domain",
+            }
+        ),
     )
     classifications = forms.MultipleChoiceField(
         choices=get_classification_choices,
