@@ -27,7 +27,7 @@ class TestSearchView:
         assert response.context["form"].cleaned_data["query"] == "foo"
 
     def test_bad_form(self, client):
-        response = client.get(reverse("home:search"), data={"domains": "fake"})
+        response = client.get(reverse("home:search"), data={"domain": "fake"})
         assert response.status_code == 400
 
 

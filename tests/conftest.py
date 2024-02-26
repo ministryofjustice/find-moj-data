@@ -83,7 +83,7 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 
 def mock_search_facets_response(mock_catalogue, domains):
-    mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
+    mock_catalogue.search_facets.return_value = SearchFacets({"domain": domains})
 
 
 @pytest.fixture
@@ -91,7 +91,9 @@ def valid_form():
     valid_form = SearchForm(
         data={
             "query": "test",
-            "domains": ["urn:li:domain:HMCTS"],
+            "domain": "urn:li:domain:HMCTS",
+            "classifications": ["OFFICIAL"],
+            "where_to_access": ["analytical_platform"],
             "sort": "ascending",
             "clear_filter": False,
             "clear_label": False,
