@@ -31,14 +31,10 @@ class SearchService(GenericService):
         self.context = self._get_context()
 
     @staticmethod
-    def _build_filter_strings(
+    def _build_custom_property_filter(
         filter_param: str, filter_value_list: list[str]
     ) -> list[str]:
-        return (
-            [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
-            if filter_value_list
-            else []
-        )
+        return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
     def _get_search_results(self, page: str, items_per_page: int):
         if self.form.is_bound:
@@ -50,10 +46,10 @@ class SearchService(GenericService):
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         domains_and_subdomains = domains_with_their_subdomains(domain)
-        classifications = self._build_filter_strings(
+        classifications = self._build_custom_property_filter(
             "sensitivityLevel=", form_data.get("classifications", [])
         )
-        where_to_access = self._build_filter_strings(
+        where_to_access = self._build_custom_property_filter(
             "whereToAccessDataset=", form_data.get("where_to_access", [])
         )
         filter_value = []

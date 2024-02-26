@@ -47,7 +47,6 @@ def generate_page(page_size=20, result_type: ResultType = None):
         results.append(
             SearchResult(
                 id=fake.unique.name(),
-                result_type=choice((ResultType.DATA_PRODUCT, ResultType.TABLE)),
                 result_type=(
                     choice((ResultType.DATA_PRODUCT, ResultType.TABLE))
                     if result_type is None

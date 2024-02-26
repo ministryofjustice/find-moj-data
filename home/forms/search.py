@@ -8,7 +8,7 @@ def get_domain_choices() -> list[tuple[str, str]]:
     """Make API call to obtain domain choices"""
     # TODO: pull in the domains from the catalogue client
     # facets = client.search_facets()
-    # domain_list = facets.options("domain")
+    # domain_list = facets.options("domains")
     return [
         ("", "All Domains"),
         ("urn:li:domain:HMCTS", "HMCTS"),
