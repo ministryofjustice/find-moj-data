@@ -25,6 +25,15 @@ from datahub.metadata.schema_classes import (
 fake = Faker()
 
 
+def pytest_addoption(parser):
+    parser.addoption("--chromedriver-path", action="store")
+
+
+@pytest.fixture
+def chromedriver_path(request):
+    return request.config.getoption("--chromedriver-path")
+
+
 def generate_page(page_size=20, result_type: ResultType = None):
     """
     Generate a fake search page
@@ -35,11 +44,6 @@ def generate_page(page_size=20, result_type: ResultType = None):
             SearchResult(
                 id=fake.unique.name(),
                 result_type=choice((ResultType.DATA_PRODUCT, ResultType.TABLE)),
-                result_type=(
-                    choice((ResultType.DATA_PRODUCT, ResultType.TABLE))
-                    if result_type is None
-                    else result_type
-                ),
                 name=fake.name(),
                 description=fake.paragraph(),
                 metadata={"search_summary": "a"},

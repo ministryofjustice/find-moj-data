@@ -16,13 +16,20 @@ class TestSearchWithoutJavascriptAndCss:
 
     @pytest.fixture(autouse=True)
     def setup(
-        self, live_server, selenium, home_page, search_page, details_data_product_page
+        self,
+        live_server,
+        selenium,
+        home_page,
+        search_page,
+        details_data_product_page,
+        chromedriver_path,
     ):
         self.selenium = selenium
         self.live_server_url = live_server.url
         self.home_page = home_page
         self.search_page = search_page
         self.details_data_product_page = details_data_product_page
+        self.chromedriver_path = chromedriver_path
 
     def test_browse_to_first_item_data_product(self, mock_catalogue):
         """
@@ -160,11 +167,15 @@ class TestSearchWithoutJavascriptAndCss:
 
     def test_automated_accessibility_home(self):
         self.start_on_the_home_page()
-        check_for_accessibility_issues(self.selenium.current_url)
+        check_for_accessibility_issues(
+            self.selenium.current_url, chromedriver_path=self.chromedriver_path
+        )
 
     def test_automated_accessibility_search(self):
         self.start_on_the_search_page()
-        check_for_accessibility_issues(self.selenium.current_url)
+        check_for_accessibility_issues(
+            self.selenium.current_url, chromedriver_path=self.chromedriver_path
+        )
 
     def test_search_to_data_product_details(self, mock_catalogue):
         """
