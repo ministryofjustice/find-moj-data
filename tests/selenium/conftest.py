@@ -1,14 +1,15 @@
-from pytest import CollectReport, StashKey
 import datetime
 from pathlib import Path
 from typing import Any, Generator
 
 import pytest
+from pytest import CollectReport, StashKey
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
+
 
 TMP_DIR = Path(__file__).parent / "../../tmp"
 
@@ -66,9 +67,15 @@ class Page:
         self.selenium = selenium
 
 
-class DetailsPage(Page):
+class DataProductDetailsPage(Page):
     def secondary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h2")
+
+    def data_product_details(self):
+        return self.selenium.find_element(By.TAG_NAME, "dl")
+
+    def data_product_tables(self):
+        return self.selenium.find_element(By.TAG_NAME, "table")
 
 
 class HomePage(Page):
@@ -175,5 +182,5 @@ def search_page(selenium) -> SearchPage:
 
 
 @pytest.fixture
-def details_page(selenium) -> DetailsPage:
-    return DetailsPage(selenium)
+def details_data_product_page(selenium) -> DataProductDetailsPage:
+    return DataProductDetailsPage(selenium)

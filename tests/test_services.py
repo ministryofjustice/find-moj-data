@@ -7,7 +7,7 @@ from data_platform_catalogue.search_types import (
     SearchResult,
 )
 from unittest.mock import patch
-from home.service.search import domains_with_their_subdomains
+from home.service.search import SearchForm, SearchService, domains_with_their_subdomains
 from home.service.glossary import GlossaryService
 
 
@@ -32,21 +32,72 @@ class TestSearchService:
             "HMCTS": "?query=test&sort=ascending&clear_filter=False&clear_label=False"
         }
 
+    def test_highlight_results_no_query(self, search_service):
+        search_service.form.cleaned_data = {"query": ""}
+        search_service._highlight_results()
+        assert (
+            normal.description == highlighted.description
+            and normal.metadata == highlighted.metadata
+            for normal, highlighted in zip(
+                search_service.results.page_results,
+                search_service.highlighted_results.page_results,
+            )
+        )
 
-class TestDetailsService:
-    def test_get_context(self, detail_context, mock_catalogue):
-        assert detail_context["result"] == mock_catalogue.search().page_results[0]
+    def test_highlight_results_with_case_insensitive_query(self):
+        # The descriptions are all in lower case, so search upper case
+        # to test case insensitivity
+        form = SearchForm(data={"query": "A"})
+        assert form.is_valid()
+        service = SearchService(form=form, page="1")
+
+        descriptions = [result.description for result in service.results.page_results]
+        highlighted_descriptions = [
+            result.description for result in service.highlighted_results.page_results
+        ]
+
+        assert descriptions != highlighted_descriptions
+        assert (
+            "**a**" or "**A**" in highlighted.description
+            for normal, highlighted in zip(
+                service.results.page_results,
+                service.highlighted_results.page_results,
+            )
+            if "a" or "A" in normal.description
+        )
+
+
+class TestDetailsDataProductService:
+    def test_get_context_data_product(self, detail_dataproduct_context, mock_catalogue):
+        assert (
+            detail_dataproduct_context["result"]
+            == mock_catalogue.search().page_results[0]
+        )
         result_type = (
             "Data product"
             if mock_catalogue.search().page_results[0].result_type
             == ResultType.DATA_PRODUCT
             else "Table"
         )
-        assert detail_context["result_type"] == result_type
+        assert detail_dataproduct_context["result_type"] == result_type
         assert (
-            detail_context["page_title"]
+            detail_dataproduct_context["page_title"]
             == f"{mock_catalogue.search().page_results[0].name} - Data catalogue"
         )
+
+    def test_get_context_data_product_tables(
+        self, detail_dataproduct_context, mock_catalogue
+    ):
+        name = mock_catalogue.list_data_product_assets().page_results[0].name
+        mock_table = {
+            "name": name,
+            "urn": mock_catalogue.list_data_product_assets().page_results[0].id,
+            "description": mock_catalogue.list_data_product_assets()
+            .page_results[0]
+            .description,
+            "type": "TABLE",
+        }
+        assert detail_dataproduct_context["tables"][0] == mock_table
 
 
 class TestGlossaryService:

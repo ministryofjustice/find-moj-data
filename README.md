@@ -18,5 +18,6 @@ Run `npm install` and then `npm run sass` to compile the stylesheets.
 
 ## Testing
 
-- Unit tests: `pytest -m 'not slow'`
+- Python unit tests: `pytest -m 'not slow'`
+- Javascript unit tests: `npm test`
 - Selenium tests: `pytest -m 'slow'`

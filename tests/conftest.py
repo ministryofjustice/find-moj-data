@@ -14,14 +14,29 @@ from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
-from home.service.details import DetailsService
+from home.service.details import DataProductDetailsService
 from home.service.search import SearchService
 from home.service.glossary import GlossaryService
+
+from datahub.metadata.schema_classes import (
+    DataProductPropertiesClass,
+    DataProductAssociationClass,
+)
 
 fake = Faker()
 
 
-def generate_page(page_size=20):
+def pytest_addoption(parser):
+    parser.addoption("--chromedriver-path", action="store")
+
+
+@pytest.fixture
+def chromedriver_path(request):
+    return request.config.getoption("--chromedriver-path")
+
+
+def generate_page(page_size=20, result_type: ResultType = None):
+
     """
     Generate a fake search page
     """
@@ -30,10 +45,14 @@ def generate_page(page_size=20):
         results.append(
             SearchResult(
                 id=fake.unique.name(),
-                result_type=choice(
-                    (ResultType.DATA_PRODUCT, ResultType.TABLE)),
+                result_type=(
+                    choice((ResultType.DATA_PRODUCT, ResultType.TABLE))
+                    if result_type is None
+                    else result_type
+                ),
                 name=fake.name(),
-                description=fake.paragraphs(),
+                description=fake.paragraph(),
+                metadata={"search_summary": "a"},
             )
         )
     return results
@@ -72,6 +91,11 @@ def mock_catalogue():
     )
     mock_search_facets_response(mock_catalogue, domains=generate_options())
     mock_get_glossary_terms_response(mock_catalogue)
+    mock_list_data_product_response(
+        mock_catalogue,
+        page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
+        total_results=1,
+    )
 
     yield mock_catalogue
 
@@ -86,8 +110,26 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 
 def mock_search_facets_response(mock_catalogue, domains):
-    mock_catalogue.search_facets.return_value = SearchFacets(
-        {"domains": domains})
+    mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
+
+
+def mock_list_data_product_response(mock_catalogue, total_results, page_results=()):
+    search_response = SearchResponse(
+        total_results=total_results, page_results=page_results
+    )
+    mock_catalogue.list_data_product_assets.return_value = search_response
+
+
+def mock_get_dataproduct_aspect(mock_catalogue):
+    data_product_association = DataProductAssociationClass(
+        destinationUrn="urn:li:dataset:(urn:li:dataPlatform:glue,test.test,PROD)",
+        sourceUrn="urn:li:dataProduct:test",
+    )
+
+    response = DataProductPropertiesClass(
+        name="test", assets=[data_product_association], description="test"
+    )
+    mock_catalogue.graph.get_aspect.return_value = response
 
 def mock_get_glossary_terms_response(mock_catalogue):
     mock_catalogue.get_glossary_terms.return_value = SearchResponse(
@@ -152,25 +194,21 @@ def valid_form():
 
 
 @pytest.fixture
-def search_context(valid_form):
-    search_service = SearchService(form=valid_form, page="1")
-    context = search_service._get_context()
-    return context
+def search_service(valid_form):
+    return SearchService(form=valid_form, page="1")
 
 
 @pytest.fixture
-def detail_context(mock_catalogue):
+def search_context(search_service):
+    return search_service.context
+
+
+@pytest.fixture
+def detail_dataproduct_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
         total_results=1, page_results=generate_page(page_size=1)
     )
-    details_service = DetailsService(urn="urn:li:dataProduct:test")
+
+    details_service = DataProductDetailsService(urn="urn:li:dataProduct:test")
     context = details_service._get_context()
     return context
-
-# @pytest.fixture
-# def glossary_context(mock_catalogue):
-#     mock_catalogue.search.return_value = SearchResponse(
-#         total_results=1, page_results=generate_page(page_size=1)
-#     )
-#     glossary_service = GlossaryService()
-#     return glossary_service.context

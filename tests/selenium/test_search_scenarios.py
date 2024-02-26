@@ -3,6 +3,8 @@ import re
 import pytest
 
 from .helpers import check_for_accessibility_issues
+from tests.conftest import mock_search_response, generate_page
+from data_platform_catalogue.search_types import ResultType
 
 
 @pytest.mark.slow
@@ -13,27 +15,43 @@ class TestSearchWithoutJavascriptAndCss:
     """
 
     @pytest.fixture(autouse=True)
-    def setup(self, live_server, selenium, home_page, search_page, details_page):
+    def setup(
+        self,
+        live_server,
+        selenium,
+        home_page,
+        search_page,
+        details_data_product_page,
+        chromedriver_path,
+    ):
         self.selenium = selenium
         self.live_server_url = live_server.url
         self.home_page = home_page
         self.search_page = search_page
-        self.details_page = details_page
+        self.details_data_product_page = details_data_product_page
+        self.chromedriver_path = chromedriver_path
 
     def verify_glossary_link_from_homepage_works(self):
         self.start_on_the_home_page()
         self.click_on_the_glossary_link()
         self.verify_i_am_on_the_glossary_page()
 
-    def test_browse_to_first_item(self):
+    def test_browse_to_first_item_data_product(self, mock_catalogue):
         """
         Browses from the home page -> search -> details page
         """
+        # we need to mock search response to be data products
+        mock_search_response(
+            mock_catalogue=mock_catalogue,
+            page_results=generate_page(result_type=ResultType.DATA_PRODUCT),
+            total_results=100,
+        )
+
         self.start_on_the_home_page()
         self.click_on_the_search_link()
+
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
-
         item_name = self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page(item_name)
 
@@ -151,11 +169,31 @@ class TestSearchWithoutJavascriptAndCss:
 
     def test_automated_accessibility_home(self):
         self.start_on_the_home_page()
-        check_for_accessibility_issues(self.selenium.current_url)
+        check_for_accessibility_issues(
+            self.selenium.current_url, chromedriver_path=self.chromedriver_path
+        )
 
     def test_automated_accessibility_search(self):
         self.start_on_the_search_page()
-        check_for_accessibility_issues(self.selenium.current_url)
+        check_for_accessibility_issues(
+            self.selenium.current_url, chromedriver_path=self.chromedriver_path
+        )
+
+    def test_search_to_data_product_details(self, mock_catalogue):
+        """
+        Users can search a data product and got to its details page
+        """
+        mock_search_response(
+            mock_catalogue=mock_catalogue,
+            page_results=generate_page(result_type=ResultType.DATA_PRODUCT),
+            total_results=100,
+        )
+        self.start_on_the_search_page()
+        self.enter_a_query_and_submit("court timeliness")
+        item_name = self.click_on_the_first_result()
+        self.verify_i_am_on_the_details_page(item_name)
+        self.verify_data_product_details()
+        self.verify_data_product_tables_listed()
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
@@ -197,7 +235,7 @@ class TestSearchWithoutJavascriptAndCss:
     def verify_i_am_on_the_details_page(self, item_name):
         assert item_name in self.selenium.title
 
-        secondary_heading_text = self.details_page.secondary_heading().text
+        secondary_heading_text = self.details_data_product_page.secondary_heading().text
 
         assert secondary_heading_text == item_name
 
@@ -256,3 +294,11 @@ class TestSearchWithoutJavascriptAndCss:
     def verify_sort_selected(self, expected):
         value = self.search_page.checked_sort_option().get_attribute("value") or ""
         assert value == expected.lower()
+
+    def verify_data_product_tables_listed(self):
+        tables = self.details_data_product_page.data_product_tables()
+        assert tables.text
+
+    def verify_data_product_details(self):
+        data_product_details = self.details_data_product_page.data_product_details()
+        assert data_product_details.text
