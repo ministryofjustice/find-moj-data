@@ -93,10 +93,10 @@ class DomainModel:
             subdomains.extend(domain_choices)
         return subdomains
 
-    def get_parent_value(self, subdomain_value) -> str | None:
+    def get_parent_urn(self, child_subdomain_urn) -> str | None:
         for domain, subdomains in self.subdomains.items():
-            for s in subdomains:
-                if subdomain_value == s[0]:
+            for subdomain in subdomains:
+                if child_subdomain_urn == subdomain.urn:
                     return domain
 
     def get_label(self, value):
