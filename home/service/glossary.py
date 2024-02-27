@@ -24,7 +24,7 @@ class GlossaryService(GenericService):
             if not first_parent:
                 return "Unsorted"
 
-        page_results_copy = sorted(page_results_copy, key=sorter)
+        page_results_copy = sorted(glossary_search_results.page_results, key=sorter)
         sorted_total_results = [
             {"name": key, "members": list(group)}
             for key, group
