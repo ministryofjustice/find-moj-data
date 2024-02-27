@@ -3,20 +3,20 @@ from urllib.parse import urlencode
 
 from django import forms
 
-from .domain_model import DomainModel
+from .domain_model import Domain, DomainModel
 
 
-def get_domain_choices() -> list[tuple[str, str]]:
+def get_domain_choices() -> list[Domain]:
     """Make API call to obtain domain choices"""
-    choices: list[tuple[str, str]] = [
-        ("", "All domains"),
+    choices = [
+        Domain("", "All domains"),
     ]
     choices.extend(DomainModel().top_level_domains)
     return choices
 
 
-def get_subdomain_choices():
-    choices: list[tuple[str, str]] = [("", "All subdomains")]
+def get_subdomain_choices() -> list[Domain]:
+    choices = [Domain("", "All subdomains")]
     choices.extend(DomainModel().all_subdomains())
     return choices
 
