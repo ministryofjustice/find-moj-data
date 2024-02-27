@@ -81,8 +81,8 @@ class DomainModel:
 
         for domain, subdomains in self.subdomains.items():
             domain_label = self.labels[domain]
-            for value, label in subdomains:
-                self.labels[value] = f"{domain_label} - {label}"
+            for urn, subdoman_label in subdomains:
+                self.labels[urn] = f"{domain_label} - {subdoman_label}"
 
     def all_subdomains(self) -> list[Domain]:  # -> list[Any]
         """
