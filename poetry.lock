@@ -1825,13 +1825,13 @@ psutil = "*"
 
 [[package]]
 name = "ministryofjustice-data-platform-catalogue"
-version = "0.16.0"
+version = "0.16.1"
 description = "Library to integrate the MoJ data platform with the catalogue component."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ministryofjustice_data_platform_catalogue-0.16.0-py3-none-any.whl", hash = "sha256:64d21083518a7a8358265c3d7701211ba0dcc051f9b2c3b54c7213463603a745"},
-    {file = "ministryofjustice_data_platform_catalogue-0.16.0.tar.gz", hash = "sha256:f10e4bdbd68c5f541463e59a3e2b4d56f5f714021a073a1587e608d20df36592"},
+    {file = "ministryofjustice_data_platform_catalogue-0.16.1-py3-none-any.whl", hash = "sha256:ffec496eeaa67e7511cabbbc0887dab85d759ec1c2787d24fefad420de957cc4"},
+    {file = "ministryofjustice_data_platform_catalogue-0.16.1.tar.gz", hash = "sha256:909fad2a6f6c3d3682bd5e190b3f535b3e49f909e1cabcea5ba140f28c9cf51b"},
 ]
 
 [package.dependencies]
@@ -3063,13 +3063,13 @@ urllib3 = {version = ">=1.26,<3", extras = ["socks"]}
 
 [[package]]
 name = "sentry-sdk"
-version = "1.40.5"
+version = "1.40.6"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = "*"
 files = [
-    {file = "sentry-sdk-1.40.5.tar.gz", hash = "sha256:d2dca2392cc5c9a2cc9bb874dd7978ebb759682fe4fe889ee7e970ee8dd1c61e"},
-    {file = "sentry_sdk-1.40.5-py2.py3-none-any.whl", hash = "sha256:d188b407c9bacbe2a50a824e1f8fb99ee1aeb309133310488c570cb6d7056643"},
+    {file = "sentry-sdk-1.40.6.tar.gz", hash = "sha256:f143f3fb4bb57c90abef6e2ad06b5f6f02b2ca13e4060ec5c0549c7a9ccce3fa"},
+    {file = "sentry_sdk-1.40.6-py2.py3-none-any.whl", hash = "sha256:becda09660df63e55f307570e9817c664392655a7328bbc414b507e9cb874c67"},
 ]
 
 [package.dependencies]
@@ -3095,7 +3095,7 @@ huey = ["huey (>=2)"]
 loguru = ["loguru (>=0.5)"]
 opentelemetry = ["opentelemetry-distro (>=0.35b0)"]
 opentelemetry-experimental = ["opentelemetry-distro (>=0.40b0,<1.0)", "opentelemetry-instrumentation-aiohttp-client (>=0.40b0,<1.0)", "opentelemetry-instrumentation-django (>=0.40b0,<1.0)", "opentelemetry-instrumentation-fastapi (>=0.40b0,<1.0)", "opentelemetry-instrumentation-flask (>=0.40b0,<1.0)", "opentelemetry-instrumentation-requests (>=0.40b0,<1.0)", "opentelemetry-instrumentation-sqlite3 (>=0.40b0,<1.0)", "opentelemetry-instrumentation-urllib (>=0.40b0,<1.0)"]
-pure-eval = ["asttokens", "executing", "pure-eval"]
+pure-eval = ["asttokens", "executing", "pure_eval"]
 pymongo = ["pymongo (>=3.1)"]
 pyspark = ["pyspark (>=2.4.4)"]
 quart = ["blinker (>=1.1)", "quart (>=0.16.1)"]
@@ -3721,4 +3721,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "58b31116749fa4b12c4fc4c72b84e658e5c1b9fe3863f0b3f70395c80ff308cf"
+content-hash = "843e2d2c2fd4265d002fc3b1bb7e9fac5975c3af3199bd9829251ea42069277d"
