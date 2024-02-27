@@ -17,9 +17,6 @@ class GlossaryService(GenericService):
         glossary_search_results = self.client.get_glossary_terms()
         total_results = glossary_search_results.total_results
 
-        # The sort is required for the grouping to work correctly
-        page_results_copy = deepcopy(glossary_search_results.page_results)
-
         def sorter(result):
             first_parent = result.metadata.get("parentNodes", [])
             if first_parent:
@@ -27,7 +24,7 @@ class GlossaryService(GenericService):
             if not first_parent:
                 return "Unsorted"
 
-        page_results_copy.sort(key=sorter)
+        page_results_copy = sorted(page_results_copy, key=sorter)
         sorted_total_results = [
             {"name": key, "members": list(group)}
             for key, group
