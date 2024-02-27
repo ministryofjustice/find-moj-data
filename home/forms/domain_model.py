@@ -2,7 +2,7 @@ from typing import NamedTuple
 
 
 class Domain(NamedTuple):
-    value: str
+    urn: str
     label: str
 
 
