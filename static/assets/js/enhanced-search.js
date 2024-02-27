@@ -8,11 +8,11 @@
  * has to hit "Apply filters" first.
  */
 
-const ALL_DOMAINS_VALUE = "*";
+const ALL_DOMAINS_VALUE = "";
 
 export const initDomainFilter = () => {
-  const subdomainSelect = document.querySelector("#subdomains-filter");
-  const topLevelDomainSelect = document.querySelector("#domains-filter");
+  const subdomainSelect = document.querySelector("#id_subdomain");
+  const topLevelDomainSelect = document.querySelector("#id_domain");
   const subdomainGroup = document.querySelector(".js-required");
 
   if (subdomainSelect === null || topLevelDomainSelect === null) {
@@ -29,7 +29,13 @@ class DomainFilter {
     this.topLevelDomainSelect = topLevelDomainSelect;
     this.subdomainSelect = subdomainSelect;
     this.options = this.#extractSubdomainOptions();
-    this.#onClearTopLevelDomain();
+
+    if (this.isWildcardTopLevelDomain()) {
+      this.#onClearTopLevelDomain();
+    } else {
+      const selectedDomain = this.topLevelDomainSelect.value;
+      this.#onSelectTopLevelDomain(selectedDomain, false);
+    }
 
     topLevelDomainSelect.addEventListener("change", () =>
       this.#onChangeDomain()
@@ -63,19 +69,19 @@ class DomainFilter {
   }
 
   #onChangeDomain() {
-    const selectedDomain = this.topLevelDomainSelect.value;
     if (this.isWildcardTopLevelDomain()) {
       this.#onClearTopLevelDomain();
     } else {
-      this.#onSelectTopLevelDomain(selectedDomain);
+      const selectedDomain = this.topLevelDomainSelect.value;
+      this.#onSelectTopLevelDomain(selectedDomain, true);
     }
 
     this.#notify();
   }
 
-  #onSelectTopLevelDomain(selectedDomain) {
+  #onSelectTopLevelDomain(selectedDomain, reset) {
     this.subdomainSelect.disabled = false;
-    this.#setSubdomainOptions(this.options[selectedDomain]);
+    this.#setSubdomainOptions(this.options[selectedDomain], reset);
   }
 
   #onClearTopLevelDomain() {
@@ -91,14 +97,16 @@ class DomainFilter {
     return this.topLevelDomainSelect.value === ALL_DOMAINS_VALUE;
   }
 
-  #setSubdomainOptions(newOptionElements) {
+  #setSubdomainOptions(newOptionElements, reset) {
     const existingOptionElements =
       this.subdomainSelect.querySelectorAll("option");
 
     existingOptionElements.forEach((option) => {
       if (option.value != ALL_DOMAINS_VALUE) {
         option.parentNode.removeChild(option);
-        option.selected = false;
+        if (reset) {
+          option.selected = false;
+        }
       }
     });
 

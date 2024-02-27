@@ -1,4 +1,5 @@
 from types import GeneratorType
+from unittest.mock import patch
 
 import pytest
 from data_platform_catalogue.search_types import (
@@ -6,9 +7,9 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
-from unittest.mock import patch
-from home.service.search import SearchForm, SearchService, domains_with_their_subdomains
+
 from home.service.glossary import GlossaryService
+from home.service.search import SearchForm, SearchService, domains_with_their_subdomains
 
 
 class TestSearchService:
@@ -43,6 +44,7 @@ class TestSearchService:
             "analytical_platform": (
                 "?query=test&"
                 "domain=urn%3Ali%3Adomain%3AHMCTS&"
+                "subdomain=&"
                 "classifications=OFFICIAL&"
                 "sort=ascending&"
                 "clear_filter=False&"
@@ -54,6 +56,7 @@ class TestSearchService:
             "OFFICIAL": (
                 "?query=test&"
                 "domain=urn%3Ali%3Adomain%3AHMCTS&"
+                "subdomain=&"
                 "where_to_access=analytical_platform&"
                 "sort=ascending&"
                 "clear_filter=False&"
@@ -201,18 +204,24 @@ class TestGlossaryService:
 
 
 @pytest.mark.parametrize(
-    "domain, expected_subdomains",
+    "domain, subdomain, expected_subdomains",
     [
-        ("does-not-exist", []),
+        ("does-not-exist", "", []),
         (
             "urn:li:domain:HMPPS",
+            "",
             [
                 "urn:li:domain:HMPPS",
                 "urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9",
                 "urn:li:domain:abe153c1-416b-4abb-be7f-6accf2abb10a",
             ],
         ),
+        (
+            "urn:li:domain:HMPPS",
+            "urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9",
+            ["urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9"],
+        ),
     ],
 )
-def test_domain_expansion(domain, expected_subdomains):
-    assert domains_with_their_subdomains(domain) == expected_subdomains
+def test_domain_expansion(domain, subdomain, expected_subdomains):
+    assert domains_with_their_subdomains(domain, subdomain) == expected_subdomains

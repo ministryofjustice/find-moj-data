@@ -1,14 +1,15 @@
 import re
 
 import pytest
+from data_platform_catalogue.search_types import ResultType
+
+from tests.conftest import generate_page, mock_search_response
 
 from .helpers import check_for_accessibility_issues
-from tests.conftest import mock_search_response, generate_page
-from data_platform_catalogue.search_types import ResultType
 
 
 @pytest.mark.slow
-class TestSearchWithoutJavascriptAndCss:
+class TestSearch:
     """
     Test interacting with the search form through the browser,
     as a user would
@@ -70,12 +71,15 @@ class TestSearchWithoutJavascriptAndCss:
         Interacts with the filters on the left hand side
         """
         domain = "HMPPS"
+        subdomain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
+        self.select_subdomain(subdomain)
         self.click_apply_filters()
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
         self.verify_domain_selected(domain)
+        self.verify_subdomain_selected(subdomain)
 
     def test_pagination(self):
         """
@@ -109,8 +113,10 @@ class TestSearchWithoutJavascriptAndCss:
         interact with the search page.
         """
         domain = "HMPPS"
+        subdomain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
+        self.select_subdomain(subdomain)
         self.click_apply_filters()
         self.enter_a_query_and_submit("nomis")
         self.click_sort_option("Ascending")
@@ -119,6 +125,7 @@ class TestSearchWithoutJavascriptAndCss:
         self.verify_i_have_results()
         self.verify_the_search_bar_has_value("nomis")
         self.verify_domain_selected(domain)
+        self.verify_subdomain_selected(subdomain)
         self.verify_sort_selected("Ascending")
 
     def test_adding_a_query_resets_pagination(self):
@@ -157,6 +164,7 @@ class TestSearchWithoutJavascriptAndCss:
         self.verify_domain_selected(domain)
         self.click_clear_selected_filter(domain)
         self.verify_unselected_domain()
+        self.verify_unselected_subdomain()
 
     def test_clear_all_filters(self):
         """
@@ -250,6 +258,9 @@ class TestSearchWithoutJavascriptAndCss:
     def select_domain(self, domain):
         self.search_page.select_domain(domain)
 
+    def select_subdomain(self, domain):
+        self.search_page.select_subdomain(domain)
+
     def click_sort_option(self, sortby):
         self.search_page.sort_label(sortby).click()
 
@@ -271,9 +282,17 @@ class TestSearchWithoutJavascriptAndCss:
         selected_domain = self.search_page.get_selected_domain().text
         assert selected_domain == domain
 
+    def verify_subdomain_selected(self, domain):
+        selected_domain = self.search_page.get_selected_subdomain().text
+        assert selected_domain == domain
+
     def verify_unselected_domain(self):
         selected_domain = self.search_page.get_selected_domain().text
-        assert selected_domain == "All Domains"
+        assert selected_domain == "All domains"
+
+    def verify_unselected_subdomain(self):
+        selected_domain = self.search_page.get_selected_subdomain().text
+        assert selected_domain == "All subdomains"
 
     def verify_selected_filters_shown(self, domains):
         actual = {i.text for i in self.search_page.selected_filter_tags()}

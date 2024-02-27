@@ -3,63 +3,22 @@ from urllib.parse import urlencode
 
 from django import forms
 
+from .domain_model import DomainModel
+
 
 def get_domain_choices() -> list[tuple[str, str]]:
     """Make API call to obtain domain choices"""
-    # TODO: pull in the domains from the catalogue client
-    # facets = client.search_facets()
-    # domain_list = facets.options("domains")
-    return [
-        ("", "All Domains"),
-        ("urn:li:domain:HMCTS", "HMCTS"),
-        ("urn:li:domain:HMPPS", "HMPPS"),
-        ("urn:li:domain:HQ", "HQ"),
-        ("urn:li:domain:LAA", "LAA"),
-        ("urn:li:domain:OPG", "OPG"),
+    choices: list[tuple[str, str]] = [
+        ("", "All domains"),
     ]
+    choices.extend(DomainModel().top_level_domains)
+    return choices
 
 
-def get_subdomain_choices(domain):
-    # TODO: pull in the subdomains from the catalogue client so we don't need to hardcode
-    return {
-        "urn:li:domain:HMPPS": [
-            ("urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9", "Prisons"),
-            ("urn:li:domain:abe153c1-416b-4abb-be7f-6accf2abb10a", "Probation"),
-        ],
-        "urn:li:domain:HMCTS": [
-            ("urn:li:domain:4d77af6d-9eca-4c44-b189-5f1addffae55", "Civil courts"),
-            ("urn:li:domain:31754f66-33df-4a73-b039-532518bc765e", "Crown courts"),
-            ("urn:li:domain:81adfe94-1284-46a2-9179-945ad2a76c14", "Family courts"),
-            (
-                "urn:li:domain:b261176c-d8eb-4111-8454-c0a1fa95005f",
-                "Magistrates courts",
-            ),
-        ],
-        "urn:li:domain:OPG": [
-            (
-                "urn:li:domain:bc091f6c-7674-4c82-a315-f5489398f099",
-                "Lasting power of attourney",
-            ),
-            (
-                "urn:li:domain:efb9ade3-3c5d-4c5c-b451-df9f2d8136f5",
-                "Supervision orders",
-            ),
-        ],
-        "urn:li:domain:HQ": [
-            ("urn:li:domain:9fb7ff13-6c7e-47ef-bef1-b13b23fd8c7a", "Estates"),
-            ("urn:li:domain:e4476e66-37a1-40fd-83b9-c908f805d8f4", "Finance"),
-            ("urn:li:domain:0985731b-8e1c-4b4a-bfc0-38e58d8ba8a1", "People"),
-            ("urn:li:domain:a320c915-0b43-4277-9769-66615aab4adc", "Performance"),
-        ],
-        "urn:li:domain:LAA": [
-            (
-                "urn:li:domain:24344488-d770-437a-ba6f-e6129203b927",
-                "Civil legal advice",
-            ),
-            ("urn:li:domain:Legal%20Aid", "Legal aid"),
-            ("urn:li:domain:5c423c06-d328-431f-8634-7a7e86928819", "Public defender"),
-        ],
-    }.get(domain, [])
+def get_subdomain_choices():
+    choices: list[tuple[str, str]] = [("", "All subdomains")]
+    choices.extend(DomainModel().all_subdomains())
+    return choices
 
 
 def get_sort_choices():
@@ -82,6 +41,25 @@ def get_where_to_access_choices():
     return [("analytical_platform", "Analytical Platform")]
 
 
+class SelectWithOptionAttribute(forms.Select):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.domain_model = DomainModel()
+
+    def create_option(
+        self, name, value, label, selected, index, subindex=None, attrs=None
+    ):
+        option = super().create_option(
+            name, value, label, selected, index, subindex, attrs
+        )
+
+        if value:
+            option["attrs"]["data-parent"] = self.domain_model.get_parent_value(value)
+
+        return option
+
+
 class SearchForm(forms.Form):
     """Django form to represent data product search page inputs"""
 
@@ -94,12 +72,13 @@ class SearchForm(forms.Form):
     domain = forms.ChoiceField(
         choices=get_domain_choices,
         required=False,
-        widget=forms.Select(
-            attrs={
-                "form": "searchform",
-                "class": "govuk-select",
-                "aria-label": "domain",
-            }
+        widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
+    )
+    subdomain = forms.ChoiceField(
+        choices=get_subdomain_choices,
+        required=False,
+        widget=SelectWithOptionAttribute(
+            attrs={"form": "searchform", "class": "govuk-select"}
         ),
     )
     classifications = forms.MultipleChoiceField(
@@ -143,4 +122,6 @@ class SearchForm(forms.Form):
             value.remove(filter_value)
         elif isinstance(value, str) and filter_value == value:
             query_params.pop(filter_name)
+            if filter_name == "domain":
+                query_params.pop("subdomain")
         return f"?{urlencode(query_params, doseq=True)}"

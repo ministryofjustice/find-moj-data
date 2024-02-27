@@ -1,26 +1,26 @@
 import { initDomainFilter } from "enhanced-search";
 import { expect, test } from "@jest/globals";
 
-const widget_html = `
+const unselectedWidgetHtml = `
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
         <div class="govuk-form-group">
-            <label class="govuk-label" for="domains-filter">
+            <label class="govuk-label" for="id_domain">
                 Top-level
             </label>
-            <select class="govuk-select" id="domains-filter" name="domains">
-                <option value="*">All domains</option>
+            <select class="govuk-select" id="id_domain" name="domains">
+                <option value="">All domains</option>
                 <option value="a">Domain A</option>
                 <option value="b">Domain B</option>
                 <option value="c">Domain C</option>
             </select>
         </div>
         <div class="govuk-form-group js-required">
-            <label class="govuk-label" for="subdomains-filter">
+            <label class="govuk-label" for="id_subdomain">
                 Subdomain
             </label>
-            <select class="govuk-select" id="subdomains-filter" name="subdomains" disabled>
-                <option value="*">All subdomains</option>
+            <select class="govuk-select" id="id_subdomain" name="subdomains" disabled>
+                <option value="">All subdomains</option>
                 <option value="a1" data-parent="a">Subdomain of A 1</option>
                 <option value="a2" data-parent="a">Subdomain of A 2</option>
                 <option value="b1" data-parent="b">Subdomain of B 1</option>
@@ -30,14 +30,43 @@ const widget_html = `
     </fieldset>
 `;
 
+const selectedWidgetHtml = `
+<fieldset class="govuk-fieldset">
+<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
+<div class="govuk-form-group">
+    <label class="govuk-label" for="id_domain">
+        Top-level
+    </label>
+    <select class="govuk-select" id="id_domain" name="domains">
+        <option value="">All domains</option>
+        <option value="a" selected>Domain A</option>
+        <option value="b">Domain B</option>
+        <option value="c">Domain C</option>
+    </select>
+</div>
+<div class="govuk-form-group js-required">
+    <label class="govuk-label" for="id_subdomain">
+        Subdomain
+    </label>
+    <select class="govuk-select" id="id_subdomain" name="subdomains" disabled>
+        <option value="">All subdomains</option>
+        <option value="a1" data-parent="a">Subdomain of A 1</option>
+        <option value="a2" selected data-parent="a">Subdomain of A 2</option>
+        <option value="b1" data-parent="b">Subdomain of B 1</option>
+        <option value="b2" data-parent="b">Subdomain of B 2</option>
+    </select>
+</div>
+</fieldset>
+`;
+
 let subdomainFilter;
 let domainFilter;
 const eventSpy = jest.fn();
 
-describe("initialisation", () => {
+describe("initialisation without selected options", () => {
   beforeEach(() => {
-    document.body.innerHTML = widget_html;
-    subdomainFilter = document.querySelector("#subdomains-filter");
+    document.body.innerHTML = unselectedWidgetHtml;
+    subdomainFilter = document.querySelector("#id_subdomain");
     initDomainFilter();
   });
 
@@ -50,12 +79,32 @@ describe("initialisation", () => {
   });
 });
 
+describe("initialisation with selected options", () => {
+  beforeEach(() => {
+    document.body.innerHTML = selectedWidgetHtml;
+    subdomainFilter = document.querySelector("#id_subdomain");
+    initDomainFilter();
+  });
+
+  test("subdomain select is enabled", () => {
+    expect(subdomainFilter).toBeEnabled();
+  });
+
+  test("only the selected domain's options are available", () => {
+    const options = subdomainFilter.querySelectorAll("option");
+
+    const values = Array.from(options).map((el) => el.value);
+
+    expect(values).toEqual(["", "a1", "a2"]);
+  });
+});
+
 describe("after selecting a domain with no subdomains", () => {
   beforeEach(() => {
-    document.body.innerHTML = widget_html;
+    document.body.innerHTML = unselectedWidgetHtml;
 
-    subdomainFilter = document.querySelector("#subdomains-filter");
-    domainFilter = document.querySelector("#domains-filter");
+    subdomainFilter = document.querySelector("#id_subdomain");
+    domainFilter = document.querySelector("#id_domain");
 
     initDomainFilter();
 
@@ -71,7 +120,7 @@ describe("after selecting a domain with no subdomains", () => {
   });
 
   test("selects all subdomains", () => {
-    expect(subdomainFilter.value).toEqual("*");
+    expect(subdomainFilter.value).toEqual("");
   });
 
   test("only the all subdomains option is available", () => {
@@ -79,7 +128,7 @@ describe("after selecting a domain with no subdomains", () => {
 
     const values = Array.from(options).map((el) => el.value);
 
-    expect(values).toEqual(["*"]);
+    expect(values).toEqual([""]);
   });
 
   test("fires an event with the selected domain/subdomain pair", () => {
@@ -93,10 +142,10 @@ describe("after selecting a domain with no subdomains", () => {
 
 describe("after selecting a domain", () => {
   beforeEach(() => {
-    document.body.innerHTML = widget_html;
+    document.body.innerHTML = unselectedWidgetHtml;
 
-    subdomainFilter = document.querySelector("#subdomains-filter");
-    domainFilter = document.querySelector("#domains-filter");
+    subdomainFilter = document.querySelector("#id_subdomain");
+    domainFilter = document.querySelector("#id_domain");
 
     initDomainFilter();
 
@@ -116,7 +165,7 @@ describe("after selecting a domain", () => {
 
     const values = Array.from(options).map((el) => el.value);
 
-    expect(values).toEqual(["*", "a1", "a2"]);
+    expect(values).toEqual(["", "a1", "a2"]);
   });
 
   test("fires an event with the selected domain and null subdomain", () => {
@@ -153,11 +202,11 @@ describe("after selecting a domain", () => {
 
         const values = Array.from(options).map((el) => el.value);
 
-        expect(values).toEqual(["*", "b1", "b2"]);
+        expect(values).toEqual(["", "b1", "b2"]);
       });
 
       test("selects all subdomains", () => {
-        expect(subdomainFilter.value).toEqual("*");
+        expect(subdomainFilter.value).toEqual("");
       });
 
       test("fires an event with the selected domain and null subdomain", () => {
@@ -175,14 +224,14 @@ describe("after selecting a domain", () => {
         });
 
         test("selects all subdomains", () => {
-          expect(subdomainFilter.value).toEqual("*");
+          expect(subdomainFilter.value).toEqual("");
         });
       });
     });
 
     describe("after clearing the top level domain", () => {
       beforeEach(() => {
-        domainFilter.value = "*";
+        domainFilter.value = "";
         domainFilter.dispatchEvent(new Event("change"));
       });
 
