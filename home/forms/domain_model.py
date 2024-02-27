@@ -22,8 +22,8 @@ class DomainModel:
             Domain("urn:li:domain:OPG", "OPG"),
         ]
 
-        for value, label in self.top_level_domains:
-            self.labels[value] = label
+        for urn, label in self.top_level_domains:
+            self.labels[urn] = label
 
         self.subdomains = {
             "urn:li:domain:HMPPS": [
