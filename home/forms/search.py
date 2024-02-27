@@ -55,7 +55,7 @@ class SelectWithOptionAttribute(forms.Select):
         )
 
         if value:
-            option["attrs"]["data-parent"] = self.domain_model.get_parent_value(value)
+            option["attrs"]["data-parent"] = self.domain_model.get_parent_urn(value)
 
         return option
 

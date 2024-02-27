@@ -100,4 +100,4 @@ class DomainModel:
                     return domain
 
     def get_label(self, urn):
-        return self.labels.get(value, urn)
+        return self.labels.get(urn, urn)
