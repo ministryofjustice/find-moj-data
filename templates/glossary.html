@@ -1,0 +1,46 @@
+{% extends "base/base.html" %}
+{% load markdown %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-quarter">
+    <h1 class="govuk-heading-l">Glossary</h1>
+  </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <ul class="govuk-list">
+            {% for parent_term in results %}
+            <li>
+                <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ parent_term }}">
+                    <strong>{{ parent_term.name }}</strong>
+                </a></div>
+                {% for member in parent_term.members %}
+                    <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ member.name }}">
+                        {{ member.name }}
+                    </a></div>
+                {%endfor%}
+                <br>
+            </li>
+            {%endfor%}
+        </ul>
+    </div>
+    <div class="govuk-grid-column-three-quarters">
+        {% for parent_term in results %}
+        <div>
+            <h1 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term.name }}</h1>
+            <p class="govuk-body-l">{{ parent_term.description }}</p>
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        </div>
+            {% for member in parent_term.members %}
+            <div>
+                <h2 class="govuk-heading-m" id="{{ member.name }}">{{ member.name }}</h2>
+                <p class="govuk-body">{{ member.description|markdown }}</p>
+            </div>
+            {%endfor%}
+            <br>
+        {%endfor%}
+    </div>
+</div>
+
+{% endblock content %}

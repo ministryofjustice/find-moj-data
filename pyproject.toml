@@ -11,7 +11,7 @@ django = "^5.0.1"
 pyyaml = "^6.0.1"
 gunicorn = "^21.2.0"
 whitenoise = "^6.6.0"
-ministryofjustice-data-platform-catalogue = "^0.15.0"
+ministryofjustice-data-platform-catalogue = "^0.16.1"
 markdown = "^3.5.2"
 python-dotenv = "^1.0.1"
 

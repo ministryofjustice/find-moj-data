@@ -5,6 +5,7 @@ from django.shortcuts import render
 from home.forms.search import SearchForm
 from home.service.details import DataProductDetailsService, DatasetDetailsService
 from home.service.search import SearchService
+from home.service.glossary import GlossaryService
 
 
 def home_view(request):
@@ -55,3 +56,7 @@ def search_view(request, page: str = "1"):
 
     search_service = SearchService(form=form, page=page)
     return render(request, "search.html", search_service.context)
+
+def glossary_view(request):
+    glossary_service = GlossaryService()
+    return render(request, "glossary.html", glossary_service.context)

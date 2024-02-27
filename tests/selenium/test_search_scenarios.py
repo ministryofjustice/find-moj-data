@@ -30,8 +30,11 @@ class TestSearchWithoutJavascriptAndCss:
         self.search_page = search_page
         self.details_data_product_page = details_data_product_page
         self.chromedriver_path = chromedriver_path
-        self.details_data_product_page = details_data_product_page
-        self.chromedriver_path = chromedriver_path
+
+    def verify_glossary_link_from_homepage_works(self):
+        self.start_on_the_home_page()
+        self.click_on_the_glossary_link()
+        self.verify_i_am_on_the_glossary_page()
 
     def test_browse_to_first_item_data_product(self, mock_catalogue):
         """
@@ -206,12 +209,18 @@ class TestSearchWithoutJavascriptAndCss:
     def click_on_the_search_link(self):
         self.home_page.search_nav_link().click()
 
+    def click_on_the_glossary_link(self):
+        self.home_page.glossary_nav_link().click()
+
     def click_on_the_search_button(self):
         self.search_page.search_button().click()
 
     def verify_i_am_on_the_search_page(self):
         assert "Search" in self.selenium.title
         assert "Find MOJ Data" in self.search_page.primary_heading().text
+
+    def verify_i_am_on_the_glossary_page(self):
+        assert "Glossary" in self.selenium.title
 
     def verify_i_have_results(self):
         result_count = self.search_page.result_count().text

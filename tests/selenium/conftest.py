@@ -84,6 +84,9 @@ class HomePage(Page):
     def search_nav_link(self) -> WebElement:
         return self.selenium.find_element(By.LINK_TEXT, "Search")
 
+    def glossary_nav_link(self) -> WebElement:
+        return self.selenium.find_element(By.LINK_TEXT, "Glossary")
+
 
 class SearchResultWrapper:
     def __init__(self, element: WebElement):
