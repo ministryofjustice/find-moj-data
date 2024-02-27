@@ -99,5 +99,5 @@ class DomainModel:
                 if child_subdomain_urn == subdomain.urn:
                     return domain
 
-    def get_label(self, value):
-        return self.labels.get(value, value)
+    def get_label(self, urn):
+        return self.labels.get(value, urn)
