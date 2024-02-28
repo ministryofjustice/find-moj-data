@@ -27,8 +27,10 @@ const updateResults = () => {
 
   // Loop through all term groups, and hide those without visible terms
   termGroups.forEach((el) => {
-    const terms = el.querySelectorAll(".term:not(.govuk-\\!-display-none)");
-    const isEmpty = terms.length === 0;
+    const terms = Array.from(el.querySelectorAll(".term"));
+    const isEmpty =
+      terms.length === 0 ||
+      terms.every((term) => term.classList.contains("govuk-!-display-none"));
 
     if (isEmpty) {
       el.classList.add("govuk-!-display-none");
