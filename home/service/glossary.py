@@ -1,12 +1,16 @@
-from copy import deepcopy
 from itertools import groupby
 from sys import maxsize
 
-from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-
 from .base import GenericService
+
+GLOSSARY_ORDERING = [
+    "Key concepts",
+    "Technical terms",
+    "Data governance terms",
+    "Data protection terms",
+    "Other technical terms",
+    "Data sources",
+]
 
 
 class GlossaryService(GenericService):
@@ -26,7 +30,7 @@ class GlossaryService(GenericService):
             if first_parent:
                 parent_name = first_parent[0]["properties"]["name"]
                 try:
-                    parent_index = settings.GLOSSARY_ORDERING.index(parent_name)
+                    parent_index = GLOSSARY_ORDERING.index(parent_name)
                 except ValueError:
                     pass
             return parent_index, name

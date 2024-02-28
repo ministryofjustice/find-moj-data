@@ -130,12 +130,3 @@ DATABASES = {
         "NAME": ":memory:",
     }
 }
-
-GLOSSARY_ORDERING = [
-    "Key concepts",
-    "Technical terms",
-    "Data governance terms",
-    "Data protection terms",
-    "Other technical terms",
-    "Data sources",
-]
