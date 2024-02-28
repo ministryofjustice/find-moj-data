@@ -10841,4 +10841,14 @@ span.moj-header__link:hover {
   display: none;
 }
 
+@media (min-width: 40.0625em) {
+  #sticky-sidebar {
+    position: sticky;
+    top: 10px;
+    max-height: 100vh;
+    overflow-y: auto;
+    margin-bottom: 30px;
+  }
+}
+
 /*# sourceMappingURL=base.css.map */
