@@ -5,23 +5,32 @@ from typing import Any
 from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
 from django.core.paginator import Paginator
 
-from home.forms.search import SearchForm, get_subdomain_choices
+from home.forms.domain_model import DomainModel
+from home.forms.search import SearchForm
 
 from .base import GenericService
 
 
-def domains_with_their_subdomains(domain: str) -> list[str]:
+def domains_with_their_subdomains(domain: str, subdomain: str) -> list[str]:
     """
-    When assets are tagged to subdomains, they are not included in search results if
-    we filter by domain alone. We need to include all possible subdomains in the filter.
+    Users can search by domain, and optionally by subdomain.
+    When subdomain is passed, then we can filter on that directly.
+
+    However, when we filter by domain alone, assets tagged to subdomains
+    are not automatically included, so we need to include all possible
+    subdomains in the filter.
     """
-    subdomains = get_subdomain_choices(domain)
+    if subdomain:
+        return [subdomain]
+
+    subdomains = DomainModel().subdomains.get(domain, [])
     subdomains = [subdomain[0] for subdomain in subdomains]
     return [domain, *subdomains] if subdomains else []
 
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
+        self.domain_model = DomainModel()
         self.form = form
         self.page = page
         self.client = self._get_catalogue_client()
@@ -45,7 +54,8 @@ class SearchService(GenericService):
         query = form_data.get("query", "")
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
-        domains_and_subdomains = domains_with_their_subdomains(domain)
+        subdomain = form_data.get("subdomain", "")
+        domains_and_subdomains = domains_with_their_subdomains(domain, subdomain)
         classifications = self._build_custom_property_filter(
             "sensitivityLevel=", form_data.get("classifications", [])
         )
@@ -83,42 +93,53 @@ class SearchService(GenericService):
 
         return Paginator(pages_list, items_per_page)
 
-    def _generate_label_clear_ref(self) -> dict[str, dict[str, str]]:
+    def _generate_label_clear_ref(self) -> dict[str, dict[str, str]] | None:
         if self.form.is_bound:
             domain = self.form.cleaned_data.get("domain", "")
             classifications = self.form.cleaned_data.get("classifications", [])
             where_to_access = self.form.cleaned_data.get("where_to_access", [])
             label_clear_href = {}
             if domain:
-                label_clear_href["domain"] = {
-                    domain.split(":")[-1]: (
-                        self.form.encode_without_filter(
-                            filter_name="domain", filter_value=domain
-                        )
-                    )
-                }
+                label_clear_href["domain"] = self._generate_domain_clear_href()
             if classifications:
                 classifications_clear_href = {}
                 for classification in classifications:
-                    classifications_clear_href[
-                        classification
-                    ] = self.form.encode_without_filter(
-                        filter_name="classifications", filter_value=classification
+                    classifications_clear_href[classification] = (
+                        self.form.encode_without_filter(
+                            filter_name="classifications", filter_value=classification
+                        )
                     )
                 label_clear_href["classifications"] = classifications_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}
                 for access in where_to_access:
-                    where_to_access_clear_href[
-                        access
-                    ] = self.form.encode_without_filter(
-                        filter_name="where_to_access", filter_value=access
+                    where_to_access_clear_href[access] = (
+                        self.form.encode_without_filter(
+                            filter_name="where_to_access", filter_value=access
+                        )
                     )
                 label_clear_href["availability"] = where_to_access_clear_href
         else:
             label_clear_href = None
+
         return label_clear_href
+
+    def _generate_domain_clear_href(
+        self,
+    ) -> dict[str, str]:
+        domain = self.form.cleaned_data.get("domain", "")
+        subdomain = self.form.cleaned_data.get("subdomain", "")
+
+        label = self.domain_model.get_label(subdomain or domain)
+
+        return {
+            label: (
+                self.form.encode_without_filter(
+                    filter_name="domain", filter_value=domain
+                )
+            )
+        }
 
     def _get_context(self) -> dict[str, Any]:
         if self.form["query"].value():

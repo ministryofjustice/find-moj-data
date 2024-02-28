@@ -11,8 +11,6 @@ from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
-
-
 TMP_DIR = Path(__file__).parent / "../../tmp"
 
 
@@ -130,16 +128,25 @@ class SearchPage(Page):
     def domain_select(self) -> WebElement:
         return Select(self.selenium.find_element(By.ID, "id_domain"))
 
+    def subdomain_select(self) -> WebElement:
+        return Select(self.selenium.find_element(By.ID, "id_subdomain"))
+
     def select_domain(self, domain) -> WebElement:
         select = self.domain_select()
+        return select.select_by_visible_text(domain)
+
+    def select_subdomain(self, domain) -> WebElement:
+        select = self.subdomain_select()
+        print(f"Selecting subdomain {domain}")
         return select.select_by_visible_text(domain)
 
     def get_selected_domain(self) -> WebElement:
         select = self.domain_select()
         return select.first_selected_option
 
-    def domain_option(self, name) -> WebElement:
-        return self.selenium.find_element(By.XPATH, f"//option[ text() = '{name}' ]")
+    def get_selected_subdomain(self) -> WebElement:
+        select = self.subdomain_select()
+        return select.first_selected_option
 
     def sort_label(self, name) -> WebElement:
         return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
