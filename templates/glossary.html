@@ -38,7 +38,7 @@
             <h1 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term.name }}</h1>
             <p class="govuk-body-l">{{ parent_term.description }}</p>
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        </div>
+
             {% for member in parent_term.members %}
             <div data-term="{{member.name|upper}}" class="term">
                 <h2 class="govuk-heading-m" id="{{ member.name }}">{{ member.name }}</h2>
@@ -46,6 +46,7 @@
             </div>
             {%endfor%}
             <br>
+        </div>
         {%endfor%}
     </div>
 </div>
