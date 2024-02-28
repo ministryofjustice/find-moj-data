@@ -18,12 +18,12 @@
     <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
         <ul class="govuk-list">
             {% for parent_term in results %}
-            <li>
+            <li class="term-group">
                 <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ parent_term }}">
                     <strong>{{ parent_term.name }}</strong>
                 </a></div>
                 {% for member in parent_term.members %}
-                    <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ member.name }}">
+                    <div data-term="{{member.name|upper}}" class="term"><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ member.name }}">
                         {{ member.name }}
                     </a></div>
                 {%endfor%}
