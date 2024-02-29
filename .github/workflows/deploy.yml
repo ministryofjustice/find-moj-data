@@ -2,8 +2,7 @@ name: deploy
 
 on:
   push:
-    branches:
-      [main]
+    branches: [main]
   workflow_dispatch:
 
 permissions: {}
@@ -11,6 +10,9 @@ concurrency: dev
 
 jobs:
   ecr:
+    defaults:
+      run:
+        working-directory: ./catalogue-frontend
     runs-on: ubuntu-latest
     environment: dev
     permissions:

@@ -11,6 +11,10 @@ on:
 
 jobs:
   test:
+    defaults:
+      run:
+        working-directory: ./catalogue-frontend
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +58,10 @@ jobs:
         run: poetry run pytest -m 'slow' --chromedriver-path=$(npm root -g)/chromedriver/bin/chromedriver
 
   test_javascript:
+    defaults:
+      run:
+        working-directory: ./catalogue-frontend
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
