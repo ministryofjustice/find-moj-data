@@ -32,9 +32,9 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: find-moj-data-secrets
-                  key: secret_key
+                  key: secret-key
             - name: CATALOGUE_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: find-moj-data-secrets
-                  key: catalogue_token
+                  key: catalogue-token
