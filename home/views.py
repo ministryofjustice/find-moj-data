@@ -1,25 +1,62 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
-from .services import get_catalogue_client
+from home.forms.search import SearchForm
+from home.service.details import DataProductDetailsService, DatasetDetailsService
+from home.service.search import SearchService
+from home.service.glossary import GlossaryService
 
 
-# Create your views here.
 def home_view(request):
     context = {}
-    context["service_name"] = "Daap Data Catalogue"
     return render(request, "home.html", context)
 
 
-def search_view(request):
-    query = request.GET.get("query", "")
-    page = request.GET.get("page", None)
+def details_view(request, result_type, id):
+    if result_type == "data_product":
+        context = data_product_details(request, id)
+        return render(request, "details_data_product.html", context)
+    if result_type == "table":
+        context = dataset_details(request, id)
+        return render(request, "details_dataset.html", context)
 
-    client = get_catalogue_client()
-    search_results = client.search(query=query, page=page)
 
-    context = {}
-    context["query"] = query
-    context["service_name"] = "Daap Data Catalogue"
-    context["results"] = search_results.page_results
-    context["total_results"] = search_results.total_results
-    return render(request, "search.html", context)
+def data_product_details(request, id):
+    try:
+        service = DataProductDetailsService(id)
+    except ObjectDoesNotExist:
+        raise Http404("Asset does not exist")
+
+    context = service.context
+
+    return context
+
+
+def dataset_details(request, id):
+    try:
+        service = DatasetDetailsService(id)
+    except ObjectDoesNotExist:
+        raise Http404("Asset does not exist")
+
+    context = service.context
+
+    return context
+
+
+def search_view(request, page: str = "1"):
+    new_search = request.GET.get("new", "")
+    if new_search:
+        form = SearchForm()
+    else:
+        # Populated search scenario
+        form = SearchForm(request.GET)
+        if not form.is_valid():
+            return HttpResponseBadRequest(form.errors)
+
+    search_service = SearchService(form=form, page=page)
+    return render(request, "search.html", search_service.context)
+
+def glossary_view(request):
+    glossary_service = GlossaryService()
+    return render(request, "glossary.html", glossary_service.context)

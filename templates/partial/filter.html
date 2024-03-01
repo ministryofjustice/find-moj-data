@@ -1,3 +1,5 @@
+{% load future %}
+{% load clear_filter %}
 <div class="govuk-grid-column-one-third">
     <div class="moj-filter">
       <div class="moj-filter__header">
@@ -8,83 +10,50 @@
         </div>
       </div>
       <div class="moj-filter__content">
-        <div class="moj-filter__selected">
-          <div class="moj-filter__selected-heading">
-            <div class="moj-filter__heading-title">
-              <h2 class="govuk-heading-m">Selected filters</h2>
-            </div>
-            <div class="moj-filter__heading-action">
-              <p><a class="govuk-link govuk-link--no-visited-state" href="">Clear filters</a></p>
-            </div>
-          </div>
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Type</h3>
-          <ul class="moj-filter-tags">
-            <li><a class="moj-filter__tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> Blue</a></li>
-            <li><a class="moj-filter__tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> Yellow</a></li>
-          </ul>
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Status</h3>
-          <ul class="moj-filter-tags">
-            <li><a class="moj-filter__tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span> Completed</a></li>
-          </ul>
-        </div>
+        {% include "partial/selected_filters.html" %}
         <div class="moj-filter__options">
-          <button type="submit" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
-            Apply filters
-          </button>
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                Type
-              </legend>
-              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type" name="type" type="checkbox" value="1" checked>
-                  <label class="govuk-label govuk-checkboxes__label" for="type">
-                    Blue (18)
-                  </label>
+            <button form="searchform" class="govuk-button" data-module="govuk-button" data-test-id="apply-filters">
+              Apply filters
+            </button>
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
+                  <div class="govuk-form-group">
+                    <label class="govuk-label" for="{{form.domain.id_for_label}}">Top-level domain</label>
+                  {{form.domain}}
+                  </div>
+                  <div class="govuk-form-group js-required">
+                    <label class="govuk-label" for="{{form.subdomain.id_for_label}}">Subdomain</label>
+                    {{form.subdomain}}
+                  </div>
+              </fieldset>
+            </div>
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Security Classification</legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                  {% for classification_option in form.classifications %}
+                    <div class="govuk-checkboxes__item">
+                      {{ classification_option.tag}}
+                      <label class="govuk-label govuk-checkboxes__label" for="{{ classification_option.id_for_label }}">{{classification_option.choice_label}}</label>
+                    </div>
+                  {% endfor %}
                 </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type-2" name="type" type="checkbox" value="2" checked>
-                  <label class="govuk-label govuk-checkboxes__label" for="type-2">
-                    Yellow (5)
-                  </label>
+              </fieldset>
+            </div>
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Availability</legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                  {% for access_option in form.where_to_access %}
+                    <div class="govuk-checkboxes__item">
+                      {{ access_option.tag}}
+                      <label class="govuk-label govuk-checkboxes__label" for="{{ access_option.id_for_label }}">{{access_option.choice_label}}</label>
+                    </div>
+                  {% endfor %}
                 </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="type-3" name="type" type="checkbox" value="3">
-                  <label class="govuk-label govuk-checkboxes__label" for="type-3">
-                    Red (2)
-                  </label>
-                </div>
-              </div>
-            </fieldset>
-          </div>
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                Status
-              </legend>
-              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="status" name="status" type="checkbox" value="complete" checked>
-                  <label class="govuk-label govuk-checkboxes__label" for="status">
-                    Completed (2)
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="status-2" name="status" type="checkbox" value="incomplete">
-                  <label class="govuk-label govuk-checkboxes__label" for="status-2">
-                    Incomplete (5)
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="status-3" name="status" type="checkbox" value="inprogress">
-                  <label class="govuk-label govuk-checkboxes__label" for="status-3">
-                    In progress (3)
-                  </label>
-                </div>
-              </div>
-            </fieldset>
-          </div>
+              </fieldset>
+            </div>
         </div>
       </div>
     </div>

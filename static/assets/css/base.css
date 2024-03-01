@@ -43,7 +43,10 @@
 
 
 :root {
-  --govuk-frontend-version: "5.0.0";
+  --govuk-frontend-version: "5.1.0";
+  --govuk-frontend-breakpoint-mobile: 20rem;
+  --govuk-frontend-breakpoint-tablet: 40.0625rem;
+  --govuk-frontend-breakpoint-desktop: 48.0625rem;
 }
 
 
@@ -60,14 +63,14 @@ a, .govuk-link {
   font-family: "GDS Transport";
   font-style: normal;
   font-weight: normal;
-  src: url("/static/fonts/light-94a07e06a1-v2.woff2") format("woff2"), url("/static/fonts/light-f591b13f7d-v2.woff") format("woff");
+  src: url("/static/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"), url("/static/assets/fonts/light-f591b13f7d-v2.woff") format("woff");
   font-display: fallback;
 }
 @font-face {
   font-family: "GDS Transport";
   font-style: normal;
   font-weight: bold;
-  src: url("/static/fonts/bold-b542beb274-v2.woff2") format("woff2"), url("/static/fonts/bold-affa96571d-v2.woff") format("woff");
+  src: url("/static/assets/fonts/bold-b542beb274-v2.woff2") format("woff2"), url("/static/assets/fonts/bold-affa96571d-v2.woff") format("woff");
   font-display: fallback;
 }
 @media print {
@@ -2451,24 +2454,9 @@ p + .govuk-heading-s,
 }
 
 .govuk-character-count__message {
-  font-family: "GDS Transport", arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "tnum" 1;
-  font-weight: 400;
+  font-variant-numeric: tabular-nums;
   margin-top: 0;
   margin-bottom: 0;
-}
-@media print {
-  .govuk-character-count__message {
-    font-family: sans-serif;
-  }
-}
-@supports (font-variant-numeric: tabular-nums) {
-  .govuk-character-count__message {
-    font-feature-settings: normal;
-    font-variant-numeric: tabular-nums;
-  }
 }
 .govuk-character-count__message::after {
   content: "​";
@@ -2608,12 +2596,10 @@ p + .govuk-heading-s,
 
 
 .govuk-checkboxes__item {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
   position: relative;
-  min-height: 40px;
   margin-bottom: 10px;
-  padding-left: 40px;
-  clear: left;
 }
 
 .govuk-checkboxes__item:last-child,
@@ -2622,10 +2608,6 @@ p + .govuk-heading-s,
 }
 
 .govuk-checkboxes__input {
-  position: absolute;
-  z-index: 1;
-  top: -2px;
-  left: -2px;
   width: 44px;
   height: 44px;
   margin: 0;
@@ -2634,9 +2616,10 @@ p + .govuk-heading-s,
 }
 
 .govuk-checkboxes__label {
-  display: inline-block;
+  align-self: center;
+  max-width: calc(100% - 74px);
   margin-bottom: 0;
-  padding: 8px 15px 5px;
+  padding: 7px 15px;
   cursor: pointer;
   touch-action: manipulation;
 }
@@ -2645,8 +2628,8 @@ p + .govuk-heading-s,
   content: "";
   box-sizing: border-box;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 2px;
+  left: 2px;
   width: 40px;
   height: 40px;
   border: 2px solid currentcolor;
@@ -2657,8 +2640,8 @@ p + .govuk-heading-s,
   content: "";
   box-sizing: border-box;
   position: absolute;
-  top: 11px;
-  left: 9px;
+  top: 13px;
+  left: 10px;
   width: 23px;
   height: 12px;
   transform: rotate(-45deg);
@@ -2671,8 +2654,14 @@ p + .govuk-heading-s,
 
 .govuk-checkboxes__hint {
   display: block;
+  width: 100%;
+  margin-top: -5px;
   padding-right: 15px;
-  padding-left: 15px;
+  padding-left: 59px;
+}
+
+.govuk-label:not(.govuk-label--m):not(.govuk-label--l):not(.govuk-label--xl) + .govuk-checkboxes__hint {
+  margin-bottom: 0;
 }
 
 .govuk-checkboxes__input:focus + .govuk-checkboxes__label::before {
@@ -2755,49 +2744,33 @@ p + .govuk-heading-s,
 }
 
 .govuk-checkboxes--small .govuk-checkboxes__item {
-  min-height: 0;
   margin-bottom: 0;
-  padding-left: 34px;
-  float: left;
-}
-.govuk-checkboxes--small .govuk-checkboxes__item::after {
-  content: "";
-  display: block;
-  clear: both;
 }
 .govuk-checkboxes--small .govuk-checkboxes__input {
-  left: -10px;
+  margin-left: -10px;
 }
 .govuk-checkboxes--small .govuk-checkboxes__label {
-  margin-top: -2px;
-  padding: 13px 15px 13px 1px;
-  float: left;
-}
-@media (min-width: 40.0625em) {
-  .govuk-checkboxes--small .govuk-checkboxes__label {
-    padding: 11px 15px 10px 1px;
-  }
+  padding-left: 1px;
 }
 .govuk-checkboxes--small .govuk-checkboxes__label::before {
-  top: 8px;
+  top: 10px;
+  left: 0;
   width: 24px;
   height: 24px;
 }
 .govuk-checkboxes--small .govuk-checkboxes__label::after {
-  top: 15px;
+  top: 17px;
   left: 6px;
   width: 12px;
   height: 6.5px;
   border-width: 0 0 3px 3px;
 }
 .govuk-checkboxes--small .govuk-checkboxes__hint {
-  padding: 0;
-  clear: both;
+  padding-left: 34px;
 }
 .govuk-checkboxes--small .govuk-checkboxes__conditional {
   margin-left: 10px;
   padding-left: 20px;
-  clear: both;
 }
 .govuk-checkboxes--small .govuk-checkboxes__item:hover .govuk-checkboxes__input:not(:disabled) + .govuk-checkboxes__label::before {
   outline: 3px dashed transparent;
@@ -2911,23 +2884,8 @@ p + .govuk-heading-s,
 }
 
 .govuk-input--extra-letter-spacing {
-  font-family: "GDS Transport", arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "tnum" 1;
-  font-weight: 400;
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0.05em;
-}
-@media print {
-  .govuk-input--extra-letter-spacing {
-    font-family: sans-serif;
-  }
-}
-@supports (font-variant-numeric: tabular-nums) {
-  .govuk-input--extra-letter-spacing {
-    font-feature-settings: normal;
-    font-variant-numeric: tabular-nums;
-  }
 }
 
 .govuk-input--width-30 {
@@ -2985,7 +2943,9 @@ p + .govuk-heading-s,
   font-size: 1rem;
   line-height: 1.25;
   box-sizing: border-box;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 2.5rem;
   height: 2.5rem;
   padding: 5px;
@@ -3014,12 +2974,6 @@ p + .govuk-heading-s,
   .govuk-input__suffix {
     font-size: 14pt;
     line-height: 1.15;
-  }
-}
-@media (max-width: 40.0525em) {
-  .govuk-input__prefix,
-  .govuk-input__suffix {
-    line-height: 1.6;
   }
 }
 @media (max-width: 19.99em) {
@@ -3654,7 +3608,7 @@ p + .govuk-heading-s,
   display: inline-block;
   min-width: 125px;
   padding-top: 112px;
-  background-image: url("/static/images/govuk-crest.png");
+  background-image: url("/static/assets/images/govuk-crest.png");
   background-repeat: no-repeat;
   background-position: 50% 0%;
   background-size: 125px 102px;
@@ -3663,7 +3617,7 @@ p + .govuk-heading-s,
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .govuk-footer__copyright-logo {
-    background-image: url("/static/images/govuk-crest-2x.png");
+    background-image: url("/static/assets/images/govuk-crest-2x.png");
   }
 }
 
@@ -3921,7 +3875,7 @@ p + .govuk-heading-s,
 
 .govuk-header__logo {
   margin-bottom: 10px;
-  padding-right: 50px;
+  padding-right: 80px;
 }
 @media (min-width: 48.0625em) {
   .govuk-header__logo {
@@ -3953,13 +3907,16 @@ p + .govuk-heading-s,
   font-size: 0.875rem;
   line-height: 1.1428571429;
   position: absolute;
-  top: 20px;
+  top: 13px;
   right: 0;
+  max-width: 80px;
+  min-height: 24px;
   margin: 0;
   padding: 0;
   border: 0;
   color: #ffffff;
   background: none;
+  word-break: break-all;
   cursor: pointer;
 }
 @media print {
@@ -4835,12 +4792,10 @@ p + .govuk-heading-s,
 
 
 .govuk-radios__item {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
   position: relative;
-  min-height: 40px;
   margin-bottom: 10px;
-  padding-left: 40px;
-  clear: left;
 }
 
 .govuk-radios__item:last-child,
@@ -4849,10 +4804,6 @@ p + .govuk-heading-s,
 }
 
 .govuk-radios__input {
-  position: absolute;
-  z-index: 1;
-  top: -2px;
-  left: -2px;
   width: 44px;
   height: 44px;
   margin: 0;
@@ -4861,9 +4812,10 @@ p + .govuk-heading-s,
 }
 
 .govuk-radios__label {
-  display: inline-block;
+  align-self: center;
+  max-width: calc(100% - 74px);
   margin-bottom: 0;
-  padding: 8px 15px 5px;
+  padding: 7px 15px;
   cursor: pointer;
   touch-action: manipulation;
 }
@@ -4872,8 +4824,8 @@ p + .govuk-heading-s,
   content: "";
   box-sizing: border-box;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 2px;
+  left: 2px;
   width: 40px;
   height: 40px;
   border: 2px solid currentcolor;
@@ -4884,8 +4836,8 @@ p + .govuk-heading-s,
 .govuk-radios__label::after {
   content: "";
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
   width: 0;
   height: 0;
   border: 10px solid currentcolor;
@@ -4896,8 +4848,14 @@ p + .govuk-heading-s,
 
 .govuk-radios__hint {
   display: block;
+  width: 100%;
+  margin-top: -5px;
   padding-right: 15px;
-  padding-left: 15px;
+  padding-left: 59px;
+}
+
+.govuk-label:not(.govuk-label--m):not(.govuk-label--l):not(.govuk-label--xl) + .govuk-radios__hint {
+  margin-bottom: 0;
 }
 
 .govuk-radios__input:focus + .govuk-radios__label::before {
@@ -4927,15 +4885,13 @@ p + .govuk-heading-s,
 }
 
 @media (min-width: 40.0625em) {
-  .govuk-radios--inline::after {
-    content: "";
-    display: block;
-    clear: both;
+  .govuk-radios--inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
   }
   .govuk-radios--inline .govuk-radios__item {
     margin-right: 20px;
-    float: left;
-    clear: none;
   }
 }
 
@@ -4993,48 +4949,31 @@ p + .govuk-heading-s,
 }
 
 .govuk-radios--small .govuk-radios__item {
-  min-height: 0;
   margin-bottom: 0;
-  padding-left: 34px;
-  float: left;
-}
-.govuk-radios--small .govuk-radios__item::after {
-  content: "";
-  display: block;
-  clear: both;
 }
 .govuk-radios--small .govuk-radios__input {
-  left: -10px;
+  margin-left: -10px;
 }
 .govuk-radios--small .govuk-radios__label {
-  margin-top: -2px;
-  padding: 13px 15px 13px 1px;
-  float: left;
-}
-@media (min-width: 40.0625em) {
-  .govuk-radios--small .govuk-radios__label {
-    padding: 11px 15px 10px 1px;
-  }
+  padding-left: 1px;
 }
 .govuk-radios--small .govuk-radios__label::before {
-  top: 8px;
+  top: 10px;
+  left: 0;
   width: 24px;
   height: 24px;
 }
 .govuk-radios--small .govuk-radios__label::after {
-  top: 15px;
+  top: 17px;
   left: 7px;
   border-width: 5px;
 }
 .govuk-radios--small .govuk-radios__hint {
-  padding: 0;
-  clear: both;
-  pointer-events: none;
+  padding-left: 34px;
 }
 .govuk-radios--small .govuk-radios__conditional {
   margin-left: 10px;
   padding-left: 20px;
-  clear: both;
 }
 .govuk-radios--small .govuk-radios__divider {
   width: 24px;
@@ -5604,22 +5543,7 @@ p + .govuk-heading-s,
 }
 
 .govuk-table__cell--numeric {
-  font-family: "GDS Transport", arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "tnum" 1;
-  font-weight: 400;
-}
-@media print {
-  .govuk-table__cell--numeric {
-    font-family: sans-serif;
-  }
-}
-@supports (font-variant-numeric: tabular-nums) {
-  .govuk-table__cell--numeric {
-    font-feature-settings: normal;
-    font-variant-numeric: tabular-nums;
-  }
+  font-variant-numeric: tabular-nums;
 }
 
 .govuk-table__header--numeric,
@@ -7873,7 +7797,7 @@ p + .govuk-heading-s,
 }
 .moj-button-menu__toggle-button:after {
   background-repeat: no-repeat;
-  background-image: url(/staticimages/icon-arrow-white-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-down.svg);
   content: "";
   display: inline-block;
   height: 5px;
@@ -7883,23 +7807,23 @@ p + .govuk-heading-s,
 }
 
 .moj-button-menu__toggle-button:focus:after {
-  background-image: url(/staticimages/icon-arrow-black-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-down.svg);
 }
 
 .moj-button-menu__toggle-button[aria-expanded=true]:focus:after {
-  background-image: url(/staticimages/icon-arrow-black-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-up.svg);
 }
 
 .moj-button-menu__toggle-button:hover:after {
-  background-image: url(/staticimages/icon-arrow-white-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-down.svg);
 }
 
 .moj-button-menu__toggle-button[aria-expanded=true]:hover:after {
-  background-image: url(/staticimages/icon-arrow-white-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-up.svg);
 }
 
 .moj-button-menu__toggle-button[aria-expanded=true]:after {
-  background-image: url(/staticimages/icon-arrow-white-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-white-up.svg);
 }
 
 .moj-button-menu__toggle-button--secondary {
@@ -7907,19 +7831,19 @@ p + .govuk-heading-s,
   margin-right: 0;
 }
 .moj-button-menu__toggle-button--secondary:after {
-  background-image: url(/staticimages/icon-arrow-black-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-down.svg);
 }
 
 .moj-button-menu__toggle-button--secondary[aria-expanded=true]:after {
-  background-image: url(/staticimages/icon-arrow-black-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-up.svg);
 }
 
 .moj-button-menu__toggle-button--secondary:hover:after {
-  background-image: url(/staticimages/icon-arrow-black-down.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-down.svg);
 }
 
 .moj-button-menu__toggle-button--secondary[aria-expanded=true]:hover:after {
-  background-image: url(/staticimages/icon-arrow-black-up.svg);
+  background-image: url(/static/assets/images/icon-arrow-black-up.svg);
 }
 
 /* MENU ITEM */
@@ -8255,7 +8179,7 @@ p + .govuk-heading-s,
   border: 0;
 }
 .moj-filter__legend button::after {
-  background-image: url(/staticimages/icon-toggle-plus-minus.svg);
+  background-image: url(/static/assets/images/icon-toggle-plus-minus.svg);
   background-position: 0 0;
   content: "";
   display: block;
@@ -8297,7 +8221,7 @@ p + .govuk-heading-s,
   border: 0;
 }
 .moj-filter__close::before {
-  background-image: url(/staticimages/icon-close-cross-black.svg);
+  background-image: url(/static/assets/images/icon-close-cross-black.svg);
   content: "";
   display: inline-block;
   height: 14px;
@@ -8440,7 +8364,7 @@ p + .govuk-heading-s,
   color: #ffffff;
 }
 .moj-filter__tag:after {
-  background-image: url(/staticimages/icon-tag-remove-cross.svg);
+  background-image: url(/static/assets/images/icon-tag-remove-cross.svg);
   content: "";
   display: inline-block;
   font-weight: bold;
@@ -8450,7 +8374,7 @@ p + .govuk-heading-s,
   width: 10px;
 }
 .moj-filter__tag:hover:after {
-  background-image: url(/staticimages/icon-tag-remove-cross-white.svg);
+  background-image: url(/static/assets/images/icon-tag-remove-cross-white.svg);
 }
 
 .moj-filter__options {
@@ -9659,7 +9583,7 @@ span.moj-header__link:hover {
   color: #1d70b8;
 }
 .moj-primary-navigation__link:hover {
-  color: #5694ca;
+  color: #003078;
 }
 .moj-primary-navigation__link:focus {
   color: #0b0c0c;
@@ -9692,6 +9616,12 @@ span.moj-header__link:hover {
   bottom: 0;
   left: 0;
   width: 100%;
+}
+.moj-primary-navigation__link[aria-current]:hover {
+  color: #003078;
+}
+.moj-primary-navigation__link[aria-current]:hover:before {
+  background-color: #003078;
 }
 .moj-primary-navigation__link[aria-current]:focus {
   color: #0b0c0c;
@@ -9825,7 +9755,7 @@ span.moj-header__link:hover {
 
 .moj-progress-bar__icon--complete {
   background-color: #00703c;
-  background-image: url(/staticimages/icon-progress-tick.svg);
+  background-image: url(/static/assets/images/icon-progress-tick.svg);
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
@@ -9906,24 +9836,24 @@ span.moj-header__link:hover {
 }
 
 .moj-rich-text-editor__toolbar-button--bold {
-  background-image: url(/staticimages/icon-wysiwyg-bold.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-bold.svg);
 }
 
 .moj-rich-text-editor__toolbar-button--italic {
-  background-image: url(/staticimages/icon-wysiwyg-italic.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-italic.svg);
 }
 
 .moj-rich-text-editor__toolbar-button--underline {
-  background-image: url(/staticimages/icon-wysiwyg-underline.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-underline.svg);
 }
 
 .moj-rich-text-editor__toolbar-button--unordered-list {
-  background-image: url(/staticimages/icon-wysiwyg-unordered-list.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-unordered-list.svg);
   margin-left: 10px;
 }
 
 .moj-rich-text-editor__toolbar-button--ordered-list {
-  background-image: url(/staticimages/icon-wysiwyg-ordered-list.svg);
+  background-image: url(/static/assets/images/icon-wysiwyg-ordered-list.svg);
 }
 
 .moj-rich-text-editor__content {
@@ -10197,14 +10127,12 @@ span.moj-header__link:hover {
   }
 }
 .moj-side-navigation__item a:hover {
-  border-color: #5694ca;
+  color: #003078;
 }
 .moj-side-navigation__item a:focus {
   color: #0b0c0c;
   background-color: #ffdd00;
-  box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
   border-color: #0b0c0c;
-  border-left-color: transparent;
   position: relative;
 }
 
@@ -10214,12 +10142,14 @@ span.moj-header__link:hover {
   color: #1d70b8;
   font-weight: bold;
 }
+.moj-side-navigation__item--active a:hover {
+  color: #003078;
+  border-color: #003078;
+}
 .moj-side-navigation__item--active a:focus {
   color: #0b0c0c;
   background-color: #ffdd00;
-  box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
   border-color: #0b0c0c;
-  border-left-color: transparent;
 }
 @media (min-width: 40.0625em) {
   .moj-side-navigation__item--active a:link,
@@ -10229,7 +10159,6 @@ span.moj-header__link:hover {
   .moj-side-navigation__item--active a:focus {
     color: #0b0c0c;
     background-color: #ffdd00;
-    border-color: transparent;
   }
 }
 
@@ -10419,7 +10348,7 @@ span.moj-header__link:hover {
   color: #1d70b8;
 }
 .moj-sub-navigation__link:hover {
-  color: #5694ca;
+  color: #003078;
 }
 .moj-sub-navigation__link:focus {
   color: #0b0c0c;
@@ -10430,12 +10359,17 @@ span.moj-header__link:hover {
   background-color: #0b0c0c;
   content: "";
   display: block;
-  width: 100%;
+  height: 100%;
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
-  height: 5px;
+  width: 5px;
+}
+@media (min-width: 40.0625em) {
+  .moj-sub-navigation__link:focus:before {
+    height: 5px;
+    width: 100%;
+  }
 }
 
 .moj-sub-navigation__link[aria-current=page] {
@@ -10458,6 +10392,9 @@ span.moj-header__link:hover {
     height: 5px;
     width: 100%;
   }
+}
+.moj-sub-navigation__link[aria-current=page]:hover {
+  color: #003078;
 }
 .moj-sub-navigation__link[aria-current=page]:focus:before {
   background-color: #0b0c0c;
@@ -10816,7 +10753,7 @@ span.moj-header__link:hover {
 }
 
 .moj-timeline__document-link {
-  background-image: url(/staticimages/icon-document.svg);
+  background-image: url(/static/assets/images/icon-document.svg);
   background-repeat: no-repeat;
   background-size: 20px 16px;
   background-position: 0 50%;
@@ -10897,6 +10834,20 @@ span.moj-header__link:hover {
 @media (min-width: 1020px) {
   .moj-width-container {
     margin: 0 auto;
+  }
+}
+
+.js-required {
+  display: none;
+}
+
+@media (min-width: 40.0625em) {
+  #sticky-sidebar {
+    position: sticky;
+    top: 10px;
+    max-height: 100vh;
+    overflow-y: auto;
+    margin-bottom: 30px;
   }
 }
 

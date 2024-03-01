@@ -13,22 +13,27 @@
 {% include "base/navigation.html" %}
 
 <div class="govuk-width-container app-width-container">
-  <div class="govuk-phase-banner">
+  <div class="govuk-phase-banner" role="region">
     <p class="govuk-phase-banner__content">
       <strong class="govuk-tag govuk-phase-banner__content__tag">Alpha
       </strong>
-      <span class="govuk-phase-banner__text">
+      <!--<span class="govuk-phase-banner__text">
         This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
+      </span>-->
+      <span class="govuk-phase-banner__text">
+        This service is currently under development and feedback is being gathered through user research.
       </span>
     </p>
   </div>
 
-{% block content %}
-{% endblock content %}
+  <main class="govuk-main-wrapper" id="main-content" role="main">
+  {% block content %}
+  {% endblock content %}
+  </main>
 
 </div>
 {% include "base/footer.html" %}
-<script type="module" href="{% static 'assets/js/govuk-frontend-5.0.0.min.js' %}"></script>
+<script type="module" href="{% static 'assets/js/govuk-frontend.min.js' %}"></script>
 <script src="{% static 'assets/js/moj-frontend.js' %}"></script>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -36,9 +41,11 @@
   crossorigin="anonymous"
 ></script>
 <script type="module">
-  import {initAll} from "{% static 'assets/js/govuk-frontend-5.0.0.min.js' %}"
+  import {initAll} from "{% static 'assets/js/govuk-frontend.min.js' %}"
   initAll();
   window.MOJFrontend.initAll();
 </script>
+{% block scripts %}
+{% endblock scripts %}
 </body>
 </html>

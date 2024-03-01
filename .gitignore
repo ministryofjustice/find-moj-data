@@ -164,3 +164,7 @@ cython_debug/
 staticfiles/
 
 node_modules
+
+tmp/
+
+coverage
