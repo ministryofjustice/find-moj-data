@@ -1,5 +1,5 @@
-name: Data Platform Story
-description: 📖 Create new Data Platform story
+name: Data Catalogue Story
+description: 📖 Create new Data Catalogue story
 title: "[gitmoji] <title>"
 labels: ["enhancement"]
 body:
