@@ -32,8 +32,6 @@ def get_sort_choices():
 def get_classification_choices():
     return [
         ("OFFICIAL", "Official"),
-        ("SECRET", "Secret"),
-        ("TOP-SECRET", "Top-Secret"),
     ]
 
 
