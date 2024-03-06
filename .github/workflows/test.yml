@@ -84,7 +84,6 @@ jobs:
 
   deploy_test:
     uses: "./.github/workflows/deploy-generic.yml"
-    needs: ["unit_test", "javascript_test"]
     with:
       env: "test"
       ecr_repository: "${{ vars.TEST_ECR_REPOSITORY }}"
