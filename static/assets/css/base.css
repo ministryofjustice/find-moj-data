@@ -43,7 +43,7 @@
 
 
 :root {
-  --govuk-frontend-version: "5.1.0";
+  --govuk-frontend-version: "5.2.0";
   --govuk-frontend-breakpoint-mobile: 20rem;
   --govuk-frontend-breakpoint-tablet: 40.0625rem;
   --govuk-frontend-breakpoint-desktop: 48.0625rem;
@@ -2608,6 +2608,7 @@ p + .govuk-heading-s,
 }
 
 .govuk-checkboxes__input {
+  z-index: 1;
   width: 44px;
   height: 44px;
   margin: 0;
@@ -4804,6 +4805,7 @@ p + .govuk-heading-s,
 }
 
 .govuk-radios__input {
+  z-index: 1;
   width: 44px;
   height: 44px;
   margin: 0;
@@ -10849,6 +10851,11 @@ span.moj-header__link:hover {
     overflow-y: auto;
     margin-bottom: 30px;
   }
+}
+.summary-card {
+  background-color: #f3f2f1;
+  padding: 15px 20px;
+  margin-bottom: 30px;
 }
 
 /*# sourceMappingURL=base.css.map */

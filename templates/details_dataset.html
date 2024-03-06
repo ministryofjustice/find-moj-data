@@ -1,1 +1,72 @@
-TODO
+{% extends "base/base.html" %}
+{% load static %}
+{% load markdown %}
+{% load humanize %}
+
+{% block breadcrumbs %}
+<div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="#">Search</a>
+      </li>
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="#">Some data product</a>
+      </li>
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="#">Some dataset</a>
+      </li>
+    </ol>
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <span class="govuk-caption-m">Dataset</span>
+        <h2 class="govuk-heading-l">Some dataset</h2>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="summary-card">
+            <h2 class="govuk-heading-s">
+                Description
+            </h2>
+            <p class="govuk-body">
+                Lorum ipsum
+            </p>
+        </div>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <!--<h2 class="govuk-heading-s">IAO or Data Owner</h2>-->
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+    
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Schema</caption>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Column name</th>
+                <th scope="col" class="govuk-table__header">Description</th>
+                <th scope="col" class="govuk-table__header">Type</th>
+                <th scope="col" class="govuk-table__header">Is Nullable</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">abc</td>
+                <td class="govuk-table__cell">def</td>
+                <td class="govuk-table__cell">string</td>
+                <td class="govuk-table__cell">YES</td>
+              </tr>
+            </tbody>
+          </table>
+
+    </div>
+</div>
+
+{% endblock content %}
