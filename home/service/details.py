@@ -1,7 +1,6 @@
 from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
 from django.core.exceptions import ObjectDoesNotExist
 
-
 from .base import GenericService
 
 
@@ -59,7 +58,36 @@ class DataProductDetailsService(GenericService):
 
 class DatasetDetailsService(GenericService):
     def __init__(self, urn: str):
+        super().__init__()
+
+        self.client = self._get_catalogue_client()
+
+        self.table_metadata = self.client.get_table_details(urn)
+
+        # Use a search query to obtain the remaining metadata about the table.
+        # This could be merged into the above query.
+        filter_value = [MultiSelectFilter("urn", [urn])]
+        search_results = self.client.search(query="", page=None, filters=filter_value)
+
+        if not search_results.page_results:
+            raise ObjectDoesNotExist(urn)
+
+        self.result = search_results.page_results[0]
+        data_products = self.result.metadata.get("data_products", ())
+        if data_products:
+            # Pick the first data product to use as the parent in the breadcrumb.
+            # If the dataset belongs to multiple data products, this may diverge
+            # from the path the user took to get to this page. However as of datahub
+            # v0.12, assigning to multiple data products is not possible.
+            self.parent_data_product = data_products[0]
+        else:
+            self.parent_data_product = None
+
         self.context = self._get_context()
 
     def _get_context(self):
-        return {}
+        return {
+            "table": self.table_metadata,
+            "parent_data_product": self.parent_data_product,
+            "result": self.result,
+        }

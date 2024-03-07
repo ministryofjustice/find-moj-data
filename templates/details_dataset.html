@@ -11,11 +11,11 @@
     </li>
     {% if parent_data_product %}
     <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=data_product id=parent_data_product.urn %}">{{parent_data_product.name}}</a>
+      <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type='data_product' id=parent_data_product.id %}">{{parent_data_product.name}}</a>
     </li>
     {% endif %}
     <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{{request.path}}">ABC</a>
+      <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{table.name}}</a>
     </li>
   </ol>
 </div>
@@ -36,7 +36,7 @@
                 Description
             </h2>
             <p class="govuk-body">
-                Lorum ipsum
+                {{table.description|markdown}}
             </p>
         </div>
     </div>
@@ -47,7 +47,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-    
+        {% if table.column_details %}
         <table class="govuk-table">
             <caption class="govuk-table__caption govuk-table__caption--m">Schema</caption>
             <thead class="govuk-table__head">
@@ -59,14 +59,21 @@
               </tr>
             </thead>
             <tbody class="govuk-table__body">
+              {% for column in table.column_details %}
               <tr class="govuk-table__row">
-                <td class="govuk-table__cell">abc</td>
-                <td class="govuk-table__cell">def</td>
-                <td class="govuk-table__cell">string</td>
-                <td class="govuk-table__cell">YES</td>
+                <td class="govuk-table__cell">{{column.name}}</td>
+                <td class="govuk-table__cell">{{column.description|default:''}}</td>
+                <td class="govuk-table__cell">{{column.type}}</td>
+                <td class="govuk-table__cell">{{column.nullable|yesno}}</td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
+          {% else %}
+          <h2 class="govuk-heading-m">Schema</h2>
+          <p class="govuk-body">The schema for this table is not available.</p>
+          {% endif %}
+
 
     </div>
 </div>

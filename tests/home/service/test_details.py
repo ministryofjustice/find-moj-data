@@ -1,5 +1,7 @@
 from data_platform_catalogue.search_types import ResultType
 
+from home.service.details import DatasetDetailsService
+
 
 class TestDetailsDataProductService:
     def test_get_context_data_product(self, detail_dataproduct_context, mock_catalogue):
@@ -32,3 +34,17 @@ class TestDetailsDataProductService:
             "type": "TABLE",
         }
         assert detail_dataproduct_context["tables"][0] == mock_table
+
+
+class TestDetailsDatasetService:
+    def test_get_context_contains_table_metadata(self, dataset_with_parent):
+        service = DatasetDetailsService(dataset_with_parent["urn"])
+        context = service.context
+        assert context["table"] == dataset_with_parent["table_metadata"]
+
+    def test_get_context_contains_parent(self, dataset_with_parent):
+        service = DatasetDetailsService(dataset_with_parent["urn"])
+        context = service.context
+        assert (
+            context["parent_data_product"] == dataset_with_parent["parent_data_product"]
+        )
