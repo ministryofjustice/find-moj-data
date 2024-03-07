@@ -11,7 +11,7 @@ jobs:
       env: "test"
       ecr_repository: "${{ vars.TEST_ECR_REPOSITORY }}"
       ecr_region: "${{ vars.TEST_ECR_REGION }}"
-      debug_flag: "${{ vars.DEBUG }}"
+      debug: "${{ vars.DEBUG }}"
       django_allowed_hosts: "${{ vars.DJANGO_ALLOWED_HOSTS }}"
       catalogue_url: "${{ vars.CATALOGUE_URL }}"
     secrets:
@@ -30,7 +30,7 @@ jobs:
       env: "dev"
       ecr_repository: "${{ vars.TEST_ECR_REPOSITORY }}"
       ecr_region: "${{ vars.TEST_ECR_REGION }}"
-      debug_flag: "${{ vars.DEBUG }}"
+      debug: "${{ vars.DEBUG }}"
       django_allowed_hosts: "${{ vars.DJANGO_ALLOWED_HOSTS }}"
       catalogue_url: "${{ vars.CATALOGUE_URL }}"
     secrets:
@@ -49,7 +49,7 @@ jobs:
       env: "preprod"
       ecr_repository: "${{ vars.TEST_ECR_REPOSITORY }}"
       ecr_region: "${{ vars.TEST_ECR_REGION }}"
-      debug_flag: "${{ vars.DEBUG }}"
+      debug: "${{ vars.DEBUG }}"
       django_allowed_hosts: "${{ vars.DJANGO_ALLOWED_HOSTS }}"
       catalogue_url: "${{ vars.CATALOGUE_URL }}"
     secrets:
