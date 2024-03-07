@@ -45,6 +45,7 @@ def generate_page(page_size=20, result_type: ResultType = None):
     """
     results = []
     for _ in range(page_size):
+        name = fake.name()
         results.append(
             SearchResult(
                 id=fake.unique.name(),
@@ -53,7 +54,8 @@ def generate_page(page_size=20, result_type: ResultType = None):
                     if result_type is None
                     else result_type
                 ),
-                name=fake.name(),
+                name=name,
+                fully_qualified_name=name,
                 description=fake.paragraph(),
                 metadata={"search_summary": "a"},
             )
@@ -134,6 +136,7 @@ def mock_get_dataproduct_aspect(mock_catalogue):
     )
     mock_catalogue.graph.get_aspect.return_value = response
 
+
 def mock_get_glossary_terms_response(mock_catalogue):
     mock_catalogue.get_glossary_terms.return_value = SearchResponse(
         total_results=3,
@@ -179,6 +182,7 @@ def mock_get_glossary_terms_response(mock_catalogue):
             ),
         ],
     )
+
 
 @pytest.fixture
 def valid_form():

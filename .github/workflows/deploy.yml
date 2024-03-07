@@ -17,8 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
-          aws-region: ${{ vars.ECR_REGION }}
+          role-to-assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.DEV_ECR_REGION }}
       - uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
       - run: |
@@ -26,7 +26,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          REPOSITORY: ${{ vars.DEV_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
       - run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
@@ -41,7 +41,7 @@ jobs:
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
           IMAGE_TAG: ${{ github.sha }}
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          REPOSITORY: ${{ vars.DEV_ECR_REPOSITORY }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
       - run: |
           echo "${{ secrets.KUBE_CERT }}" > ca.crt
