@@ -15,10 +15,10 @@ on:
         description: "ecr region to hold container image"
         required: true
         type: string
-      debug_flag:
+      debug:
         description: "flag for django's debug mode"
         required: true
-        type: number
+        type: string
       django_allowed_hosts:
         description: "django allowed hosts"
         required: true
@@ -80,7 +80,7 @@ jobs:
           cat deployments/templates/secrets.yml | envsubst > deployments/secrets.yml
         env:
           CATALOGUE_URL: ${{ inputs.CATALOGUE_URL }}
-          DEBUG: ${{ inputs.DEBUG_FLAG }}
+          DEBUG: ${{ inputs.DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ inputs.DJANGO_ALLOWED_HOSTS }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
