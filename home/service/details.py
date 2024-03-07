@@ -29,15 +29,9 @@ class DataProductDetailsService(GenericService):
 
         assets_in_data_product = []
         for result in data_product_search:
-            # name is like that as fully qualified name ({data_product}.{asset}) seems
-            # too verbose to display here.
             assets_in_data_product.append(
                 {
-                    "name": (
-                        result.name
-                        if not result.name.split(".")[0] == self.result.name
-                        else result.name.split(".")[1]
-                    ),
+                    "name": result.name,
                     "urn": result.id,
                     "description": result.description,
                     "type": "TABLE",
