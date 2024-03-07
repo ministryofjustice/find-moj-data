@@ -12,6 +12,7 @@ jobs:
       env: "test"
       ecr_repository: "${{ vars.TEST_ECR_REPOSITORY }}"
       ecr_region: "${{ vars.TEST_ECR_REGION }}"
+      debug_flag: 0
       django_allowed_hosts: "${{ vars.DJANGO_ALLOWED_HOSTS }}"
       catalogue_url: "${{ vars.CATALOGUE_URL }}"
     secrets:
