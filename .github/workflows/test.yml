@@ -9,10 +9,8 @@ on:
     branches:
       - main
 
-concurrency: test
-
 jobs:
-  unit_test:
+  unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -55,7 +53,7 @@ jobs:
         if: steps.fast-tests.outcome == 'success'
         run: poetry run pytest -m 'slow' --chromedriver-path=$(npm root -g)/chromedriver/bin/chromedriver
 
-  javascript_test:
+  javascript:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -84,7 +82,7 @@ jobs:
       - name: Run javascript tests
         run: npm test
 
-  deploy_test:
+  deploy:
     uses: "./.github/workflows/deploy-generic.yml"
     with:
       env: "test"
