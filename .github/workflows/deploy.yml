@@ -2,12 +2,9 @@ name: deploy
 
 on:
   push:
-    branches:
-      [main]
-  workflow_dispatch:
+    branches: [main]
 
 permissions: {}
-concurrency: dev
 
 jobs:
   ecr:
