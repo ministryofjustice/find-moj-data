@@ -11,9 +11,6 @@ jobs:
       env: "test"
       ecr_repository: ${{ vars.TEST_ECR_REPOSITORY }}
       ecr_region: ${{ vars.TEST_ECR_REGION }}
-      debug: ${{ vars.DEBUG }}
-      django_allowed_hosts: ${{ vars.DJANGO_ALLOWED_HOSTS }}
-      catalogue_url: ${{ vars.CATALOGUE_URL }}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
@@ -30,9 +27,6 @@ jobs:
       env: "dev"
       ecr_repository: ${{ vars.DEV_ECR_REPOSITORY }}
       ecr_region: ${{ vars.DEV_ECR_REGION }}
-      debug: ${{ vars.DEBUG }}
-      django_allowed_hosts: ${{ vars.DJANGO_ALLOWED_HOSTS }}
-      catalogue_url: ${{ vars.CATALOGUE_URL }}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
@@ -49,9 +43,6 @@ jobs:
       env: "preprod"
       ecr_repository: ${{ vars.PREPROD_ECR_REPOSITORY }}
       ecr_region: ${{ vars.PREPROD_ECR_REGION }}
-      debug: ${{ vars.DEBUG }}
-      django_allowed_hosts: ${{ vars.DJANGO_ALLOWED_HOSTS }}
-      catalogue_url: ${{ vars.CATALOGUE_URL }}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
