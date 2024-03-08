@@ -28,8 +28,8 @@ jobs:
     needs: test
     with:
       env: "dev"
-      ecr_repository: ${{ vars.TEST_ECR_REPOSITORY }}
-      ecr_region: ${{ vars.TEST_ECR_REGION }}
+      ecr_repository: ${{ vars.DEV_ECR_REPOSITORY }}
+      ecr_region: ${{ vars.DEV_ECR_REGION }}
       debug: ${{ vars.DEBUG }}
       django_allowed_hosts: ${{ vars.DJANGO_ALLOWED_HOSTS }}
       catalogue_url: ${{ vars.CATALOGUE_URL }}
@@ -38,7 +38,7 @@ jobs:
       kube_cert: ${{ secrets.KUBE_CERT }}
       kube_cluster: ${{ secrets.KUBE_CLUSTER }}
       kube_token: ${{ secrets.KUBE_TOKEN }}
-      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
+      ecr_role_to_assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
 
@@ -47,8 +47,8 @@ jobs:
     needs: dev
     with:
       env: "preprod"
-      ecr_repository: ${{ vars.TEST_ECR_REPOSITORY }}
-      ecr_region: ${{ vars.TEST_ECR_REGION }}
+      ecr_repository: ${{ vars.PREPROD_ECR_REPOSITORY }}
+      ecr_region: ${{ vars.PREPROD_ECR_REGION }}
       debug: ${{ vars.DEBUG }}
       django_allowed_hosts: ${{ vars.DJANGO_ALLOWED_HOSTS }}
       catalogue_url: ${{ vars.CATALOGUE_URL }}
@@ -57,6 +57,6 @@ jobs:
       kube_cert: ${{ secrets.KUBE_CERT }}
       kube_cluster: ${{ secrets.KUBE_CLUSTER }}
       kube_token: ${{ secrets.KUBE_TOKEN }}
-      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
+      ecr_role_to_assume: ${{ secrets.PREPROD_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
