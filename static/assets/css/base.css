@@ -10856,6 +10856,7 @@ span.moj-header__link:hover {
   background-color: #f3f2f1;
   padding: 15px 20px;
   margin-bottom: 30px;
+  overflow-wrap: break-word;
 }
 
 /*# sourceMappingURL=base.css.map */

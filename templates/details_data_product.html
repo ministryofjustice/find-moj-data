@@ -31,14 +31,6 @@
       </div>
       <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Domain name</dt>
-          <dd class="govuk-summary-list__value">
-          {{result.metadata.domain_name}}
-          </dd>
-        </div>
-
-
-        <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Last updated date</dt>
           <dd class="govuk-summary-list__value">
             {% if result.last_updated %}
@@ -68,6 +60,12 @@
           <dt class="govuk-summary-list__key">DPIA Status </dt>
           <dd class="govuk-summary-list__value">
 
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Domain name</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.metadata.domain_name}}
           </dd>
         </div>
         <div class="govuk-summary-list__row">
