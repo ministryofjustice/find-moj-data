@@ -103,9 +103,4 @@ jobs:
           kubectl config set-credentials deploy-user --token=${{ secrets.KUBE_TOKEN }}
           kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${KUBE_NAMESPACE}
           kubectl config use-context ${KUBE_CLUSTER}
-
-      - name: Apply Helm deployment
-        id: apply-helm-deployment
-        env:
-          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
-        run: kubectl -n ${KUBE_NAMESPACE} apply -f deployments/
+          kubectl -n ${KUBE_NAMESPACE} apply -f deployments/
