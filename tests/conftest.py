@@ -1,8 +1,10 @@
 from random import choice
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client import BaseCatalogueClient
+from data_platform_catalogue.entities import TableMetadata
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -19,13 +21,8 @@ from faker import Faker
 
 from home.forms.search import SearchForm
 from home.service.details import DataProductDetailsService
-from home.service.search import SearchService
 from home.service.glossary import GlossaryService
-
-from datahub.metadata.schema_classes import (
-    DataProductPropertiesClass,
-    DataProductAssociationClass,
-)
+from home.service.search import SearchService
 
 fake = Faker()
 
@@ -39,27 +36,49 @@ def chromedriver_path(request):
     return request.config.getoption("--chromedriver-path")
 
 
-def generate_page(page_size=20, result_type: ResultType = None):
+def generate_search_result(
+    result_type: ResultType | None = None, id=None, metadata=None
+) -> SearchResult:
+    """
+    Generate a random search result
+    """
+    name = fake.name()
+
+    return SearchResult(
+        id=id or fake.unique.name(),
+        result_type=(
+            choice((ResultType.DATA_PRODUCT, ResultType.TABLE))
+            if result_type is None
+            else result_type
+        ),
+        name=name,
+        fully_qualified_name=name,
+        description=fake.paragraph(),
+        metadata=metadata or {"search_summary": "a"},
+    )
+
+
+def generate_table_metadata(
+    name=None, description=None, columns_details=None, retention_period_in_days=None
+) -> TableMetadata:
+    """
+    Generate a fake table metadata object
+    """
+    return TableMetadata(
+        name=name or fake.unique.name(),
+        description=description or fake.paragraph(),
+        column_details=columns_details or [],
+        retention_period_in_days=retention_period_in_days or 123,
+    )
+
+
+def generate_page(page_size=20, result_type: ResultType | None = None):
     """
     Generate a fake search page
     """
     results = []
     for _ in range(page_size):
-        name = fake.name()
-        results.append(
-            SearchResult(
-                id=fake.unique.name(),
-                result_type=(
-                    choice((ResultType.DATA_PRODUCT, ResultType.TABLE))
-                    if result_type is None
-                    else result_type
-                ),
-                name=name,
-                fully_qualified_name=name,
-                description=fake.paragraph(),
-                metadata={"search_summary": "a"},
-            )
-        )
+        results.append(generate_search_result(result_type=result_type))
     return results
 
 
@@ -221,3 +240,31 @@ def detail_dataproduct_context(mock_catalogue):
     details_service = DataProductDetailsService(urn="urn:li:dataProduct:test")
     context = details_service._get_context()
     return context
+
+
+@pytest.fixture
+def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
+    """
+    Mock the catalogue response for a dataset that is linked to a data product
+    """
+    data_product = {"urn": "data-product-abc", "name": "parent"}
+
+    table_metadata = generate_table_metadata()
+    mock_catalogue.get_table_details.return_value = table_metadata
+
+    mock_catalogue.search.return_value = SearchResponse(
+        total_results=1,
+        page_results=[
+            generate_search_result(
+                result_type=ResultType.TABLE,
+                id="dataset-abc",
+                metadata={"data_products": [data_product]},
+            )
+        ],
+    )
+
+    return {
+        "urn": "dataset-abc",
+        "parent_data_product": data_product,
+        "table_metadata": table_metadata,
+    }

@@ -4,8 +4,8 @@ from django.shortcuts import render
 
 from home.forms.search import SearchForm
 from home.service.details import DataProductDetailsService, DatasetDetailsService
-from home.service.search import SearchService
 from home.service.glossary import GlossaryService
+from home.service.search import SearchService
 
 
 def home_view(request):
@@ -46,6 +46,7 @@ def dataset_details(request, id):
 
 def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
+    request.session["last_search"] = ""
     if new_search:
         form = SearchForm()
     else:
@@ -54,8 +55,11 @@ def search_view(request, page: str = "1"):
         if not form.is_valid():
             return HttpResponseBadRequest(form.errors)
 
+        request.session["last_search"] = request.GET.urlencode()
+
     search_service = SearchService(form=form, page=page)
     return render(request, "search.html", search_service.context)
+
 
 def glossary_view(request):
     glossary_service = GlossaryService()
