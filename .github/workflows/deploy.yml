@@ -2,57 +2,52 @@ name: deploy
 
 on:
   push:
-    branches:
-      [main]
-  workflow_dispatch:
-
-permissions: {}
-concurrency: dev
+    branches: [main]
 
 jobs:
-  ecr:
-    runs-on: ubuntu-latest
-    environment: dev
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read # This is required for actions/checkout
-    steps:
-      - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
-          aws-region: ${{ vars.DEV_ECR_REGION }}
-      - uses: aws-actions/amazon-ecr-login@v2
-        id: login-ecr
-      - run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.DEV_ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
-      - run: |
-          cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
-          cat deployments/templates/ingress.yml | envsubst > deployments/ingress.yml
-          cat deployments/templates/service.yml | envsubst > deployments/service.yml
-          cat deployments/templates/secrets.yml | envsubst > deployments/secrets.yml
-        env:
-          CATALOGUE_URL: ${{ vars.CATALOGUE_URL }}
-          DEBUG: ${{ vars.DEBUG }}
-          DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
-          IMAGE_TAG: ${{ github.sha }}
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.DEV_ECR_REPOSITORY }}
-          NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
-      - run: |
-          echo "${{ secrets.KUBE_CERT }}" > ca.crt
-          kubectl config set-cluster ${KUBE_CLUSTER} --certificate-authority=./ca.crt --server=https://${KUBE_CLUSTER}
-          kubectl config set-credentials deploy-user --token=${{ secrets.KUBE_TOKEN }}
-          kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${KUBE_NAMESPACE}
-          kubectl config use-context ${KUBE_CLUSTER}
-          kubectl -n ${KUBE_NAMESPACE} apply -f deployments/
-        env:
-          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
-          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+  test:
+    uses: "./.github/workflows/deploy-generic.yml"
+    with:
+      env: "test"
+      ecr_repository: ${{ vars.TEST_ECR_REPOSITORY }}
+      ecr_region: ${{ vars.TEST_ECR_REGION }}
+    secrets:
+      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
+      kube_cert: ${{ secrets.KUBE_CERT }}
+      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
+      kube_token: ${{ secrets.KUBE_TOKEN }}
+      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
+      secret_key: ${{ secrets.SECRET_KEY }}
+      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+
+  dev:
+    uses: "./.github/workflows/deploy-generic.yml"
+    needs: test
+    with:
+      env: "dev"
+      ecr_repository: ${{ vars.DEV_ECR_REPOSITORY }}
+      ecr_region: ${{ vars.DEV_ECR_REGION }}
+    secrets:
+      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
+      kube_cert: ${{ secrets.KUBE_CERT }}
+      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
+      kube_token: ${{ secrets.KUBE_TOKEN }}
+      ecr_role_to_assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
+      secret_key: ${{ secrets.SECRET_KEY }}
+      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+
+  preprod:
+    uses: "./.github/workflows/deploy-generic.yml"
+    needs: dev
+    with:
+      env: "preprod"
+      ecr_repository: ${{ vars.PREPROD_ECR_REPOSITORY }}
+      ecr_region: ${{ vars.PREPROD_ECR_REGION }}
+    secrets:
+      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
+      kube_cert: ${{ secrets.KUBE_CERT }}
+      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
+      kube_token: ${{ secrets.KUBE_TOKEN }}
+      ecr_role_to_assume: ${{ secrets.PREPROD_ECR_ROLE_TO_ASSUME }}
+      secret_key: ${{ secrets.SECRET_KEY }}
+      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
