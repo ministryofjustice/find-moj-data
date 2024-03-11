@@ -40,7 +40,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Helm Chart into Cloud Platform
+    name: Deploy Helm chart into Cloud Platform
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
     permissions:
@@ -74,7 +74,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-      - name: Prepare helm deployment
+      - name: Prepare Helm deployment
         id: prepare-helm-deployment
         env:
           CATALOGUE_URL: ${{ env.CATALOGUE_URL }}
@@ -92,7 +92,7 @@ jobs:
           cat deployments/templates/service.yml | envsubst > deployments/service.yml
           cat deployments/templates/secrets.yml | envsubst > deployments/secrets.yml
 
-      - name: Configure kubernetes cluster
+      - name: Configure Kubernetes cluster
         id: configure-kubernetes-cluster
         env:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
@@ -104,7 +104,7 @@ jobs:
           kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${KUBE_NAMESPACE}
           kubectl config use-context ${KUBE_CLUSTER}
 
-      - name: Apply helm deployment
+      - name: Apply Helm deployment
         id: apply-helm-deployment
         env:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
