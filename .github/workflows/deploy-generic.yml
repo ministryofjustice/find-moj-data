@@ -55,18 +55,24 @@ jobs:
           aws-region: ${{ inputs.ECR_REGION }}
 
       - name: Login to ECR
-        id: ecr-login
+        id: login-to-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and push image to ECR
-        id: build-and-push-image-to-ecr
+      - name: Build Docker image
+        id: build-docker-image
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
           REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        run: docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+
+      - name: Push Docker image to ECR
+        id: push-docker-image-to-ecr
+        env:
+          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
+          REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Prepare helm deployment
         id: prepare-helm-deployment
@@ -77,7 +83,7 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
           IMAGE_TAG: ${{ github.sha }}
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
           REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
         run: |
