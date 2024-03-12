@@ -22,73 +22,59 @@
   <span class="govuk-caption-m">Data product</span>
   <h2 class="govuk-heading-l">{{result.name}}</h2>
   <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-summary-card__title-wrapper" >
-    <dl class="govuk-summary-list govuk-summary-list--no-border">
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Registered by</dt>
-        <dd class="govuk-summary-list__value">
-          {{result.metadata.owner}}
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Owner email</dt>
-        <dd class="govuk-summary-list__value">
-        {{result.metadata.owner_email}}
-        </dd>
-      </div>
-
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Domain name</dt>
-        <dd class="govuk-summary-list__value">
-        {{result.metadata.domain_name}}
-        </dd>
-      </div>
-
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Last updated date</dt>
-        <dd class="govuk-summary-list__value">
-          {% if result.last_updated %}
-          {{result.last_updated | date:"jS F Y"}} ({{result.last_updated|naturaltime}})
-          {% endif %}
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Refresh period</dt>
-        <dd class="govuk-summary-list__value">
-
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Retention period</dt>
-        <dd class="govuk-summary-list__value">
-        {{result.metadata.retention_period_in_days|intcomma}}
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">DPIA Status </dt>
-        <dd class="govuk-summary-list__value">
-
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Tags</dt>
-        <dd class="govuk-summary-list__value">
-        {{ result.tags |join:", " }}
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Description</dt>
-        <dd class="govuk-summary-list__value">
+    <div class="summary-card">
+      <h2 class="govuk-heading-s govuk-!-margin-top-3">
+          Description
+      </h2>
+      <div class="govuk-body">
           {{result.description|markdown}}
-        </dd>
       </div>
-    </dl>
+      <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Last updated date</dt>
+          <dd class="govuk-summary-list__value">
+            {% if result.last_updated %}
+            {{result.last_updated | date:"jS F Y"}} ({{result.last_updated|naturaltime}})
+            {% endif %}
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Refresh period</dt>
+          <dd class="govuk-summary-list__value">
+
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Retention period</dt>
+          <dd class="govuk-summary-list__value">
+            {% if table.retention_period_in_days is None %}
+              Permanent
+            {% else %}
+              {{result.metadata.retention_period_in_days|intcomma}} days
+            {% endif %}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">DPIA Status </dt>
+          <dd class="govuk-summary-list__value">
+
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Domain name</dt>
+          <dd class="govuk-summary-list__value">
+          {{result.metadata.domain_name}}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Tags</dt>
+          <dd class="govuk-summary-list__value">
+          {{ result.tags |join:", " }}
+          </dd>
+        </div>
+      </dl>
     </div>
     <br/>
     <table class="govuk-table">
@@ -121,25 +107,7 @@
   </div>
 
   <div class="govuk-grid-column-one-third">
-      <div class="govuk-body">
-        <p class="govuk-heading-s">IAO or Data Owner</p>
-        <span class="govuk-body">
-          {{result.metadata.owner}}
-        </span>
-      </div>
-      <div class="govuk-body">
-        <p class="govuk-heading-s">Contact for access requirement</p>
-        <span class="govuk-body">
-          {{result.metadata.owner_email}}
-        </span>
-      </div>
-      <div class="govuk-body">
-        <p class="govuk-heading-s">Access requirement</p>
-        <span class="govuk-body">
-          Processing the data might require
-          permission from IAO or Data owner
-        </span>
-      </div>
+    {% include "partial/contact_info.html" with data_owner=result.metadata.owner data_owner_email=result.metadata.owner_email %}
   </div>
 </div>
 </div>
