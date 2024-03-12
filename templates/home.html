@@ -3,11 +3,13 @@
 
 {% block content %}
 
-  <a onclick="history.back()" class="govuk-back-link">Back</a>
-  <h1 class="govuk-heading-xl">Customised page template</h1>
+    <a onclick="history.back()"
+       class="govuk-back-link">Back</a>
+    <h1 class="govuk-heading-xl">Customised page template</h1>
 
-  <p class="govuk-body">
-    <a href="{% url 'home:glossary' %}" class="govuk-link">Glossary</a>.
-  </p>
+    <p class="govuk-body">
+        <a href="{% url 'home:glossary' %}"
+           class="govuk-link">Glossary</a>.
+    </p>
 
 {% endblock content %}

@@ -4,144 +4,148 @@
 {% load humanize %}
 
 {% block breadcrumbs %}
-<div class="govuk-breadcrumbs">
-    <ol class="govuk-breadcrumbs__list">
-      <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
-      </li>
-      <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{result.name}}</a>
-      </li>
-    </ol>
-</div>
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link"
+                   href="{% url 'home:search' %}?{{ request.session.last_search|default:'' }}">Search</a>
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link"
+                   href="{{ request.path }}">{{ result.name }}</a>
+            </li>
+        </ol>
+    </div>
 {% endblock breadcrumbs %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-  <span class="govuk-caption-m">Data product</span>
-  <h2 class="govuk-heading-l">{{result.name}}</h2>
-  <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-summary-card__title-wrapper" >
-    <dl class="govuk-summary-list govuk-summary-list--no-border">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <span class="govuk-caption-m">Data product</span>
+            <h2 class="govuk-heading-l">{{ result.name }}</h2>
+            <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-summary-card__title-wrapper">
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Registered by</dt>
-        <dd class="govuk-summary-list__value">
-          {{result.metadata.owner}}
-        </dd>
-      </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Registered by</dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ result.metadata.owner }}
+                            </dd>
+                        </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Owner email</dt>
-        <dd class="govuk-summary-list__value">
-        {{result.metadata.owner_email}}
-        </dd>
-      </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Owner email</dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ result.metadata.owner_email }}
+                            </dd>
+                        </div>
 
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Domain name</dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ result.metadata.domain_name }}
+                            </dd>
+                        </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Domain name</dt>
-        <dd class="govuk-summary-list__value">
-        {{result.metadata.domain_name}}
-        </dd>
-      </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Last updated date</dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if result.last_updated %}
+                                    {{ result.last_updated | date:"jS F Y" }} ({{ result.last_updated|naturaltime }})
+                                {% endif %}
+                            </dd>
+                        </div>
 
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Refresh period</dt>
+                            <dd class="govuk-summary-list__value">
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Last updated date</dt>
-        <dd class="govuk-summary-list__value">
-          {% if result.last_updated %}
-          {{result.last_updated | date:"jS F Y"}} ({{result.last_updated|naturaltime}})
-          {% endif %}
-        </dd>
-      </div>
+                            </dd>
+                        </div>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Refresh period</dt>
-        <dd class="govuk-summary-list__value">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Retention period</dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ result.metadata.retention_period_in_days|intcomma }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">DPIA Status</dt>
+                            <dd class="govuk-summary-list__value">
 
-        </dd>
-      </div>
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Tags</dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ result.tags |join:", " }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Description</dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ result.description|markdown }}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+                <br />
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-table__caption--m">Data product content</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col"
+                                class="govuk-table__header app-custom-class">Table name</th>
+                            <th scope="col"
+                                class="govuk-table__header app-custom-class">Description</th>
+                            <th scope="col"
+                                class="govuk-table__header app-custom-class">Schema details</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for table in tables %}
+                            {% with table_type=table.type|lower %}
+                                <tr class="govuk-table__row">
+                                    <th scope="row"
+                                        class="govuk-table__header">{{ table.name }}</th>
+                                    <td class="govuk-table__cell">
+                                        {% if table.description|length > 200 %}
+                                            {{ table.description|slice:":200"|add:"..."|markdown }}
+                                        {% else %}
+                                            {{ table.description|markdown }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        <a href="{% url 'home:details' result_type=table_type id=table.urn %}"
+                                           class="govuk-link">Schema details</a>
+                                    </td>
+                                </tr>
+                            {% endwith %}
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Retention period</dt>
-        <dd class="govuk-summary-list__value">
-        {{result.metadata.retention_period_in_days|intcomma}}
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">DPIA Status </dt>
-        <dd class="govuk-summary-list__value">
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Tags</dt>
-        <dd class="govuk-summary-list__value">
-        {{ result.tags |join:", " }}
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Description</dt>
-        <dd class="govuk-summary-list__value">
-          {{result.description|markdown}}
-        </dd>
-      </div>
-    </dl>
+            <div class="govuk-grid-column-one-third">
+                <div class="govuk-body">
+                    <p class="govuk-heading-s">IAO or Data Owner</p>
+                    <span class="govuk-body">{{ result.metadata.owner }}</span>
+                </div>
+                <div class="govuk-body">
+                    <p class="govuk-heading-s">Contact for access requirement</p>
+                    <span class="govuk-body">{{ result.metadata.owner_email }}</span>
+                </div>
+                <div class="govuk-body">
+                    <p class="govuk-heading-s">Access requirement</p>
+                    <span class="govuk-body">
+                        Processing the data might require
+                        permission from IAO or Data owner
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
-    <br/>
-    <table class="govuk-table">
-      <caption class="govuk-table__caption govuk-table__caption--m">Data product content</caption>
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header app-custom-class">Table name</th>
-          <th scope="col" class="govuk-table__header app-custom-class">Description</th>
-          <th scope="col" class="govuk-table__header app-custom-class">Schema details</th>
-        </tr>
-      </thead>
-      <tbody class="govuk-table__body">
-        {% for table in tables %}
-        {% with table_type=table.type|lower %}
-          <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">{{table.name}}</th>
-            <td class="govuk-table__cell">
-              {% if table.description|length > 200 %}
-                {{ table.description|slice:":200"|add:"..."|markdown }}
-              {% else %}
-                {{ table.description|markdown }}
-              {% endif %}
-            </td>
-            <td class="govuk-table__cell">  <a href="{% url 'home:details' result_type=table_type id=table.urn %}" class="govuk-link">Schema details</a></td>
-          </tr>       
-        {% endwith %} 
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <div class="govuk-grid-column-one-third">
-      <div class="govuk-body">
-        <p class="govuk-heading-s">IAO or Data Owner</p>
-        <span class="govuk-body">
-          {{result.metadata.owner}}
-        </span>
-      </div>
-      <div class="govuk-body">
-        <p class="govuk-heading-s">Contact for access requirement</p>
-        <span class="govuk-body">
-          {{result.metadata.owner_email}}
-        </span>
-      </div>
-      <div class="govuk-body">
-        <p class="govuk-heading-s">Access requirement</p>
-        <span class="govuk-body">
-          Processing the data might require
-          permission from IAO or Data owner
-        </span>
-      </div>
-  </div>
-</div>
-</div>
 
 {% endblock content %}

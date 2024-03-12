@@ -1,54 +1,60 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="govuk-template app-html-class">
+<html lang="en"
+      class="govuk-template app-html-class">
 
-{% include "base/head.html" %}
+    {% include "base/head.html" %}
 
-<body class="govuk-template__body app-body-class" data-test="My value" data-other="report:details">
-<script>
+    <body class="govuk-template__body app-body-class"
+          data-test="My value"
+          data-other="report:details">
+        <script>
   document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
-</script>
-<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+        </script>
+        <a href="#main-content"
+           class="govuk-skip-link"
+           data-module="govuk-skip-link">Skip to main content</a>
 
-{% include "base/navigation.html" %}
+        {% include "base/navigation.html" %}
 
-<div class="govuk-width-container app-width-container">
-  <div class="govuk-phase-banner" role="region">
-    <p class="govuk-phase-banner__content">
-      <strong class="govuk-tag govuk-phase-banner__content__tag">Alpha
-      </strong>
-      <!--<span class="govuk-phase-banner__text">
+        <div class="govuk-width-container app-width-container">
+            <div class="govuk-phase-banner"
+                 role="region">
+                <p class="govuk-phase-banner__content">
+                    <strong class="govuk-tag govuk-phase-banner__content__tag">Alpha</strong>
+                    <!--<span class="govuk-phase-banner__text">
         This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
       </span>-->
-      <span class="govuk-phase-banner__text">
-        This service is currently under development and feedback is being gathered through user research.
-      </span>
-    </p>
-  </div>
+                    <span class="govuk-phase-banner__text">
+                        This service is currently under development and feedback is being gathered through user research.
+                    </span>
+                </p>
+            </div>
 
-  {% block breadcrumbs %}
-  {% endblock breadcrumbs %}
+            {% block breadcrumbs %}
+            {% endblock breadcrumbs %}
 
-  <main class="govuk-main-wrapper" id="main-content" role="main">
-  {% block content %}
-  {% endblock content %}
-  </main>
+            <main class="govuk-main-wrapper"
+                  id="main-content"
+                  role="main">
+                {% block content %}
+                {% endblock content %}
+            </main>
 
-</div>
-{% include "base/footer.html" %}
-<script type="module" href="{% static 'assets/js/govuk-frontend.min.js' %}"></script>
-<script src="{% static 'assets/js/moj-frontend.js' %}"></script>
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"
-></script>
-<script type="module">
+        </div>
+        {% include "base/footer.html" %}
+        <script type="module"
+                href="{% static 'assets/js/govuk-frontend.min.js' %}"></script>
+        <script src="{% static 'assets/js/moj-frontend.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+                integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+                crossorigin="anonymous"></script>
+        <script type="module">
   import {initAll} from "{% static 'assets/js/govuk-frontend.min.js' %}"
   initAll();
   window.MOJFrontend.initAll();
-</script>
-{% block scripts %}
-{% endblock scripts %}
-</body>
+        </script>
+        {% block scripts %}
+        {% endblock scripts %}
+    </body>
 </html>

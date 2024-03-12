@@ -4,78 +4,80 @@
 {% load humanize %}
 
 {% block breadcrumbs %}
-<div class="govuk-breadcrumbs">
-  <ol class="govuk-breadcrumbs__list">
-    <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
-    </li>
-    {% if parent_data_product %}
-    <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type='data_product' id=parent_data_product.id %}">{{parent_data_product.name}}</a>
-    </li>
-    {% endif %}
-    <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{table.name}}</a>
-    </li>
-  </ol>
-</div>
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link"
+                   href="{% url 'home:search' %}?{{ request.session.last_search|default:'' }}">Search</a>
+            </li>
+            {% if parent_data_product %}
+                <li class="govuk-breadcrumbs__list-item">
+                    <a class="govuk-breadcrumbs__link"
+                       href="{% url 'home:details' result_type='data_product' id=parent_data_product.id %}">{{ parent_data_product.name }}</a>
+                </li>
+            {% endif %}
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link"
+                   href="{{ request.path }}">{{ table.name }}</a>
+            </li>
+        </ol>
+    </div>
 {% endblock breadcrumbs %}
 
 {% block content %}
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <span class="govuk-caption-m">Dataset</span>
-        <h2 class="govuk-heading-l">Some dataset</h2>
-    </div>
-</div>
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <div class="summary-card">
-            <h2 class="govuk-heading-s">
-                Description
-            </h2>
-            <p class="govuk-body">
-                {{table.description|markdown}}
-            </p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <span class="govuk-caption-m">Dataset</span>
+            <h2 class="govuk-heading-l">Some dataset</h2>
         </div>
     </div>
-    <div class="govuk-grid-column-one-third">
-        <!--<h2 class="govuk-heading-s">IAO or Data Owner</h2>-->
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="summary-card">
+                <h2 class="govuk-heading-s">Description</h2>
+                <p class="govuk-body">{{ table.description|markdown }}</p>
+            </div>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <!--<h2 class="govuk-heading-s">IAO or Data Owner</h2>-->
+        </div>
     </div>
-</div>
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        {% if table.column_details %}
-        <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">Schema</caption>
-            <thead class="govuk-table__head">
-              <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Column name</th>
-                <th scope="col" class="govuk-table__header">Description</th>
-                <th scope="col" class="govuk-table__header">Type</th>
-                <th scope="col" class="govuk-table__header">Is Nullable</th>
-              </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-              {% for column in table.column_details %}
-              <tr class="govuk-table__row">
-                <td class="govuk-table__cell">{{column.name}}</td>
-                <td class="govuk-table__cell">{{column.description|default:''}}</td>
-                <td class="govuk-table__cell">{{column.type}}</td>
-                <td class="govuk-table__cell">{{column.nullable|yesno}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% else %}
-          <h2 class="govuk-heading-m">Schema</h2>
-          <p class="govuk-body">The schema for this table is not available.</p>
-          {% endif %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            {% if table.column_details %}
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-table__caption--m">Schema</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col"
+                                class="govuk-table__header">Column name</th>
+                            <th scope="col"
+                                class="govuk-table__header">Description</th>
+                            <th scope="col"
+                                class="govuk-table__header">Type</th>
+                            <th scope="col"
+                                class="govuk-table__header">Is Nullable</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        {% for column in table.column_details %}
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">{{ column.name }}</td>
+                                <td class="govuk-table__cell">{{ column.description|default:'' }}</td>
+                                <td class="govuk-table__cell">{{ column.type }}</td>
+                                <td class="govuk-table__cell">{{ column.nullable|yesno }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <h2 class="govuk-heading-m">Schema</h2>
+                <p class="govuk-body">The schema for this table is not available.</p>
+            {% endif %}
 
-
+        </div>
     </div>
-</div>
 
 {% endblock content %}

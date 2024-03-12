@@ -2,59 +2,69 @@
 {% load clear_filter %}
 <div class="govuk-grid-column-one-third">
     <div class="moj-filter">
-      <div class="moj-filter__header">
-        <div class="moj-filter__header-title">
-          <h2 class="govuk-heading-m">Filter</h2>
-        </div>
-        <div class="moj-filter__header-action">
-        </div>
-      </div>
-      <div class="moj-filter__content">
-        {% include "partial/selected_filters.html" %}
-        <div class="moj-filter__options">
-            <button form="searchform" class="govuk-button" data-module="govuk-button" data-test-id="apply-filters">
-              Apply filters
-            </button>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
-                  <div class="govuk-form-group">
-                    <label class="govuk-label" for="{{form.domain.id_for_label}}">Top-level domain</label>
-                  {{form.domain}}
-                  </div>
-                  <div class="govuk-form-group js-required">
-                    <label class="govuk-label" for="{{form.subdomain.id_for_label}}">Subdomain</label>
-                    {{form.subdomain}}
-                  </div>
-              </fieldset>
+        <div class="moj-filter__header">
+            <div class="moj-filter__header-title">
+                <h2 class="govuk-heading-m">Filter</h2>
             </div>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Security Classification</legend>
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                  {% for classification_option in form.classifications %}
-                    <div class="govuk-checkboxes__item">
-                      {{ classification_option.tag}}
-                      <label class="govuk-label govuk-checkboxes__label" for="{{ classification_option.id_for_label }}">{{classification_option.choice_label}}</label>
-                    </div>
-                  {% endfor %}
+            <div class="moj-filter__header-action"></div>
+        </div>
+        <div class="moj-filter__content">
+            {% include "partial/selected_filters.html" %}
+            <div class="moj-filter__options">
+                <button form="searchform"
+                        class="govuk-button"
+                        data-module="govuk-button"
+                        data-test-id="apply-filters">Apply filters</button>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Domain</legend>
+                        <div class="govuk-form-group">
+                            <label class="govuk-label"
+                                   for="{{ form.domain.id_for_label }}">Top-level domain</label>
+                            {{ form.domain }}
+                        </div>
+                        <div class="govuk-form-group js-required">
+                            <label class="govuk-label"
+                                   for="{{ form.subdomain.id_for_label }}">Subdomain</label>
+                            {{ form.subdomain }}
+                        </div>
+                    </fieldset>
                 </div>
-              </fieldset>
-            </div>
-            <div class="govuk-form-group">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Availability</legend>
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                  {% for access_option in form.where_to_access %}
-                    <div class="govuk-checkboxes__item">
-                      {{ access_option.tag}}
-                      <label class="govuk-label govuk-checkboxes__label" for="{{ access_option.id_for_label }}">{{access_option.choice_label}}</label>
-                    </div>
-                  {% endfor %}
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Security Classification</legend>
+                        <div class="govuk-checkboxes govuk-checkboxes--small"
+                             data-module="govuk-checkboxes">
+                            {% for classification_option in form.classifications %}
+                                <div class="govuk-checkboxes__item">
+                                    {{ classification_option.tag }}
+                                    <label class="govuk-label govuk-checkboxes__label"
+                                           for="{{ classification_option.id_for_label }}">
+                                        {{ classification_option.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
                 </div>
-              </fieldset>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Availability</legend>
+                        <div class="govuk-checkboxes govuk-checkboxes--small"
+                             data-module="govuk-checkboxes">
+                            {% for access_option in form.where_to_access %}
+                                <div class="govuk-checkboxes__item">
+                                    {{ access_option.tag }}
+                                    <label class="govuk-label govuk-checkboxes__label"
+                                           for="{{ access_option.id_for_label }}">
+                                        {{ access_option.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
             </div>
         </div>
-      </div>
     </div>
 </div>
