@@ -77,9 +77,9 @@ jobs:
       - name: Prepare Helm deployment
         id: prepare-helm-deployment
         env:
-          CATALOGUE_URL: ${{ env.CATALOGUE_URL }}
-          DEBUG: ${{ env.DEBUG }}
-          DJANGO_ALLOWED_HOSTS: ${{ env.DJANGO_ALLOWED_HOSTS }}
+          CATALOGUE_URL: ${{ vars.CATALOGUE_URL }}
+          DEBUG: ${{ vars.DEBUG }}
+          DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
           IMAGE_TAG: ${{ github.sha }}
