@@ -13,7 +13,9 @@
             {% if parent_data_product %}
                 <li class="govuk-breadcrumbs__list-item">
                     <a class="govuk-breadcrumbs__link"
-                       href="{% url 'home:details' result_type='data_product' id=parent_data_product.id %}">{{ parent_data_product.name }}</a>
+                       href="{% url 'home:details' result_type='data_product' id=parent_data_product.id %}">
+                        {{ parent_data_product.name }}
+                    </a>
                 </li>
             {% endif %}
             <li class="govuk-breadcrumbs__list-item">
