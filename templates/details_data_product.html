@@ -21,6 +21,8 @@
   <div class="govuk-grid-column-full">
   <span class="govuk-caption-m">Data product</span>
   <h2 class="govuk-heading-l">{{result.name}}</h2>
+</div>
+<div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="summary-card">
       <h2 class="govuk-heading-s govuk-!-margin-top-3">
@@ -57,13 +59,7 @@
           </dd>
         </div>
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">DPIA Status </dt>
-          <dd class="govuk-summary-list__value">
-
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Domain name</dt>
+          <dt class="govuk-summary-list__key">Domain</dt>
           <dd class="govuk-summary-list__value">
           {{result.metadata.domain_name}}
           </dd>
@@ -76,7 +72,15 @@
         </div>
       </dl>
     </div>
-    <br/>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    {% include "partial/contact_info.html" with data_owner=result.metadata.owner data_owner_email=result.metadata.owner_email %}
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
     <table class="govuk-table">
       <caption class="govuk-table__caption govuk-table__caption--m">Data product content</caption>
       <thead class="govuk-table__head">
@@ -90,7 +94,7 @@
         {% for table in tables %}
         {% with table_type=table.type|lower %}
           <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">{{table.name}}</th>
+            <td class="govuk-table__cell">{{table.name}}</td>
             <td class="govuk-table__cell">
               {% if table.description|length > 200 %}
                 {{ table.description|slice:":200"|add:"..."|markdown:3 }}
@@ -104,10 +108,6 @@
         {% endfor %}
       </tbody>
     </table>
-  </div>
-
-  <div class="govuk-grid-column-one-third">
-    {% include "partial/contact_info.html" with data_owner=result.metadata.owner data_owner_email=result.metadata.owner_email %}
   </div>
 </div>
 </div>
