@@ -22,9 +22,9 @@
       {% if result.description %}
       <div class="govuk-body-m">
         {% if result.description|length > 200 %}
-          {{ result.description|slice:":200"|add:"..."|markdown }}
+          {{ result.description|slice:":200"|add:"..."|markdown:3 }}
         {% else %}
-          {{ result.description|markdown }}
+          {{ result.description|markdown:3 }}
         {% endif %}
       </div>
       {% endif %}

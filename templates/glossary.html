@@ -42,7 +42,7 @@
             {% for member in parent_term.members %}
             <div data-term="{{member.name|upper}}" class="term">
                 <h3 class="govuk-heading-m" id="{{ member.name }}">{{ member.name }}</h3>
-                <p class="govuk-body">{{ member.description|markdown }}</p>
+                <p class="govuk-body">{{ member.description|markdown:3 }}</p>
             </div>
             {%endfor%}
             <br>
