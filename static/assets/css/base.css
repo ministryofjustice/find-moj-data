@@ -10843,6 +10843,12 @@ span.moj-header__link:hover {
   display: none;
 }
 
+mark {
+  background-color: inherit;
+  color: inherit;
+  font-weight: 700;
+}
+
 @media (min-width: 40.0625em) {
   #sticky-sidebar {
     position: sticky;

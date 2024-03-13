@@ -11,5 +11,11 @@ $govuk-global-styles: true;
     display: none;
 }
 
+mark {
+    background-color: inherit;
+    color: inherit;
+    font-weight: 700;
+}
+
 @import './glossary';
 @import './details';
