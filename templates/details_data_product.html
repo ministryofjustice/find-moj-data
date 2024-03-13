@@ -84,7 +84,7 @@
         {% for table in tables %}
         {% with table_type=table.type|lower %}
           <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">{{table.name}}</th>
+            <td class="govuk-table__cell">{{table.name}}</td>
             <td class="govuk-table__cell">
               {% if table.description|length > 200 %}
                 {{ table.description|slice:":200"|add:"..."|markdown:3 }}
