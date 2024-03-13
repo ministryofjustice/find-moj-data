@@ -35,51 +35,36 @@
             <h2 class="govuk-heading-s govuk-!-margin-top-3">
                 Description
             </h2>
-            <p class="govuk-body">
+            <div class="govuk-body">
                 {{table.description|markdown:3}}
-            </p>
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Last updated date</dt>
-                <dd class="govuk-summary-list__value">
-                  {% if result.last_updated %}
-                  {{result.last_updated | date:"jS F Y"}} ({{result.last_updated|naturaltime}})
-                  {% endif %}
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                  Retention period
-                </dt>
-                <dd class="govuk-summary-list__value">
-                  {% if table.retention_period_in_days is None %}
-                  Permanent
-                  {% else %}
-                  {{table.retention_period_in_days|intcomma}} days
-                  {% endif %}
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Refresh period</dt>
-                <dd class="govuk-summary-list__value">
-        
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Domain</dt>
-                <dd class="govuk-summary-list__value">
+            </div>
+            <ul class="govuk-list govuk-body">
+              <li>
+                <span class="govuk-!-font-weight-bold">Last updated date:</span>
+                {% if result.last_updated %}
+                {{result.last_updated | date:"jS F Y"}} ({{result.last_updated|naturaltime}})
+                {% endif %}
+              </li>
+              <li>
+                <span class="govuk-!-font-weight-bold">Retention period:</span>
+                {% if table.retention_period_in_days is None %}
+                Permanent
+                {% else %}
+                {{table.retention_period_in_days|intcomma}} days
+                {% endif %}
+              </li>
+              <li>
+                <span class="govuk-!-font-weight-bold">Refresh period:</span>
+              </li>
+              <li>
+                <span class="govuk-!-font-weight-bold">Domain:</span>
                 {{result.metadata.domain_name}}
-                </dd>
-              </div>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                  Tags
-                </dt>
-                <dd class="govuk-summary-list__value">
-                  {{result.tags | join:', '}}
-                </dd>
-              </div>
-            </dl>
+              </li>
+              <li>
+                <span class="govuk-!-font-weight-bold">Tags:</span>
+                {{result.tags | join:', '}}
+              </li>
+            </ul>
         </div>
     </div>
     <div class="govuk-grid-column-one-third">
