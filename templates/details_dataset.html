@@ -105,8 +105,8 @@
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">{{column.name}}</td>
                 <td class="govuk-table__cell">{{column.description|default:''}}</td>
-                <td class="govuk-table__cell">{{column.type}}</td>
-                <td class="govuk-table__cell">{{column.nullable|yesno}}</td>
+                <td class="govuk-table__cell">{{column.type|title}}</td>
+                <td class="govuk-table__cell">{{column.nullable|yesno|upper}}</td>
               </tr>
               {% endfor %}
             </tbody>
