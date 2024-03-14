@@ -82,19 +82,19 @@ jobs:
       - name: Run javascript tests
         run: npm test
 
-  # Only the deploy workflow should deploy to the test env on main
+  # Only the deploy workflow should deploy to the dev env on main
   deploy:
     if: github.event.ref != 'refs/heads/main'
     uses: "./.github/workflows/deploy-generic.yml"
     with:
-      env: "test"
-      ecr_repository: ${{ vars.TEST_ECR_REPOSITORY }}
-      ecr_region: ${{ vars.TEST_ECR_REGION }}
+      env: "dev"
+      ecr_repository: ${{ vars.DEV_ECR_REPOSITORY }}
+      ecr_region: ${{ vars.DEV_ECR_REGION }}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
       kube_cluster: ${{ secrets.KUBE_CLUSTER }}
       kube_token: ${{ secrets.KUBE_TOKEN }}
-      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
+      ecr_role_to_assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
