@@ -173,17 +173,14 @@ class SearchService(GenericService):
             return highlighted_results
 
         else:
-            pattern = re.compile(rf"(\w+)?({re.escape(query)})(\w+)?")
+            pattern = f"({re.escape(query)})"
             for result in highlighted_results.page_results:
-                description = result.description
-                for match in pattern.finditer(description):
-                    description = re.sub(
-                        match.group(0),
-                        f"<mark>{match.group(0)}</mark>",
-                        description,
-                        flags=re.IGNORECASE,
-                    )
-                result.description = description
+                result.description = re.sub(
+                    pattern,
+                    r"<mark>\1</mark>",
+                    result.description,
+                    flags=re.IGNORECASE,
+                )
 
             return highlighted_results
 
