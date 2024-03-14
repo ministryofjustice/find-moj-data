@@ -173,15 +173,9 @@ class SearchService(GenericService):
             return highlighted_results
 
         else:
-            pattern = f"({re.escape(query)})"
+            pattern = re.compile(rf"(\w*{query}\w*)", flags=re.IGNORECASE)
             for result in highlighted_results.page_results:
-                result.description = re.sub(
-                    pattern,
-                    r"<mark>\1</mark>",
-                    result.description,
-                    flags=re.IGNORECASE,
-                )
-
+                result.description = pattern.sub(r"<mark>\1</mark>", result.description)
             return highlighted_results
 
     def _get_match_reason_display_names(self):
