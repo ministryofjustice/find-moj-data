@@ -104,20 +104,20 @@ class SearchService(GenericService):
             if classifications:
                 classifications_clear_href = {}
                 for classification in classifications:
-                    classifications_clear_href[
-                        classification
-                    ] = self.form.encode_without_filter(
-                        filter_name="classifications", filter_value=classification
+                    classifications_clear_href[classification] = (
+                        self.form.encode_without_filter(
+                            filter_name="classifications", filter_value=classification
+                        )
                     )
                 label_clear_href["classifications"] = classifications_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}
                 for access in where_to_access:
-                    where_to_access_clear_href[
-                        access
-                    ] = self.form.encode_without_filter(
-                        filter_name="where_to_access", filter_value=access
+                    where_to_access_clear_href[access] = (
+                        self.form.encode_without_filter(
+                            filter_name="where_to_access", filter_value=access
+                        )
                     )
                 label_clear_href["availability"] = where_to_access_clear_href
         else:
@@ -177,7 +177,7 @@ class SearchService(GenericService):
             for result in highlighted_results.page_results:
                 result.description = re.sub(
                     pattern,
-                    r"**\1**",
+                    r"<mark>\1</mark>",
                     result.description,
                     flags=re.IGNORECASE,
                 )

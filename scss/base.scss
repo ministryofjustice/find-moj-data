@@ -11,5 +11,11 @@ $govuk-global-styles: true;
     display: none;
 }
 
+mark {
+    background-color: inherit;
+    color: inherit;
+    @include govuk-typography-weight-bold($important: false);
+}
+
 @import './glossary';
 @import './details';
