@@ -112,7 +112,23 @@ class SearchForm(forms.Form):
         self.initial["sort"] = "relevance"
 
     def encode_without_filter(self, filter_name: str, filter_value: str):
-        """Preformat hrefs to drop individual filters"""
+        """
+        Generate a query string that can be used to generate "remove filter"
+        links.
+
+        The query string includes all submitted form parameters except
+        the one identified by filter_name and filter_value.
+
+        >>> formdata = {'domain': 'urn:li:domain:HMCTS', 'classifications': ['OFFICIAL']}
+        >>> form = SearchForm(formdata)
+        >>> assert form.is_valid()
+
+        >>> form.encode_without_filter('domain', 'urn:li:domain:HMCTS')
+        '?query=&classifications=OFFICIAL&sort=&clear_filter=False&clear_label=False'
+
+        >>> form.encode_without_filter('classifications', 'OFFICIAL')
+        '?query=&domain=urn%3Ali%3Adomain%3AHMCTS&subdomain=&sort=&clear_filter=False&clear_label=False'
+        """
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)
         value = query_params.get(filter_name)

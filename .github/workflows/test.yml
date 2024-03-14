@@ -38,7 +38,7 @@ jobs:
       - run: poetry install --no-interaction
       - name: run unit tests with coverage
         id: fast-tests
-        run: poetry run pytest --cov -m 'not slow'
+        run: poetry run pytest --cov -m 'not slow' --doctest-modules
 
       - name: Get Chromium version 🌐
         run: |
