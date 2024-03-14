@@ -82,7 +82,7 @@ jobs:
       - name: Run javascript tests
         run: npm test
 
-  # Only the deploy workflow should deploy to the dev env on main
+  # Deploys to the 'dev' frontend unless pushed to main
   deploy:
     if: github.event.ref != 'refs/heads/main'
     uses: "./.github/workflows/deploy-generic.yml"
