@@ -72,7 +72,7 @@ class DataProductDetailsPage(Page):
         return self.selenium.find_element(By.TAG_NAME, "h2")
 
     def data_product_details(self):
-        return self.selenium.find_element(By.TAG_NAME, "dl")
+        return self.selenium.find_element(By.ID, "metadata-property-list")
 
     def data_product_tables(self):
         return self.selenium.find_element(By.TAG_NAME, "table")
