@@ -22,6 +22,8 @@ spec:
               containerPort: 8000
               protocol: TCP
           env:
+            - name: ENV
+              value: "${ENV}"
             - name: CATALOGUE_URL
               value: "${CATALOGUE_URL}"
             - name: DEBUG
