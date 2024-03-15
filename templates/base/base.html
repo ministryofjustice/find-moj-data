@@ -15,13 +15,21 @@
 <div class="govuk-width-container app-width-container">
   <div class="govuk-phase-banner" role="region">
     <p class="govuk-phase-banner__content">
-      <strong class="govuk-tag govuk-phase-banner__content__tag">Alpha
-      </strong>
+      <strong class="govuk-tag govuk-phase-banner__content__tag">Alpha</strong>
+      {% if env == "dev" %}
+        <strong class="govuk-tag govuk-tag--yellow govuk-phase-banner__content__tag">{{ env|title }}</strong>
+      {% endif %}
+      {% if env == "test" %}
+        <strong class="govuk-tag govuk-tag--green govuk-phase-banner__content__tag">{{ env|title }}</strong>
+      {% endif %}
+      {% if env == "preprod" %}
+        <strong class="govuk-tag govuk-tag--blue govuk-phase-banner__content__tag">{{ env|title }}</strong>
+      {% endif %}
       <!--<span class="govuk-phase-banner__text">
         This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
       </span>-->
       <span class="govuk-phase-banner__text">
-        This service is currently under development and feedback is being gathered through user research.
+        This service is currently in development and feedback is being gathered through user research.
       </span>
     </p>
   </div>
