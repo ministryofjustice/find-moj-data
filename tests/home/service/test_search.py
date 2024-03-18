@@ -3,7 +3,8 @@ from types import GeneratorType
 
 import pytest
 
-from home.service.search import domains_with_their_subdomains
+from home.forms.search import SearchForm
+from home.service.search import SearchService, domains_with_their_subdomains
 
 
 class TestSearchService:
@@ -95,9 +96,11 @@ class TestSearchService:
             == marked_description
         )
 
-    def test_highlight_results_no_query(self, search_service):
-        search_service.form.cleaned_data = {"query": ""}
-        search_service._highlight_results()
+    def test_highlight_results_no_query(self):
+        form = SearchForm(data={"query": ""})
+        assert form.is_valid()
+
+        search_service = SearchService(form=form, page="1")
 
         assert (
             search_service.results.page_results
@@ -105,8 +108,10 @@ class TestSearchService:
         )
 
     def test_highlight_results_with_query(self, search_service):
-        search_service.form.cleaned_data = {"query": "a"}
-        search_service._highlight_results()
+        form = SearchForm(data={"query": "a"})
+        assert form.is_valid()
+
+        search_service = SearchService(form=form, page="1")
 
         assert (
             search_service.results.page_results
