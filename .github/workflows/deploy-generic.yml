@@ -77,6 +77,7 @@ jobs:
       - name: Prepare Helm deployment
         id: prepare-helm-deployment
         env:
+          ENV: ${{ inputs.env }}
           CATALOGUE_URL: ${{ vars.CATALOGUE_URL }}
           DEBUG: ${{ vars.DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}

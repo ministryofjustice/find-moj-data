@@ -54,6 +54,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.env",
             ],
         },
     },
@@ -119,6 +120,7 @@ with open(SAMPLE_SEARCH_RESULTS_FILENAME) as f:
 # Catalog settings
 CATALOGUE_URL = os.environ.get("CATALOGUE_URL")
 CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
+ENV = os.environ.get("ENV")
 
 # session
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
