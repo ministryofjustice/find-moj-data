@@ -173,16 +173,22 @@ class SearchService(GenericService):
             return highlighted_results
 
         else:
-            pattern = f"({re.escape(query)})"
+            query_word_highlighting_pattern = (
+                self._compile_query_word_highlighting_pattern(query)
+            )
             for result in highlighted_results.page_results:
-                result.description = re.sub(
-                    pattern,
-                    r"<mark>\1</mark>",
-                    result.description,
-                    flags=re.IGNORECASE,
+                result.description = self._add_mark_tags(
+                    result.description, query_word_highlighting_pattern
                 )
-
             return highlighted_results
+
+    @staticmethod
+    def _compile_query_word_highlighting_pattern(query: str) -> re.compile:
+        return re.compile(rf"(\w*{query}\w*)", flags=re.IGNORECASE)
+
+    @staticmethod
+    def _add_mark_tags(description: str, pattern: re.compile) -> str:
+        return pattern.sub(r"<mark>\1</mark>", description)
 
     def _get_match_reason_display_names(self):
         return {

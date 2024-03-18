@@ -1,9 +1,10 @@
+import re
 from types import GeneratorType
 
 import pytest
-from data_platform_catalogue.search_types import SearchResult
 
-from home.service.search import SearchForm, SearchService, domains_with_their_subdomains
+from home.forms.search import SearchForm
+from home.service.search import SearchService, domains_with_their_subdomains
 
 
 class TestSearchService:
@@ -58,38 +59,63 @@ class TestSearchService:
             )
         }
 
-    def test_highlight_results_no_query(self, search_service):
-        search_service.form.cleaned_data = {"query": ""}
-        search_service._highlight_results()
+    def test__compile_query_word_highlighting_pattern(self, search_service):
+        query = "test"
+        pattern = search_service._compile_query_word_highlighting_pattern(query)
+        assert pattern == re.compile(rf"(\w*{query}\w*)", flags=re.IGNORECASE)
+
+    @pytest.mark.parametrize(
+        "query, description, marked_description",
+        [
+            (
+                "test",
+                "This is a test description",
+                "This is a <mark>test</mark> description",
+            ),
+            (
+                "OFF",
+                "This is a offence description of offences",
+                "This is a <mark>offence</mark> description of <mark>offences</mark>",
+            ),
+            (
+                "OFF",
+                "offence description of offences",
+                "<mark>offence</mark> description of <mark>offences</mark>",
+            ),
+        ],
+    )
+    def test__add_mark_tags(
+        self, query, description, marked_description, search_service
+    ):
+        pattern = search_service._compile_query_word_highlighting_pattern(query)
         assert (
-            normal.description == highlighted.description
-            and normal.metadata == highlighted.metadata
-            for normal, highlighted in zip(
-                search_service.results.page_results,
-                search_service.highlighted_results.page_results,
+            search_service._add_mark_tags(
+                description,
+                pattern,
             )
+            == marked_description
         )
 
-    def test_highlight_results_with_case_insensitive_query(self):
-        # The descriptions are all in lower case, so search upper case
-        # to test case insensitivity
-        form = SearchForm(data={"query": "A"})
+    def test_highlight_results_no_query(self):
+        form = SearchForm(data={"query": ""})
         assert form.is_valid()
-        service = SearchService(form=form, page="1")
 
-        descriptions = [result.description for result in service.results.page_results]
-        highlighted_descriptions = [
-            result.description for result in service.highlighted_results.page_results
-        ]
+        search_service = SearchService(form=form, page="1")
 
-        assert descriptions != highlighted_descriptions
         assert (
-            "**a**" or "**A**" in highlighted.description
-            for normal, highlighted in zip(
-                service.results.page_results,
-                service.highlighted_results.page_results,
-            )
-            if "a" or "A" in normal.description
+            search_service.results.page_results
+            == search_service.highlighted_results.page_results
+        )
+
+    def test_highlight_results_with_query(self, search_service):
+        form = SearchForm(data={"query": "a"})
+        assert form.is_valid()
+
+        search_service = SearchService(form=form, page="1")
+
+        assert (
+            search_service.results.page_results
+            != search_service.highlighted_results.page_results
         )
 
 
