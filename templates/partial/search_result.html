@@ -17,6 +17,10 @@
           <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
             Table
           </strong>
+          {% elif result.result_type.name == "CHART" %}
+          <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
+            Chart
+          </strong>
           {% endif %}
       </h3>
       {% if result.description %}
@@ -79,7 +83,7 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Matched fields</dt>
           <dd class="govuk-summary-list__value">
-            {{ result.matches|lookup:readable_match_reasons|join:", " }}
+            {{ result.matches|join:", " }}
           </dd>
         </div>
     </div>

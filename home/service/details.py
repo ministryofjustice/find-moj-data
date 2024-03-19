@@ -91,3 +91,13 @@ class DatasetDetailsService(GenericService):
             "parent_data_product": self.parent_data_product,
             "result": self.result,
         }
+
+
+class ChartDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.client = self._get_catalogue_client()
+        self.chart_metadata = self.client.get_chart_details(urn)
+        self.context = self._get_context()
+
+    def _get_context(self):
+        return {"chart": self.chart_metadata}
