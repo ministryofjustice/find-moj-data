@@ -1,6 +1,7 @@
 from data_platform_catalogue.search_types import ResultType
+from data_platform_catalogue.entities import ChartMetadata
 
-from home.service.details import DatasetDetailsService
+from home.service.details import DatasetDetailsService, ChartDetailsService
 
 
 class TestDetailsDataProductService:
@@ -48,3 +49,16 @@ class TestDetailsDatasetService:
         assert (
             context["parent_data_product"] == dataset_with_parent["parent_data_product"]
         )
+
+
+class TestDetailsChartService:
+    def test_get_context(self, mock_catalogue):
+        chart_metadata = ChartMetadata(
+            name="test", description="test", external_url="https://www.test.com"
+        )
+        mock_catalogue.get_chart_details.return_value = chart_metadata
+
+        context = ChartDetailsService("urn").context
+        expected = {"chart": chart_metadata}
+
+        assert context == expected

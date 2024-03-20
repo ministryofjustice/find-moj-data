@@ -17,6 +17,10 @@
           <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
             Table
           </strong>
+          {% elif result.result_type.name == "CHART" %}
+          <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
+            Chart
+          </strong>
           {% endif %}
       </h3>
       {% if result.description %}
