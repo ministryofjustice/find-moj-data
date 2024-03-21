@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client import BaseCatalogueClient
-from data_platform_catalogue.entities import TableMetadata
+from data_platform_catalogue.entities import TableMetadata, RelationshipType
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -78,7 +78,7 @@ def generate_table_metadata(
         description=description or fake.paragraph(),
         column_details=columns_details or [],
         retention_period_in_days=retention_period_in_days or 123,
-        relationships=relations,
+        relationships=relations or {RelationshipType.PARENT: []},
         domain=domain_name,
         tags=tags,
         last_updated=last_updated,

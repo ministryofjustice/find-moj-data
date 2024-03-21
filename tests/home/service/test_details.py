@@ -1,4 +1,5 @@
 from data_platform_catalogue.search_types import ResultType
+from data_platform_catalogue.entities import RelationshipType, RelatedEntity
 
 from home.service.details import DatasetDetailsService
 from tests.conftest import generate_table_metadata
@@ -45,18 +46,18 @@ class TestDetailsDatasetService:
 
     def test_get_context_contains_parent(self, mock_catalogue):
         parent = {
-            "total": 1,
-            "entities": [{"id": "urn:li:container:parent", "name": "parent"}],
+            RelationshipType.PARENT: [
+                RelatedEntity(id="urn:li:container:parent", name="parent")
+            ],
         }
         mock_table = generate_table_metadata(relations=parent)
         mock_catalogue.get_table_details.return_value = mock_table
 
         service = DatasetDetailsService("urn:li:datsset:test")
         context = service.context
-        assert context["parent_entity"] == {
-            "id": "urn:li:container:parent",
-            "name": "parent",
-        }
+        assert context["parent_entity"] == RelatedEntity(
+            id="urn:li:container:parent", name="parent"
+        )
 
 
 class TestDatabaseDetailsService:
