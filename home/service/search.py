@@ -25,7 +25,7 @@ def domains_with_their_subdomains(domain: str, subdomain: str) -> list[str]:
 
     subdomains = DomainModel().subdomains.get(domain, [])
     subdomains = [subdomain[0] for subdomain in subdomains]
-    return [domain, *subdomains] if subdomains else []
+    return [domain, *subdomains] if not domain == "" else []
 
 
 class SearchService(GenericService):
