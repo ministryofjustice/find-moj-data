@@ -45,11 +45,7 @@ class DataProductDetailsService(GenericService):
     def _get_context(self):
         context = {
             "result": self.result,
-            "result_type": (
-                "Data product"
-                if self.result.result_type == ResultType.DATA_PRODUCT
-                else "Table"
-            ),
+            "result_type": "Data product",
             "tables": self.assets_in_data_product,
             "page_title": f"{self.result.name} - Data catalogue",
         }
@@ -97,11 +93,7 @@ class DatabaseDetailsService(GenericService):
     def _get_context(self):
         context = {
             "result": self.result,
-            "result_type": (
-                "Database"
-                if self.result.result_type == ResultType.DATABASE
-                else "Table"
-            ),
+            "result_type": "Database",
             "tables": self.entities_in_database,
             "page_title": f"{self.result.name} - Data catalogue",
         }
