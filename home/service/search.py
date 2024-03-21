@@ -195,6 +195,7 @@ class SearchService(GenericService):
             "id": "ID",
             "urn": "URN",
             "domains": "Domain",
+            "title": "Title",
             "name": "Name",
             "description": "Description",
             "fieldPaths": "Column name",

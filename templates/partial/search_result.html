@@ -20,6 +20,9 @@
           {% elif result.result_type.name == "DATABASE" %}
           <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
             Database
+          {% elif result.result_type.name == "CHART" %}
+          <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
+            Chart
           </strong>
           {% endif %}
       </h3>

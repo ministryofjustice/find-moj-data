@@ -7,6 +7,7 @@ from home.service.details import (
     DataProductDetailsService,
     DatasetDetailsService,
     DatabaseDetailsService,
+    ChartDetailsService
 )
 from home.service.glossary import GlossaryService
 from home.service.search import SearchService
@@ -19,17 +20,20 @@ def home_view(request):
 
 def details_view(request, result_type, id):
     if result_type == "data_product":
-        context = data_product_details(request, id)
+        context = data_product_details(id)
         return render(request, "details_data_product.html", context)
     if result_type == "table":
-        context = dataset_details(request, id)
+        context = dataset_details(id)
         return render(request, "details_dataset.html", context)
     if result_type == "database":
         context = database_details(request, id)
         return render(request, "details_database.html", context)
+    if result_type == "chart":
+        context = chart_details(id)
+        return render(request, "details_chart.html", context)
 
 
-def data_product_details(request, id):
+def data_product_details(id):
     try:
         service = DataProductDetailsService(id)
     except ObjectDoesNotExist:
@@ -51,9 +55,20 @@ def database_details(request, id):
     return context
 
 
-def dataset_details(request, id):
+def dataset_details(id):
     try:
         service = DatasetDetailsService(id)
+    except ObjectDoesNotExist:
+        raise Http404("Asset does not exist")
+
+    context = service.context
+
+    return context
+
+
+def chart_details(id):
+    try:
+        service = ChartDetailsService(id)
     except ObjectDoesNotExist:
         raise Http404("Asset does not exist")
 

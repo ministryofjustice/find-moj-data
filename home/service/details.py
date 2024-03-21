@@ -146,3 +146,13 @@ class DatasetDetailsService(GenericService):
             "parent_entity": self.parent_entity,
             "dataset_parent_type": self.dataset_parent_type,
         }
+
+
+class ChartDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.client = self._get_catalogue_client()
+        self.chart_metadata = self.client.get_chart_details(urn)
+        self.context = self._get_context()
+
+    def _get_context(self):
+        return {"chart": self.chart_metadata}
