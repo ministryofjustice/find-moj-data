@@ -261,7 +261,8 @@ def search_context(search_service):
 @pytest.fixture
 def detail_dataproduct_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
-        total_results=1, page_results=generate_page(page_size=1)
+        total_results=1,
+        page_results=generate_page(page_size=1, result_type=ResultType.DATA_PRODUCT),
     )
 
     details_service = DataProductDetailsService(urn="urn:li:dataProduct:test")
@@ -272,7 +273,8 @@ def detail_dataproduct_context(mock_catalogue):
 @pytest.fixture
 def detail_database_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
-        total_results=1, page_results=generate_page(page_size=1)
+        total_results=1,
+        page_results=generate_page(page_size=1, result_type=ResultType.DATABASE),
     )
 
     details_service = DatabaseDetailsService(urn="urn:li:container:test")

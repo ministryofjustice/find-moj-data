@@ -1,5 +1,9 @@
 from data_platform_catalogue.search_types import ResultType
-from data_platform_catalogue.entities import RelationshipType, RelatedEntity, ChartMetadata
+from data_platform_catalogue.entities import (
+    RelationshipType,
+    RelatedEntity,
+    ChartMetadata,
+)
 
 from home.service.details import DatasetDetailsService, ChartDetailsService
 from tests.conftest import generate_table_metadata
@@ -76,7 +80,6 @@ class TestDatabaseDetailsService:
             detail_database_context["page_title"]
             == f"{mock_catalogue.search().page_results[0].name} - Data catalogue"
         )
-
 
     def test_get_context_database_tables(self, detail_database_context, mock_catalogue):
         name = mock_catalogue.list_database_tables().page_results[0].name
