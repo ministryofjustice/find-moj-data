@@ -70,16 +70,18 @@ class TestSearch:
         """
         Interacts with the filters on the left hand side
         """
-        domain = "HMPPS"
-        subdomain = "Prisons"
+        domain = "Prison"
+        # subdomain = None
+        # domain = "HMPPS"
+        # subdomain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
-        self.select_subdomain(subdomain)
+        # self.select_subdomain(subdomain)
         self.click_apply_filters()
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
         self.verify_domain_selected(domain)
-        self.verify_subdomain_selected(subdomain)
+        # self.verify_subdomain_selected(subdomain)
 
     def test_pagination(self):
         """
@@ -112,11 +114,11 @@ class TestSearch:
         Search settings persist as the user continues to
         interact with the search page.
         """
-        domain = "HMPPS"
-        subdomain = "Prisons"
+        domain = "Prison"
+        # subdomain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
-        self.select_subdomain(subdomain)
+        # self.select_subdomain(subdomain)
         self.click_apply_filters()
         self.enter_a_query_and_submit("nomis")
         self.click_sort_option("Ascending")
@@ -125,7 +127,7 @@ class TestSearch:
         self.verify_i_have_results()
         self.verify_the_search_bar_has_value("nomis")
         self.verify_domain_selected(domain)
-        self.verify_subdomain_selected(subdomain)
+        # self.verify_subdomain_selected(subdomain)
         self.verify_sort_selected("Ascending")
 
     def test_adding_a_query_resets_pagination(self):
@@ -148,7 +150,7 @@ class TestSearch:
         self.click_next_page()
         self.verify_page("2")
 
-        self.select_domain("HMPPS")
+        self.select_domain("Prison")
         self.click_apply_filters()
         self.verify_page("1")
 
@@ -157,7 +159,7 @@ class TestSearch:
         Users can clear a filter by clicking on it within the "selected filters"
         panel.
         """
-        domain = "HMPPS"
+        domain = "Prison"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()
@@ -170,7 +172,7 @@ class TestSearch:
         """
         Users can click a button to clear all filters.
         """
-        domain = "HMCTS"
+        domain = "Prison"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()

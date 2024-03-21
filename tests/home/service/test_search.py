@@ -1,10 +1,15 @@
 import re
 from types import GeneratorType
-
+import os
 import pytest
 
 from home.forms.search import SearchForm
 from home.service.search import SearchService, domains_with_their_subdomains
+
+dev_env = True if os.environ.get("ENV") == "dev" else False
+run_for_dev = pytest.mark.skipif(
+    not dev_env, reason="only dev datahub has subdomains currently"
+)
 
 
 class TestSearchService:
@@ -25,7 +30,7 @@ class TestSearchService:
 
     def test_get_context_label_clear_href(self, search_context):
         assert search_context["label_clear_href"]["domain"] == {
-            "HMCTS": (
+            "Prison": (
                 "?query=test&"
                 "classifications=OFFICIAL&"
                 "where_to_access=analytical_platform&"
@@ -38,7 +43,7 @@ class TestSearchService:
         assert search_context["label_clear_href"]["availability"] == {
             "analytical_platform": (
                 "?query=test&"
-                "domain=urn%3Ali%3Adomain%3AHMCTS&"
+                "domain=urn%3Ali%3Adomain%3Aprison&"
                 "subdomain=&"
                 "classifications=OFFICIAL&"
                 "sort=ascending&"
@@ -50,7 +55,7 @@ class TestSearchService:
         assert search_context["label_clear_href"]["classifications"] == {
             "OFFICIAL": (
                 "?query=test&"
-                "domain=urn%3Ali%3Adomain%3AHMCTS&"
+                "domain=urn%3Ali%3Adomain%3Aprison&"
                 "subdomain=&"
                 "where_to_access=analytical_platform&"
                 "sort=ascending&"
@@ -119,6 +124,7 @@ class TestSearchService:
         )
 
 
+@run_for_dev
 @pytest.mark.parametrize(
     "domain, subdomain, expected_subdomains",
     [

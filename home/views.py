@@ -4,7 +4,10 @@ from django.shortcuts import render
 
 from home.forms.search import SearchForm
 from home.service.details import (
-    ChartDetailsService, DataProductDetailsService, DatasetDetailsService
+    DataProductDetailsService,
+    DatasetDetailsService,
+    DatabaseDetailsService,
+    ChartDetailsService,
 )
 from home.service.glossary import GlossaryService
 from home.service.search import SearchService
@@ -21,7 +24,10 @@ def details_view(request, result_type, id):
         return render(request, "details_data_product.html", context)
     if result_type == "table":
         context = dataset_details(id)
-        return render(request, "details_dataset.html", context)
+        return render(request, "details_table.html", context)
+    if result_type == "database":
+        context = database_details(request, id)
+        return render(request, "details_database.html", context)
     if result_type == "chart":
         context = chart_details(id)
         return render(request, "details_chart.html", context)
@@ -30,6 +36,17 @@ def details_view(request, result_type, id):
 def data_product_details(id):
     try:
         service = DataProductDetailsService(id)
+    except ObjectDoesNotExist:
+        raise Http404("Asset does not exist")
+
+    context = service.context
+
+    return context
+
+
+def database_details(request, id):
+    try:
+        service = DatabaseDetailsService(id)
     except ObjectDoesNotExist:
         raise Http404("Asset does not exist")
 

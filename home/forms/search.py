@@ -119,15 +119,15 @@ class SearchForm(forms.Form):
         The query string includes all submitted form parameters except
         the one identified by filter_name and filter_value.
 
-        >>> formdata = {'domain': 'urn:li:domain:HMCTS', 'classifications': ['OFFICIAL']}
+        >>> formdata = {'domain': 'urn:li:domain:prison', 'classifications': ['OFFICIAL']}
         >>> form = SearchForm(formdata)
         >>> assert form.is_valid()
 
-        >>> form.encode_without_filter('domain', 'urn:li:domain:HMCTS')
+        >>> form.encode_without_filter('domain', 'urn:li:domain:prison')
         '?query=&classifications=OFFICIAL&sort=&clear_filter=False&clear_label=False'
 
         >>> form.encode_without_filter('classifications', 'OFFICIAL')
-        '?query=&domain=urn%3Ali%3Adomain%3AHMCTS&subdomain=&sort=&clear_filter=False&clear_label=False'
+        '?query=&domain=urn%3Ali%3Adomain%3Aprison&subdomain=&sort=&clear_filter=False&clear_label=False'
         """
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)

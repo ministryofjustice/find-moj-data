@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client import BaseCatalogueClient
-from data_platform_catalogue.entities import TableMetadata
+from data_platform_catalogue.entities import TableMetadata, RelationshipType
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -20,7 +20,7 @@ from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
-from home.service.details import DataProductDetailsService
+from home.service.details import DataProductDetailsService, DatabaseDetailsService
 from home.service.glossary import GlossaryService
 from home.service.search import SearchService
 
@@ -59,7 +59,16 @@ def generate_search_result(
 
 
 def generate_table_metadata(
-    name=None, description=None, columns_details=None, retention_period_in_days=None
+    name=None,
+    description=None,
+    columns_details=None,
+    retention_period_in_days=None,
+    relations=None,
+    domain_name=None,
+    tags=None,
+    last_updated=None,
+    owner=None,
+    owner_email=None,
 ) -> TableMetadata:
     """
     Generate a fake table metadata object
@@ -69,6 +78,12 @@ def generate_table_metadata(
         description=description or fake.paragraph(),
         column_details=columns_details or [],
         retention_period_in_days=retention_period_in_days or 123,
+        relationships=relations or {RelationshipType.PARENT: []},
+        domain=domain_name,
+        tags=tags,
+        last_updated=last_updated,
+        owner=owner,
+        owner_email=owner_email,
     )
 
 
@@ -120,10 +135,22 @@ def mock_catalogue():
         page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
         total_results=1,
     )
+    mock_list_database_tables_response(
+        mock_catalogue,
+        page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
+        total_results=1,
+    )
 
     yield mock_catalogue
 
     patcher.stop()
+
+
+def mock_list_database_tables_response(mock_catalogue, total_results, page_results=()):
+    search_response = SearchResponse(
+        total_results=total_results, page_results=page_results
+    )
+    mock_catalogue.list_database_tables.return_value = search_response
 
 
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
@@ -208,7 +235,7 @@ def valid_form():
     valid_form = SearchForm(
         data={
             "query": "test",
-            "domain": "urn:li:domain:HMCTS",
+            "domain": "urn:li:domain:prison",
             "classifications": ["OFFICIAL"],
             "where_to_access": ["analytical_platform"],
             "sort": "ascending",
@@ -234,10 +261,23 @@ def search_context(search_service):
 @pytest.fixture
 def detail_dataproduct_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
-        total_results=1, page_results=generate_page(page_size=1)
+        total_results=1,
+        page_results=generate_page(page_size=1, result_type=ResultType.DATA_PRODUCT),
     )
 
     details_service = DataProductDetailsService(urn="urn:li:dataProduct:test")
+    context = details_service._get_context()
+    return context
+
+
+@pytest.fixture
+def detail_database_context(mock_catalogue):
+    mock_catalogue.search.return_value = SearchResponse(
+        total_results=1,
+        page_results=generate_page(page_size=1, result_type=ResultType.DATABASE),
+    )
+
+    details_service = DatabaseDetailsService(urn="urn:li:container:test")
     context = details_service._get_context()
     return context
 
@@ -265,6 +305,6 @@ def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
 
     return {
         "urn": "dataset-abc",
-        "parent_data_product": data_product,
+        "parent_entity": data_product,
         "table_metadata": table_metadata,
     }

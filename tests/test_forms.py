@@ -17,7 +17,7 @@ class TestSearchForm:
 
     def test_form_encode_without_filter_for_one_filter(self, valid_form):
         assert valid_form.encode_without_filter(
-            filter_name="domain", filter_value="urn:li:domain:HMCTS"
+            filter_name="domain", filter_value="urn:li:domain:prison"
         ) == (
             "?query=test&"
             "classifications=OFFICIAL&"
@@ -31,14 +31,14 @@ class TestSearchForm:
         two_filter_form = SearchForm(
             data={
                 "query": "test",
-                "domain": "urn:li:domain:HMCTS",
+                "domain": "urn:li:domain:prison",
                 "classifications": ["OFFICIAL"],
             }
         )
         two_filter_form.is_valid()
 
         assert two_filter_form.encode_without_filter(
-            filter_name="domain", filter_value="urn:li:domain:HMCTS"
+            filter_name="domain", filter_value="urn:li:domain:prison"
         ) == (
             "?query=test&"
             "classifications=OFFICIAL&"
