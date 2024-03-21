@@ -44,7 +44,10 @@ class TestDetailsDatasetService:
         assert context["table"] == dataset_with_parent["table_metadata"]
 
     def test_get_context_contains_parent(self, mock_catalogue):
-        parent = (1, [{"id": "urn:li:container:parent", "name": "parent"}])
+        parent = {
+            "total": 1,
+            "entities": [{"id": "urn:li:container:parent", "name": "parent"}],
+        }
         mock_table = generate_table_metadata(relations=parent)
         mock_catalogue.get_table_details.return_value = mock_table
 

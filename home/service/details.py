@@ -1,4 +1,5 @@
 from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
+from data_platform_catalogue.entities import RelationshipType
 from django.core.exceptions import ObjectDoesNotExist
 
 from .base import GenericService
@@ -120,17 +121,17 @@ class DatasetDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         self.table_metadata
-        parents = self.table_metadata.relationships
+        parents = self.table_metadata.relationships[RelationshipType.PARENT]
         if parents:
             # Pick the first entity to use as the parent in the breadcrumb.
             # If the dataset belongs to multiple parents, this may diverge
             # from the path the user took to get to this page. However as of datahub
             # v0.12, assigning to multiple data products is not possible and we don't
             # have datasets with multiple parent containers.
-            self.parent_entity = parents["entities"][0]
+            self.parent_entity = parents[0]
             self.dataset_parent_type = (
                 ResultType.DATABASE.name.lower()
-                if "container" in self.parent_entity["id"].split(":")
+                if "container" in self.parent_entity.id.split(":")
                 else ResultType.DATA_PRODUCT.name.lower()
             )
         else:
