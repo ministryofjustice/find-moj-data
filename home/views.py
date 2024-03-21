@@ -7,7 +7,7 @@ from home.service.details import (
     DataProductDetailsService,
     DatasetDetailsService,
     DatabaseDetailsService,
-    ChartDetailsService
+    ChartDetailsService,
 )
 from home.service.glossary import GlossaryService
 from home.service.search import SearchService
@@ -24,7 +24,7 @@ def details_view(request, result_type, id):
         return render(request, "details_data_product.html", context)
     if result_type == "table":
         context = dataset_details(id)
-        return render(request, "details_dataset.html", context)
+        return render(request, "details_table.html", context)
     if result_type == "database":
         context = database_details(request, id)
         return render(request, "details_database.html", context)
