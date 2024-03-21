@@ -2,7 +2,6 @@
 {% load humanize %}
 <div id="search-results">
 {% for result in highlighted_results %}
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
@@ -20,6 +19,7 @@
           {% elif result.result_type.name == "DATABASE" %}
           <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
             Database
+          </strong>
           {% elif result.result_type.name == "CHART" %}
           <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
             Chart
@@ -35,10 +35,7 @@
         {% endif %}
       </div>
       {% endif %}
-
-
       <dl class="govuk-summary-list">
-
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Registered by:</dt>
           <dd class="govuk-summary-list__value">
