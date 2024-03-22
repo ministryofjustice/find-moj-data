@@ -2,7 +2,7 @@ import re
 from copy import deepcopy
 from typing import Any
 
-from data_platform_catalogue.search_types import MultiSelectFilter, SortOption
+from data_platform_catalogue.search_types import MultiSelectFilter, SortOption, ResultType
 from django.core.paginator import Paginator
 
 from home.forms.domain_model import DomainModel
@@ -45,6 +45,14 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
+
+    def _build_entity_types(_, entity_types: list[str]) -> tuple[ResultType]:
+        default_entities = tuple(
+            entity for entity in ResultType if entity.name != "GLOSSARY_TERM"
+        )
+        chosen_entities = tuple(ResultType[entity] for entity in entity_types) if entity_types else None
+        return chosen_entities if chosen_entities else default_entities
+
     def _get_search_results(self, page: str, items_per_page: int):
         if self.form.is_bound:
             form_data = self.form.cleaned_data
@@ -62,6 +70,7 @@ class SearchService(GenericService):
         where_to_access = self._build_custom_property_filter(
             "whereToAccessDataset=", form_data.get("where_to_access", [])
         )
+        entity_types = self._build_entity_types(form_data.get("entity_types"))
         filter_value = []
         if domains_and_subdomains:
             filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
@@ -82,6 +91,7 @@ class SearchService(GenericService):
             query=query,
             page=page_for_search,
             filters=filter_value,
+            result_types=entity_types,
             sort=sort_option,
             count=items_per_page,
         )

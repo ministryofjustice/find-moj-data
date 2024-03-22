@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 from django import forms
 
 from .domain_model import Domain, DomainModel
+from data_platform_catalogue.search_types import ResultType
 
 
 def get_domain_choices() -> list[Domain]:
@@ -37,6 +38,13 @@ def get_classification_choices():
 
 def get_where_to_access_choices():
     return [("analytical_platform", "Analytical Platform")]
+
+
+def get_entity_types():
+    return [
+        (entity.name, entity.name.replace("_", " ").lower().title())
+        for entity in ResultType if entity.name != "GLOSSARY_TERM"
+    ]
 
 
 class SelectWithOptionAttribute(forms.Select):
@@ -88,6 +96,13 @@ class SearchForm(forms.Form):
     )
     where_to_access = forms.MultipleChoiceField(
         choices=get_where_to_access_choices,
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
+        ),
+    )
+    entity_types = forms.MultipleChoiceField(
+        choices=get_entity_types,
         required=False,
         widget=forms.CheckboxSelectMultiple(
             attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
