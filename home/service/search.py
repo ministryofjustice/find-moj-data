@@ -124,7 +124,7 @@ class SearchService(GenericService):
                             filter_name="where_to_access", filter_value=access
                         )
                     )
-                label_clear_href["availability"] = where_to_access_clear_href
+                label_clear_href["Where To Access"] = where_to_access_clear_href
         else:
             label_clear_href = None
 

@@ -40,7 +40,7 @@ class TestSearchService:
             )
         }
 
-        assert search_context["label_clear_href"]["availability"] == {
+        assert search_context["label_clear_href"]["Where To Access"] == {
             "analytical_platform": (
                 "?query=test&"
                 "domain=urn%3Ali%3Adomain%3Aprison&"
