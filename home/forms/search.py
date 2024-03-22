@@ -35,10 +35,10 @@ def get_where_to_access_choices():
 
 
 def get_entity_types():
-    return [
+    return sorted([
         (entity.name, entity.name.replace("_", " ").lower().title())
         for entity in ResultType if entity.name != "GLOSSARY_TERM"
-    ]
+    ])
 
 
 class SelectWithOptionAttribute(forms.Select):
