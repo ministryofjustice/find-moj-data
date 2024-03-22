@@ -20,8 +20,8 @@ class TestSearchForm:
             filter_name="domain", filter_value="urn:li:domain:prison"
         ) == (
             "?query=test&"
-            "classifications=OFFICIAL&"
             "where_to_access=analytical_platform&"
+            "entity_types=TABLE&"
             "sort=ascending&"
             "clear_filter=False&"
             "clear_label=False"
@@ -32,7 +32,7 @@ class TestSearchForm:
             data={
                 "query": "test",
                 "domain": "urn:li:domain:prison",
-                "classifications": ["OFFICIAL"],
+                "entity_types": ["TABLE"],
             }
         )
         two_filter_form.is_valid()
@@ -41,7 +41,7 @@ class TestSearchForm:
             filter_name="domain", filter_value="urn:li:domain:prison"
         ) == (
             "?query=test&"
-            "classifications=OFFICIAL&"
+            "entity_types=TABLE&"
             "sort=&"
             "clear_filter=False&"
             "clear_label=False"

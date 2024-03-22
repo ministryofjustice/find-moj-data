@@ -64,9 +64,6 @@ class SearchService(GenericService):
         domain = form_data.get("domain", "")
         subdomain = form_data.get("subdomain", "")
         domains_and_subdomains = domains_with_their_subdomains(domain, subdomain)
-        classifications = self._build_custom_property_filter(
-            "sensitivityLevel=", form_data.get("classifications", [])
-        )
         where_to_access = self._build_custom_property_filter(
             "whereToAccessDataset=", form_data.get("where_to_access", [])
         )
@@ -74,8 +71,6 @@ class SearchService(GenericService):
         filter_value = []
         if domains_and_subdomains:
             filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
-        if classifications:
-            filter_value.append(MultiSelectFilter("customProperties", classifications))
         if where_to_access:
             filter_value.append(MultiSelectFilter("customProperties", where_to_access))
 
@@ -106,20 +101,20 @@ class SearchService(GenericService):
     def _generate_label_clear_ref(self) -> dict[str, dict[str, str]] | None:
         if self.form.is_bound:
             domain = self.form.cleaned_data.get("domain", "")
-            classifications = self.form.cleaned_data.get("classifications", [])
+            entity_types = self.form.cleaned_data.get("entity_types", [])
             where_to_access = self.form.cleaned_data.get("where_to_access", [])
             label_clear_href = {}
             if domain:
                 label_clear_href["domain"] = self._generate_domain_clear_href()
-            if classifications:
-                classifications_clear_href = {}
-                for classification in classifications:
-                    classifications_clear_href[classification] = (
+            if entity_types:
+                entity_types_clear_href = {}
+                for entity_type in entity_types:
+                    entity_types_clear_href[entity_type.lower().title()] = (
                         self.form.encode_without_filter(
-                            filter_name="classifications", filter_value=classification
+                            filter_name="entity_types", filter_value=entity_type
                         )
                     )
-                label_clear_href["classifications"] = classifications_clear_href
+                label_clear_href["Entity Types"] = entity_types_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}

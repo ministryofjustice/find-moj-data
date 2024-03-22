@@ -32,8 +32,8 @@ class TestSearchService:
         assert search_context["label_clear_href"]["domain"] == {
             "Prison": (
                 "?query=test&"
-                "classifications=OFFICIAL&"
                 "where_to_access=analytical_platform&"
+                "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
                 "clear_label=False"
@@ -45,15 +45,15 @@ class TestSearchService:
                 "?query=test&"
                 "domain=urn%3Ali%3Adomain%3Aprison&"
                 "subdomain=&"
-                "classifications=OFFICIAL&"
+                "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
                 "clear_label=False"
             )
         }
 
-        assert search_context["label_clear_href"]["classifications"] == {
-            "OFFICIAL": (
+        assert search_context["label_clear_href"]["Entity Types"] == {
+            "Table": (
                 "?query=test&"
                 "domain=urn%3Ali%3Adomain%3Aprison&"
                 "subdomain=&"
