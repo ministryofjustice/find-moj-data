@@ -236,7 +236,7 @@ def valid_form():
         data={
             "query": "test",
             "domain": "urn:li:domain:prison",
-            "classifications": ["OFFICIAL"],
+            "entity_types": ["TABLE"],
             "where_to_access": ["analytical_platform"],
             "sort": "ascending",
             "clear_filter": False,

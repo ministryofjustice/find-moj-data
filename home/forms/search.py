@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 from django import forms
 
 from .domain_model import Domain, DomainModel
+from data_platform_catalogue.search_types import ResultType
 
 
 def get_domain_choices() -> list[Domain]:
@@ -29,14 +30,15 @@ def get_sort_choices():
     ]
 
 
-def get_classification_choices():
-    return [
-        ("OFFICIAL", "Official"),
-    ]
-
-
 def get_where_to_access_choices():
     return [("analytical_platform", "Analytical Platform")]
+
+
+def get_entity_types():
+    return sorted([
+        (entity.name, entity.name.replace("_", " ").lower().title())
+        for entity in ResultType if entity.name != "GLOSSARY_TERM"
+    ])
 
 
 class SelectWithOptionAttribute(forms.Select):
@@ -79,15 +81,15 @@ class SearchForm(forms.Form):
             attrs={"form": "searchform", "class": "govuk-select"}
         ),
     )
-    classifications = forms.MultipleChoiceField(
-        choices=get_classification_choices,
+    where_to_access = forms.MultipleChoiceField(
+        choices=get_where_to_access_choices,
         required=False,
         widget=forms.CheckboxSelectMultiple(
             attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
         ),
     )
-    where_to_access = forms.MultipleChoiceField(
-        choices=get_where_to_access_choices,
+    entity_types = forms.MultipleChoiceField(
+        choices=get_entity_types,
         required=False,
         widget=forms.CheckboxSelectMultiple(
             attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
@@ -119,14 +121,14 @@ class SearchForm(forms.Form):
         The query string includes all submitted form parameters except
         the one identified by filter_name and filter_value.
 
-        >>> formdata = {'domain': 'urn:li:domain:prison', 'classifications': ['OFFICIAL']}
+        >>> formdata = {'domain': 'urn:li:domain:prison', 'entity_types': ['TABLE']}
         >>> form = SearchForm(formdata)
         >>> assert form.is_valid()
 
         >>> form.encode_without_filter('domain', 'urn:li:domain:prison')
-        '?query=&classifications=OFFICIAL&sort=&clear_filter=False&clear_label=False'
+        '?query=&entity_types=TABLE&sort=&clear_filter=False&clear_label=False'
 
-        >>> form.encode_without_filter('classifications', 'OFFICIAL')
+        >>> form.encode_without_filter('entity_types', 'TABLE')
         '?query=&domain=urn%3Ali%3Adomain%3Aprison&subdomain=&sort=&clear_filter=False&clear_label=False'
         """
         # Deepcopy the cleaned data dict to avoid modifying it inplace
