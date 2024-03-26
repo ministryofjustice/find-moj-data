@@ -4,105 +4,105 @@
 {% load humanize %}
 
 {% block breadcrumbs %}
-<div class="govuk-breadcrumbs">
-  <ol class="govuk-breadcrumbs__list">
-    <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
-    </li>
-    {% if parent_entity %}
-    <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type id=parent_entity.id %}">{{parent_entity.name}}</a>
-    </li>
-    {% endif %}
-    <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{table.name}}</a>
-    </li>
-  </ol>
-</div>
+  <div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
+      </li>
+      {% if parent_entity %}
+        <li class="govuk-breadcrumbs__list-item">
+          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type id=parent_entity.id %}">{{parent_entity.name}}</a>
+        </li>
+      {% endif %}
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{table.name}}</a>
+      </li>
+    </ol>
+  </div>
 {% endblock breadcrumbs %}
 
 {% block content %}
 
-<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <span class="govuk-caption-m">Table</span>
-        <h2 class="govuk-heading-l">{{table.name}}</h2>
+      <span class="govuk-caption-m">Table</span>
+      <h2 class="govuk-heading-l">{{table.name}}</h2>
     </div>
-</div>
-<div class="govuk-grid-row">
+  </div>
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <div class="summary-card">
-            <h2 class="govuk-heading-s govuk-!-margin-top-3">
-                Description
-            </h2>
-            <div class="govuk-body">
-                {{table.description|markdown:3}}
-            </div>
-            <ul class="govuk-list govuk-body" id="metadata-property-list">
-              <li>
-                <span class="govuk-!-font-weight-bold">Last updated date:</span>
-                {% if table.last_updated %}
-                {{table.last_updated | date:"jS F Y"}} ({{table.last_updated|naturaltime}})
-                {% endif %}
-              </li>
-              <li>
-                <span class="govuk-!-font-weight-bold">Retention period:</span>
-                {% if table.retention_period_in_days is None %}
-                Permanent
-                {% else %}
-                {{table.retention_period_in_days|intcomma}} days
-                {% endif %}
-              </li>
-              <li>
-                <span class="govuk-!-font-weight-bold">Refresh period:</span>
-              </li>
-              <li>
-                <span class="govuk-!-font-weight-bold">Domain:</span>
-                {{table.domain}}
-              </li>
-              <li>
-                <span class="govuk-!-font-weight-bold">Tags:</span>
-                {{table.tags | join:', '}}
-              </li>
-            </ul>
+      <div class="summary-card">
+        <h2 class="govuk-heading-s govuk-!-margin-top-3">
+          Description
+        </h2>
+        <div class="govuk-body">
+          {{table.description|markdown:3}}
         </div>
+        <ul class="govuk-list govuk-body" id="metadata-property-list">
+          <li>
+            <span class="govuk-!-font-weight-bold">Last updated date:</span>
+            {% if table.last_updated %}
+              {{table.last_updated | date:"jS F Y"}} ({{table.last_updated|naturaltime}})
+            {% endif %}
+          </li>
+          <li>
+            <span class="govuk-!-font-weight-bold">Retention period:</span>
+            {% if table.retention_period_in_days is None %}
+              Permanent
+            {% else %}
+              {{table.retention_period_in_days|intcomma}} days
+            {% endif %}
+          </li>
+          <li>
+            <span class="govuk-!-font-weight-bold">Refresh period:</span>
+          </li>
+          <li>
+            <span class="govuk-!-font-weight-bold">Domain:</span>
+            {{table.domain}}
+          </li>
+          <li>
+            <span class="govuk-!-font-weight-bold">Tags:</span>
+            {{table.tags | join:', '}}
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="govuk-grid-column-one-third">
       {% include "partial/contact_info.html" with data_owner=table.owner data_owner_email=table.owner_email %}
     </div>
-</div>
+  </div>
 
-<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        {% if table.column_details %}
+      {% if table.column_details %}
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">Schema</caption>
-            <thead class="govuk-table__head">
-              <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Column name</th>
-                <th scope="col" class="govuk-table__header">Description</th>
-                <th scope="col" class="govuk-table__header">Type</th>
-                <th scope="col" class="govuk-table__header">Is Nullable</th>
-              </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-              {% for column in table.column_details %}
+          <caption class="govuk-table__caption govuk-table__caption--m">Schema</caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Column name</th>
+              <th scope="col" class="govuk-table__header">Description</th>
+              <th scope="col" class="govuk-table__header">Type</th>
+              <th scope="col" class="govuk-table__header">Is Nullable</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for column in table.column_details %}
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">{{column.name}}</td>
                 <td class="govuk-table__cell">{{column.description|default:''}}</td>
                 <td class="govuk-table__cell">{{column.type|title}}</td>
                 <td class="govuk-table__cell">{{column.nullable|yesno|upper}}</td>
               </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% else %}
-          <h2 class="govuk-heading-m">Schema</h2>
-          <p class="govuk-body">The schema for this table is not available.</p>
-          {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <h2 class="govuk-heading-m">Schema</h2>
+        <p class="govuk-body">The schema for this table is not available.</p>
+      {% endif %}
 
 
     </div>
-</div>
+  </div>
 
 {% endblock content %}
