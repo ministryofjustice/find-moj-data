@@ -4,7 +4,7 @@
 {% load humanize %}
 
 {% block content %}
-<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4" id="searchform">
         <div class="govuk-form-group">
@@ -22,20 +22,20 @@
         </div>
       </form>
     </div>
-</div>
-<div class="govuk-grid-row">
-  {% include "partial/filter.html" %}
-  <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{{total_results|intcomma}} Results</h2>
+  </div>
+  <div class="govuk-grid-row">
+    {% include "partial/filter.html" %}
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{{total_results|intcomma}} Results</h2>
       {% include "partial/sort.html" %}
       {% include "partial/search_result.html" %}
       {% include "partial/pagination.html" %}
     </div>
-</div>
+  </div>
 {% endblock content %}
 {% block scripts %}
-<script type="module">
-  import {initDomainFilter} from "{% static 'assets/js/enhanced-search.js' %}"
-  initDomainFilter();
-</script>
+  <script type="module">
+    import {initDomainFilter} from "{% static 'assets/js/enhanced-search.js' %}"
+    initDomainFilter();
+  </script>
 {% endblock scripts %}

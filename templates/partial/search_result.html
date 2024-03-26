@@ -1,92 +1,92 @@
 {% load markdown %}
 {% load humanize %}
 <div id="search-results">
-{% for result in highlighted_results %}
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+  {% for result in highlighted_results %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
           {% with result_type=result.result_type.name|lower %}
-          <a href="{% url 'home:details' result_type=result_type id=result.id %}" class="govuk-link">{{result.fully_qualified_name}}</a>
+            <a href="{% url 'home:details' result_type=result_type id=result.id %}" class="govuk-link">{{result.fully_qualified_name}}</a>
           {% endwith %}
           {% if result.result_type.name == "DATA_PRODUCT" %}
-          <strong class="govuk-tag govuk-!-margin-left-2" id="result-type">
-            Data product
-          </strong>
+            <strong class="govuk-tag govuk-!-margin-left-2" id="result-type">
+              Data product
+            </strong>
           {% elif result.result_type.name == "TABLE" %}
-          <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
-            Table
-          </strong>
+            <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
+              Table
+            </strong>
           {% elif result.result_type.name == "DATABASE" %}
-          <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
-            Database
-          </strong>
+            <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
+              Database
+            </strong>
           {% elif result.result_type.name == "CHART" %}
-          <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
-            Chart
-          </strong>
+            <strong class="govuk-tag govuk-!-margin-left-2"  id="result-type">
+              Chart
+            </strong>
           {% endif %}
-      </h3>
-      {% if result.description %}
-      <div class="govuk-body-m">
-        {% if result.description|length > 200 %}
-          {{ result.description|slice:":200"|add:"..."|markdown:3 }}
-        {% else %}
-          {{ result.description|markdown:3 }}
-        {% endif %}
-      </div>
-      {% endif %}
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Registered by:</dt>
-          <dd class="govuk-summary-list__value">
-          {{result.metadata.maintainer_display_name}}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Database name:</dt>
-          <dd class="govuk-summary-list__value">
-          TBC
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">First created:</dt>
-          <dd class="govuk-summary-list__value">
-            {% if result.metadata.creation_date %}
-            {{result.metadata.creation_date | date:"jS F Y"}} ({{result.metadata.creation_date|naturaltime}})
+        </h3>
+        {% if result.description %}
+          <div class="govuk-body-m">
+            {% if result.description|length > 200 %}
+              {{ result.description|slice:":200"|add:"..."|markdown:3 }}
+            {% else %}
+              {{ result.description|markdown:3 }}
             {% endif %}
-          </dd>
+          </div>
+        {% endif %}
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Registered by:</dt>
+            <dd class="govuk-summary-list__value">
+              {{result.metadata.maintainer_display_name}}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Database name:</dt>
+            <dd class="govuk-summary-list__value">
+              TBC
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">First created:</dt>
+            <dd class="govuk-summary-list__value">
+              {% if result.metadata.creation_date %}
+                {{result.metadata.creation_date | date:"jS F Y"}} ({{result.metadata.creation_date|naturaltime}})
+              {% endif %}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Refresh period:</dt>
+            <dd class="govuk-summary-list__value">
+              TBC
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Retention period:</dt>
+            <dd class="govuk-summary-list__value">
+              {{result.metadata.retention_period_in_days}}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Domain name</dt>
+            <dd class="govuk-summary-list__value">
+              {{result.metadata.domain_name}}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Tags</dt>
+            <dd class="govuk-summary-list__value">
+              {{ result.tags |join:", " }}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Matched fields</dt>
+            <dd class="govuk-summary-list__value">
+              {{ result.matches|lookup:readable_match_reasons|join:", " }}
+            </dd>
+          </div>
         </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Refresh period:</dt>
-          <dd class="govuk-summary-list__value">
-          TBC
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Retention period:</dt>
-          <dd class="govuk-summary-list__value">
-          {{result.metadata.retention_period_in_days}}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Domain name</dt>
-          <dd class="govuk-summary-list__value">
-          {{result.metadata.domain_name}}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Tags</dt>
-          <dd class="govuk-summary-list__value">
-          {{ result.tags |join:", " }}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Matched fields</dt>
-          <dd class="govuk-summary-list__value">
-            {{ result.matches|lookup:readable_match_reasons|join:", " }}
-          </dd>
-        </div>
-    </div>
-  </div>
-{%endfor%}
+      </div>
+  {%endfor%}
 </div>
