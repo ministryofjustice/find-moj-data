@@ -104,7 +104,7 @@ class TestSearch:
         # FIXME: this isn't preselected if the `new` query param is missing
         self.verify_sort_selected("Relevance")
 
-        self.click_sort_option("Ascending")
+        self.click_option("Ascending")
         self.click_on_the_search_button()
         self.verify_i_have_results()
         self.verify_sort_selected("Ascending")
@@ -121,7 +121,7 @@ class TestSearch:
         # self.select_subdomain(subdomain)
         self.click_apply_filters()
         self.enter_a_query_and_submit("nomis")
-        self.click_sort_option("Ascending")
+        self.click_option("Ascending")
         self.click_on_the_search_button()
 
         self.verify_i_have_results()
@@ -173,12 +173,19 @@ class TestSearch:
         Users can click a button to clear all filters.
         """
         domain = "Prison"
+
         self.start_on_the_search_page()
+
+        filters = self.search_page.get_all_filter_names()
         self.select_domain(domain)
+        for filter in filters:
+            self.click_option(filter)
         self.click_apply_filters()
         self.verify_domain_selected(domain)
+        self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
         self.verify_unselected_domain()
+        self.verfiy_unselected_checkbox_filters()
 
     def test_automated_accessibility_home(self):
         self.start_on_the_home_page()
@@ -225,6 +232,14 @@ class TestSearch:
     def click_on_the_search_button(self):
         self.search_page.search_button().click()
 
+    def verify_checkbox_filters_selected(self, filters):
+        selected_filters = self.search_page.get_selected_checkbox_filter_names()
+        assert selected_filters == filters
+
+    def verfiy_unselected_checkbox_filters(self):
+        selected_filters = self.search_page.get_selected_checkbox_filter_names()
+        assert selected_filters == []
+
     def verify_i_am_on_the_search_page(self):
         assert "Search" in self.selenium.title
         assert "Find MOJ Data" in self.search_page.primary_heading().text
@@ -263,7 +278,7 @@ class TestSearch:
     def select_subdomain(self, domain):
         self.search_page.select_subdomain(domain)
 
-    def click_sort_option(self, sortby):
+    def click_option(self, sortby):
         self.search_page.sort_label(sortby).click()
 
     def click_apply_filters(self):
