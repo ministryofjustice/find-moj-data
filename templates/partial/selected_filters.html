@@ -9,7 +9,7 @@
             <p>
                 {% if label_clear_href|get_keys|length > 0 %}
                     <a class="govuk-link govuk-link--no-visited-state"
-                       href="{% url 'home:search' %}{% query_string domain=None classifications=None where_to_access=None %}"
+                       href="{% url 'home:search' %}{% query_string domain=None entity_types=None where_to_access=None %}"
                        id="clear_filter">
                         Clear filter
                     </a>
