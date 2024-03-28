@@ -17,7 +17,7 @@ TMP_DIR = Path(__file__).parent / "../../tmp"
 @pytest.fixture(scope="session")
 def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     options = ChromeOptions()
-    # options.add_argument("headless")
+    options.add_argument("headless")
     options.add_argument("window-size=1280,720")
     selenium = WebDriver(options=options)
     selenium.implicitly_wait(10)
