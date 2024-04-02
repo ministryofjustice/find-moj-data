@@ -14,7 +14,11 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = str(os.environ.get("SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", default=0))
+DEBUG = os.environ.get("DEBUG", default=0)
+if DEBUG in ["True", "true", "T", "1"] or DEBUG:
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = str(os.environ.get("DJANGO_ALLOWED_HOSTS")).split(" ")
 
