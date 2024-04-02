@@ -1,5 +1,5 @@
-from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
 from data_platform_catalogue.entities import RelationshipType
+from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
 from django.core.exceptions import ObjectDoesNotExist
 
 from .base import GenericService
@@ -113,7 +113,8 @@ class DatasetDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         self.table_metadata
-        parents = self.table_metadata.relationships[RelationshipType.PARENT]
+        relationships = self.table_metadata.relationships or {}
+        parents = relationships.get(RelationshipType.PARENT)
         if parents:
             # Pick the first entity to use as the parent in the breadcrumb.
             # If the dataset belongs to multiple parents, this may diverge
