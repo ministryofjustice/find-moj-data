@@ -148,6 +148,23 @@ class SearchPage(Page):
         select = self.subdomain_select()
         return select.first_selected_option
 
+    def get_all_filter_names(self) -> list:
+        filter_names = [
+            item.text
+            for item in self.selenium.find_elements(
+                By.CLASS_NAME, "govuk-checkboxes__item"
+            )
+        ]
+        return filter_names
+
+    def get_selected_checkbox_filter_names(self) -> list:
+        selected_filters = [
+            item.accessible_name
+            for item in self.selenium.find_elements(By.TAG_NAME, "input")
+            if item.aria_role == "checkbox" and item.is_selected()
+        ]
+        return selected_filters
+
     def sort_label(self, name) -> WebElement:
         return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
 
