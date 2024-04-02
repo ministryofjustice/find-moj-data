@@ -15,7 +15,7 @@ SECRET_KEY = str(os.environ.get("SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", default=0)
-if DEBUG in ["True", "true", "T", "1"] or DEBUG:
+if DEBUG in ["True", "true", "T", "1", True, 1]:
     DEBUG = True
 else:
     DEBUG = False
