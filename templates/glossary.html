@@ -16,6 +16,7 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
+            <a href="#glossary-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to glossary content</a>
             <ul class="govuk-list">
                 {% for parent_term in results %}
                     <li class="term-group">
@@ -32,7 +33,7 @@
                 {%endfor%}
             </ul>
         </div>
-        <div class="govuk-grid-column-three-quarters">
+        <div class="govuk-grid-column-three-quarters" id="glossary-content">
             {% for parent_term in results %}
                 <div class="term-group">
                     <h2 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term.name }}</h2>
