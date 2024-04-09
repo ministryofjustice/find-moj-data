@@ -10849,6 +10849,10 @@ mark {
   font-weight: 700;
 }
 
+.extra-skip-link:active, .extra-skip-link:focus {
+  margin-bottom: 15px !important;
+}
+
 @media (min-width: 40.0625em) {
   #sticky-sidebar {
     position: sticky;

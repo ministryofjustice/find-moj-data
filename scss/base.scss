@@ -17,5 +17,9 @@ mark {
     @include govuk-typography-weight-bold($important: false);
 }
 
+.extra-skip-link:active, .extra-skip-link:focus {
+    margin-bottom: govuk-spacing(3) !important;
+}
+
 @import './glossary';
 @import './details';
