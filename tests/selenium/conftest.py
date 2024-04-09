@@ -68,6 +68,9 @@ class Page:
 
 
 class DataProductDetailsPage(Page):
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
     def secondary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h2")
 
