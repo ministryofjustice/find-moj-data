@@ -70,6 +70,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
+        {% if tables %}
         <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--m">Database content</caption>
           <thead class="govuk-table__head">
@@ -97,6 +98,10 @@
             {% endfor %}
           </tbody>
         </table>
+        {% else %}
+        <h2 class="govuk-heading-m">Database content</h2>
+        <p class="govuk-body">This database is missing table information.</p>
+        {% endif %}
       </div>
     </div>
   </div>
