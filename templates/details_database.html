@@ -20,7 +20,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <span class="govuk-caption-m">Database</span>
-      <h2 class="govuk-heading-l">{{result.name}}</h2>
+      <h1 class="govuk-heading-l">{{result.name}}</h1>
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -70,6 +70,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
+        {% if tables %}
         <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--m">Database content</caption>
           <thead class="govuk-table__head">
@@ -91,12 +92,16 @@
                       {{ table.description|markdown:3 }}
                     {% endif %}
                   </td>
-                  <td class="govuk-table__cell">  <a href="{% url 'home:details' result_type=table_type id=table.urn %}" class="govuk-link">Schema details</a></td>
+                  <td class="govuk-table__cell">  <a href="{% url 'home:details' result_type=table_type id=table.urn %}" class="govuk-link">Table details</a></td>
                 </tr>
               {% endwith %}
             {% endfor %}
           </tbody>
         </table>
+        {% else %}
+        <h2 class="govuk-heading-m">Database content</h2>
+        <p class="govuk-body">This database is missing table information.</p>
+        {% endif %}
       </div>
     </div>
   </div>

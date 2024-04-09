@@ -263,9 +263,9 @@ class TestSearch:
     def verify_i_am_on_the_details_page(self, item_name):
         assert item_name in self.selenium.title
 
-        secondary_heading_text = self.details_data_product_page.secondary_heading().text
+        heading_text = self.details_data_product_page.primary_heading().text
 
-        assert secondary_heading_text == item_name
+        assert heading_text == item_name
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
