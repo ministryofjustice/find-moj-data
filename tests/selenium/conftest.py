@@ -11,7 +11,7 @@ from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
-TMP_DIR = Path(__file__).parent / "../../tmp"
+TMP_DIR = (Path(__file__).parent / "../../tmp").resolve()
 
 
 @pytest.fixture(scope="session")
@@ -53,6 +53,7 @@ def screenshotter(request, selenium: RemoteWebDriver):
 
     elif ("call" not in report) or report["call"].failed:
         timestamp = datetime.datetime.now().strftime(r"%Y%m%d%H%M%S")
+        TMP_DIR.mkdir(exist_ok=True)
         path = str(TMP_DIR / f"{timestamp}-{testname}-failed.png")
         total_height = selenium.execute_script(
             "return document.body.parentNode.scrollHeight"
@@ -79,6 +80,20 @@ class DataProductDetailsPage(Page):
 
     def data_product_tables(self):
         return self.selenium.find_element(By.TAG_NAME, "table")
+
+    def table_link(self):
+        return self.selenium.find_element(By.LINK_TEXT, "Table details")
+
+
+class TableDetailsPage(Page):
+    def caption(self):
+        return self.selenium.find_element(By.CSS_SELECTOR, ".govuk-caption-m").text
+
+    def column_descriptions(self):
+        return [
+            c.text
+            for c in self.selenium.find_elements(By.CSS_SELECTOR, ".column-description")
+        ]
 
 
 class HomePage(Page):
@@ -222,3 +237,8 @@ def search_page(selenium) -> SearchPage:
 @pytest.fixture
 def details_data_product_page(selenium) -> DataProductDetailsPage:
     return DataProductDetailsPage(selenium)
+
+
+@pytest.fixture
+def table_details_page(selenium) -> TableDetailsPage:
+    return TableDetailsPage(selenium)
