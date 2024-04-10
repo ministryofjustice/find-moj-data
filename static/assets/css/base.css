@@ -10853,6 +10853,10 @@ mark {
   margin-bottom: 15px !important;
 }
 
+a.govuk-skip-link:focus {
+  text-decoration: underline;
+}
+
 @media (min-width: 40.0625em) {
   #sticky-sidebar {
     position: sticky;
