@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client import BaseCatalogueClient
-from data_platform_catalogue.entities import TableMetadata, RelationshipType
+from data_platform_catalogue.entities import RelationshipType, TableMetadata
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -20,7 +20,7 @@ from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
-from home.service.details import DataProductDetailsService, DatabaseDetailsService
+from home.service.details import DatabaseDetailsService, DataProductDetailsService
 from home.service.glossary import GlossaryService
 from home.service.search import SearchService
 
@@ -140,6 +140,7 @@ def mock_catalogue():
         page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
         total_results=1,
     )
+    mock_get_table_details_response(mock_catalogue)
 
     yield mock_catalogue
 
@@ -151,6 +152,21 @@ def mock_list_database_tables_response(mock_catalogue, total_results, page_resul
         total_results=total_results, page_results=page_results
     )
     mock_catalogue.list_database_tables.return_value = search_response
+
+
+def mock_get_table_details_response(mock_catalogue):
+    mock_catalogue.get_table_details.return_value = TableMetadata(
+        name="abc",
+        description="abc",
+        retention_period_in_days=0,
+        column_details=[
+            {
+                "name": "foo",
+                "description": "description **with markdown**",
+                "type": "string",
+            }
+        ],
+    )
 
 
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
