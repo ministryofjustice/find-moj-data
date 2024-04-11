@@ -31,4 +31,55 @@
   z-index: 1;
 }
 
+.trim-text {
+  --line-height: 1.5;
+  --lines-to-show: 3;
+  line-height: var(--line-height);
+  overflow: hidden;
+  max-height: calc(var(--line-height) * var(--lines-to-show) * 1em);
+  position: relative;
+}
+
+.expand-chk{
+  appearance: none;
+  border: none;
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+  color: blue;
+  background-color: #ffffff;
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: none;
+
+}
+
+.expand-chk:hover{
+  background-color: #fd0;
+
+}
+
+.expand-chk:focus{
+  background-color: #fd0;
+
+}
+
+.expand-chk:before{
+  content: "...read more";
+
+}
+
+.expand-chk:checked:before{
+  content: "collapse";
+
+}
+
+.trim-text:has(+ .expand-chk:checked){
+  max-height:none;
+}
+
+
 /*# sourceMappingURL=search.css.map */

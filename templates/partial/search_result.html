@@ -27,13 +27,16 @@
           {% endif %}
         </h3>
         {% if result.description %}
-          <div class="govuk-body-m">
-            {% if result.description|length > 200 %}
-              {{ result.description|slice:":200"|add:"..."|markdown:3 }}
-            {% else %}
+          {% if result.description|length > 195 %}
+            <div class="trim-text">
               {{ result.description|markdown:3 }}
-            {% endif %}
-          </div>
+            </div>
+            <input class="expand-chk" type="checkbox" title="expand or collapse text">
+          {% else %}
+            <div class="govuk-body-m">
+              {{ result.description|markdown:3 }}
+            </div>
+          {% endif %}
         {% endif %}
         <dl class="govuk-summary-list">
           <div class="govuk-summary-list__row">
