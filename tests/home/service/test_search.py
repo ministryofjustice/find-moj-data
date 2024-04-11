@@ -1,6 +1,7 @@
+import os
 import re
 from types import GeneratorType
-import os
+
 import pytest
 
 from home.forms.search import SearchForm
@@ -67,7 +68,8 @@ class TestSearchService:
     def test__compile_query_word_highlighting_pattern(self, search_service):
         query = "test"
         pattern = search_service._compile_query_word_highlighting_pattern(query)
-        assert pattern == re.compile(rf"(\w*{query}\w*)", flags=re.IGNORECASE)
+
+        assert pattern == re.compile(rf"((\w*{query}\w*))", flags=re.IGNORECASE)
 
     @pytest.mark.parametrize(
         "query, description, marked_description",
@@ -86,6 +88,21 @@ class TestSearchService:
                 "OFF",
                 "offence description of offences",
                 "<mark>offence</mark> description of <mark>offences</mark>",
+            ),
+            (
+                "offence description",
+                "offence description of offences",
+                "<mark>offence description</mark> of <mark>offences</mark>",
+            ),
+            (
+                "offence description",
+                "offence abc",
+                "<mark>offence</mark> abc",
+            ),
+            (
+                "offence description banana",
+                "offence description of offences",
+                "<mark>offence</mark> <mark>description</mark> of <mark>offences</mark>",
             ),
         ],
     )
