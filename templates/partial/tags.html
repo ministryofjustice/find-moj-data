@@ -1,0 +1,3 @@
+{% for tag in tags %}
+<a href="{% url 'home:search' %}?query={{tag|urlencode}}">{{tag}}</a>{% if not forloop.last %}, {% endif %}
+{% endfor %}

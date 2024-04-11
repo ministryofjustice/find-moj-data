@@ -57,7 +57,7 @@
             </li>
             <li>
               <span class="govuk-!-font-weight-bold">Tags:</span>
-              {{ result.tags |join:", " }}
+              {% include "partial/tags.html" with tags=result.tags %}
             </div>
           </li>
         </ul>
