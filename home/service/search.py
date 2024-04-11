@@ -178,7 +178,7 @@ class SearchService(GenericService):
 
     def _highlight_results(self):
         "Take a SearchResponse and add bold markdown where the query appears"
-        query = self.form.cleaned_data.get("query") if self.form.is_valid() else ""
+        query = self.form.cleaned_data.get("query", "") if self.form.is_valid() else ""
         highlighted_results = deepcopy(self.results)
 
         if query in ("", "*"):
