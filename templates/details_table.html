@@ -89,7 +89,7 @@
             {% for column in table.column_details %}
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">{{column.name}}</td>
-                <td class="govuk-table__cell column-description">{{column.description|default:''}}</td>
+                <td class="govuk-table__cell column-description">{{column.description|default:''|markdown}}</td>
                 <td class="govuk-table__cell">{{column.type|title}}</td>
                 <td class="govuk-table__cell">{{column.nullable|yesno|upper}}</td>
               </tr>

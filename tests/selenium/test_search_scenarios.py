@@ -349,5 +349,5 @@ class TestSearch:
     def verify_i_am_on_the_table_details_page(self):
         assert self.table_details_page.caption() == "Table"
         assert self.table_details_page.column_descriptions() == [
-            "description **with markdown**"
+            "description with markdown"
         ]
