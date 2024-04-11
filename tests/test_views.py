@@ -56,6 +56,14 @@ class TestDetailsView:
         assert response.status_code == 404
 
 
+class TestTableView:
+    def test_table(self, client):
+        response = client.get(
+            reverse("home:details", kwargs={"id": "fake", "result_type": "table"})
+        )
+        assert response.status_code == 200
+
+
 class TestChartView:
     def test_chart(self, client):
         response = client.get(

@@ -23,6 +23,7 @@ class TestSearch:
         home_page,
         search_page,
         details_data_product_page,
+        table_details_page,
         chromedriver_path,
     ):
         self.selenium = selenium
@@ -30,6 +31,7 @@ class TestSearch:
         self.home_page = home_page
         self.search_page = search_page
         self.details_data_product_page = details_data_product_page
+        self.table_details_page = table_details_page
         self.chromedriver_path = chromedriver_path
 
     def verify_glossary_link_from_homepage_works(self):
@@ -199,9 +201,9 @@ class TestSearch:
             self.selenium.current_url, chromedriver_path=self.chromedriver_path
         )
 
-    def test_search_to_data_product_details(self, mock_catalogue):
+    def test_search_to_details(self, mock_catalogue):
         """
-        Users can search a data product and got to its details page
+        Users can search and drill down into details
         """
         mock_search_response(
             mock_catalogue=mock_catalogue,
@@ -214,6 +216,8 @@ class TestSearch:
         self.verify_i_am_on_the_details_page(item_name)
         self.verify_data_product_details()
         self.verify_data_product_tables_listed()
+        self.click_on_table()
+        self.verify_i_am_on_the_table_details_page()
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
@@ -338,3 +342,12 @@ class TestSearch:
     def verify_data_product_details(self):
         data_product_details = self.details_data_product_page.data_product_details()
         assert data_product_details.text
+
+    def click_on_table(self):
+        self.details_data_product_page.table_link().click()
+
+    def verify_i_am_on_the_table_details_page(self):
+        assert self.table_details_page.caption() == "Table"
+        assert self.table_details_page.column_descriptions() == [
+            "description with markdown"
+        ]
