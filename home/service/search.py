@@ -2,8 +2,13 @@ import re
 from copy import deepcopy
 from typing import Any
 
-from data_platform_catalogue.search_types import MultiSelectFilter, SortOption, ResultType
+from data_platform_catalogue.search_types import (
+    MultiSelectFilter,
+    ResultType,
+    SortOption,
+)
 from django.core.paginator import Paginator
+from nltk.stem import PorterStemmer
 
 from home.forms.domain_model import DomainModel
 from home.forms.search import SearchForm
@@ -31,6 +36,7 @@ def domains_with_their_subdomains(domain: str, subdomain: str) -> list[str]:
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
         self.domain_model = DomainModel()
+        self.stemmer = PorterStemmer()
         self.form = form
         self.page = page
         self.client = self._get_catalogue_client()
@@ -45,12 +51,15 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-
     def _build_entity_types(_, entity_types: list[str]) -> tuple[ResultType]:
         default_entities = tuple(
             entity for entity in ResultType if entity.name != "GLOSSARY_TERM"
         )
-        chosen_entities = tuple(ResultType[entity] for entity in entity_types) if entity_types else None
+        chosen_entities = (
+            tuple(ResultType[entity] for entity in entity_types)
+            if entity_types
+            else None
+        )
         return chosen_entities if chosen_entities else default_entities
 
     def _get_search_results(self, page: str, items_per_page: int):
@@ -171,7 +180,7 @@ class SearchService(GenericService):
 
     def _highlight_results(self):
         "Take a SearchResponse and add bold markdown where the query appears"
-        query = self.form.cleaned_data.get("query") if self.form.is_valid() else ""
+        query = self.form.cleaned_data.get("query", "") if self.form.is_valid() else ""
         highlighted_results = deepcopy(self.results)
 
         if query in ("", "*"):
@@ -187,12 +196,17 @@ class SearchService(GenericService):
                 )
             return highlighted_results
 
-    @staticmethod
-    def _compile_query_word_highlighting_pattern(query: str) -> re.compile:
-        return re.compile(rf"(\w*{query}\w*)", flags=re.IGNORECASE)
+    def _compile_query_word_highlighting_pattern(self, query: str) -> re.Pattern:
+        terms = [self.stemmer.stem(term) for term in query.split()]
+        if len(terms) > 1:
+            terms = [query] + terms
+
+        pattern = "|".join([r"(\w*{}\w*)".format(re.escape(word)) for word in terms])
+
+        return re.compile(rf"({pattern})", flags=re.IGNORECASE)
 
     @staticmethod
-    def _add_mark_tags(description: str, pattern: re.compile) -> str:
+    def _add_mark_tags(description: str, pattern: re.Pattern) -> str:
         return pattern.sub(r"<mark>\1</mark>", description)
 
     def _get_match_reason_display_names(self):
