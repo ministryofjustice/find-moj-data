@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <a onclick="history.back()" class="govuk-back-link">Back</a>
+  <div class="govuk-width-container">
+    <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h1 class="govuk-heading-l">Server error</h1>
+          <p class="govuk-body">
+            There is a problem with the server.
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+{% endblock content %}
