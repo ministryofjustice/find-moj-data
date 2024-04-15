@@ -8,6 +8,7 @@ from data_platform_catalogue.search_types import (
     SortOption,
 )
 from django.core.paginator import Paginator
+from nltk.stem import PorterStemmer
 
 from home.forms.domain_model import DomainModel
 from home.forms.search import SearchForm
@@ -35,6 +36,7 @@ def domains_with_their_subdomains(domain: str, subdomain: str) -> list[str]:
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
         self.domain_model = DomainModel()
+        self.stemmer = PorterStemmer()
         self.form = form
         self.page = page
         self.client = self._get_catalogue_client()
@@ -194,9 +196,8 @@ class SearchService(GenericService):
                 )
             return highlighted_results
 
-    @staticmethod
-    def _compile_query_word_highlighting_pattern(query: str) -> re.Pattern:
-        terms = query.split()
+    def _compile_query_word_highlighting_pattern(self, query: str) -> re.Pattern:
+        terms = [self.stemmer.stem(term) for term in query.split()]
         if len(terms) > 1:
             terms = [query] + terms
 
