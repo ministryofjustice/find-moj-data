@@ -11,7 +11,7 @@ def truncate_snippet(value, max_chars=200):
     """
     Truncate a chunk of markup, ensuring that:
 
-    1. At most `arg` characters are returned
+    1. At most `max_chars` characters are returned
     2. The result contains a <mark>, if possible
     3. The snippet starts at the beginning of a paragraph, if possible.
     4. Words are preserved at the start of a snippet (but they can be truncated at the end)
