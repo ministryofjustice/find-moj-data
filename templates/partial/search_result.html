@@ -28,7 +28,7 @@
         </h3>
         {% if result.description %}
           <div class="govuk-body-m">
-            {{ result.description|truncate_snippet:200|markdown:3 }}
+            {{ result.description|truncate_snippet:300|markdown:3 }}
           </div>
         {% endif %}
         <dl class="govuk-summary-list govuk-summary-list--no-border">
