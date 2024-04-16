@@ -54,9 +54,11 @@
       crossorigin="anonymous"
     ></script>
     <script type="module">
-      import {initAll} from "{% static 'assets/js/govuk-frontend.min.js' %}"
+      import {initAll} from "{% static 'assets/js/govuk-frontend.min.js' %}";
+      import {init as initApp} from "{% static 'assets/js/application.js' %}";
       initAll();
       window.MOJFrontend.initAll();
+      initApp();
     </script>
     {% block scripts %}
     {% endblock scripts %}

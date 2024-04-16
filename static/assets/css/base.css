@@ -10873,4 +10873,19 @@ a.govuk-skip-link:focus {
   overflow-wrap: break-word;
 }
 
+.more-less-toggle > .govuk-button {
+  display: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.more-less-toggle > .more-less-ellipsis {
+  display: none;
+}
+.more-less-toggle > *:not(.govuk-button, .more-less-ellipsis):last-child {
+  display: inline;
+}
+.more-less-toggle > .more-less-remainder > *:not(.govuk-button, .more-less-ellipsis):first-child {
+  display: inline;
+}
+
 /*# sourceMappingURL=base.css.map */

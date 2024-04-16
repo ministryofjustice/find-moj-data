@@ -1,6 +1,6 @@
 import pytest
 
-from home.templatetags.snippets import truncate_snippet
+from home.templatetags.snippets import expandable_section, truncate_snippet
 
 
 @pytest.mark.parametrize(
@@ -32,3 +32,24 @@ from home.templatetags.snippets import truncate_snippet
 )
 def test_snippet(full_text, limit, expected):
     assert truncate_snippet(full_text, limit) == expected
+
+
+@pytest.mark.parametrize(
+    "full_text, limit, expected_html",
+    [
+        ("", 10, ""),
+        ("1234567890", 10, "1234567890"),
+        (
+            "1234567890abc",
+            10,
+            '<div class="more-less-toggle" data-module="more-less-toggle">123456789<span class="more-less-ellipsis">&hellip; </span><span class="more-less-remainder">0abc</span><button class="govuk-button govuk-button--secondary">Show more</button></div>',
+        ),
+    ],
+    ids=(
+        "empty string",
+        "string should not be truncated",
+        "string should be truncated",
+    ),
+)
+def test_expandable_section(full_text, limit, expected_html):
+    assert expandable_section(full_text, limit) == expected_html

@@ -1,0 +1,10 @@
+.more-less-toggle {
+    > .govuk-button {
+        display: none;
+        margin-top: govuk-spacing(2);
+        margin-bottom: govuk-spacing(2);
+    }
+    > .more-less-ellipsis {
+        display: none;
+    }
+}

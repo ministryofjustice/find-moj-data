@@ -1,6 +1,9 @@
 from itertools import dropwhile
 
 from django.template.defaultfilters import stringfilter, truncatechars_html
+from django.utils.html import format_html
+from django.utils.safestring import SafeText, mark_safe
+from markdown import markdown as markdown_func
 
 from home.templatetags.markdown import register
 
@@ -73,3 +76,31 @@ def _align_snippet(snippet, max_chars):
 
     # Anchor the snippet a few words before the mark
     return "…" + truncatechars_html(short_prefix + from_mark, arg=new_max_chars)
+
+
+@register.simple_tag
+@stringfilter
+def expandable_section(
+    value: str, cutoff_chars=200, render_markdown=False, heading_offset=0
+) -> str | SafeText:
+    """
+    Render content in a block which can be enhanced with javascript to render a show more/less toggle,
+    so that the user is not forced to scroll through the whole thing.
+    If javascript is disabled, we fall back to displaying the whole text.
+    The truncation follows the same rules as Django's truncatechars_html filter.
+    """
+    prefix: str | SafeText = truncatechars_html(value, cutoff_chars)
+
+    actual_prefix_length = len(prefix)
+    actual_value_length = len(value)
+    if actual_prefix_length < actual_value_length:
+        prefix = prefix[:-1]  # remove ellipsis
+        remainder = value[actual_prefix_length - 1 :]
+    else:
+        return value
+
+    return format_html(
+        '<div class="more-less-toggle" data-module="more-less-toggle">{}<span class="more-less-ellipsis">&hellip; </span><span class="more-less-remainder">{}</span><button class="govuk-button govuk-button--secondary">Show more</button></div>',
+        prefix,
+        remainder,
+    )
