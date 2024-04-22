@@ -10857,6 +10857,12 @@ a.govuk-skip-link:focus {
   text-decoration: underline;
 }
 
+@media (min-width: 48.0625em) {
+  .column-description {
+    max-width: 480px;
+  }
+}
+
 @media (min-width: 40.0625em) {
   #sticky-sidebar {
     position: sticky;

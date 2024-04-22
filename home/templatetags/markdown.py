@@ -9,4 +9,12 @@ register = template.Library()
 @register.filter
 @stringfilter
 def markdown(value, heading_offset=0) -> SafeText:
-    return mark_safe(markdown_func(value, extensions=['mdx_headdown'], extension_configs={'mdx_headdown': {'offset': heading_offset}}))
+    return mark_safe(
+        markdown_func(
+            value,
+            extensions=["fenced_code", "mdx_headdown"],
+            extension_configs={
+                "mdx_headdown": {"offset": heading_offset},
+            },
+        )
+    )

@@ -27,5 +27,13 @@ a.govuk-skip-link:focus {
     text-decoration: underline;
 }
 
+
+.column-description {
+    @include govuk-media-query($from: desktop) {
+        max-width: $govuk-page-width / 2;
+    }
+}
+
+
 @import './glossary';
 @import './details';
