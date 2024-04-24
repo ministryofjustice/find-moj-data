@@ -26,8 +26,8 @@ class TestSearchService:
         assert isinstance(search_context["page_range"], GeneratorType)
         assert search_context["paginator"].num_pages == 5
 
-    def test_get_context_page_title(self, search_context):
-        assert search_context["page_title"] == 'Search for "test" - Data catalogue'
+    def test_get_context_h1_value(self, search_context):
+        assert search_context["h1_value"] == "Search"
 
     def test_get_context_label_clear_href(self, search_context):
         assert search_context["label_clear_href"]["domain"] == {

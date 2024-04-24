@@ -4,10 +4,10 @@ from django.shortcuts import render
 
 from home.forms.search import SearchForm
 from home.service.details import (
+    ChartDetailsService,
+    DatabaseDetailsService,
     DataProductDetailsService,
     DatasetDetailsService,
-    DatabaseDetailsService,
-    ChartDetailsService,
 )
 from home.service.glossary import GlossaryService
 from home.service.search import SearchService
@@ -15,6 +15,7 @@ from home.service.search import SearchService
 
 def home_view(request):
     context = {}
+    context["h1_value"] = "Home"
     return render(request, "home.html", context)
 
 
@@ -26,7 +27,7 @@ def details_view(request, result_type, id):
         context = dataset_details(id)
         return render(request, "details_table.html", context)
     if result_type == "database":
-        context = database_details(request, id)
+        context = database_details(id)
         return render(request, "details_database.html", context)
     if result_type == "chart":
         context = chart_details(id)
@@ -44,7 +45,7 @@ def data_product_details(id):
     return context
 
 
-def database_details(request, id):
+def database_details(id):
     try:
         service = DatabaseDetailsService(id)
     except ObjectDoesNotExist:

@@ -1,4 +1,3 @@
-import pytest
 from data_platform_catalogue.search_types import SearchResult
 
 from home.service.glossary import GlossaryService
@@ -8,6 +7,7 @@ class TestGlossaryService:
     def test_get_context(self):
         glossary_context = GlossaryService()
         expected_context = {
+            "h1_value": "Glossary",
             "results": [
                 {
                     "name": "Data protection terms",
@@ -69,7 +69,7 @@ class TestGlossaryService:
                     ],
                     "description": "",
                 },
-            ]
+            ],
         }
 
         assert expected_context == glossary_context.context

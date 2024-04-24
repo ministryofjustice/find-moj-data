@@ -47,7 +47,7 @@ class DataProductDetailsService(GenericService):
             "result": self.result,
             "result_type": "Data product",
             "tables": self.assets_in_data_product,
-            "page_title": f"{self.result.name} - Data catalogue",
+            "h1_value": "Details",
         }
 
         return context
@@ -95,7 +95,7 @@ class DatabaseDetailsService(GenericService):
             "result": self.result,
             "result_type": "Database",
             "tables": self.entities_in_database,
-            "page_title": f"{self.result.name} - Data catalogue",
+            "h1_value": "Details",
         }
 
         return context
@@ -138,6 +138,7 @@ class DatasetDetailsService(GenericService):
             "table": self.table_metadata,
             "parent_entity": self.parent_entity,
             "dataset_parent_type": self.dataset_parent_type,
+            "h1_value": "Details",
         }
 
 
@@ -148,4 +149,7 @@ class ChartDetailsService(GenericService):
         self.context = self._get_context()
 
     def _get_context(self):
-        return {"chart": self.chart_metadata}
+        return {
+            "chart": self.chart_metadata,
+            "h1_value": "Details",
+        }

@@ -156,16 +156,12 @@ class SearchService(GenericService):
         }
 
     def _get_context(self) -> dict[str, Any]:
-        if self.form["query"].value():
-            page_title = f'Search for "{self.form["query"].value()}" - Data catalogue'
-        else:
-            page_title = "Search - Data catalogue"
 
         context = {
             "form": self.form,
             "results": self.results.page_results,
             "highlighted_results": self.highlighted_results.page_results,
-            "page_title": page_title,
+            "h1_value": "Search",
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(
                 self.page, on_each_side=2, on_ends=1
