@@ -46,17 +46,21 @@ jobs:
         id: fast-tests
         run: poetry run pytest --cov -m 'not slow' --doctest-modules
 
-      - name: Get Chromium version 🌐
-        run: |
-          CHROMIUM_VERSION=$(google-chrome --product-version)
-          echo "Chromium version: $CHROMIUM_VERSION"
-          echo "CHROMIUM_VERSION=$CHROMIUM_VERSION" >> $GITHUB_ENV
+      # - name: Get Chromium version 🌐
+      #   run: |
+      #     CHROMIUM_VERSION=$(google-chrome --product-version)
+      #     echo "Chromium version: $CHROMIUM_VERSION"
+      #     echo "CHROMIUM_VERSION=$CHROMIUM_VERSION" >> $GITHUB_ENV
 
-      - name: Install chromedriver 🚗
-        shell: bash
-        run: |
-          sudo apt-get update && \
-            sudo apt-get -y install chromium-chromedriver
+      # - name: Install chromedriver 🚗
+      #   shell: bash
+      #   run: |
+      #     sudo apt-get update && \
+      #       sudo apt-get -y install chromium-chromedriver
+
+      - name: Prepare Selenium
+      # https://github.com/marketplace/actions/setup-chromedriver
+        uses: nanasess/setup-chromedriver@v2.2.2
 
       - name: run selenium tests
         id: slow-tests
