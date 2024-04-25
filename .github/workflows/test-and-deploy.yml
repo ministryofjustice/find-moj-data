@@ -15,19 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: 3.11.1
+
       - name: cache poetry install
         uses: actions/cache@v4
         with:
           path: ~/.local
           key: poetry-1.7.1-0
+
       - uses: snok/install-poetry@v1
         with:
           version: 1.7.1
           virtualenvs-create: true
           virtualenvs-in-project: true
+
       - name: cache deps
         id: cache-deps
         uses: actions/cache@v4
@@ -37,22 +41,19 @@ jobs:
       - run: poetry install --no-interaction --no-root
         if: steps.cache-deps.outputs.cache-hit != 'true'
       - run: poetry install --no-interaction
+
       - name: run unit tests with coverage
         id: fast-tests
         run: poetry run pytest --cov -m 'not slow' --doctest-modules
 
-      - name: Get Chromium version 🌐
-        run: |
-          CHROMIUM_VERSION=$(google-chrome --product-version)
-          echo "Chromium version: $CHROMIUM_VERSION"
-          echo "CHROMIUM_VERSION=$CHROMIUM_VERSION" >> $GITHUB_ENV
-      - name: Install chromedriver 🚗
-        run: |
-          npm install -g chromedriver@${CHROMIUM_VERSION%.*.*}
+      - name: Prepare Selenium
+      # https://github.com/marketplace/actions/setup-chromedriver
+        uses: nanasess/setup-chromedriver@v2.2.2
+
       - name: run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: poetry run pytest -m 'slow' --chromedriver-path=$(npm root -g)/chromedriver/bin/chromedriver
+        run: poetry run pytest -m 'slow'
 
   javascript:
     runs-on: ubuntu-latest
