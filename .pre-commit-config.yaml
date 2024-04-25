@@ -1,7 +1,7 @@
 default_stages: [commit]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: requirements-txt-fixer
       - id: check-yaml
@@ -11,7 +11,7 @@ repos:
         exclude: tf$|j2$
 
   - repo: https://github.com/psf/black
-    rev: 24.2.0
+    rev: 24.4.0
     hooks:
       - id: black
         name: black formatting
@@ -57,7 +57,7 @@ repos:
         args: []
 
   - repo: https://github.com/rtts/djhtml
-    rev: "main" # replace with the latest tag on GitHub
+    rev: "3.0.6" # replace with the latest tag on GitHub
     hooks:
       - id: djhtml
       - id: djcss
