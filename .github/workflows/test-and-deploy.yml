@@ -65,7 +65,7 @@ jobs:
       - name: run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: poetry run pytest -m 'slow' --chromedriver-path=$(npm root -g)/chromedriver/bin/chromedriver
+        run: poetry run pytest -m 'slow'
 
   javascript:
     runs-on: ubuntu-latest
