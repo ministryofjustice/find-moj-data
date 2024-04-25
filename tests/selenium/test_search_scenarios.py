@@ -24,7 +24,9 @@ class TestSearch:
         search_page,
         details_data_product_page,
         table_details_page,
+        glossary_page,
         chromedriver_path,
+        page_titles,
     ):
         self.selenium = selenium
         self.live_server_url = live_server.url
@@ -32,7 +34,9 @@ class TestSearch:
         self.search_page = search_page
         self.details_data_product_page = details_data_product_page
         self.table_details_page = table_details_page
+        self.glossary_page = glossary_page
         self.chromedriver_path = chromedriver_path
+        self.page_titles = page_titles
 
     def verify_glossary_link_from_homepage_works(self):
         self.start_on_the_home_page()
@@ -55,8 +59,8 @@ class TestSearch:
 
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
-        item_name = self.click_on_the_first_result()
-        self.verify_i_am_on_the_details_page(item_name)
+        self.click_on_the_first_result()
+        self.verify_i_am_on_the_details_page()
 
     def test_search_with_query(self):
         """
@@ -212,8 +216,8 @@ class TestSearch:
         )
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("court timeliness")
-        item_name = self.click_on_the_first_result()
-        self.verify_i_am_on_the_details_page(item_name)
+        self.click_on_the_first_result()
+        self.verify_i_am_on_the_details_page()
         self.verify_data_product_details()
         self.verify_data_product_tables_listed()
         self.click_on_table()
@@ -221,11 +225,14 @@ class TestSearch:
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
-        assert "Data catalogue" in self.selenium.title
+        assert self.selenium.title in self.page_titles
+        heading_text = self.details_data_product_page.primary_heading().text
+
+        assert heading_text == self.selenium.title.split("-")[0].strip()
 
     def start_on_the_search_page(self):
         self.selenium.get(f"{self.live_server_url}/search?new=True")
-        assert "Search" in self.selenium.title
+        assert self.selenium.title in self.page_titles
 
     def click_on_the_search_link(self):
         self.home_page.search_nav_link().click()
@@ -245,11 +252,16 @@ class TestSearch:
         assert selected_filters == []
 
     def verify_i_am_on_the_search_page(self):
-        assert "Search" in self.selenium.title
-        assert "Find MOJ Data" in self.search_page.primary_heading().text
+        assert self.selenium.title in self.page_titles
+        heading_text = self.search_page.primary_heading().text
+
+        assert heading_text == self.selenium.title.split("-")[0].strip()
 
     def verify_i_am_on_the_glossary_page(self):
-        assert "Glossary" in self.selenium.title
+        assert self.selenium.title in self.page_titles
+        heading_text = self.glossary_page.primary_heading().text
+
+        assert heading_text == self.selenium.title.split("-")[0].strip()
 
     def verify_i_have_results(self):
         result_count = self.search_page.result_count().text
@@ -260,16 +272,13 @@ class TestSearch:
         assert first_result.text
 
         first_link = first_result.link()
-        item_name = first_link.text
         first_link.click()
-        return item_name
 
-    def verify_i_am_on_the_details_page(self, item_name):
-        assert item_name in self.selenium.title
-
+    def verify_i_am_on_the_details_page(self):
+        assert self.selenium.title in self.page_titles
         heading_text = self.details_data_product_page.primary_heading().text
 
-        assert heading_text == item_name
+        assert heading_text == self.selenium.title.split("-")[0].strip()
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
