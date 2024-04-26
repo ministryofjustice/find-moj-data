@@ -8,7 +8,7 @@
     <div class="govuk-grid-column-two-thirds">
       <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4" id="searchform">
         <div class="govuk-form-group">
-          <h1 class="govuk-heading-xl">{{h1_value}}</h1>
+          <h1 class="govuk-heading-l">{{h1_value}}</h1>
           <div class="search-container">
             <label for="{{ form.query.id_for_label }}" class="govuk-label govuk-visually-hidden-focusable">Search MOJ Data</label>
             {{ form.query }}
