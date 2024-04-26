@@ -59,8 +59,8 @@ class TestSearch:
 
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
-        self.click_on_the_first_result()
-        self.verify_i_am_on_the_details_page()
+        item_name = self.click_on_the_first_result()
+        self.verify_i_am_on_the_details_page(item_name)
 
     def test_search_with_query(self):
         """
@@ -216,8 +216,8 @@ class TestSearch:
         )
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("court timeliness")
-        self.click_on_the_first_result()
-        self.verify_i_am_on_the_details_page()
+        item_name = self.click_on_the_first_result()
+        self.verify_i_am_on_the_details_page(item_name)
         self.verify_data_product_details()
         self.verify_data_product_tables_listed()
         self.click_on_table()
@@ -272,13 +272,17 @@ class TestSearch:
         assert first_result.text
 
         first_link = first_result.link()
+        item_name = first_link.text
         first_link.click()
+        return item_name
 
-    def verify_i_am_on_the_details_page(self):
+    def verify_i_am_on_the_details_page(self, item_name):
         assert self.selenium.title in self.page_titles
-        heading_text = self.details_data_product_page.primary_heading().text
 
+        heading_text = self.details_data_product_page.primary_heading().text
         assert heading_text == self.selenium.title.split("-")[0].strip()
+
+        assert item_name == self.details_data_product_page.secondary_heading().text
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
