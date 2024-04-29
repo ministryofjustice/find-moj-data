@@ -56,6 +56,6 @@ class GlossaryService(GenericService):
             else:
                 parent_term["description"] = ""
 
-        context = {"results": sorted_total_results}
+        context = {"results": sorted_total_results, "h1_value": "Glossary"}
 
         return context

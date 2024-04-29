@@ -134,3 +134,6 @@ DATABASES = {
         "NAME": ":memory:",
     }
 }
+# Define a service name setting for page titles
+SERVICE_NAME = "Find MOJ Data"
+GOV_UK_SUFFIX = "GOV.UK"

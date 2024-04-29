@@ -104,6 +104,11 @@ class HomePage(Page):
         return self.selenium.find_element(By.LINK_TEXT, "Glossary")
 
 
+class GlossaryPage(Page):
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
+
 class SearchResultWrapper:
     def __init__(self, element: WebElement):
         self.element = element
@@ -242,3 +247,14 @@ def details_data_product_page(selenium) -> DataProductDetailsPage:
 @pytest.fixture
 def table_details_page(selenium) -> TableDetailsPage:
     return TableDetailsPage(selenium)
+
+
+@pytest.fixture
+def glossary_page(selenium) -> GlossaryPage:
+    return GlossaryPage(selenium)
+
+
+@pytest.fixture
+def page_titles():
+    pages = ["Home", "Search", "Details", "Glossary"]
+    return [f"{page} - Find MOJ Data - GOV.UK" for page in pages]
