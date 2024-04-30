@@ -11,7 +11,7 @@
       </li>
       {% if parent_entity %}
         <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type id=parent_entity.id %}">{{parent_entity.name}}</a>
+          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.id %}">{{parent_entity.name}}</a>
         </li>
       {% endif %}
       <li class="govuk-breadcrumbs__list-item">
@@ -42,8 +42,8 @@
         <ul class="govuk-list govuk-body" id="metadata-property-list">
           <li>
             <span class="govuk-!-font-weight-bold">Last updated date:</span>
-            {% if table.last_updated %}
-              {{table.last_updated | date:"jS F Y"}} ({{table.last_updated|naturaltime}})
+            {% if table.last_modified %}
+              {{table.last_modified | date:"jS F Y"}} ({{table.last_modified|naturaltime}})
             {% endif %}
           </li>
           <li>
@@ -59,7 +59,7 @@
           </li>
           <li>
             <span class="govuk-!-font-weight-bold">Domain:</span>
-            {{table.domain}}
+            {{table.domain.display_name}}
           </li>
           <li>
             <span class="govuk-!-font-weight-bold">Tags:</span>
@@ -69,7 +69,7 @@
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with data_owner=table.owner data_owner_email=table.owner_email %}
+      {% include "partial/contact_info.html" with data_owner=table..governance.data_owner.display_name data_owner_email=table..governance.data_owner.email %}
     </div>
   </div>
 

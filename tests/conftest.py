@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client import BaseCatalogueClient
-from data_platform_catalogue.entities import RelationshipType, TableMetadata
+from data_platform_catalogue.entities import RelationshipType, Table
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -66,22 +66,22 @@ def generate_table_metadata(
     relations=None,
     domain_name=None,
     tags=None,
-    last_updated=None,
+    last_modified=None,
     owner=None,
     owner_email=None,
-) -> TableMetadata:
+) -> Table:
     """
     Generate a fake table metadata object
     """
-    return TableMetadata(
+    return Table(
+        urn="urn:li:table:fake",
         name=name or fake.unique.name(),
         description=description or fake.paragraph(),
         column_details=columns_details or [],
-        retention_period_in_days=retention_period_in_days or 123,
         relationships=relations or {RelationshipType.PARENT: []},
         domain=domain_name,
         tags=tags,
-        last_updated=last_updated,
+        last_modified=last_modified,
         owner=owner,
         owner_email=owner_email,
     )
@@ -155,7 +155,7 @@ def mock_list_database_tables_response(mock_catalogue, total_results, page_resul
 
 
 def mock_get_table_details_response(mock_catalogue):
-    mock_catalogue.get_table_details.return_value = TableMetadata(
+    mock_catalogue.get_table_details.return_value = Table(
         name="abc",
         description="abc",
         retention_period_in_days=0,

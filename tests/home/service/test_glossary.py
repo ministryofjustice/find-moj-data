@@ -29,7 +29,7 @@ class TestGlossaryService:
                                 ]
                             },
                             tags=[],
-                            last_updated=None,
+                            last_modified=None,
                         ),
                         SearchResult(
                             id="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
@@ -48,7 +48,7 @@ class TestGlossaryService:
                                 ]
                             },
                             tags=[],
-                            last_updated=None,
+                            last_modified=None,
                         ),
                     ],
                     "description": "Data protection terms",
@@ -64,7 +64,7 @@ class TestGlossaryService:
                             matches={},
                             metadata={"parentNodes": []},
                             tags=[],
-                            last_updated=None,
+                            last_modified=None,
                         )
                     ],
                     "description": "",
