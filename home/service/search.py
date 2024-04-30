@@ -5,6 +5,7 @@ from typing import Any
 from data_platform_catalogue.search_types import (
     MultiSelectFilter,
     ResultType,
+    SearchResponse,
     SortOption,
 )
 from django.core.paginator import Paginator
@@ -62,7 +63,7 @@ class SearchService(GenericService):
         )
         return chosen_entities if chosen_entities else default_entities
 
-    def _get_search_results(self, page: str, items_per_page: int):
+    def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
         if self.form.is_bound:
             form_data = self.form.cleaned_data
         else:

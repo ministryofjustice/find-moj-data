@@ -6,7 +6,6 @@ from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,
     DatabaseDetailsService,
-    DataProductDetailsService,
     DatasetDetailsService,
 )
 from home.service.glossary import GlossaryService
@@ -19,24 +18,21 @@ def home_view(request):
     return render(request, "home.html", context)
 
 
-def details_view(request, result_type, id):
-    if result_type == "data_product":
-        context = data_product_details(id)
-        return render(request, "details_data_product.html", context)
+def details_view(request, result_type, urn):
     if result_type == "table":
-        context = dataset_details(id)
+        context = dataset_details(urn)
         return render(request, "details_table.html", context)
     if result_type == "database":
-        context = database_details(id)
+        context = database_details(urn)
         return render(request, "details_database.html", context)
     if result_type == "chart":
-        context = chart_details(id)
+        context = chart_details(urn)
         return render(request, "details_chart.html", context)
 
 
-def data_product_details(id):
+def database_details(urn):
     try:
-        service = DataProductDetailsService(id)
+        service = DatabaseDetailsService(urn)
     except ObjectDoesNotExist:
         raise Http404("Asset does not exist")
 
@@ -45,9 +41,9 @@ def data_product_details(id):
     return context
 
 
-def database_details(id):
+def dataset_details(urn):
     try:
-        service = DatabaseDetailsService(id)
+        service = DatasetDetailsService(urn)
     except ObjectDoesNotExist:
         raise Http404("Asset does not exist")
 
@@ -56,20 +52,9 @@ def database_details(id):
     return context
 
 
-def dataset_details(id):
+def chart_details(urn):
     try:
-        service = DatasetDetailsService(id)
-    except ObjectDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    context = service.context
-
-    return context
-
-
-def chart_details(id):
-    try:
-        service = ChartDetailsService(id)
+        service = ChartDetailsService(urn)
     except ObjectDoesNotExist:
         raise Http404("Asset does not exist")
 
