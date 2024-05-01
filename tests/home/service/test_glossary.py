@@ -13,7 +13,7 @@ class TestGlossaryService:
                     "name": "Data protection terms",
                     "members": [
                         SearchResult(
-                            id="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
+                            urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
                             result_type="GLOSSARY_TERM",
                             name="IAO",
                             description="Information asset owner.\n",
@@ -32,7 +32,7 @@ class TestGlossaryService:
                             last_modified=None,
                         ),
                         SearchResult(
-                            id="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
+                            urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
                             result_type="GLOSSARY_TERM",
                             name="Other term",
                             description="Term description to test groupings work",
@@ -57,7 +57,7 @@ class TestGlossaryService:
                     "name": "Unsorted",
                     "members": [
                         SearchResult(
-                            id="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
+                            urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
                             result_type="GLOSSARY_TERM",
                             name="Security classification",
                             description="Only data that is 'official'",

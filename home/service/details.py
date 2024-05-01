@@ -21,7 +21,7 @@ class DatabaseDetailsService(GenericService):
         self.context = self._get_context()
 
     def _get_database_entities(self):
-        # we might want to implement pagination for data product children
+        # we might want to implement pagination for database children
         # details at some point
         database_search = self.client.list_database_tables(
             urn=self.urn, count=500
