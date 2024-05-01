@@ -3,6 +3,7 @@ from typing import Any, Dict
 
 import pytest
 from datahub.metadata.schema_classes import DomainPropertiesClass
+
 from tests.test_helpers.graph_helpers import MockDataHubGraph
 from tests.test_helpers.mce_helpers import check_golden_file
 
@@ -29,7 +30,8 @@ def base_mock_graph(
 
 @pytest.fixture
 def test_snapshots_dir(pytestconfig: pytest.Config) -> Path:
-    return pytestconfig.rootpath / "tests/snapshots"
+    rootpath = Path(__file__).parent
+    return rootpath / "snapshots"
 
 
 @pytest.fixture
