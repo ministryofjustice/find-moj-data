@@ -81,6 +81,7 @@ jobs:
           CATALOGUE_URL: ${{ vars.CATALOGUE_URL }}
           DEBUG: ${{ vars.DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
+          DJANGO_LOG_LEVEL: ${{ vars.DJANGO_LOG_LEVEL }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
           IMAGE_TAG: ${{ github.sha }}
