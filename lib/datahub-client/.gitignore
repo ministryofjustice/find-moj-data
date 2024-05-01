@@ -1,0 +1,10 @@
+.env
+coverage/
+venv/
+env/
+.DS_STORE
+.vscode
+*.code-workspace
+dist/
+__pycache__
+.idea/
