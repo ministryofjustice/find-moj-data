@@ -31,35 +31,10 @@ class TestSearchView:
         assert response.status_code == 400
 
 
-class TestDetailsView:
-    def test_details_data_product(self, client):
-        response = client.get(
-            reverse(
-                "home:details",
-                kwargs={
-                    "id": "urn:li:dataProduct:common-platform",
-                    "result_type": "data_product",
-                },
-            )
-        )
-        assert response.status_code == 200
-
-    def test_details_data_product_not_found(self, client, mock_catalogue):
-        mock_catalogue.search.return_value = SearchResponse(
-            total_results=0, page_results=[]
-        )
-        response = client.get(
-            reverse(
-                "home:details", kwargs={"id": "fake", "result_type": "data_product"}
-            )
-        )
-        assert response.status_code == 404
-
-
 class TestTableView:
     def test_table(self, client):
         response = client.get(
-            reverse("home:details", kwargs={"id": "fake", "result_type": "table"})
+            reverse("home:details", kwargs={"urn": "fake", "result_type": "table"})
         )
         assert response.status_code == 200
 
@@ -67,7 +42,7 @@ class TestTableView:
 class TestChartView:
     def test_chart(self, client):
         response = client.get(
-            reverse("home:details", kwargs={"id": "fake", "result_type": "chart"})
+            reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"})
         )
         assert response.status_code == 200
 

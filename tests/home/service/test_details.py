@@ -1,42 +1,15 @@
 from data_platform_catalogue.entities import (
-    ChartMetadata,
-    RelatedEntity,
+    Chart,
+    EntityRef,
     RelationshipType,
+    Governance,
+    DomainRef,
+    OwnerRef,
 )
 from data_platform_catalogue.search_types import ResultType
 
 from home.service.details import ChartDetailsService, DatasetDetailsService
 from tests.conftest import generate_table_metadata
-
-
-class TestDetailsDataProductService:
-    def test_get_context_data_product(self, detail_dataproduct_context, mock_catalogue):
-        assert (
-            detail_dataproduct_context["result"]
-            == mock_catalogue.search().page_results[0]
-        )
-        result_type = (
-            "Data product"
-            if mock_catalogue.search().page_results[0].result_type
-            == ResultType.DATA_PRODUCT
-            else "Table"
-        )
-        assert detail_dataproduct_context["result_type"] == result_type
-        assert detail_dataproduct_context["h1_value"] == "Details"
-
-    def test_get_context_data_product_tables(
-        self, detail_dataproduct_context, mock_catalogue
-    ):
-        name = mock_catalogue.list_data_product_assets().page_results[0].name
-        mock_table = {
-            "name": name,
-            "urn": mock_catalogue.list_data_product_assets().page_results[0].id,
-            "description": mock_catalogue.list_data_product_assets()
-            .page_results[0]
-            .description,
-            "type": "TABLE",
-        }
-        assert detail_dataproduct_context["tables"][0] == mock_table
 
 
 class TestDetailsDatasetService:
@@ -48,7 +21,7 @@ class TestDetailsDatasetService:
     def test_get_context_contains_parent(self, mock_catalogue):
         parent = {
             RelationshipType.PARENT: [
-                RelatedEntity(id="urn:li:container:parent", name="parent")
+                EntityRef(urn="urn:li:container:parent", display_name="parent")
             ],
         }
         mock_table = generate_table_metadata(relations=parent)
@@ -56,8 +29,8 @@ class TestDetailsDatasetService:
 
         service = DatasetDetailsService("urn:li:datsset:test")
         context = service.context
-        assert context["parent_entity"] == RelatedEntity(
-            id="urn:li:container:parent", name="parent"
+        assert context["parent_entity"] == EntityRef(
+            urn="urn:li:container:parent", display_name="parent"
         )
 
 
@@ -79,7 +52,7 @@ class TestDatabaseDetailsService:
         name = mock_catalogue.list_database_tables().page_results[0].name
         mock_table = {
             "name": name,
-            "urn": mock_catalogue.list_database_tables().page_results[0].id,
+            "urn": mock_catalogue.list_database_tables().page_results[0].urn,
             "description": mock_catalogue.list_database_tables()
             .page_results[0]
             .description,
@@ -90,8 +63,22 @@ class TestDatabaseDetailsService:
 
 class TestDetailsChartService:
     def test_get_context(self, mock_catalogue):
-        chart_metadata = ChartMetadata(
-            name="test", description="test", external_url="https://www.test.com"
+        chart_metadata = Chart(
+            name="test",
+            description="test",
+            external_url="https://www.test.com",
+            domain=DomainRef(urn="LAA", display_name="LAA"),
+            governance=Governance(
+                data_owner=OwnerRef(
+                    display_name="", email="Contact email for the user", urn=""
+                ),
+                data_stewards=[
+                    OwnerRef(
+                        display_name="", email="Contact email for the user", urn=""
+                    )
+                ],
+            ),
+            platform=EntityRef(urn="", display_name="")
         )
         mock_catalogue.get_chart_details.return_value = chart_metadata
 

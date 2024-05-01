@@ -43,25 +43,6 @@ class TestSearch:
         self.click_on_the_glossary_link()
         self.verify_i_am_on_the_glossary_page()
 
-    def test_browse_to_first_item_data_product(self, mock_catalogue):
-        """
-        Browses from the home page -> search -> details page
-        """
-        # we need to mock search response to be data products
-        mock_search_response(
-            mock_catalogue=mock_catalogue,
-            page_results=generate_page(result_type=ResultType.DATA_PRODUCT),
-            total_results=100,
-        )
-
-        self.start_on_the_home_page()
-        self.click_on_the_search_link()
-
-        self.verify_i_am_on_the_search_page()
-        self.verify_i_have_results()
-        item_name = self.click_on_the_first_result()
-        self.verify_i_am_on_the_details_page(item_name)
-
     def test_search_with_query(self):
         """
         Types a search query and press enter
@@ -211,7 +192,7 @@ class TestSearch:
         """
         mock_search_response(
             mock_catalogue=mock_catalogue,
-            page_results=generate_page(result_type=ResultType.DATA_PRODUCT),
+            page_results=generate_page(result_type=ResultType.DATABASE),
             total_results=100,
         )
         self.start_on_the_search_page()
