@@ -13,10 +13,6 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
-from datahub.metadata.schema_classes import (
-    DataProductAssociationClass,
-    DataProductPropertiesClass,
-)
 from django.test import Client
 from faker import Faker
 
@@ -205,7 +201,7 @@ def mock_get_table_details_response(mock_catalogue):
                     description="description **with markdown**",
                     nullable=False,
                     is_primary_key=True,
-                    foreign_keys=None
+                    foreign_keys=[]
                 ),
             ],
             platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
