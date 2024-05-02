@@ -24,12 +24,15 @@ ENV POETRY_NO_INTERACTION=1 \
   POETRY_CACHE_DIR=/tmp/poetry_cache
 
 COPY pyproject.toml poetry.lock ./
+COPY lib ./lib
 
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 RUN poetry run python -m nltk.downloader punkt
 
 # The runtime image, used to just run the code provided its virtual environment
 FROM python:3.11-slim-buster as runtime
+
+WORKDIR /app
 
 ENV VIRTUAL_ENV=/app/.venv \
   PATH="/app/.venv/bin:$PATH"
