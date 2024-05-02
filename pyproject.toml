@@ -37,6 +37,7 @@ build-backend = "poetry.core.masonry.api"
 DJANGO_SETTINGS_MODULE = "core.settings"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
 markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+testpaths = ["tests", "lib/data_platform_catalogue/tests"]
 
 [tool.isort]
 profile = "black"
