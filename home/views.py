@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
+from data_platform_catalogue.client.exceptions import EntityDoesNotExist
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
@@ -33,7 +33,7 @@ def details_view(request, result_type, urn):
 def database_details(urn):
     try:
         service = DatabaseDetailsService(urn)
-    except ObjectDoesNotExist:
+    except EntityDoesNotExist:
         raise Http404("Asset does not exist")
 
     context = service.context
@@ -44,7 +44,7 @@ def database_details(urn):
 def dataset_details(urn):
     try:
         service = DatasetDetailsService(urn)
-    except ObjectDoesNotExist:
+    except EntityDoesNotExist:
         raise Http404("Asset does not exist")
 
     context = service.context
@@ -55,7 +55,7 @@ def dataset_details(urn):
 def chart_details(urn):
     try:
         service = ChartDetailsService(urn)
-    except ObjectDoesNotExist:
+    except EntityDoesNotExist:
         raise Http404("Asset does not exist")
 
     context = service.context
