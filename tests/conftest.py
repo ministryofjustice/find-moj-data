@@ -18,7 +18,6 @@ from faker import Faker
 
 from home.forms.search import SearchForm
 from home.service.details import DatabaseDetailsService
-from home.service.glossary import GlossaryService
 from home.service.search import SearchService
 
 fake = Faker()
