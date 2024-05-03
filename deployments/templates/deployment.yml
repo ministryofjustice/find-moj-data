@@ -32,6 +32,8 @@ spec:
               value: "${DJANGO_ALLOWED_HOSTS}"
             - name: DJANGO_LOG_LEVEL
               value: "${DJANGO_LOG_LEVEL}"
+            - name: SENTRY_DSN
+              value: "${SENTRY_DSN}"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
