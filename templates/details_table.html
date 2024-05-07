@@ -11,7 +11,7 @@
       </li>
       {% if parent_entity %}
         <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.id %}">{{parent_entity.name}}</a>
+          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.urn %}">{{parent_entity.name}}</a>
         </li>
       {% endif %}
       <li class="govuk-breadcrumbs__list-item">
