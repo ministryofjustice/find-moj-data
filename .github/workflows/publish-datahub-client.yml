@@ -44,4 +44,4 @@ jobs:
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
         with:
-          packages-dir: python-libraries/data-platform-catalogue/dist
+          packages-dir: lib/datahub-client/dist
