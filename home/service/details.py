@@ -5,54 +5,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from .base import GenericService
 
 
-class DataProductDetailsService(GenericService):
-    def __init__(self, urn: str):
-        self.urn = urn
-        self.client = self._get_catalogue_client()
-
-        filter_value = [MultiSelectFilter("urn", [urn])]
-        search_results = self.client.search(query="", page=None, filters=filter_value)
-
-        if not search_results.page_results:
-            raise ObjectDoesNotExist(urn)
-
-        self.result = search_results.page_results[0]
-        self.assets_in_data_product = self._get_data_product_entities()
-        self.context = self._get_context()
-
-    def _get_data_product_entities(self):
-        # we might want to implement pagination for data product children
-        # details at some point
-        data_product_search = self.client.list_data_product_assets(
-            urn=self.urn, count=500
-        ).page_results
-
-        assets_in_data_product = []
-        for result in data_product_search:
-            assets_in_data_product.append(
-                {
-                    "name": result.name,
-                    "urn": result.id,
-                    "description": result.description,
-                    "type": "TABLE",
-                }
-            )
-
-        assets_in_data_product = sorted(assets_in_data_product, key=lambda d: d["name"])
-
-        return assets_in_data_product
-
-    def _get_context(self):
-        context = {
-            "result": self.result,
-            "result_type": "Data product",
-            "tables": self.assets_in_data_product,
-            "h1_value": "Details",
-        }
-
-        return context
-
-
 class DatabaseDetailsService(GenericService):
     def __init__(self, urn: str):
         self.urn = urn
@@ -69,7 +21,7 @@ class DatabaseDetailsService(GenericService):
         self.context = self._get_context()
 
     def _get_database_entities(self):
-        # we might want to implement pagination for data product children
+        # we might want to implement pagination for database children
         # details at some point
         database_search = self.client.list_database_tables(
             urn=self.urn, count=500
@@ -80,7 +32,7 @@ class DatabaseDetailsService(GenericService):
             entities_in_database.append(
                 {
                     "name": result.name,
-                    "urn": result.id,
+                    "urn": result.urn,
                     "description": result.description,
                     "type": "TABLE",
                 }
@@ -122,11 +74,7 @@ class DatasetDetailsService(GenericService):
             # v0.12, assigning to multiple data products is not possible and we don't
             # have datasets with multiple parent containers.
             self.parent_entity = parents[0]
-            self.dataset_parent_type = (
-                ResultType.DATABASE.name.lower()
-                if "container" in self.parent_entity.id.split(":")
-                else ResultType.DATA_PRODUCT.name.lower()
-            )
+            self.dataset_parent_type = ResultType.DATABASE.name.lower()
         else:
             self.parent_entity = None
             self.dataset_parent_type = None

@@ -9,7 +9,7 @@ urlpatterns = [
     path("search", views.search_view, name="search"),
     path("glossary", views.glossary_view, name="glossary"),
     path(
-        "details/<str:result_type>/<str:id>",
+        "details/<str:result_type>/<str:urn>",
         views.details_view,
         name="details",
     ),
