@@ -39,8 +39,7 @@ class Column(BaseModel):
     """
 
     name: str = Field(
-        pattern=r"^[\w.]+$",
-        description="The name of a column as it appears in the table.",
+        description="The column name or dotted path that identifies the column within the schema. This uses Datahub's FieldPath encoding scheme, and may include type and versioning information.",
     )
     display_name: str = Field(description="A user-friendly version of the name")
     type: str = Field(

@@ -335,7 +335,7 @@ class DataHubCatalogueClient:
             platformSchema=OtherSchemaClass(rawSchema=""),
             fields=[
                 SchemaFieldClass(
-                    fieldPath=f"{column.name}",
+                    fieldPath=f"{column.display_name}",
                     type=SchemaFieldDataTypeClass(
                         type=DATAHUB_DATA_TYPE_MAPPING[column.type]  # type: ignore
                     ),
