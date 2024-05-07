@@ -26,6 +26,7 @@ class TestSearch:
         table_details_page,
         glossary_page,
         chromedriver_path,
+        axe_version,
         page_titles,
     ):
         self.selenium = selenium
@@ -37,6 +38,7 @@ class TestSearch:
         self.glossary_page = glossary_page
         self.chromedriver_path = chromedriver_path
         self.page_titles = page_titles
+        self.axe_version = axe_version
 
     def verify_glossary_link_from_homepage_works(self):
         self.start_on_the_home_page()
@@ -177,13 +179,17 @@ class TestSearch:
     def test_automated_accessibility_home(self):
         self.start_on_the_home_page()
         check_for_accessibility_issues(
-            self.selenium.current_url, chromedriver_path=self.chromedriver_path
+            self.selenium.current_url,
+            chromedriver_path=self.chromedriver_path,
+            axe_version=self.axe_version,
         )
 
     def test_automated_accessibility_search(self):
         self.start_on_the_search_page()
         check_for_accessibility_issues(
-            self.selenium.current_url, chromedriver_path=self.chromedriver_path
+            self.selenium.current_url,
+            chromedriver_path=self.chromedriver_path,
+            axe_version=self.axe_version,
         )
 
     def test_search_to_details(self, mock_catalogue):
