@@ -21,13 +21,6 @@ mark {
     margin-bottom: govuk-spacing(3) !important;
 }
 
-// Workaround to stop the a:focus selector from setting this to none
-// When govuk-global-styles is enabled in the design system
-a.govuk-skip-link:focus {
-    text-decoration: underline;
-}
-
-
 .column-description {
     @include govuk-media-query($from: desktop) {
         max-width: $govuk-page-width / 2;
