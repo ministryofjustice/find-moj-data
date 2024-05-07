@@ -10,7 +10,7 @@ max-line-length = 120
 
 [tool.poetry]
 name = "ministryofjustice-data-platform-catalogue"
-version = "1.0.0"
+version = "1.0.1"
 description = "Wrapper around Datahub supporting custom properties for the Find MOJ Data service."
 authors = ["MoJ Data Platform Team <data-platform-tech@digital.justice.gov.uk>"]
 license = "MIT"
