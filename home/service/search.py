@@ -195,7 +195,7 @@ class SearchService(GenericService):
             )
             for result in highlighted_results.page_results:
                 result.description = self._add_mark_tags(
-                    result.description, query_word_highlighting_pattern
+                    result.description or "", query_word_highlighting_pattern
                 )
             return highlighted_results
 
