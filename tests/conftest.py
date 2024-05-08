@@ -18,7 +18,6 @@ from faker import Faker
 
 from home.forms.search import SearchForm
 from home.service.details import DatabaseDetailsService
-from home.service.glossary import GlossaryService
 from home.service.search import SearchService
 
 fake = Faker()
@@ -26,11 +25,17 @@ fake = Faker()
 
 def pytest_addoption(parser):
     parser.addoption("--chromedriver-path", action="store")
+    parser.addoption("--axe-version", action="store")
 
 
 @pytest.fixture
 def chromedriver_path(request):
     return request.config.getoption("--chromedriver-path")
+
+
+@pytest.fixture
+def axe_version(request):
+    return request.config.getoption("--axe-version") or "latest"
 
 
 def generate_search_result(

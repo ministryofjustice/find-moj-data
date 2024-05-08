@@ -11,7 +11,7 @@
       </li>
       {% if parent_entity %}
         <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.id %}">{{parent_entity.name}}</a>
+          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.urn %}">{{parent_entity.name}}</a>
         </li>
       {% endif %}
       <li class="govuk-breadcrumbs__list-item">
@@ -89,7 +89,7 @@
           <tbody class="govuk-table__body">
             {% for column in table.column_details %}
               <tr class="govuk-table__row">
-                <td class="govuk-table__cell">{{column.name}}</td>
+                <td class="govuk-table__cell">{{column.display_name}}</td>
                 <td class="govuk-table__cell column-description">{{column.description|default:''|markdown:3|truncatechars_html:300}}</td>
                 <td class="govuk-table__cell">{{column.type|title}}</td>
                 <td class="govuk-table__cell">{{column.nullable|yesno|upper}}</td>

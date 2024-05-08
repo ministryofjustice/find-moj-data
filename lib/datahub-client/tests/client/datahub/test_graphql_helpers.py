@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+import pytest
 from data_platform_catalogue.client.graphql_helpers import (
     parse_columns,
     parse_created_and_modified,
@@ -199,16 +200,41 @@ def test_parse_relations_blank():
     assert result == {RelationshipType.PARENT: []}
 
 
-def test_parse_created_and_modified():
+@pytest.mark.parametrize(
+    "raw_created,raw_last_modified,expected_created,expected_modified",
+    [
+        (
+            1710426920000,
+            {"time": 1710426921000, "actor": "Shakira"},
+            datetime(2024, 3, 14, 14, 35, 20, tzinfo=timezone.utc),
+            datetime(2024, 3, 14, 14, 35, 21, tzinfo=timezone.utc),
+        ),
+        (
+            0,
+            {"time": 0, "actor": "Shakira"},
+            None,
+            None,
+        ),
+        (
+            None,
+            None,
+            None,
+            None,
+        ),
+    ],
+)
+def test_parse_created_and_modified(
+    raw_created, raw_last_modified, expected_created, expected_modified
+):
     properties = {
-        "created": 1710426920000,
-        "lastModified": {"time": 1710426921000, "actor": "Shakira"},
+        "created": raw_created,
+        "lastModified": raw_last_modified,
     }
 
     created, modified = parse_created_and_modified(properties)
 
-    assert created == datetime(2024, 3, 14, 14, 35, 20, tzinfo=timezone.utc)
-    assert modified == datetime(2024, 3, 14, 14, 35, 21, tzinfo=timezone.utc)
+    assert created == expected_created
+    assert modified == expected_modified
 
 
 def test_parse_properties():
