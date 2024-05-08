@@ -140,6 +140,7 @@ DATABASES = {
 SERVICE_NAME = "Find MOJ Data"
 GOV_UK_SUFFIX = "GOV.UK"
 
+MAX_RESULTS = 10_000
 
 LOGGING = {
     "version": 1,  # the dictConfig format version

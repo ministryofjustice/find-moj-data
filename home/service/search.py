@@ -8,6 +8,7 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SortOption,
 )
+from django.conf import settings
 from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
@@ -157,6 +158,10 @@ class SearchService(GenericService):
         }
 
     def _get_context(self) -> dict[str, Any]:
+        if self.results.total_results >= settings.MAX_RESULTS:
+            total_results = f"{settings.MAX_RESULTS}+"
+        else:
+            total_results = str(self.results.total_results)
 
         context = {
             "form": self.form,
@@ -167,8 +172,9 @@ class SearchService(GenericService):
             "page_range": self.paginator.get_elided_page_range(
                 self.page, on_each_side=2, on_ends=1
             ),
+            "number_of_words": len(self.form.cleaned_data["query"].split()),
             "paginator": self.paginator,
-            "total_results": self.results.total_results,
+            "total_results": total_results,
             "label_clear_href": self._generate_label_clear_ref(),
             "readable_match_reasons": self._get_match_reason_display_names(),
         }
