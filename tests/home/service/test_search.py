@@ -19,7 +19,7 @@ class TestSearchService:
 
     def test_get_context_search_result(self, mock_catalogue, search_context):
         assert search_context["results"] == mock_catalogue.search().page_results
-        assert search_context["total_results"] == 100
+        assert search_context["total_results"] == "100"
 
     def test_get_context_paginator(self, search_context):
         assert search_context["page_obj"].number == 1

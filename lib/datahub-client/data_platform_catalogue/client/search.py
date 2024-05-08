@@ -137,7 +137,10 @@ class SearchClient:
             name = field.get("name")
             value = field.get("value")
             if name == "customProperties" and value != "":
-                name, value = value.split("=")
+                try:
+                    name, value = value.split("=")
+                except ValueError:
+                    continue
             matched_fields[name] = value
         return matched_fields
 
