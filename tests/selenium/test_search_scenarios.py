@@ -252,7 +252,7 @@ class TestSearch:
 
     def verify_i_have_results(self):
         result_count = self.search_page.result_count().text
-        assert re.match(r"[1-9]\d* Results", result_count)
+        assert re.match(r"[1-9]\d* results", result_count)
 
     def click_on_the_first_result(self):
         first_result = self.search_page.first_search_result()
