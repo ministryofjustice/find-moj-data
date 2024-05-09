@@ -37,35 +37,9 @@
           Description
         </h3>
         <div class="govuk-body">
-          {{table.description|markdown:3}}
+          No description available.
         </div>
-        <ul class="govuk-list govuk-body" id="metadata-property-list">
-          <li>
-            <span class="govuk-!-font-weight-bold">Last updated date:</span>
-            {% if table.last_modified %}
-              {{table.last_modified | date:"jS F Y"}} ({{table.last_modified|naturaltime}})
-            {% endif %}
-          </li>
-          <li>
-            <span class="govuk-!-font-weight-bold">Retention period:</span>
-            {% if table.retention_period_in_days is None %}
-              Permanent
-            {% else %}
-              {{table.retention_period_in_days|intcomma}} days
-            {% endif %}
-          </li>
-          <li>
-            <span class="govuk-!-font-weight-bold">Refresh period:</span>
-          </li>
-          <li>
-            <span class="govuk-!-font-weight-bold">Domain:</span>
-            {{table.domain.display_name}}
-          </li>
-          <li>
-            <span class="govuk-!-font-weight-bold">Tags:</span>
-            {{table.tags | join:', '}}
-          </li>
-        </ul>
+        
       </div>
     </div>
     <div class="govuk-grid-column-one-third">

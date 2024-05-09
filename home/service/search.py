@@ -8,6 +8,7 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SortOption,
 )
+from django.conf import settings
 from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
@@ -39,6 +40,10 @@ class SearchService(GenericService):
         self.domain_model = DomainModel()
         self.stemmer = PorterStemmer()
         self.form = form
+        if self.form.is_bound:
+            self.form_data = self.form.cleaned_data
+        else:
+            self.form_data = {}
         self.page = page
         self.client = self._get_catalogue_client()
         self.results = self._get_search_results(page, items_per_page)
@@ -64,10 +69,7 @@ class SearchService(GenericService):
         return chosen_entities if chosen_entities else default_entities
 
     def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
-        if self.form.is_bound:
-            form_data = self.form.cleaned_data
-        else:
-            form_data = {}
+        form_data = self.form_data
 
         query = form_data.get("query", "")
         sort = form_data.get("sort", "relevance")
@@ -157,6 +159,10 @@ class SearchService(GenericService):
         }
 
     def _get_context(self) -> dict[str, Any]:
+        if self.results.total_results >= settings.MAX_RESULTS:
+            total_results = f"{settings.MAX_RESULTS}+"
+        else:
+            total_results = str(self.results.total_results)
 
         context = {
             "form": self.form,
@@ -167,8 +173,9 @@ class SearchService(GenericService):
             "page_range": self.paginator.get_elided_page_range(
                 self.page, on_each_side=2, on_ends=1
             ),
+            "number_of_words": len(self.form_data.get("query", "").split()),
             "paginator": self.paginator,
-            "total_results": self.results.total_results,
+            "total_results": total_results,
             "label_clear_href": self._generate_label_clear_ref(),
             "readable_match_reasons": self._get_match_reason_display_names(),
         }
@@ -189,7 +196,7 @@ class SearchService(GenericService):
             )
             for result in highlighted_results.page_results:
                 result.description = self._add_mark_tags(
-                    result.description, query_word_highlighting_pattern
+                    result.description or "", query_word_highlighting_pattern
                 )
             return highlighted_results
 
