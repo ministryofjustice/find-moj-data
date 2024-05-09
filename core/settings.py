@@ -159,11 +159,11 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": os.getenv("DJANGO_LOG_LEVEL", "DEBUG"),
+        "level": os.environ.get("DJANGO_LOG_LEVEL", "DEBUG"),
     },
     "loggers": {
         "django": {
-            "level": os.getenv("DJANGO_LOG_LEVEL", "DEBUG"),
+            "level": os.environ.get("DJANGO_LOG_LEVEL", "DEBUG"),
             "handlers": ["console"],
             "propagate": False,
         },
@@ -173,6 +173,7 @@ LOGGING = {
 # Sentry Configuration
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
+    enable_tracing=True,
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
     traces_sample_rate=1.0,
