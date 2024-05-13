@@ -42,6 +42,28 @@ jobs:
         if: steps.cache-deps.outputs.cache-hit != 'true'
       - run: poetry install --no-interaction
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "21"
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        id: install_dependencies
+        run: npm install
+
       - name: run unit tests with coverage
         id: fast-tests
         run: poetry run pytest --cov -m 'not slow' --doctest-modules
