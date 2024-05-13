@@ -6,6 +6,8 @@ import sentry_sdk
 import yaml
 from dotenv import load_dotenv
 
+TRUTHY_VALUES = ["True", "true", "T", "1"]
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,7 +20,7 @@ SECRET_KEY = str(os.environ.get("SECRET_KEY"))
 # SECURITY WARNING: don't run with debug turned on in production!
 # os.environ returns string values for env vars
 DEBUG_STR: str = os.environ.get("DEBUG", default="0")
-DEBUG: bool = DEBUG_STR in ["True", "true", "T", "1"]
+DEBUG: bool = DEBUG_STR in TRUTHY_VALUES
 
 ALLOWED_HOSTS = str(os.environ.get("DJANGO_ALLOWED_HOSTS")).split(" ")
 
@@ -59,6 +61,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "core.context_processors.env",
+                "core.context_processors.analytics",
             ],
         },
     },
@@ -170,6 +173,11 @@ LOGGING = {
         },
     },
 }
+
+ANALYTICS_ID: str = os.environ.get("ANALYTICS_ID", "")
+ENABLE_ANALYTICS: bool = (
+    os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES
+) and ANALYTICS_ID != ""
 
 # Sentry Configuration
 sentry_sdk.init(
