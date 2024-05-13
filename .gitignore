@@ -163,7 +163,7 @@ cython_debug/
 
 #static files dirs
 staticfiles/
-/static
+static/
 !/static/assets/js/enhanced-glossary.js
 !/static/assets/js/enhanced-search.js
 
