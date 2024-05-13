@@ -6,7 +6,7 @@
     "axe": "^12.2.6",
     "govuk-frontend": "^5.3.1",
     "jest-environment-jsdom": "^29.7.0",
-    "sass": "^1.77.0"
+    "sass": "^1.77.1"
   },
   "scripts": {
     "dependencies": "bash scripts/import-static.sh",
