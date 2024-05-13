@@ -64,6 +64,8 @@ jobs:
         id: install_dependencies
         run: npm install
 
+      - run: ls static/assets
+
       - name: run unit tests with coverage
         id: fast-tests
         run: poetry run pytest --cov -m 'not slow' --doctest-modules
