@@ -47,11 +47,22 @@ jobs:
         with:
           node-version: "21"
 
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
         id: install_dependencies
         run: npm install
-
-      - run: find static
 
       - name: collect static files
         run: poetry run python manage.py collectstatic --no-input
