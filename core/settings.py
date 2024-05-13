@@ -98,9 +98,9 @@ TIME_ZONE = "Europe/London"
 USE_I18N = False
 USE_TZ = True
 
-
 # https://whitenoise.readthedocs.io/en/latest/django.html#WHITENOISE_STATIC_PREFIX
 STATIC_URL = "/static/"
+FRONTEND_STATIC_BASE_URL = STATIC_URL
 # https://whitenoise.readthedocs.io/en/latest/django.html#make-sure-staticfiles-is-configured-correctly
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
