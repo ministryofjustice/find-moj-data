@@ -100,10 +100,9 @@ USE_TZ = True
 
 # https://whitenoise.readthedocs.io/en/latest/django.html#WHITENOISE_STATIC_PREFIX
 STATIC_URL = "/static/"
-FRONTEND_STATIC_BASE_URL = STATIC_URL
 # https://whitenoise.readthedocs.io/en/latest/django.html#make-sure-staticfiles-is-configured-correctly
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = 'home.utils.storage.NonstrictManifestStaticFilesStorage'
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
