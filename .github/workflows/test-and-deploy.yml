@@ -42,10 +42,19 @@ jobs:
         if: steps.cache-deps.outputs.cache-hit != 'true'
       - run: poetry install --no-interaction
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "21"
+
+      - name: Install dependencies
+        id: install_dependencies
+        run: npm install
+
+      - run: find static
+
       - name: collect static files
         run: poetry run python manage.py collectstatic --no-input
-
-      - run: find static && find staticfiles
 
       - name: run unit tests with coverage
         id: fast-tests
