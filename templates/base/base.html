@@ -18,14 +18,14 @@
       <div class="govuk-phase-banner" role="region">
         <p class="govuk-phase-banner__content">
           <strong class="govuk-tag govuk-phase-banner__content__tag">Alpha</strong>
-          {% if env == "dev" %}
-            <strong class="govuk-tag govuk-tag--yellow govuk-phase-banner__content__tag">{{ env|title }}</strong>
+          {% if ENV == "dev" %}
+            <strong class="govuk-tag govuk-tag--yellow govuk-phase-banner__content__tag">{{ ENV|title }}</strong>
           {% endif %}
-          {% if env == "test" %}
-            <strong class="govuk-tag govuk-tag--green govuk-phase-banner__content__tag">{{ env|title }}</strong>
+          {% if ENV == "test" %}
+            <strong class="govuk-tag govuk-tag--green govuk-phase-banner__content__tag">{{ ENV|title }}</strong>
           {% endif %}
-          {% if env == "preprod" %}
-            <strong class="govuk-tag govuk-tag--blue govuk-phase-banner__content__tag">{{ env|title }}</strong>
+          {% if ENV == "preprod" %}
+            <strong class="govuk-tag govuk-tag--blue govuk-phase-banner__content__tag">{{ ENV|title }}</strong>
           {% endif %}
       <!--<span class="govuk-phase-banner__text">
         This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
@@ -60,5 +60,9 @@
     </script>
     {% block scripts %}
     {% endblock scripts %}
+    {% if ENABLE_ANALYTICS %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_ID }}"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ ANALYTICS_ID }}');</script>
+    {% endif %}
   </body>
 </html>
