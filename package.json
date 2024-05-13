@@ -9,7 +9,7 @@
     "sass": "^1.77.0"
   },
   "scripts": {
-    "sass": "sass --load-path=. scss:static/assets/css",
+    "dependencies": "bash scripts/import-static.sh",
     "test": "jest"
   },
   "devDependencies": {
