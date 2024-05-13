@@ -162,6 +162,7 @@ cython_debug/
 .DS_Store
 
 #static files dirs
+staticfiles/
 /static
 !/static/assets/js/enhanced-glossary.js
 !/static/assets/js/enhanced-search.js
