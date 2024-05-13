@@ -165,7 +165,6 @@ cython_debug/
 /static
 !/static/assets/js/enhanced-glossary.js
 !/static/assets/js/enhanced-search.js
-# !static/assets/js/moj-frontend.min.js
 
 node_modules
 
