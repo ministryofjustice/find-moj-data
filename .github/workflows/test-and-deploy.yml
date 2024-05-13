@@ -45,6 +45,8 @@ jobs:
       - name: collect static files
         run: poetry run python manage.py collectstatic --no-input
 
+      - run: find static && find staticfiles
+
       - name: run unit tests with coverage
         id: fast-tests
         run: poetry run pytest --cov -m 'not slow' --doctest-modules
