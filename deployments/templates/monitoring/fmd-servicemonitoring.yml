@@ -1,7 +1,7 @@
   apiVersion: monitoring.coreos.com/v1
   kind: ServiceMonitor
   metadata:
-    name: find-moj-data-service
+    name: find-moj-data-service-mointor
   spec:
     selector:
       matchLabels:
