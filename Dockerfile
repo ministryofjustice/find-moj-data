@@ -37,10 +37,11 @@ WORKDIR /app
 ENV VIRTUAL_ENV=/app/.venv \
   PATH="/app/.venv/bin:$PATH"
 
+# copy project and dependencies
+COPY . .
+COPY --from=builder static/. static
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-# copy project
-COPY . .
 
 RUN python manage.py collectstatic --noinput
 
