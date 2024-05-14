@@ -1,3 +1,5 @@
+cd app
+
 cp -a node_modules/govuk-frontend/dist/govuk/assets/. static/assets \
     && cp -a node_modules/@ministryofjustice/frontend/moj/assets/images/. static/assets/images
 
