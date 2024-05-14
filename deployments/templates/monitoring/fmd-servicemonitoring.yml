@@ -7,5 +7,5 @@
       matchLabels:
         app: find-moj-data
     endpoints:
-    - port: metrics
+    - port: http
       interval: 15s
