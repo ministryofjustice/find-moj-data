@@ -7,6 +7,6 @@ spec:
     app: find-moj-data # this should match the pod label in deployment.yml
   ports:
     - name: http
-      port: 8000
+      port: 80
       targetPort: 8000
       protocol: TCP
