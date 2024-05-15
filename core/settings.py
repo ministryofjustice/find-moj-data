@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "azure_auth",
     "home.apps.HomeConfig",
     "django_prometheus",
 ]
@@ -201,3 +202,16 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
     environment=ENV or "local",
 )
+
+AZURE_AUTH = {
+    "CLIENT_ID": os.environ.get("CLIENT_ID"),
+    "CLIENT_SECRET": os.environ.get("CLIENT_SECRET"),
+    "REDIRECT_URI": "http://localhost:8000/azure_auth/callback",
+    "SCOPES": ["User.Read"],
+    "AUTHORITY": os.environ.get("AUTHORITY"),
+    "LOGOUT_URI": "https://localhost:8000/logout",
+}
+LOGIN_URL = "/azure_auth/login"
+LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
+
+AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)

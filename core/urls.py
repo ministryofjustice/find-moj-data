@@ -25,6 +25,10 @@ def trigger_error(request):
 
 urlpatterns = [
     path("admin/", view=admin.site.urls),
+    path(
+        "azure_auth/",
+        include("azure_auth.urls"),
+    ),
     path("sentry-debug/", trigger_error),
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
