@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "^5.0.6"
+django-prometheus = "^2.3.1"
 pyyaml = "^6.0.1"
 gunicorn = "^22.0.0"
 whitenoise = "^6.6.0"

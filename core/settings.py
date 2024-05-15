@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from socket import gethostbyname, gethostname
 
 import sentry_sdk
 import yaml
@@ -23,6 +24,7 @@ DEBUG_STR: str = os.environ.get("DEBUG", default="0")
 DEBUG: bool = DEBUG_STR in TRUTHY_VALUES
 
 ALLOWED_HOSTS = str(os.environ.get("DJANGO_ALLOWED_HOSTS")).split(" ")
+ALLOWED_HOSTS.append(gethostbyname(gethostname()))
 
 # Application definition
 INSTALLED_APPS = [
@@ -34,9 +36,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "home.apps.HomeConfig",
+    "django_prometheus",
 ]
 
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -45,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"

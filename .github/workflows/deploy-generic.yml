@@ -96,6 +96,8 @@ jobs:
           cat deployments/templates/ingress.yml | envsubst > deployments/ingress.yml
           cat deployments/templates/service.yml | envsubst > deployments/service.yml
           cat deployments/templates/secrets.yml | envsubst > deployments/secrets.yml
+          cat deployments/templates/monitoring/fmd-servicemonitor.yml | envsubst > deployments/servicemonitor.yml
+          cat deployments/templates/monitoring/fmd-networkpolicy.yml | envsubst > deployments/networkpolicy.yml
 
       - name: Configure Kubernetes cluster
         id: configure-kubernetes-cluster
