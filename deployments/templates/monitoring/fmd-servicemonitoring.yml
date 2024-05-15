@@ -1,12 +1,12 @@
   apiVersion: monitoring.coreos.com/v1
   kind: ServiceMonitor
   metadata:
-    name: find-moj-data-service-mointor
+    name: find-moj-data-service-monitor
   spec:
     selector:
       matchLabels:
         app: find-moj-data
     endpoints:
     - port: http
-      path: metrics
+      path: /metrics
       interval: 15s

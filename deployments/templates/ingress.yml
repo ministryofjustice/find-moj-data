@@ -22,12 +22,3 @@ spec:
                 name: find-moj-data-service # this should match the metadata.name in service.yml
                 port:
                   number: 80
-      metrics:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: find-moj-data-service # this should match the metadata.name in service.yml
-                port:
-                  number: 8080
