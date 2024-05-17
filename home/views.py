@@ -21,6 +21,7 @@ def home_view(request):
     return render(request, "home.html", context)
 
 
+@azure_auth_required
 def details_view(request, result_type, urn):
     if result_type == "table":
         context = dataset_details(urn)
@@ -33,6 +34,7 @@ def details_view(request, result_type, urn):
         return render(request, "details_chart.html", context)
 
 
+@azure_auth_required
 def database_details(urn):
     try:
         service = DatabaseDetailsService(urn)
@@ -44,6 +46,7 @@ def database_details(urn):
     return context
 
 
+@azure_auth_required
 def dataset_details(urn):
     try:
         service = DatasetDetailsService(urn)
@@ -55,6 +58,7 @@ def dataset_details(urn):
     return context
 
 
+@azure_auth_required
 def chart_details(urn):
     try:
         service = ChartDetailsService(urn)
@@ -66,6 +70,7 @@ def chart_details(urn):
     return context
 
 
+@azure_auth_required
 def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
     request.session["last_search"] = ""
@@ -83,6 +88,7 @@ def search_view(request, page: str = "1"):
     return render(request, "search.html", search_service.context)
 
 
+@azure_auth_required
 def glossary_view(request):
     glossary_service = GlossaryService()
     return render(request, "glossary.html", glossary_service.context)
