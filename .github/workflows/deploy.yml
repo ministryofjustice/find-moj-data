@@ -19,6 +19,7 @@ jobs:
       ecr_role_to_assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+      slack_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
 
   test:
     uses: "./.github/workflows/deploy-generic.yml"
@@ -35,6 +36,7 @@ jobs:
       ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+      slack_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
 
   preprod:
     uses: "./.github/workflows/deploy-generic.yml"
@@ -51,3 +53,4 @@ jobs:
       ecr_role_to_assume: ${{ secrets.PREPROD_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+      slack_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
