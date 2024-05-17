@@ -141,7 +141,7 @@ CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
 ENV = os.environ.get("ENV")
 
 # session
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+# SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 # Not actually used - Just required for LiveServerTestCase
 DATABASES = {
