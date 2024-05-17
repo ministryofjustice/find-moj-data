@@ -37,9 +37,12 @@
           Description
         </h3>
         <div class="govuk-body">
-          No description available.
+          {% if table.description %}
+            {{table.description}}
+          {% else %}
+            No description available.
+          {% endif %}
         </div>
-
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
