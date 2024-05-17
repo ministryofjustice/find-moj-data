@@ -94,7 +94,7 @@ jobs:
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
         run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
           cat deployments/templates/ingress.yml | envsubst > deployments/ingress.yml
