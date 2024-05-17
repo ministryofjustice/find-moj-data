@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "azure_auth",
     "home.apps.HomeConfig",
     "django_prometheus",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -146,7 +147,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
+        "NAME": "db.sqlite3",
     }
 }
 # Define a service name setting for page titles
@@ -206,12 +207,13 @@ sentry_sdk.init(
 AZURE_AUTH = {
     "CLIENT_ID": os.environ.get("CLIENT_ID"),
     "CLIENT_SECRET": os.environ.get("CLIENT_SECRET"),
-    "REDIRECT_URI": "http://localhost:8000/azure_auth/callback",
+    "REDIRECT_URI": os.environ.get("REDIRECT_URI"),
     "SCOPES": ["User.Read"],
     "AUTHORITY": os.environ.get("AUTHORITY"),
     "LOGOUT_URI": "https://localhost:8000/logout",
 }
 LOGIN_URL = "/azure_auth/login"
-LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
+LOGIN_REDIRECT_URL = "/search"  # Or any other endpoint
 
 AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
+AUTH_USER_MODEL = "users.CustomUser"

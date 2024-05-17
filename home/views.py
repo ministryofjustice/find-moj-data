@@ -2,6 +2,8 @@ from data_platform_catalogue.client.exceptions import EntityDoesNotExist
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
+from azure_auth.decorators import azure_auth_required
+
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,
@@ -12,6 +14,7 @@ from home.service.glossary import GlossaryService
 from home.service.search import SearchService
 
 
+@azure_auth_required
 def home_view(request):
     context = {}
     context["h1_value"] = "Home"
