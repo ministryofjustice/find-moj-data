@@ -31,7 +31,7 @@
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Registered by:</dt>
             <dd class="govuk-summary-list__value">
-              {{result.metadata.maintainer_display_name}}
+              TBC
             </dd>
           </div>
           <div class="govuk-summary-list__row">
@@ -47,12 +47,12 @@
             </dd>
           </div>
           {% if result.matches %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Matched fields</dt>
-            <dd class="govuk-summary-list__value">
-              {{ result.matches|lookup:readable_match_reasons|join:", " }}
-            </dd>
-          </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Matched fields</dt>
+              <dd class="govuk-summary-list__value">
+                {{ result.matches|lookup:readable_match_reasons|join:", " }}
+              </dd>
+            </div>
           {% endif %}
         </dl>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
