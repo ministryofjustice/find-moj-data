@@ -37,7 +37,7 @@ on:
       catalogue_token:
         description: "token to authenticate with the catalogue"
         required: true
-      slack_webhook:
+      slack_alert_webhook:
         description: "used to post alerts to slack channel"
         required: true
 
@@ -94,7 +94,7 @@ jobs:
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_ALERT_WEBHOOK: ${{ secrets.SLACK_ALERT_WEBHOOK }}
         run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
           cat deployments/templates/ingress.yml | envsubst > deployments/ingress.yml
