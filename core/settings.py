@@ -130,11 +130,6 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
-SAMPLE_SEARCH_RESULTS_FILENAME = BASE_DIR / "sample_data/sample_search_page.yaml"
-
-with open(SAMPLE_SEARCH_RESULTS_FILENAME) as f:
-    SAMPLE_SEARCH_RESULTS = yaml.safe_load(f)
-
 # Catalog settings
 CATALOGUE_URL = os.environ.get("CATALOGUE_URL")
 CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
@@ -201,6 +196,7 @@ sentry_sdk.init(
     environment=ENV or "local",
 )
 
+# Azure auth configuration
 AZURE_AUTH = {
     "CLIENT_ID": os.environ.get("CLIENT_ID"),
     "CLIENT_SECRET": os.environ.get("CLIENT_SECRET"),
