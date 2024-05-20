@@ -14,11 +14,8 @@ from data_platform_catalogue.entities import (
     TagRef,
     Column,
     ColumnRef,
-    UsageRestrictions,
     EntityRef,
     CustomEntityProperties,
-    DataSummary,
-    AccessInformation,
 )
 from data_platform_catalogue.entities import (
     AccessInformation,
