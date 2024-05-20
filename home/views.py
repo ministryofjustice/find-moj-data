@@ -2,8 +2,6 @@ from data_platform_catalogue.client.exceptions import EntityDoesNotExist
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
-from azure_auth.decorators import azure_auth_required
-
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,
@@ -14,14 +12,12 @@ from home.service.glossary import GlossaryService
 from home.service.search import SearchService
 
 
-@azure_auth_required
 def home_view(request):
     context = {}
     context["h1_value"] = "Home"
     return render(request, "home.html", context)
 
 
-@azure_auth_required
 def details_view(request, result_type, urn):
     if result_type == "table":
         context = dataset_details(urn)
@@ -34,7 +30,6 @@ def details_view(request, result_type, urn):
         return render(request, "details_chart.html", context)
 
 
-@azure_auth_required
 def database_details(urn):
     try:
         service = DatabaseDetailsService(urn)
@@ -46,7 +41,6 @@ def database_details(urn):
     return context
 
 
-@azure_auth_required
 def dataset_details(urn):
     try:
         service = DatasetDetailsService(urn)
@@ -58,7 +52,6 @@ def dataset_details(urn):
     return context
 
 
-@azure_auth_required
 def chart_details(urn):
     try:
         service = ChartDetailsService(urn)
@@ -70,7 +63,6 @@ def chart_details(urn):
     return context
 
 
-@azure_auth_required
 def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
     request.session["last_search"] = ""
@@ -88,7 +80,6 @@ def search_view(request, page: str = "1"):
     return render(request, "search.html", search_service.context)
 
 
-@azure_auth_required
 def glossary_view(request):
     glossary_service = GlossaryService()
     return render(request, "glossary.html", glossary_service.context)

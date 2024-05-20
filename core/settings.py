@@ -140,10 +140,7 @@ CATALOGUE_URL = os.environ.get("CATALOGUE_URL")
 CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
 ENV = os.environ.get("ENV")
 
-# session
-# SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
-# Not actually used - Just required for LiveServerTestCase
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -216,4 +213,6 @@ LOGIN_URL = "/azure_auth/login"
 LOGIN_REDIRECT_URL = "/search"  # Or any other endpoint
 
 AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
+
+
 AUTH_USER_MODEL = "users.CustomUser"
