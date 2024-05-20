@@ -6,6 +6,21 @@ from unittest.mock import MagicMock, patch
 import pytest
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
+    RelationshipType,
+    Table,
+    DomainRef,
+    Governance,
+    OwnerRef,
+    TagRef,
+    Column,
+    ColumnRef,
+    UsageRestrictions,
+    EntityRef,
+    CustomEntityProperties,
+    DataSummary,
+    AccessInformation,
+)
+from data_platform_catalogue.entities import (
     AccessInformation,
     Column,
     ColumnRef,
@@ -27,6 +42,7 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
+from django.conf import settings
 from django.test import Client
 from faker import Faker
 
@@ -35,6 +51,11 @@ from home.service.details import DatabaseDetailsService
 from home.service.search import SearchService
 
 fake = Faker()
+
+
+@pytest.fixture(autouse=True, scope="session")
+def remove_azure_auth_middleware():
+    settings.MIDDLEWARE.remove("azure_auth.middleware.AzureMiddleware")
 
 
 def pytest_addoption(parser):

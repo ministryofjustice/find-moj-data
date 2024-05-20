@@ -1,7 +1,10 @@
 from data_platform_catalogue.search_types import SearchResponse
 from django.urls import reverse
 
+import pytest
 
+
+@pytest.mark.django_db
 class TestSearchView:
     """
     Test the view renders the correct context depending on query parameters and session
