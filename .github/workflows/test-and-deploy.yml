@@ -78,7 +78,7 @@ jobs:
       - name: run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: poetry run pytest -m 'slow' --axe-version 4.9.0
+        run: poetry run pytest tests/selenium --axe-version 4.9.0
 
   javascript:
     runs-on: ubuntu-latest
