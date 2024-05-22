@@ -1,0 +1,15 @@
+name: 'Check for Vulnerabilities'
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # every 6 hours
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kunalnagarco/action-cve@v1.12.36
+        with:
+          token: ${{ secrets.VULN_CHECK_PERSONAL_ACCESS_TOKEN }}
+          slack_webhook: ${{ secrets.VULN_CHECK_SLACK_WEBHOOK }}
+          severity: high,critical
