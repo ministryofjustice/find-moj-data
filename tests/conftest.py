@@ -59,7 +59,9 @@ def pytest_addoption(parser):
 
 @pytest.fixture(autouse=True, scope="session")
 def remove_azure_auth_middleware():
-    settings.MIDDLEWARE.remove("azure_auth.middleware.AzureMiddleware")
+    auth_middleware = "azure_auth.middleware.AzureMiddleware"
+    if auth_middleware in settings.MIDDLEWARE:
+        settings.MIDDLEWARE.remove(auth_middleware)
 
 
 @pytest.fixture

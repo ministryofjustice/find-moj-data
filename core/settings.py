@@ -199,7 +199,6 @@ sentry_sdk.init(
 
 # Enable / Disable Azure Auth
 if os.environ.get("AZURE_AUTH_ENABLED", "true") == "true":
-
     # Adds the Azure Authentication middleware to the Django Authentication middleware
     MIDDLEWARE.append(
         "azure_auth.middleware.AzureMiddleware",
