@@ -135,9 +135,7 @@ STATICFILES_FINDERS = (
 CATALOGUE_URL = os.environ.get("CATALOGUE_URL")
 CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
 
-
 ENV = os.environ.get("ENV")
-
 
 DATABASES = {
     "default": {
