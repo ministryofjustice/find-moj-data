@@ -98,6 +98,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "users.CustomUser"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -132,6 +134,8 @@ STATICFILES_FINDERS = (
 # Catalog settings
 CATALOGUE_URL = os.environ.get("CATALOGUE_URL")
 CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
+
+
 ENV = os.environ.get("ENV")
 
 
@@ -195,19 +199,23 @@ sentry_sdk.init(
     environment=ENV or "local",
 )
 
-# Azure auth configuration
-AZURE_AUTH = {
-    "CLIENT_ID": os.environ.get("CLIENT_ID"),
-    "CLIENT_SECRET": os.environ.get("CLIENT_SECRET"),
-    "REDIRECT_URI": os.environ.get("REDIRECT_URI"),
-    "SCOPES": ["User.Read"],
-    "AUTHORITY": os.environ.get("AUTHORITY"),
-    "LOGOUT_URI": "https://localhost:8000/logout",
-}
-LOGIN_URL = "/azure_auth/login"
-LOGIN_REDIRECT_URL = "/search"  # Or any other endpoint
+# Enable / Disable Azure Auth
+if os.environ.get("AZURE_AUTH_ENABLED", "true") == "true":
 
-AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
+    # Adds the Azure Authentication middleware to the Django Authentication middleware
+    MIDDLEWARE.append(
+        "azure_auth.middleware.AzureMiddleware",
+    )
 
+    # Azure auth configuration
+    AZURE_AUTH = {
+        "CLIENT_ID": os.environ.get("AZURE_CLIENT_ID"),
+        "CLIENT_SECRET": os.environ.get("AZURE_CLIENT_SECRET"),
+        "REDIRECT_URI": os.environ.get("AZURE_REDIRECT_URI"),
+        "SCOPES": ["User.Read"],
+        "AUTHORITY": os.environ.get("AZURE_AUTHORITY"),
+    }
+    LOGIN_URL = "/azure_auth/login"
+    LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
 
-AUTH_USER_MODEL = "users.CustomUser"
+    AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
