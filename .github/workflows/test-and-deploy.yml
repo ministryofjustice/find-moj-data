@@ -126,3 +126,4 @@ jobs:
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+      azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
