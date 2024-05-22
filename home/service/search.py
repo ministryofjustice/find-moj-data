@@ -71,7 +71,8 @@ class SearchService(GenericService):
     def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
         form_data = self.form_data
 
-        query = form_data.get("query", "")
+        # Workaround for https://github.com/datahub-project/datahub/issues/10505
+        query = form_data.get("query", "").replace("_", " ")
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         subdomain = form_data.get("subdomain", "")

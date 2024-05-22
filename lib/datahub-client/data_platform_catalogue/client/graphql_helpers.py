@@ -16,6 +16,8 @@ from data_platform_catalogue.entities import (
     UsageRestrictions,
 )
 
+PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
+
 
 def parse_owner(entity: dict[str, Any]) -> OwnerRef:
     """
@@ -93,6 +95,13 @@ def parse_properties(
     properties = entity["properties"] or {}
     editable_properties = entity.get("editableProperties") or {}
     properties.update(editable_properties)
+
+    for key in PROPERTIES_EMPTY_STRING_FIELDS:
+        try:
+            properties[key] = properties[key] or ""
+        except KeyError:
+            pass
+
     custom_properties_dict = {
         i["key"]: i["value"] or "" for i in properties.get("customProperties", [])
     }

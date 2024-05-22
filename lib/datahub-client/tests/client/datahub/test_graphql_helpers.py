@@ -275,3 +275,46 @@ def test_parse_properties():
         ),
         data_summary=DataSummary(row_count=100),
     )
+
+
+def test_parse_properties_with_none_values():
+    entity = {
+        "properties": {
+            "customProperties": [
+                {"key": "dpia_required", "value": False},
+                {"key": "dpia_location", "value": ""},
+                {"key": "data_sensitivity_level", "value": "OFFICIAL"},
+                {"key": "where_to_access_dataset", "value": "analytical_platform"},
+                {"key": "source_dataset_name", "value": ""},
+                {"key": "s3_location", "value": "s3://databucket/"},
+                {"key": "row_count", "value": 100},
+                {"key": "Not_IN", "value": "dddd"},
+            ],
+            "name": "test",
+            "description": None,
+            "externalUrl": None,
+
+        },
+        "editableProperties": {"edit1": "q"},
+    }
+    properties, custom_properties = parse_properties(entity)
+
+    assert properties == {
+        "name": "test",
+        "description": "",
+        "edit1": "q",
+        "externalUrl": "",
+    }
+
+    assert custom_properties == CustomEntityProperties(
+        usage_restrictions=UsageRestrictions(
+            dpia_required=False,
+            dpia_location="",
+        ),
+        access_information=AccessInformation(
+            where_to_access_dataset="analytical_platform",
+            source_dataset_name="",
+            s3_location="s3://databucket/",
+        ),
+        data_summary=DataSummary(row_count=100),
+    )
