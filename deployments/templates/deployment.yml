@@ -38,6 +38,14 @@ spec:
               value: "${ENABLE_ANALYTICS}"
             - name: ANALYTICS_ID
               value: "${ANALYTICS_ID}"
+            - name: AZURE_AUTH_ENABLED
+              value: "${AZURE_AUTH_ENABLED}"
+            - name: AZURE_CLIENT_ID
+              value: "$AZURE_CLIENT_ID"
+            - name: AZURE_REDIRECT_URI
+              value: "$AZURE_REDIRECT_URI"
+            - name: AZURE_AUTHORITY
+              value: "$AZURE_AUTHORITY"      
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -48,3 +56,13 @@ spec:
                 secretKeyRef:
                   name: find-moj-data-secrets
                   key: catalogue-token
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: find-moj-data-secrets
+                  key: secret-key
+            - name: AZURE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: find-moj-data-secrets
+                  key: azure-client-secret
