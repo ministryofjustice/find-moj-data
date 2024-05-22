@@ -3,9 +3,8 @@ import sys
 from pathlib import Path
 from socket import gaierror, gethostbyname, gethostname
 
-import sentry_sdk
-import yaml
 from dotenv import load_dotenv
+import sentry_sdk
 
 TRUTHY_VALUES = ["True", "true", "T", "1"]
 
