@@ -16,7 +16,7 @@ markdown = "^3.5.2"
 python-dotenv = "^1.0.1"
 markdown-headdown = "^0.1.3"
 nltk = "^3.8.1"
-sentry-sdk = {extras = ["django"], version = "^2.0.1"}
+sentry-sdk = { extras = ["django"], version = "^2.0.1" }
 ministryofjustice-data-platform-catalogue = { path = "lib/datahub-client", develop = true }
 
 [tool.poetry.group.dev.dependencies]
@@ -38,7 +38,10 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
-markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "datahub: marks tests that query Datahub rather than mocking",
+]
 testpaths = ["tests", "lib/data_platform_catalogue/tests"]
 
 [tool.isort]

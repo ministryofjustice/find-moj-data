@@ -5,7 +5,21 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
-from data_platform_catalogue.entities import RelationshipType, Table, DomainRef, Governance, OwnerRef, TagRef, Column, ColumnRef, UsageRestrictions, EntityRef, CustomEntityProperties, DataSummary, AccessInformation
+from data_platform_catalogue.entities import (
+    AccessInformation,
+    Column,
+    ColumnRef,
+    CustomEntityProperties,
+    DataSummary,
+    DomainRef,
+    EntityRef,
+    Governance,
+    OwnerRef,
+    RelationshipType,
+    Table,
+    TagRef,
+    UsageRestrictions,
+)
 from data_platform_catalogue.search_types import (
     FacetOption,
     ResultType,
@@ -69,49 +83,47 @@ def generate_table_metadata(
     Generate a fake table metadata object
     """
     return Table(
-            urn="urn:li:table:fake",
-            display_name="Foo.Dataset",
-            name=name or fake.unique.name(),
-            fully_qualified_name="Foo.Dataset",
-            description=description or fake.paragraph(),
-            relationships=relations or {RelationshipType.PARENT: []},
-            domain=DomainRef(display_name="LAA", urn="LAA"),
-            governance=Governance(
-                data_owner=OwnerRef(
-                    display_name="", email="Contact email for the user", urn=""
-                ),
-                data_stewards=[
-                    OwnerRef(
-                        display_name="", email="Contact email for the user", urn=""
+        urn="urn:li:table:fake",
+        display_name="Foo.Dataset",
+        name=name or fake.unique.name(),
+        fully_qualified_name="Foo.Dataset",
+        description=description or fake.paragraph(),
+        relationships=relations or {RelationshipType.PARENT: []},
+        domain=DomainRef(display_name="LAA", urn="LAA"),
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
+            ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        created=None,
+        column_details=[
+            Column(
+                name="urn",
+                display_name="urn",
+                type="string",
+                description="The primary identifier for the dataset entity.",
+                nullable=False,
+                is_primary_key=True,
+                foreign_keys=[
+                    ColumnRef(
+                        name="urn",
+                        display_name="urn",
+                        table=EntityRef(
+                            urn="urn:li:dataset:(urn:li:dataPlatform:datahub,Dataset,PROD)",
+                            display_name="Dataset",
+                        ),
                     )
                 ],
             ),
-            tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
-            created=None,
-            column_details=[
-                Column(
-                    name="urn",
-                    display_name="urn",
-                    type="string",
-                    description="The primary identifier for the dataset entity.",
-                    nullable=False,
-                    is_primary_key=True,
-                    foreign_keys=[
-                        ColumnRef(
-                            name="urn",
-                            display_name="urn",
-                            table=EntityRef(
-                                urn="urn:li:dataset:(urn:li:dataPlatform:datahub,Dataset,PROD)",
-                                display_name="Dataset",
-                            ),
-                        )
-                    ],
-                ),
-            ],
-            platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
-            custom_properties=CustomEntityProperties(),
-        )
+        ],
+        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
+        custom_properties=CustomEntityProperties(),
+    )
 
 
 def generate_page(page_size=20, result_type: ResultType | None = None):
@@ -147,7 +159,11 @@ def client():
 
 
 @pytest.fixture(autouse=True)
-def mock_catalogue():
+def mock_catalogue(request):
+    if "datahub" in request.keywords:
+        yield None
+        return
+
     patcher = patch("home.service.base.GenericService._get_catalogue_client")
     mock_fn = patcher.start()
     mock_catalogue = MagicMock(spec=DataHubCatalogueClient)
@@ -178,39 +194,37 @@ def mock_list_database_tables_response(mock_catalogue, total_results, page_resul
 
 def mock_get_table_details_response(mock_catalogue):
     mock_catalogue.get_table_details.return_value = Table(
-            urn="urn:li:table:fake",
-            display_name="abc",
-            name="abc",
-            fully_qualified_name="abc",
-            description="abc",
-            relationships={},
-            domain=DomainRef(display_name="LAA", urn="LAA"),
-            governance=Governance(
-                data_owner=OwnerRef(
-                    display_name="", email="Contact email for the user", urn=""
-                ),
-                data_stewards=[
-                    OwnerRef(
-                        display_name="", email="Contact email for the user", urn=""
-                    )
-                ],
+        urn="urn:li:table:fake",
+        display_name="abc",
+        name="abc",
+        fully_qualified_name="abc",
+        description="abc",
+        relationships={},
+        domain=DomainRef(display_name="LAA", urn="LAA"),
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
             ),
-            tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
-            created=None,
-            column_details=[
-                Column(
-                    name="foo",
-                    display_name="foo",
-                    type="string",
-                    description="description **with markdown**",
-                    nullable=False,
-                    is_primary_key=True,
-                    foreign_keys=[]
-                ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
             ],
-            platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
-        )
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        created=None,
+        column_details=[
+            Column(
+                name="foo",
+                display_name="foo",
+                type="string",
+                description="description **with markdown**",
+                nullable=False,
+                is_primary_key=True,
+                foreign_keys=[],
+            ),
+        ],
+        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
+    )
 
 
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
