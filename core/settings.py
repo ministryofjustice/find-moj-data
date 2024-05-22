@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from socket import gethostbyname, gethostname
+from socket import gaierror, gethostbyname, gethostname
 
 import sentry_sdk
 import yaml
@@ -24,7 +24,11 @@ DEBUG_STR: str = os.environ.get("DEBUG", default="0")
 DEBUG: bool = DEBUG_STR in TRUTHY_VALUES
 
 ALLOWED_HOSTS = str(os.environ.get("DJANGO_ALLOWED_HOSTS")).split(" ")
-ALLOWED_HOSTS.append(gethostbyname(gethostname()))
+
+try:
+    ALLOWED_HOSTS.append(gethostbyname(gethostname()))
+except gaierror:
+    pass
 
 # Application definition
 INSTALLED_APPS = [

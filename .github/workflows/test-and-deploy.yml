@@ -69,7 +69,7 @@ jobs:
 
       - name: run unit tests with coverage
         id: fast-tests
-        run: poetry run pytest --cov -m 'not slow' --doctest-modules
+        run: poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
       - name: Prepare Selenium
         # https://github.com/marketplace/actions/setup-chromedriver
@@ -78,7 +78,7 @@ jobs:
       - name: run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: poetry run pytest -m 'slow' --axe-version 4.9.0
+        run: poetry run pytest tests/selenium --axe-version 4.9.0
 
   javascript:
     runs-on: ubuntu-latest
