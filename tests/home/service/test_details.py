@@ -1,10 +1,10 @@
 from data_platform_catalogue.entities import (
     Chart,
-    EntityRef,
-    RelationshipType,
-    Governance,
     DomainRef,
+    EntityRef,
+    Governance,
     OwnerRef,
+    RelationshipType,
 )
 from data_platform_catalogue.search_types import ResultType
 
@@ -64,7 +64,10 @@ class TestDatabaseDetailsService:
 class TestDetailsChartService:
     def test_get_context(self, mock_catalogue):
         chart_metadata = Chart(
+            urn="urn:li:chart:(justice-data,test)",
             name="test",
+            display_name="test",
+            fully_qualified_name="test",
             description="test",
             external_url="https://www.test.com",
             domain=DomainRef(urn="LAA", display_name="LAA"),
@@ -78,7 +81,7 @@ class TestDetailsChartService:
                     )
                 ],
             ),
-            platform=EntityRef(urn="", display_name="")
+            platform=EntityRef(urn="", display_name=""),
         )
         mock_catalogue.get_chart_details.return_value = chart_metadata
 

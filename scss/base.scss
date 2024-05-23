@@ -24,6 +24,7 @@ mark {
 .column-description {
     @include govuk-media-query($from: desktop) {
         max-width: $govuk-page-width / 2;
+        overflow-wrap: break-word;
     }
 }
 

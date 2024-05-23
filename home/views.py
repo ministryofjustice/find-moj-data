@@ -9,6 +9,7 @@ from home.service.details import (
     DatasetDetailsService,
 )
 from home.service.glossary import GlossaryService
+from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 
 
@@ -83,3 +84,10 @@ def search_view(request, page: str = "1"):
 def glossary_view(request):
     glossary_service = GlossaryService()
     return render(request, "glossary.html", glossary_service.context)
+
+
+def metadata_specification_view(request):
+    metadata_specification = MetadataSpecificationService()
+    return render(
+        request, "metadata_specification.html", metadata_specification.context
+    )

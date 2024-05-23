@@ -1,10 +1,10 @@
 from copy import deepcopy
 from urllib.parse import urlencode
 
+from data_platform_catalogue.search_types import ResultType
 from django import forms
 
 from .domain_model import Domain, DomainModel
-from data_platform_catalogue.search_types import ResultType
 
 
 def get_domain_choices() -> list[Domain]:
@@ -35,10 +35,13 @@ def get_where_to_access_choices():
 
 
 def get_entity_types():
-    return sorted([
-        (entity.name, entity.name.replace("_", " ").lower().title())
-        for entity in ResultType if entity.name != "GLOSSARY_TERM"
-    ])
+    return sorted(
+        [
+            (entity.name, entity.name.replace("_", " ").lower().title())
+            for entity in ResultType
+            if entity.name != "GLOSSARY_TERM"
+        ]
+    )
 
 
 class SelectWithOptionAttribute(forms.Select):
