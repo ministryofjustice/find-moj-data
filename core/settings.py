@@ -3,9 +3,8 @@ import sys
 from pathlib import Path
 from socket import gaierror, gethostbyname, gethostname
 
-import sentry_sdk
-import yaml
 from dotenv import load_dotenv
+import sentry_sdk
 
 TRUTHY_VALUES = ["True", "true", "T", "1"]
 
@@ -39,8 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "azure_auth",
     "home.apps.HomeConfig",
     "django_prometheus",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -53,7 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_prometheus.middleware.PrometheusAfterMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",  # This needs to be the last middleware in the list. Avoid appending to this list and rather insert into -1.
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -97,6 +98,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "users.CustomUser"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -128,24 +131,16 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
-SAMPLE_SEARCH_RESULTS_FILENAME = BASE_DIR / "sample_data/sample_search_page.yaml"
-
-with open(SAMPLE_SEARCH_RESULTS_FILENAME) as f:
-    SAMPLE_SEARCH_RESULTS = yaml.safe_load(f)
-
 # Catalog settings
 CATALOGUE_URL = os.environ.get("CATALOGUE_URL")
 CATALOGUE_TOKEN = os.environ.get("CATALOGUE_TOKEN")
+
 ENV = os.environ.get("ENV")
 
-# session
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-
-# Not actually used - Just required for LiveServerTestCase
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
+        "NAME": "db.sqlite3",
     }
 }
 # Define a service name setting for page titles
@@ -201,3 +196,24 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
     environment=ENV or "local",
 )
+
+# Enable / Disable Azure Auth
+if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
+    # Adds the Azure Authentication middleware to the Django Authentication middleware
+    MIDDLEWARE.insert(
+        -1,
+        "azure_auth.middleware.AzureMiddleware",
+    )
+
+    # Azure auth configuration
+    AZURE_AUTH = {
+        "CLIENT_ID": os.environ.get("AZURE_CLIENT_ID"),
+        "CLIENT_SECRET": os.environ.get("AZURE_CLIENT_SECRET"),
+        "REDIRECT_URI": os.environ.get("AZURE_REDIRECT_URI"),
+        "SCOPES": ["User.Read"],
+        "AUTHORITY": os.environ.get("AZURE_AUTHORITY"),
+    }
+    LOGIN_URL = "/azure_auth/login"
+    LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
+
+    AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)

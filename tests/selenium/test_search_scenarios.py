@@ -60,17 +60,12 @@ class TestSearch:
         Interacts with the filters on the left hand side
         """
         domain = "Prison"
-        # subdomain = None
-        # domain = "HMPPS"
-        # subdomain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
-        # self.select_subdomain(subdomain)
         self.click_apply_filters()
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
         self.verify_domain_selected(domain)
-        # self.verify_subdomain_selected(subdomain)
 
     def test_pagination(self):
         """
@@ -104,10 +99,8 @@ class TestSearch:
         interact with the search page.
         """
         domain = "Prison"
-        # subdomain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
-        # self.select_subdomain(subdomain)
         self.click_apply_filters()
         self.enter_a_query_and_submit("nomis")
         self.click_option("Ascending")
@@ -116,7 +109,6 @@ class TestSearch:
         self.verify_i_have_results()
         self.verify_the_search_bar_has_value("nomis")
         self.verify_domain_selected(domain)
-        # self.verify_subdomain_selected(subdomain)
         self.verify_sort_selected("Ascending")
 
     def test_adding_a_query_resets_pagination(self):

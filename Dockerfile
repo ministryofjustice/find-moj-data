@@ -44,6 +44,7 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 
 RUN python manage.py collectstatic --noinput
+RUN python manage.py migrate
 
 # Use a non-root user
 RUN addgroup --gid 31337 --system appuser \

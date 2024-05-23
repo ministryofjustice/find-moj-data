@@ -3,8 +3,22 @@ from random import choice
 from typing import Any
 from unittest.mock import MagicMock, patch
 
+from django.conf import settings
+
 import pytest
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
+from data_platform_catalogue.entities import (
+    RelationshipType,
+    Table,
+    DomainRef,
+    Governance,
+    OwnerRef,
+    TagRef,
+    Column,
+    ColumnRef,
+    EntityRef,
+    CustomEntityProperties,
+)
 from data_platform_catalogue.entities import (
     AccessInformation,
     Column,
@@ -27,6 +41,7 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
+
 from django.test import Client
 from faker import Faker
 
@@ -40,6 +55,13 @@ fake = Faker()
 def pytest_addoption(parser):
     parser.addoption("--chromedriver-path", action="store")
     parser.addoption("--axe-version", action="store")
+
+
+@pytest.fixture(autouse=True, scope="session")
+def remove_azure_auth_middleware():
+    auth_middleware = "azure_auth.middleware.AzureMiddleware"
+    if auth_middleware in settings.MIDDLEWARE:
+        settings.MIDDLEWARE.remove(auth_middleware)
 
 
 @pytest.fixture
