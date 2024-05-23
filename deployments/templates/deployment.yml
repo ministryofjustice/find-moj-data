@@ -56,11 +56,6 @@ spec:
                 secretKeyRef:
                   name: find-moj-data-secrets
                   key: catalogue-token
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: find-moj-data-secrets
-                  key: secret-key
             - name: AZURE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
