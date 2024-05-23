@@ -54,7 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_prometheus.middleware.PrometheusAfterMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",  # This needs to be the last middleware in the list. Avoid appending to this list and rather insert into -1.
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -200,7 +200,8 @@ sentry_sdk.init(
 # Enable / Disable Azure Auth
 if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
     # Adds the Azure Authentication middleware to the Django Authentication middleware
-    MIDDLEWARE.append(
+    MIDDLEWARE.insert(
+        -1,
         "azure_auth.middleware.AzureMiddleware",
     )
 
