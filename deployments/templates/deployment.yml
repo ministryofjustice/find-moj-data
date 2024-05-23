@@ -45,7 +45,7 @@ spec:
             - name: AZURE_REDIRECT_URI
               value: "$AZURE_REDIRECT_URI"
             - name: AZURE_AUTHORITY
-              value: "$AZURE_AUTHORITY"
+              value: "$AZURE_AUTHORITY"      
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:

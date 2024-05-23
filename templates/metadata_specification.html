@@ -1,0 +1,54 @@
+{% extends "base/base.html" %}
+{% load markdown %}
+{% load static %}
+{% load format_metadata_field_type %}
+
+{% block content %}
+
+<h1 class="govuk-heading-l">{{h1_value}}</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
+        <ul class="govuk-list">
+            {% for entity, schema_json in entities.items %}
+                <li class="term-group">
+                    <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ entity }}">
+                        <strong>{{ schema_json.title }}</strong>
+                    </a></div>
+                </li>
+            {%endfor%}
+        </ul>
+    </div>
+    <div class="govuk-grid-column-three-quarters" id="metadata-content">
+        <p class="govuk-body">
+            These classes are used by find-moj-data to represent persisted entities and validate user-generated entities.
+            Classes build upon <a href="https://datahubproject.io/docs/metadata-modeling/metadata-model/#the-core-entities">
+                DataHub's metadata model.
+            </a>
+        </p>
+        {% for entity, schema_json in entities.items %}
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m" id="{{ schema_json.title }}">
+                {{schema_json.title}}
+            </caption>
+            <caption class="govuk-table__caption govuk-!-font-weight-regular">{{schema_json.description}}</caption>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Field</th>
+                <th scope="col" class="govuk-table__header">Field Description</th>
+                <th scope="col" class="govuk-table__header">Examples</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+              {% for _, description in schema_json.properties.items %}
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">{{ description|format_metadata_field_type }}</td>
+                <td class="govuk-table__cell">{{ description.description }}</td>
+                <td class="govuk-table__cell column-description">{{ description.examples|join:", " }}</td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        {%endfor%}
+    </div>
+</div>
+{% endblock content %}

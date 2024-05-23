@@ -54,7 +54,7 @@ def _align_snippet(snippet, max_chars):
     Align a snippet to a few words before start_mark_idx
     """
     start_mark_idx = snippet.find("<mark>")
-    end_mark_idx = snippet[start_mark_idx + 1 :].find("</mark>")
+    end_mark_idx = snippet[start_mark_idx + 1:].find("</mark>")
 
     # If the mark is at the beginning of the first remaining paragraph,
     # no further alignment is required.

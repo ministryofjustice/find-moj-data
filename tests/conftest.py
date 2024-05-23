@@ -8,9 +8,11 @@ from django.conf import settings
 import pytest
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
+    AccessInformation,
     Column,
     ColumnRef,
     CustomEntityProperties,
+    DataSummary,
     DomainRef,
     EntityRef,
     Governance,
@@ -18,6 +20,7 @@ from data_platform_catalogue.entities import (
     RelationshipType,
     Table,
     TagRef,
+    UsageRestrictions,
 )
 from data_platform_catalogue.search_types import (
     FacetOption,

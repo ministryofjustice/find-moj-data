@@ -235,7 +235,7 @@ class DataHubCatalogueClient:
             else:
                 relations = {}
             return Table(
-                urn=None,
+                urn=urn,
                 display_name=display_name,
                 name=name,
                 fully_qualified_name=qualified_name,

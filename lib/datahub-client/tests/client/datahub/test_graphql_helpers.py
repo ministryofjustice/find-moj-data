@@ -293,7 +293,6 @@ def test_parse_properties_with_none_values():
             "name": "test",
             "description": None,
             "externalUrl": None,
-
         },
         "editableProperties": {"edit1": "q"},
     }
