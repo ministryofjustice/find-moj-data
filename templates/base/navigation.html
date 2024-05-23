@@ -27,7 +27,6 @@
           {% url 'home:home' as home_url %}
           {% url 'home:search' as search_url %}
           {% url 'home:glossary' as glossary_url %}
-          {% url 'azure_auth:logout' as logout_url %}
           <li class="govuk-header__navigation-item {% if request.path == home_url %}govuk-header__navigation-item--active{%endif%}">
             <a class="govuk-header__link" href="{% url 'home:home' %}">
               Home
