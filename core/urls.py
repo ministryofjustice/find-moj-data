@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 
 def trigger_error(request):
@@ -29,4 +30,8 @@ urlpatterns = [
     path("sentry-debug/", trigger_error),
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
+    path(
+        "unavailable",
+        TemplateView.as_view(template_name="500_datahub_unavailable.html"),
+    ),
 ]
