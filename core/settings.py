@@ -185,7 +185,7 @@ ENABLE_ANALYTICS: bool = (
 
 # Sentry Configuration
 sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN"),
+    dsn=os.environ.get("SENTRY_DSN_WORKAROUND"),
     enable_tracing=True,
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
