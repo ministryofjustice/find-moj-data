@@ -32,8 +32,8 @@ spec:
               value: "${DJANGO_ALLOWED_HOSTS}"
             - name: DJANGO_LOG_LEVEL
               value: "${DJANGO_LOG_LEVEL}"
-            - name: SENTRY_DSN
-              value: "${SENTRY_DSN}"
+            - name: SENTRY_DSN_WORKAROUND
+              value: "${SENTRY_DSN_WORKAROUND}"
             - name: ENABLE_ANALYTICS
               value: "${ENABLE_ANALYTICS}"
             - name: ANALYTICS_ID
