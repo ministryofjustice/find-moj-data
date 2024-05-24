@@ -185,7 +185,7 @@ ENABLE_ANALYTICS: bool = (
 
 # Sentry Configuration
 sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN_WORKAROUND"),
+    dsn=os.environ.get("SENTRY_DSN_WORKAROUND"), # Datahub overwrites with this variable unless it is renamed, causing Sentry to tag issues with the incorrect environment
     enable_tracing=True,
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
