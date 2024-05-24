@@ -19,14 +19,9 @@ from django.contrib import admin
 from django.urls import include, path
 
 
-def trigger_error(request):
-    division_by_zero = 1 / 0  # noqa - F841
-
-
 urlpatterns = [
     path("admin/", view=admin.site.urls),
     path("azure_auth/", include("azure_auth.urls", namespace="azure_auth")),
-    path("sentry-debug/", trigger_error),
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
 ]
