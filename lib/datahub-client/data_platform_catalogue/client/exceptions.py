@@ -4,6 +4,12 @@ class CatalogueError(Exception):
     """
 
 
+class ConnectivityError(CatalogueError):
+    """
+    Unable to collect to the Datahub catalog
+    """
+
+
 class ReferencedEntityMissing(CatalogueError):
     """
     A referenced entity (such as a user or tag) does not yet exist when

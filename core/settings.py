@@ -3,8 +3,8 @@ import sys
 from pathlib import Path
 from socket import gaierror, gethostbyname, gethostname
 
-from dotenv import load_dotenv
 import sentry_sdk
+from dotenv import load_dotenv
 
 TRUTHY_VALUES = ["True", "true", "T", "1"]
 
@@ -54,6 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.middleware.CustomErrorMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",  # This needs to be the last middleware in the list. Avoid appending to this list and rather insert into -1.
 ]
 

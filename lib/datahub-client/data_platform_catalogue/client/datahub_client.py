@@ -5,7 +5,7 @@ from typing import Sequence
 
 from data_platform_catalogue.client.exceptions import (
     AspectDoesNotExist,
-    CatalogueError,
+    ConnectivityError,
     EntityDoesNotExist,
     InvalidDomain,
     ReferencedEntityMissing,
@@ -38,6 +38,7 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SortOption,
 )
+from datahub.configuration.common import ConfigurationError
 from datahub.emitter import mce_builder
 from datahub.emitter.mcp import MetadataChangeProposalWrapper
 from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
@@ -110,12 +111,17 @@ class DataHubCatalogueClient:
         elif api_url.endswith("/api"):
             self.gms_endpoint = api_url + "/gms"
         else:
-            raise CatalogueError("api_url is incorrectly formatted")
+            raise ConnectivityError("api_url is incorrectly formatted")
 
         self.server_config = DatahubClientConfig(
             server=self.gms_endpoint, token=jwt_token
         )
-        self.graph = graph or DataHubGraph(self.server_config)
+
+        try:
+            self.graph = graph or DataHubGraph(self.server_config)
+        except ConfigurationError as e:
+            raise ConnectivityError from e
+
         self.search_client = SearchClient(self.graph)
 
         self.dataset_query = (
