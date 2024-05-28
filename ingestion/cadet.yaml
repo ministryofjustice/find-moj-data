@@ -1,0 +1,27 @@
+source:
+  type: dbt
+  config:
+    manifest_path: "s3://mojap-derived-tables/prod/run_artefacts/latest/target/manifest.json"
+    catalog_path: "s3://mojap-derived-tables/prod/run_artefacts/latest/target/catalog.json"
+    test_results_path: "s3://mojap-derived-tables/prod/run_artefacts/latest/target/run_results.json"
+    platform_instance: cadet
+    target_platform: athena
+    target_platform_instance: athena_cadet
+    infer_dbt_schemas: true
+    entities_enabled:
+      test_results: true
+      seeds: false
+      snapshots: true
+      models: true
+      sources: true
+      test_definitions: true
+    stateful_ingestion:
+      remove_stale_metadata: true
+transformers:
+  - type: pattern_add_dataset_domain
+    config:
+      semantics: OVERWRITE
+      domain_pattern:
+        rules:
+          'urn:li:dataset:\(urn:li:dataPlatform:dbt,cadet\.awsdatacatalog\.courts.*':
+            [courts]

@@ -1,0 +1,40 @@
+name: "Ingest DBT metadata from Create a Derived Table"
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: "which environment to deploy to"
+        required: true
+        type: string
+      ecr_region:
+        description: "ecr region to connect to"
+        required: false
+        type: string
+        default: eu-west-1
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.11.1
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.CADET_METADATA_ROLE_TO_ASSUME }}
+          aws-region: ${{ inputs.ECR_REGION }}
+      - name: install reqs
+        run: pip install acryl-datahub
+      - name: push metadata to datahub
+        env:
+          DATAHUB_GMS_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
+          DATAHUB_GMS_URL: ${{ vars.CATALOGUE_URL }}
+        run: |
+          datahub init
+          datahub ingest -c ingestion/cadet.yaml
