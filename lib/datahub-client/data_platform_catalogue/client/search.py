@@ -75,6 +75,7 @@ class SearchClient:
         start = 0 if page is None else int(page) * count
 
         types = self._map_result_types(result_types)
+        # add filter for display tag here...
         formatted_filters = self._map_filters(filters)
 
         variables = {
