@@ -65,7 +65,7 @@ class SearchClient:
             ResultType.CHART,
             ResultType.DATABASE,
         ),
-        filters: Sequence[MultiSelectFilter] = (),
+        filters: Sequence[MultiSelectFilter] = [],
         sort: SortOption | None = None,
     ) -> SearchResponse:
         """
@@ -75,7 +75,14 @@ class SearchClient:
         start = 0 if page is None else int(page) * count
 
         types = self._map_result_types(result_types)
-        # add filter for display tag here...
+
+        # This is the tag that any and every entity we want to present in search results
+        # now must have.
+        display_in_catalogue_filter = MultiSelectFilter(
+            filter_name="tags", included_values=["urn:li:tag:display_in_catalogue"]
+        )
+
+        filters.append(display_in_catalogue_filter)
         formatted_filters = self._map_filters(filters)
 
         variables = {
