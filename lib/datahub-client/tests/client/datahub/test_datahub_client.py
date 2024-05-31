@@ -37,7 +37,10 @@ class TestCatalogueClientWithDatahub:
     @pytest.fixture
     def database(self):
         return Database(
+            urn=None,
             name="my_database",
+            display_name="my_database",
+            fully_qualified_name="my_database",
             description="little test db",
             governance=Governance(
                 data_owner=OwnerRef(
@@ -55,10 +58,7 @@ class TestCatalogueClientWithDatahub:
             ),
             domain=DomainRef(urn="LAA", display_name="LAA"),
             last_modified=datetime(2020, 5, 17),
-            creation_date=datetime(2020, 5, 17),
-            access_information=AccessInformation(
-                s3_location="s3://databucket/",
-            ),
+            created=datetime(2020, 5, 17),
             tags=[TagRef(urn="test", display_name="test")],
             platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
             custom_properties=CustomEntityProperties(
@@ -307,7 +307,7 @@ class TestCatalogueClientWithDatahub:
             dataset = datahub_client.get_table_details(urn)
 
         assert dataset == Table(
-            urn=None,
+            urn="abc",
             display_name="Dataset",
             name="Dataset",
             fully_qualified_name="Foo.Dataset",
@@ -375,7 +375,7 @@ class TestCatalogueClientWithDatahub:
             dataset = datahub_client.get_table_details(urn)
 
         assert dataset == Table(
-            urn=None,
+            urn="abc",
             display_name="notinproperties",
             name="notinproperties",
             fully_qualified_name="notinproperties",
