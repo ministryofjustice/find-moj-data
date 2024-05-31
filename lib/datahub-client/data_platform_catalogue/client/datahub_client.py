@@ -183,7 +183,7 @@ class DataHubCatalogueClient:
             ResultType.CHART,
             ResultType.DATABASE,
         ),
-        filters: Sequence[MultiSelectFilter] = (),
+        filters: Sequence[MultiSelectFilter] = [],
         sort: SortOption | None = None,
     ) -> SearchResponse:
         """
@@ -498,6 +498,19 @@ class DataHubCatalogueClient:
         )
         self.graph.emit(metadata_event)
         logger.info(f"Type updated for Database {name} ")
+
+        if database.tags:
+            tags_to_add = mce_builder.make_global_tag_aspect_with_tag_list(
+                tags=[str(tag.display_name) for tag in database.tags]
+            )
+            event: MetadataChangeProposalWrapper = MetadataChangeProposalWrapper(
+                entityType="container",
+                changeType=ChangeTypeClass.UPSERT,
+                entityUrn=database_urn,
+                aspect=tags_to_add,
+            )
+            self.graph.emit(event)
+            logger.info(f"Tags updated for Database {name} ")
 
         return database_urn
 
