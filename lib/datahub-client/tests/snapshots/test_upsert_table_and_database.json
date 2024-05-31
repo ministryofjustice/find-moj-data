@@ -57,6 +57,21 @@
     }
 },
 {
+    "entityType": "container",
+    "entityUrn": "urn:li:container:my_database",
+    "changeType": "UPSERT",
+    "aspectName": "globalTags",
+    "aspect": {
+        "json": {
+            "tags": [
+                {
+                    "tag": "urn:li:tag:test"
+                }
+            ]
+        }
+    }
+},
+{
     "entityType": "dataset",
     "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
     "changeType": "UPSERT",
