@@ -26,24 +26,24 @@
             </a>
         </p>
         {% for entity, schema_json in entities.items %}
-        <table class="govuk-table">
+        <table class="govuk-table wide-table">
             <caption class="govuk-table__caption govuk-table__caption--m" id="{{ schema_json.title }}">
                 {{schema_json.title}}
             </caption>
             <caption class="govuk-table__caption govuk-!-font-weight-regular">{{schema_json.description}}</caption>
             <thead class="govuk-table__head">
               <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Field</th>
-                <th scope="col" class="govuk-table__header">Field Description</th>
-                <th scope="col" class="govuk-table__header">Examples</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Field</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Field Description</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Examples</th>
               </tr>
             </thead>
             <tbody class="govuk-table__body">
               {% for _, description in schema_json.properties.items %}
               <tr class="govuk-table__row">
-                <td class="govuk-table__cell">{{ description|format_metadata_field_type }}</td>
-                <td class="govuk-table__cell">{{ description.description }}</td>
-                <td class="govuk-table__cell column-description">{{ description.examples|join:", " }}</td>
+                <td class="govuk-table__cell govuk-!-width-one-third">{{ description|format_metadata_field_type }}</td>
+                <td class="govuk-table__cell govuk-!-width-one-third">{{ description.description }}</td>
+                <td class="govuk-table__cell govuk-!-width-one-third">{{ description.examples|join:", " }}</td>
               </tr>
               {%endfor%}
             </tbody>

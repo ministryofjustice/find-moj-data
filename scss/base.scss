@@ -28,6 +28,11 @@ mark {
     }
 }
 
+.wide-table {
+    table-layout: fixed;
+    width: 100%;
+    overflow-wrap: break-word;
+}
 
 @import './glossary';
 @import './details';
