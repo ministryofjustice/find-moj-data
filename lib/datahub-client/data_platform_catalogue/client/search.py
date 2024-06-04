@@ -79,7 +79,7 @@ class SearchClient:
         # This is the tag that any and every entity we want to present in search results
         # now must have.
         display_in_catalogue_filter = MultiSelectFilter(
-            filter_name="tags", included_values=["urn:li:tag:display_in_catalogue"]
+            filter_name="tags", included_values=["urn:li:tag:dc_display_in_catalogue"]
         )
 
         filters.append(display_in_catalogue_filter)
