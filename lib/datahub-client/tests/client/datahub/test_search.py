@@ -1111,3 +1111,47 @@ def test_list_database_tables(mock_graph, searcher):
     )
 
     assert response == expected
+
+
+@pytest.mark.parametrize(
+    "tags, result",
+    [
+        (["test0-tag", "dc_dc"], ["test0-tag"]),
+        (["dc_test0-tag", "dc_dc"], []),
+        (["dbt_dc", "dc_dc"], ["dbt_dc"]),
+        (["dbt:dc_", "tagger"], ["dbt:dc_", "tagger"]),
+    ],
+)
+def test_tag_to_display(tags, result):
+    test_search_result = SearchResult(
+        urn="urn:li:dataset:(urn:li:dataPlatform:athena,test_db.test_table,PROD)",
+        result_type=ResultType.TABLE,
+        name="test_table",
+        display_name="test_table",
+        fully_qualified_name="test_db.test_table",
+        description="just for test",
+        matches={},
+        metadata={
+            "owner": "",
+            "owner_email": "",
+            "total_parents": 0,
+            "parents": [],
+            "domain_name": "",
+            "domain_id": "",
+            "entity_types": {
+                "entity_type": "Dataset",
+                "entity_sub_types": ["Table"],
+            },
+            "dpia_required": None,
+            "dpia_location": "",
+            "where_to_access_dataset": "",
+            "source_dataset_name": "",
+            "s3_location": "",
+            "row_count": "",
+        },
+        tags=tags,
+        last_modified=None,
+        created=None,
+    )
+
+    assert test_search_result.tags_to_display == result
