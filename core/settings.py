@@ -55,7 +55,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.CustomErrorMiddleware",
-    # This needs to be the last middleware in the list.
+    # Prometheus needs to be the last middleware in the list.
     # Avoid appending to this list and rather insert into -1.
     "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
@@ -219,7 +219,7 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
         "SCOPES": ["User.Read"],
         "AUTHORITY": os.environ.get("AZURE_AUTHORITY"),
         "PUBLIC_PATHS": [
-            "/metrics/",
+            "/metrics",
         ],
     }
     LOGIN_URL = "/azure_auth/login"
