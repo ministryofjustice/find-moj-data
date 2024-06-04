@@ -55,7 +55,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.CustomErrorMiddleware",
-    "django_prometheus.middleware.PrometheusAfterMiddleware",  # This needs to be the last middleware in the list. Avoid appending to this list and rather insert into -1.
+    # This needs to be the last middleware in the list.
+    # Avoid appending to this list and rather insert into -1.
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -186,7 +188,10 @@ ENABLE_ANALYTICS: bool = (
 
 # Sentry Configuration
 sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN_WORKAROUND"), # Datahub overwrites with this variable unless it is renamed, causing Sentry to tag issues with the incorrect environment
+    dsn=os.environ.get(
+        "SENTRY_DSN_WORKAROUND"
+    ),  # Datahub overwrites with this variable unless it is renamed,
+    # causing Sentry to tag issues with the incorrect environment
     enable_tracing=True,
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
@@ -213,6 +218,9 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
         "REDIRECT_URI": os.environ.get("AZURE_REDIRECT_URI"),
         "SCOPES": ["User.Read"],
         "AUTHORITY": os.environ.get("AZURE_AUTHORITY"),
+        "PUBLIC_PATHS": [
+            "/metrics/",
+        ],
     }
     LOGIN_URL = "/azure_auth/login"
     LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
