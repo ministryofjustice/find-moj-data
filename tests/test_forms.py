@@ -15,9 +15,9 @@ class TestSearchForm:
     def test_all_fields_nullable(self):
         assert SearchForm(data={}).is_valid()
 
-    def test_form_encode_without_filter_for_one_filter(self, valid_form):
+    def test_form_encode_without_filter_for_one_filter(self, valid_form, valid_domain):
         assert valid_form.encode_without_filter(
-            filter_name="domain", filter_value="urn:li:domain:prison"
+            filter_name="domain", filter_value=valid_domain.urn
         ) == (
             "?query=test&"
             "where_to_access=analytical_platform&"
@@ -31,14 +31,14 @@ class TestSearchForm:
         two_filter_form = SearchForm(
             data={
                 "query": "test",
-                "domain": "urn:li:domain:prison",
+                "domain": "urn:li:domain:prisons",
                 "entity_types": ["TABLE"],
             }
         )
         two_filter_form.is_valid()
 
         assert two_filter_form.encode_without_filter(
-            filter_name="domain", filter_value="urn:li:domain:prison"
+            filter_name="domain", filter_value="urn:li:domain:prisons"
         ) == (
             "?query=test&"
             "entity_types=TABLE&"

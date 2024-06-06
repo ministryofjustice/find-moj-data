@@ -59,7 +59,7 @@ class TestSearch:
         """
         Interacts with the filters on the left hand side
         """
-        domain = "Prison"
+        domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()
@@ -98,7 +98,7 @@ class TestSearch:
         Search settings persist as the user continues to
         interact with the search page.
         """
-        domain = "Prison"
+        domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()
@@ -131,7 +131,7 @@ class TestSearch:
         self.click_next_page()
         self.verify_page("2")
 
-        self.select_domain("Prison")
+        self.select_domain("Prisons")
         self.click_apply_filters()
         self.verify_page("1")
 
@@ -140,7 +140,7 @@ class TestSearch:
         Users can clear a filter by clicking on it within the "selected filters"
         panel.
         """
-        domain = "Prison"
+        domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()
@@ -153,7 +153,7 @@ class TestSearch:
         """
         Users can click a button to clear all filters.
         """
-        domain = "Prison"
+        domain = "Prisons"
 
         self.start_on_the_search_page()
 

@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 from data_platform_catalogue.search_types import ResultType
 from django import forms
 
+from ..service.search_facet_fetcher import SearchFacetFetcher
 from .domain_model import Domain, DomainModel
 
 
@@ -12,13 +13,13 @@ def get_domain_choices() -> list[Domain]:
     choices = [
         Domain("", "All domains"),
     ]
-    choices.extend(DomainModel().top_level_domains)
+    choices.extend(DomainModel(SearchFacetFetcher()).top_level_domains)
     return choices
 
 
 def get_subdomain_choices() -> list[Domain]:
     choices = [Domain("", "All subdomains")]
-    choices.extend(DomainModel().all_subdomains())
+    choices.extend(DomainModel(SearchFacetFetcher()).all_subdomains())
     return choices
 
 
@@ -47,8 +48,7 @@ def get_entity_types():
 class SelectWithOptionAttribute(forms.Select):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.domain_model = DomainModel()
+        self.domain_model = None
 
     def create_option(
         self, name, urn, label, selected, index, subindex=None, attrs=None
@@ -56,6 +56,8 @@ class SelectWithOptionAttribute(forms.Select):
         option = super().create_option(
             name, urn, label, selected, index, subindex, attrs
         )
+
+        self.domain_model = self.domain_model or DomainModel(SearchFacetFetcher())
 
         if urn:
             option["attrs"]["data-parent"] = self.domain_model.get_parent_urn(urn)

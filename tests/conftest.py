@@ -3,8 +3,6 @@ from random import choice
 from typing import Any
 from unittest.mock import MagicMock, patch
 
-from django.conf import settings
-
 import pytest
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
@@ -29,13 +27,15 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
-
+from django.conf import settings
 from django.test import Client
 from faker import Faker
 
+from home.forms.domain_model import DomainModel
 from home.forms.search import SearchForm
 from home.service.details import DatabaseDetailsService
 from home.service.search import SearchService
+from home.service.search_facet_fetcher import SearchFacetFetcher
 
 fake = Faker()
 
@@ -146,22 +146,6 @@ def generate_page(page_size=20, result_type: ResultType | None = None):
     return results
 
 
-def generate_options(num_options=5):
-    """
-    Generate a list of options for the search facets
-    """
-    results = []
-    for _ in range(num_options):
-        results.append(
-            FacetOption(
-                value=fake.name(),
-                label=fake.name(),
-                count=fake.random_int(min=0, max=100),
-            )
-        )
-    return results
-
-
 @pytest.fixture(autouse=True)
 def client():
     client = Client()
@@ -181,7 +165,26 @@ def mock_catalogue(request):
     mock_search_response(
         mock_catalogue, page_results=generate_page(), total_results=100
     )
-    mock_search_facets_response(mock_catalogue, domains=generate_options())
+    mock_search_facets_response(
+        mock_catalogue,
+        domains=[
+            FacetOption(
+                value="urn:li:domain:prisons",
+                label="Prisons",
+                count=fake.random_int(min=0, max=100),
+            ),
+            FacetOption(
+                value="urn:li:domain:courts",
+                label="Courts",
+                count=fake.random_int(min=0, max=100),
+            ),
+            FacetOption(
+                value="urn:li:domain:finance",
+                label="Finance",
+                count=fake.random_int(min=0, max=100),
+            ),
+        ],
+    )
     mock_get_glossary_terms_response(mock_catalogue)
     mock_list_database_tables_response(
         mock_catalogue,
@@ -296,11 +299,16 @@ def mock_get_glossary_terms_response(mock_catalogue):
 
 
 @pytest.fixture
-def valid_form():
+def valid_domain():
+    return DomainModel(SearchFacetFetcher()).top_level_domains[0]
+
+
+@pytest.fixture
+def valid_form(valid_domain):
     valid_form = SearchForm(
         data={
             "query": "test",
-            "domain": "urn:li:domain:prison",
+            "domain": valid_domain.urn,
             "entity_types": ["TABLE"],
             "where_to_access": ["analytical_platform"],
             "sort": "ascending",
