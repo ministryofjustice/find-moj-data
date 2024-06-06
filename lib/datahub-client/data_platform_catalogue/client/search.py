@@ -270,6 +270,7 @@ class SearchClient:
             "domain_id": domain.urn,
             "entity_types": self._parse_types_and_sub_types(entity, "Dataset"),
         }
+        logger.debug(f"{metadata=}")
 
         metadata.update(custom_properties.usage_restrictions.model_dump())
         metadata.update(custom_properties.access_information.model_dump())

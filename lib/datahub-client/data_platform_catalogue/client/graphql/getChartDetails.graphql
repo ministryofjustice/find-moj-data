@@ -5,6 +5,16 @@ query getChartDetails($urn: String!) {
     platform {
       name
     }
+    domain {
+      domain {
+        urn
+        id
+        properties {
+          name
+          description
+        }
+      }
+    }
     ownership {
       owners {
         owner {
