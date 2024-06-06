@@ -2,7 +2,7 @@ name: 'Check for Vulnerabilities'
 
 on:
   schedule:
-    - cron: '0 0 * * *' # every day at midnight
+    - cron: '0 0 * * 1-5' # every weekday at midnight
 
 jobs:
   main:
