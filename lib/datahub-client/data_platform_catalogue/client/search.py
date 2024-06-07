@@ -256,9 +256,8 @@ class SearchClient:
         last_modified = parse_last_modified(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
 
-        relations = parse_relations(
-            RelationshipType.PARENT, entity.get("relationships", {})
-        )
+        # Could maybe do better with this. Should revisit
+        relations = parse_relations({"key_relations": entity})
         domain = parse_domain(entity)
 
         metadata = {
