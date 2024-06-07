@@ -14,6 +14,34 @@ query getDatasetDetails($urn: String!) {
         }
       }
     }
+    downstream_lineage_relations: lineage (
+      input: {direction: DOWNSTREAM
+      start:0,
+      count:10}
+    ) {
+      total
+      relationships{
+        type
+        entity{
+          urn
+          type
+        }
+      }
+    }
+    upstream_lineage_relations: lineage (
+      input: {direction: UPSTREAM
+      start:0,
+      count:10}
+    ) {
+      total
+      relationships{
+        type
+        entity{
+          urn
+          type
+        }
+      }
+    }
     subTypes {
       typeNames
     }
