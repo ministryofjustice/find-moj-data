@@ -12,7 +12,9 @@
                 "dc_where_to_access_dataset": "",
                 "source_dataset_name": "",
                 "s3_location": "",
-                "row_count": "5"
+                "row_count": "5",
+                "dc_slack_channel_name": "test-channel",
+                "dc_slack_channel_url": "test-url"
             },
             "name": "Dataset",
             "qualifiedName": "database.Dataset",
