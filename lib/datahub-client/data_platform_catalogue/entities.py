@@ -10,6 +10,8 @@ DATAHUB_DATE_FORMAT = "%Y%m%d"
 class RelationshipType(Enum):
     PARENT = "PARENT"
     PLATFORM = "PLATFORM"
+    UPSTREAM_LINEAGE = "UPSTREAM_LINEAGE"
+    DOWNSTREAM_LINEAGE = "DOWNSTREAM_LINEAGE"
 
 
 class EntityRef(BaseModel):
@@ -318,9 +320,7 @@ class Table(Entity):
 
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
-        examples=[
-            "urn:li:dataset:(urn:li:dataPlatform:redshift,public.table,DEV)"
-        ],
+        examples=["urn:li:dataset:(urn:li:dataPlatform:redshift,public.table,DEV)"],
     )
     column_details: list[Column] = Field(
         description="A list of objects which relate to columns in your data, each list item will contain, a name of"
