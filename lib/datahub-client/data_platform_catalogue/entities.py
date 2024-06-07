@@ -36,7 +36,11 @@ class ColumnRef(BaseModel):
     """
 
     name: str = Field(
-        description="The column name or dotted path that identifies the column within the schema. This uses Datahub's FieldPath encoding scheme, and may include type and versioning information.",
+        description=(
+            "The column name or dotted path that identifies the column within the "
+            "schema. This uses Datahub's FieldPath encoding scheme, and may include "
+            "type and versioning information."
+        ),
         examples=["custody_id", "table_name.custody_id"],
     )
     display_name: str = Field(
@@ -59,7 +63,11 @@ class Column(BaseModel):
     """
 
     name: str = Field(
-        description="The column name or dotted path that identifies the column within the schema. This uses Datahub's FieldPath encoding scheme, and may include type and versioning information.",
+        description=(
+            "The column name or dotted path that identifies the column within the "
+            "schema. This uses Datahub's FieldPath encoding scheme, and may include "
+            "type and versioning information."
+        ),
         examples=["parole_elibility_date", "table_name.custody_id"],
     )
     display_name: str = Field(
@@ -166,7 +174,10 @@ class UsageRestrictions(BaseModel):
     """
 
     dpia_required: bool | None = Field(
-        description="Bool for if a data privacy impact assessment (DPIA) is required to access this database",
+        description=(
+            "Bool for if a data privacy impact assessment (DPIA) is required to access "
+            "this database"
+        ),
         default=None,
         examples=[True, False],
     )
@@ -181,10 +192,10 @@ class AccessInformation(BaseModel):
     The same data entity may be accessable via multiple means.
     """
 
-    where_to_access_dataset: str = Field(
-        description="User-friendly description of where the data can be accessed",
+    dc_where_to_access_dataset: str = Field(
+        description="Descriptor for where the data can be accessed.",
         default="",
-        examples=["Analytical Platform"],
+        examples=["analytical_platform"],
     )
     source_dataset_name: str = Field(
         description="The name of a dataset this data was derived from",
@@ -195,9 +206,31 @@ class AccessInformation(BaseModel):
         description="Location of the data in s3",
         default="",
         examples=[
-            "s3://calculate-release-dates/data/database_name=dbf2e4/table_name=approved_dates/",
+            "s3://calculate-release-dates/data/database_name=dbf2e4/table_name=approved_dates/",  # noqa: E501
             "s3://alpha-hmpps-reports-data",
         ],
+    )
+
+
+class FurtherInformation(BaseModel):
+    """
+    Routes to further information about the data.
+    E.g. external links to docs, reference materials, knowledge sites, discussion forums.
+    """
+
+    dc_slack_channel_name: str = Field(
+        description=(
+            "The name of a slack channel to be used as a contact point for users of "
+            "the catalogue service, including the leading '#'. Note: this is not the "
+            "same as the owner channel for notifications."
+        ),
+        default="",
+        examples=["#data-engineering"],
+    )
+    dc_slack_channel_url: str = Field(
+        description="The URL to the slack channel",
+        default="",
+        examples=["https://moj.enterprise.slack.com/archives/CXYZ1234E"],
     )
 
 
@@ -227,6 +260,10 @@ class CustomEntityProperties(BaseModel):
     data_summary: DataSummary = Field(
         description="Summary of data stored in this table", default_factory=DataSummary
     )
+    further_information: FurtherInformation = Field(
+        description="Routes to further information about the data",
+        default_factory=FurtherInformation,
+    )
 
 
 class Entity(BaseModel):
@@ -252,21 +289,29 @@ class Entity(BaseModel):
         examples=["database.absconds", "Absconds"],
     )
     description: str = Field(
-        description="Detailed description about what functional area this entity is representing, what purpose it has"
-        " and business related information.",
+        description=(
+            "Detailed description about what functional area this entity is "
+            "representing, what purpose it has and business related information."
+        ),
         examples=[
-            "This entity has one row for each sentence in a court. Note that only the primary sentence is recorded rather than the secondary sentence."
+            (
+                "This entity has one row for each sentence in a court. Note that only"
+                "the primary sentence is recorded rather than the secondary sentence."
+            )
         ],
     )
     relationships: dict[RelationshipType, list[EntityRef]] = Field(
         default={},
-        description="References to related entities in the metadata graph, such as platform or parent entities",
+        description=(
+            "References to related entities in the metadata graph, such as platform or "
+            "parent entities"
+        ),
         examples=[
             [
                 {
                     RelationshipType.PARENT: [
                         EntityRef(
-                            urn="urn:li:dataset:(urn:li:dataPlatform:dbt,delius.custody_dates,PROD)",
+                            urn="urn:li:dataset:(urn:li:dataPlatform:dbt,delius.custody_dates,PROD)",  # noqa: E501
                             display_name="delius.custody_dates",
                         )
                     ]
@@ -295,7 +340,10 @@ class Entity(BaseModel):
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
     platform: EntityRef = Field(
-        description="The platform that an entity should belong to, e.g. Glue, Athena, DBT. Should exist in datahub",
+        description=(
+            "The platform that an entity should belong to, e.g. Glue, Athena, DBT. "
+            "Should exist in datahub"
+        ),
         examples=[EntityRef(urn="urn:li:dataPlatform:kafka", display_name="Kafka")],
     )
     custom_properties: CustomEntityProperties = Field(
@@ -318,13 +366,14 @@ class Table(Entity):
 
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
-        examples=[
-            "urn:li:dataset:(urn:li:dataPlatform:redshift,public.table,DEV)"
-        ],
+        examples=["urn:li:dataset:(urn:li:dataPlatform:redshift,public.table,DEV)"],
     )
     column_details: list[Column] = Field(
-        description="A list of objects which relate to columns in your data, each list item will contain, a name of"
-        " the column, data type of the column and description of the column.",
+        description=(
+            "A list of objects which relate to columns in your data, each list item "
+            "will contain, a name of the column, data type of the column and "
+            "description of the column."
+        ),
         examples=[
             [
                 Column(

@@ -9,6 +9,7 @@ from data_platform_catalogue.entities import (
     DomainRef,
     Entity,
     EntityRef,
+    FurtherInformation,
     Governance,
     OwnerRef,
     Table,
@@ -39,6 +40,7 @@ class MetadataSpecificationService:
                 "ColumnRef": ColumnRef.model_json_schema(),
                 "TagRef": TagRef.model_json_schema(),
                 "DataSummary": DataSummary.model_json_schema(),
+                "FurtherInformation": FurtherInformation.model_json_schema(),
                 "Entity": Entity.model_json_schema(),
             },
         }

@@ -35,6 +35,7 @@ repos:
           - flake8-comprehensions
           - flake8-debugger
           - flake8-string-format
+          - Flake8-pyproject
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
