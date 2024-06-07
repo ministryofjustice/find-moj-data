@@ -2,10 +2,12 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
+
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
     DataSummary,
+    FurtherInformation,
     UsageRestrictions,
 )
 from data_platform_catalogue.search_types import (
@@ -1028,6 +1030,7 @@ def test_search_for_container(mock_graph, searcher):
                         s3_location="",
                     ),
                     "data_summary": DataSummary(),
+                    "further_information": FurtherInformation(),
                 },
                 tags=["test"],
                 last_modified=None,
