@@ -22,7 +22,7 @@
             "customProperties": {
                 "dpia_required": "False",
                 "dpia_location": "",
-                "where_to_access_dataset": "analytical_platform",
+                "dc_where_to_access_dataset": "analytical_platform",
                 "source_dataset_name": "",
                 "s3_location": "s3://databucket/",
                 "row_count": ""
@@ -81,7 +81,7 @@
             "customProperties": {
                 "dpia_required": "True",
                 "dpia_location": "",
-                "where_to_access_dataset": "",
+                "dc_where_to_access_dataset": "",
                 "source_dataset_name": "",
                 "s3_location": "",
                 "row_count": "5"

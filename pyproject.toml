@@ -29,7 +29,6 @@ pytest-django = "^4.8.0"
 pytest-cov = "^5.0.0"
 faker = "^25.0.1"
 isort = "^5.13.2"
-pyproject-flake8 = "^7.0.0"
 djhtml = "^3.0.6"
 
 [build-system]
@@ -47,3 +46,17 @@ testpaths = ["tests", "lib/data_platform_catalogue/tests"]
 
 [tool.isort]
 profile = "black"
+
+[tool.flake8]
+per-file-ignores = [
+    '*/test_datahub_client.py:E501',
+    '*/test_graphql_helpers.py:E501',
+    '*/test_search.py:E501',
+    '*/test_integration_with_datahub_server.py:E501,F401',
+    '*/conftest.py:E501,F401',
+]
+ignore = ['E203', 'E266', 'W503', 'F403']
+exclude = ".git,.mypy_cache,.pytest_cache,build,dist"
+max-line-length = 89
+max-complexity = 18
+select = "B,C,E,F,W,T4,B9"
