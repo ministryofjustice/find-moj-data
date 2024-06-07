@@ -231,22 +231,49 @@ def parse_columns(entity: dict[str, Any]) -> list[Column]:
     return sorted(result, key=lambda c: (0 if c.is_primary_key else 1, c.name))
 
 
-def parse_relations(
-    relationship_type: RelationshipType, relations_dict: dict
-) -> dict[RelationshipType, list[EntityRef]]:
+def parse_relations(response: dict) -> dict[RelationshipType, list[EntityRef]]:
     """
     parse the relationships results returned from a graphql querys
     """
     # # we may want to do soemthing with total realtion if we are returning child relations
     # #  and need to paginate through relations - 10 relations returned as is
     # total_relations = relations_dict.get("total", 0)
-    parent_entities = relations_dict.get("relationships", [])
-    related_entities = [
+
+    # any relationship related graphl query results should be returned aginst an
+    # alias with the `_relations` suffix
+    relationships_dict = {}
+    relationships = []
+    for key, value in response.items():
+        if key.endswith("_relations"):
+            relationships.extend(value.get("relationships", []))
+
+    relationships_dict[RelationshipType.PARENT] = [
         EntityRef(
-            urn=i["entity"]["urn"], display_name=i["entity"]["properties"]["name"]
+            urn=r["entity"]["urn"], display_name=r["entity"]["properties"]["name"]
         )
-        for i in parent_entities
+        for r in relationships
+        if r.get("type") == "IsPartOf"
     ]
 
-    relations_return = {relationship_type: related_entities}
-    return relations_return
+    relationships_dict[RelationshipType.UPSTREAM_LINEAGE] = [
+        EntityRef(urn=r["entity"]["urn"], display_name="")
+        for r in relationships
+        if r.get("type") == "UpstreamOf"
+    ]
+
+    relationships_dict[RelationshipType.DOWNSTREAM_LINEAGE] = [
+        EntityRef(urn=r["entity"]["urn"], display_name="")
+        for r in relationships
+        if r.get("type") == "DownstreamOf"
+    ]
+
+    # parent_entities = relations_dict.get("relationships", [])
+    # related_entities = [
+    #     EntityRef(
+    #         urn=i["entity"]["urn"], display_name=i["entity"]["properties"]["name"]
+    #     )
+    #     for i in parent_entities
+    # ]
+
+    # relations_return = {relationship_type: related_entities}
+    return relationships_dict
