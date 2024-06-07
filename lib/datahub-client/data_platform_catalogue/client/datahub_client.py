@@ -232,14 +232,8 @@ class DataHubCatalogueClient:
             created, modified = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
-            # A dataset can't have multiple parents, but if we did
-            # start to use in that we'd need to change this
-            if response["container_relations"]["total"] > 0:
-                relations = parse_relations(
-                    RelationshipType.PARENT, response["container_relations"]
-                )
-            else:
-                relations = {}
+            relations = parse_relations(response)
+
             return Table(
                 urn=urn,
                 display_name=display_name,
