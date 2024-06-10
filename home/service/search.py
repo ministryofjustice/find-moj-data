@@ -12,8 +12,8 @@ from django.conf import settings
 from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
-from home.forms.domain_model import DomainModel
 from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
 
 from .base import GenericService
 from .search_facet_fetcher import SearchFacetFetcher

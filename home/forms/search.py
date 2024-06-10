@@ -4,8 +4,8 @@ from urllib.parse import urlencode
 from data_platform_catalogue.search_types import ResultType
 from django import forms
 
+from ..models.domain_model import Domain, DomainModel
 from ..service.search_facet_fetcher import SearchFacetFetcher
-from .domain_model import Domain, DomainModel
 
 
 def get_domain_choices() -> list[Domain]:

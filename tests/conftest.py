@@ -31,8 +31,8 @@ from django.conf import settings
 from django.test import Client
 from faker import Faker
 
-from home.forms.domain_model import DomainModel
 from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
 from home.service.details import DatabaseDetailsService
 from home.service.search import SearchService
 from home.service.search_facet_fetcher import SearchFacetFetcher
