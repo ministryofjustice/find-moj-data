@@ -232,15 +232,23 @@ class DataHubCatalogueClient:
             created, modified = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
-            relations = parse_relations(response)
-
+            lineage_relations = parse_relations(
+                RelationshipType.DATA_LINEAGE,
+                [
+                    response.get("downstream_lineage_relations", {}),
+                    response.get("upstream_lineage_relations", {}),
+                ],
+            )
+            parent_relations = parse_relations(
+                RelationshipType.PARENT, [response["parent_container_relations"]]
+            )
             return Table(
                 urn=urn,
                 display_name=display_name,
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships=relations,
+                relationships={**lineage_relations, **parent_relations},
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,

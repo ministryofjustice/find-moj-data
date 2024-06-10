@@ -11,7 +11,6 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_names,
     parse_owner,
     parse_properties,
-    parse_relations,
     parse_tags,
 )
 from data_platform_catalogue.entities import RelationshipType
@@ -256,15 +255,12 @@ class SearchClient:
         last_modified = parse_last_modified(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
 
-        # Could maybe do better with this. Should revisit
-        relations = parse_relations({"key_relations": entity})
         domain = parse_domain(entity)
 
         metadata = {
             "owner": owner.display_name,
             "owner_email": owner.email,
             "total_parents": entity.get("relationships", {}).get("total", 0),
-            "parents": relations[RelationshipType.PARENT],
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
             "entity_types": self._parse_types_and_sub_types(entity, "Dataset"),
