@@ -102,9 +102,8 @@ class DatasetDetailsService(GenericService):
         """
         has_lineage = (
             True
-            if len(self.table_metadata.relationships[RelationshipType.UPSTREAM_LINEAGE])
-            + len(
-                self.table_metadata.relationships[RelationshipType.DOWNSTREAM_LINEAGE]
+            if len(
+                self.table_metadata.relationships.get(RelationshipType.DATA_LINEAGE, [])
             )
             > 0
             else False
