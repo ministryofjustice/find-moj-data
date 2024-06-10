@@ -181,6 +181,12 @@ LOGGING = {
     },
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+
 ANALYTICS_ID: str = os.environ.get("ANALYTICS_ID", "")
 ENABLE_ANALYTICS: bool = (
     os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES
