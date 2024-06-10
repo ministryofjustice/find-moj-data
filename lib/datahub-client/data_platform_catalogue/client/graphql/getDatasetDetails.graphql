@@ -24,6 +24,12 @@ query getDatasetDetails($urn: String!) {
         type
         entity{
           urn
+          ... on Dataset {
+            name
+            properties{
+              name
+            }
+          }
           type
         }
       }
@@ -38,6 +44,12 @@ query getDatasetDetails($urn: String!) {
         type
         entity{
           urn
+          ... on Dataset {
+            name
+            properties{
+              name
+            }
+          }
           type
         }
       }
@@ -45,7 +57,7 @@ query getDatasetDetails($urn: String!) {
     subTypes {
       typeNames
     }
-    container_relations: relationships(
+    parent_container_relations: relationships(
       input: { types: ["IsPartOf"], direction: OUTGOING, count: 10 }
     ) {
       total
