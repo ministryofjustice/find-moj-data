@@ -147,7 +147,6 @@ class TestSearch:
         self.verify_domain_selected(domain)
         self.click_clear_selected_filter(domain)
         self.verify_unselected_domain()
-        self.verify_unselected_subdomain()
 
     def test_clear_all_filters(self):
         """
@@ -271,9 +270,6 @@ class TestSearch:
     def select_domain(self, domain):
         self.search_page.select_domain(domain)
 
-    def select_subdomain(self, domain):
-        self.search_page.select_subdomain(domain)
-
     def click_option(self, sortby):
         self.search_page.sort_label(sortby).click()
 
@@ -295,17 +291,9 @@ class TestSearch:
         selected_domain = self.search_page.get_selected_domain().text
         assert selected_domain == domain
 
-    def verify_subdomain_selected(self, domain):
-        selected_domain = self.search_page.get_selected_subdomain().text
-        assert selected_domain == domain
-
     def verify_unselected_domain(self):
         selected_domain = self.search_page.get_selected_domain().text
         assert selected_domain == "All domains"
-
-    def verify_unselected_subdomain(self):
-        selected_domain = self.search_page.get_selected_subdomain().text
-        assert selected_domain == "All subdomains"
 
     def verify_selected_filters_shown(self, domains):
         actual = {i.text for i in self.search_page.selected_filter_tags()}

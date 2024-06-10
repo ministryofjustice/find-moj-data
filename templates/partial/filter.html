@@ -23,10 +23,12 @@
               <label class="govuk-label" for="{{form.domain.id_for_label}}">Top-level domain</label>
               {{form.domain}}
             </div>
+            {% if form.subdomain.choices %}
             <div class="govuk-form-group js-required">
               <label class="govuk-label" for="{{form.subdomain.id_for_label}}">Subdomain</label>
               {{form.subdomain}}
             </div>
+            {% endif %}
           </fieldset>
         </div>
         <div class="govuk-form-group">
