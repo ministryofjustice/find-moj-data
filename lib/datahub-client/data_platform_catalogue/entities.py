@@ -168,6 +168,25 @@ class TagRef(BaseModel):
     )
 
 
+class GlossaryTermRef(BaseModel):
+    """
+    Reference to a Glossary term
+    """
+
+    display_name: str = Field(
+        description="Glossary term name",
+        examples=["PII"],
+    )
+    urn: str = Field(
+        description="The identifier of the glossary term",
+        examples=["urn:li:glossaryTerm:ESDA"],
+    )
+    description: str = Field(
+        description="The definition of the glossary term",
+        examples=["Essential Shared Data Asset"],
+    )
+
+
 class UsageRestrictions(BaseModel):
     """
     Metadata about how entities may be used.

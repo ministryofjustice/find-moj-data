@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
 - Return domain metadata for Charts
+- Add `glossary_terms` list to `SearchResult`
+
+### Changed
+
+- Return lists of objects for `SearchResult.tags` and `SearchResult.tags_to_display` instead of strings.
 
 ## [1.0.1] 2024-05-07
 

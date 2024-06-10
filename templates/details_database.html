@@ -58,10 +58,10 @@
             </li>
             <li>
               <span class="govuk-!-font-weight-bold">Tags:</span>
-              {{ result.tags_to_display |join:", " }}
-            </div>
-          </li>
-        </ul>
+              {{ result.tags_to_display|lookup:'display_name'|join:", " }}
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div class="govuk-grid-column-one-third">

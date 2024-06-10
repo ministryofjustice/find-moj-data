@@ -7,6 +7,7 @@ from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     parse_created_and_modified,
     parse_domain,
+    parse_glossary_terms,
     parse_last_modified,
     parse_names,
     parse_owner,
@@ -254,6 +255,7 @@ class SearchClient:
         owner = parse_owner(entity)
         properties, custom_properties = parse_properties(entity)
         tags = parse_tags(entity)
+        terms = parse_glossary_terms(entity)
         last_modified = parse_last_modified(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
 
@@ -288,7 +290,8 @@ class SearchClient:
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             metadata=metadata,
-            tags=[tag_str.display_name for tag_str in tags],
+            tags=tags,
+            glossary_terms=terms,
             last_modified=modified or last_modified,
         )
 
@@ -387,7 +390,7 @@ class SearchClient:
             display_name=display_name,
             description=properties.get("description", ""),
             metadata=metadata,
-            tags=[tag.display_name for tag in tags],
+            tags=tags,
             last_modified=last_modified,
         )
 
