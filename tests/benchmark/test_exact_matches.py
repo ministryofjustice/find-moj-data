@@ -15,8 +15,8 @@ OVERLAP_THRESHOLD = 0.75
     "query,expected_urn",
     [
         (
-            "prison_population_history.chunk_assignment",
-            "urn:li:dataset:(urn:li:dataPlatform:dbt,awsdatacatalog.prison_population_history.chunk_assignment,PROD)",
+            "bold_common_platform_linked_tables.all_offence",
+            "urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.bold_common_platform_linked_tables.all_offence,PROD)",
         ),
         (
             "Accommodation on the first night following release",

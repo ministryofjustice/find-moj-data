@@ -186,7 +186,7 @@ def test_parse_relations():
             ],
         }
     }
-    result = parse_relations(RelationshipType.PARENT, relations["relationships"])
+    result = parse_relations(RelationshipType.PARENT, [relations["relationships"]])
     assert result == {
         RelationshipType.PARENT: [
             EntityRef(urn="urn:li:dataProduct:test", display_name="test")
@@ -196,7 +196,7 @@ def test_parse_relations():
 
 def test_parse_relations_blank():
     relations = {"relationships": {"total": 0, "relationships": []}}
-    result = parse_relations(RelationshipType.PARENT, relations["relationships"])
+    result = parse_relations(RelationshipType.PARENT, [relations["relationships"]])
     assert result == {RelationshipType.PARENT: []}
 
 

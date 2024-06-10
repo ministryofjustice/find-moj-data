@@ -121,7 +121,6 @@ def test_one_search_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
@@ -208,7 +207,6 @@ def test_dataset_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
@@ -300,7 +298,6 @@ def test_full_page(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
@@ -332,7 +329,6 @@ def test_full_page(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
@@ -362,7 +358,6 @@ def test_full_page(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
@@ -442,7 +437,6 @@ def test_query_match(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
@@ -518,7 +512,6 @@ def test_result_with_owner(mock_graph, searcher):
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
@@ -889,7 +882,6 @@ def test_search_for_charts(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
@@ -1088,7 +1080,6 @@ def test_list_database_tables(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "parents": [],
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {

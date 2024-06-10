@@ -232,17 +232,22 @@ class TestCatalogueClientWithDatahub:
         urn = "abc"
         datahub_response = {
             "dataset": {
+                "type": "DATASET",
                 "platform": {"name": "datahub"},
                 "ownership": None,
                 "subTypes": None,
-                "container_relations": {
+                "downstream_lineage_relations": {"total": 0, "relationships": []},
+                "upstream_lineage_relations": {"total": 0, "relationships": []},
+                "parent_container_relations": {
                     "total": 1,
                     "relationships": [
                         {
+                            "type": "IsPartOf",
+                            "direction": "OUTGOING",
                             "entity": {
                                 "urn": "urn:li:container:database",
                                 "properties": {"name": "database"},
-                            }
+                            },
                         }
                     ],
                 },
@@ -315,7 +320,8 @@ class TestCatalogueClientWithDatahub:
             relationships={
                 RelationshipType.PARENT: [
                     EntityRef(urn="urn:li:container:database", display_name="database")
-                ]
+                ],
+                RelationshipType.DATA_LINEAGE: [],
             },
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
@@ -359,9 +365,9 @@ class TestCatalogueClientWithDatahub:
                 "platform": {"name": "datahub"},
                 "name": "notinproperties",
                 "properties": {},
-                "container_relations": {
-                    "total": 0,
-                },
+                "downstream_lineage_relations": {"total": 0, "relationships": []},
+                "upstream_lineage_relations": {"total": 0, "relationships": []},
+                "parent_container_relations": {"total": 0, "relationships": []},
                 "data_product_relations": {"total": 0, "relationships": []},
                 "schemaMetadata": {"fields": []},
             }
@@ -380,7 +386,10 @@ class TestCatalogueClientWithDatahub:
             name="notinproperties",
             fully_qualified_name="notinproperties",
             description="",
-            relationships={},
+            relationships={
+                RelationshipType.PARENT: [],
+                RelationshipType.DATA_LINEAGE: [],
+            },
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
