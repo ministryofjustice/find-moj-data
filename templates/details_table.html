@@ -78,19 +78,17 @@
         <h2 class="govuk-heading-m">Table schema</h2>
         <p class="govuk-body">The schema for this table is not available.</p>
       {% endif %}
-    </div>
-    {% if has_lineage %}
-      <div class="govuk-grid-column-full">
-          <h2 class="govuk-heading-s govuk-!-margin-top-3">
-              URL
-          </h2>
-          <div class="govuk-body">
-              <a href="{{lineage_url}}" class="govuk-link">
-                Data lineage link
-              </a>
-          </div>
-      </div>
-    {% endif %}
+      {% if has_lineage %}
+      <h2 class="govuk-heading-m">Lineage</h2>
+      <div class="govuk-body-m" >
+        If you are interested to find out what tables where used to create this table or if this table is used to create any further tables, you can see that information in the table lineage.
+      </div class="govuk-body-m">  
+      <div class="govuk-body">
+            <a href="{{lineage_url}}" class="govuk-link">
+              View lineage in DataHub
+            </a>
+        </div>
+  {% endif %}
   </div>
 
 {% endblock content %}
