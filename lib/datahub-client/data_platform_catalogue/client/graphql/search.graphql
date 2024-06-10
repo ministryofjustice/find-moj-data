@@ -99,25 +99,6 @@ query Search(
           subTypes {
             typeNames
           }
-          relationships(
-            input: {
-              types: ["DataProductContains"]
-              direction: INCOMING
-              count: 10
-            }
-          ) {
-            total
-            relationships {
-              entity {
-                urn
-                ... on DataProduct {
-                  properties {
-                    name
-                  }
-                }
-              }
-            }
-          }
           ownership {
             owners {
               owner {
