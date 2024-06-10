@@ -22,6 +22,7 @@ from data_platform_catalogue.entities import (
     DataSummary,
     DomainRef,
     EntityRef,
+    FurtherInformation,
     Governance,
     OwnerRef,
     RelationshipType,
@@ -90,7 +91,7 @@ def test_domain_facets_are_returned():
                 dpia_location="",
             ),
             access_information=AccessInformation(
-                where_to_access_dataset="analytical_platform",
+                dc_where_to_access_dataset="analytical_platform",
                 s3_location="s3://databucket/",
             ),
         ),
@@ -138,7 +139,7 @@ def test_filter_by_urn():
                 dpia_location="",
             ),
             access_information=AccessInformation(
-                where_to_access_dataset="analytical_platform",
+                dc_where_to_access_dataset="analytical_platform",
                 s3_location="s3://databucket/",
             ),
         ),

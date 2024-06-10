@@ -10,6 +10,7 @@ from data_platform_catalogue.entities import (
     DataSummary,
     DomainRef,
     EntityRef,
+    FurtherInformation,
     OwnerRef,
     RelationshipType,
     TagRef,
@@ -115,11 +116,13 @@ def parse_properties(
     access_information = AccessInformation.model_validate(custom_properties_dict)
     usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
     data_summary = DataSummary.model_validate(custom_properties_dict)
+    further_information = FurtherInformation.model_validate(custom_properties_dict)
 
     custom_properties = CustomEntityProperties(
         access_information=access_information,
         usage_restrictions=usage_restrictions,
         data_summary=data_summary,
+        further_information=further_information,
     )
 
     return properties, custom_properties
@@ -237,6 +240,11 @@ def parse_relations(
     """
     parse the relationships results returned from a graphql querys
     """
+
+    # we may want to do something with total relations if we are returning child
+    # relations and need to paginate through relations - 10 relations returned as is
+    # There may be more than 10 lineage entities but since we currently only care
+    # if lineage exists for a dataset we don't need to capture everything    
     related_entities = []
     for j in relations_list:
         for i in j["relationships"]:
