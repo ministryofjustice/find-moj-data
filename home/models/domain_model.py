@@ -1,7 +1,7 @@
 import logging
 from typing import NamedTuple
 
-from home.service.search_facet_fetcher import SearchFacetFetcher
+from data_platform_catalogue.search_types import SearchFacets
 
 logger = logging.getLogger(__name__)
 
@@ -16,10 +16,9 @@ class DomainModel:
     Store information about domains and subdomains
     """
 
-    def __init__(self, search_facet_fetcher: SearchFacetFetcher):
+    def __init__(self, search_facets: SearchFacets):
         self.labels = {}
 
-        search_facets = search_facet_fetcher.fetch()
         self.top_level_domains = [
             Domain(option.value, option.label)
             for option in search_facets.options("domains")

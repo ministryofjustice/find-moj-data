@@ -13,13 +13,15 @@ def get_domain_choices() -> list[Domain]:
     choices = [
         Domain("", "All domains"),
     ]
-    choices.extend(DomainModel(SearchFacetFetcher()).top_level_domains)
+    facets = SearchFacetFetcher().fetch()
+    choices.extend(DomainModel(facets).top_level_domains)
     return choices
 
 
 def get_subdomain_choices() -> list[Domain]:
     choices = [Domain("", "All subdomains")]
-    choices.extend(DomainModel(SearchFacetFetcher()).all_subdomains())
+    facets = SearchFacetFetcher().fetch()
+    choices.extend(DomainModel(facets).all_subdomains())
     return choices
 
 
@@ -57,7 +59,8 @@ class SelectWithOptionAttribute(forms.Select):
             name, urn, label, selected, index, subindex, attrs
         )
 
-        self.domain_model = self.domain_model or DomainModel(SearchFacetFetcher())
+        facets = SearchFacetFetcher().fetch()
+        self.domain_model = self.domain_model or DomainModel(facets)
 
         if urn:
             option["attrs"]["data-parent"] = self.domain_model.get_parent_urn(urn)

@@ -299,8 +299,13 @@ def mock_get_glossary_terms_response(mock_catalogue):
 
 
 @pytest.fixture
-def valid_domain():
-    return DomainModel(SearchFacetFetcher()).top_level_domains[0]
+def search_facets():
+    return SearchFacetFetcher().fetch()
+
+
+@pytest.fixture
+def valid_domain(search_facets):
+    return DomainModel(search_facets).top_level_domains[0]
 
 
 @pytest.fixture

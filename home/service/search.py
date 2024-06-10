@@ -40,8 +40,8 @@ def domains_with_their_subdomains(
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
-        search_facet_fetcher = SearchFacetFetcher()
-        self.domain_model = DomainModel(search_facet_fetcher)
+        facets = SearchFacetFetcher().fetch()
+        self.domain_model = DomainModel(facets)
         self.stemmer = PorterStemmer()
         self.form = form
         if self.form.is_bound:
