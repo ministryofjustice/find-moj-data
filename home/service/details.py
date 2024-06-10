@@ -84,7 +84,9 @@ class DatasetDetailsService(GenericService):
         self.context = self._get_context()
 
     def _get_context(self):
-        split_datahub_url = urlsplit(os.environ["CATALOGUE_URL"])
+        split_datahub_url = urlsplit(
+            os.getenv("CATALOGUE_URL", "https://test-catalogue.gov.uk")
+        )
 
         return {
             "table": self.table_metadata,
