@@ -75,6 +75,7 @@ class SearchClient:
         start = 0 if page is None else int(page) * count
 
         types = self._map_result_types(result_types)
+        logger.debug(f"Getting facets with result types {types}")
 
         # This is the tag that any and every entity we want to present in search results
         # now must have.
