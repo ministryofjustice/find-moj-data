@@ -70,9 +70,7 @@ class DatasetDetailsService(GenericService):
         if parents:
             # Pick the first entity to use as the parent in the breadcrumb.
             # If the dataset belongs to multiple parents, this may diverge
-            # from the path the user took to get to this page. However as of datahub
-            # v0.12, assigning to multiple data products is not possible and we don't
-            # have datasets with multiple parent containers.
+            # from the path the user took to get to this page.
             self.parent_entity = parents[0]
             self.dataset_parent_type = ResultType.DATABASE.name.lower()
         else:

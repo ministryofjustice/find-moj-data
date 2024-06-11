@@ -208,7 +208,7 @@ class SearchClient:
 
     def _get_data_collection_page_results(self, response, key_for_results: str):
         """
-        for use by entities that hold collections of data, eg. data product and container
+        for use by entities that hold collections of data, eg. container
         """
         page_results = []
         for result in response[key_for_results]["searchResults"]:

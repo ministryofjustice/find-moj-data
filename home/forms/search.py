@@ -69,7 +69,7 @@ class SelectWithOptionAttribute(forms.Select):
 
 
 class SearchForm(forms.Form):
-    """Django form to represent data product search page inputs"""
+    """Django form to represent search page inputs"""
 
     query = forms.CharField(
         max_length=100,
