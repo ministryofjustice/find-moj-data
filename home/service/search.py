@@ -12,13 +12,16 @@ from django.conf import settings
 from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
-from home.forms.domain_model import DomainModel
 from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
 
 from .base import GenericService
+from .search_facet_fetcher import SearchFacetFetcher
 
 
-def domains_with_their_subdomains(domain: str, subdomain: str) -> list[str]:
+def domains_with_their_subdomains(
+    domain: str, subdomain: str, domain_model: DomainModel
+) -> list[str]:
     """
     Users can search by domain, and optionally by subdomain.
     When subdomain is passed, then we can filter on that directly.
@@ -30,14 +33,15 @@ def domains_with_their_subdomains(domain: str, subdomain: str) -> list[str]:
     if subdomain:
         return [subdomain]
 
-    subdomains = DomainModel().subdomains.get(domain, [])
+    subdomains = domain_model.subdomains.get(domain, [])
     subdomains = [subdomain[0] for subdomain in subdomains]
     return [domain, *subdomains] if not domain == "" else []
 
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
-        self.domain_model = DomainModel()
+        facets = SearchFacetFetcher().fetch()
+        self.domain_model = DomainModel(facets)
         self.stemmer = PorterStemmer()
         self.form = form
         if self.form.is_bound:
@@ -76,7 +80,9 @@ class SearchService(GenericService):
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         subdomain = form_data.get("subdomain", "")
-        domains_and_subdomains = domains_with_their_subdomains(domain, subdomain)
+        domains_and_subdomains = domains_with_their_subdomains(
+            domain, subdomain, self.domain_model
+        )
         where_to_access = self._build_custom_property_filter(
             "whereToAccessDataset=", form_data.get("where_to_access", [])
         )

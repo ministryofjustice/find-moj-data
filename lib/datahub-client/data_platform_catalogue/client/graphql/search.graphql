@@ -89,6 +89,16 @@ query Search(
               value
             }
           }
+          domain {
+            domain {
+              urn
+              id
+              properties {
+                name
+                description
+              }
+            }
+          }
         }
         ... on Dataset {
           urn
@@ -233,7 +243,7 @@ query Search(
             }
           }
         }
-       ... on Container {
+        ... on Container {
           urn
           type
           subTypes {

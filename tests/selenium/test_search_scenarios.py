@@ -59,7 +59,7 @@ class TestSearch:
         """
         Interacts with the filters on the left hand side
         """
-        domain = "Prison"
+        domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()
@@ -98,7 +98,7 @@ class TestSearch:
         Search settings persist as the user continues to
         interact with the search page.
         """
-        domain = "Prison"
+        domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()
@@ -131,7 +131,7 @@ class TestSearch:
         self.click_next_page()
         self.verify_page("2")
 
-        self.select_domain("Prison")
+        self.select_domain("Prisons")
         self.click_apply_filters()
         self.verify_page("1")
 
@@ -140,20 +140,19 @@ class TestSearch:
         Users can clear a filter by clicking on it within the "selected filters"
         panel.
         """
-        domain = "Prison"
+        domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
         self.click_apply_filters()
         self.verify_domain_selected(domain)
         self.click_clear_selected_filter(domain)
         self.verify_unselected_domain()
-        self.verify_unselected_subdomain()
 
     def test_clear_all_filters(self):
         """
         Users can click a button to clear all filters.
         """
-        domain = "Prison"
+        domain = "Prisons"
 
         self.start_on_the_search_page()
 
@@ -271,9 +270,6 @@ class TestSearch:
     def select_domain(self, domain):
         self.search_page.select_domain(domain)
 
-    def select_subdomain(self, domain):
-        self.search_page.select_subdomain(domain)
-
     def click_option(self, sortby):
         self.search_page.sort_label(sortby).click()
 
@@ -295,17 +291,9 @@ class TestSearch:
         selected_domain = self.search_page.get_selected_domain().text
         assert selected_domain == domain
 
-    def verify_subdomain_selected(self, domain):
-        selected_domain = self.search_page.get_selected_subdomain().text
-        assert selected_domain == domain
-
     def verify_unselected_domain(self):
         selected_domain = self.search_page.get_selected_domain().text
         assert selected_domain == "All domains"
-
-    def verify_unselected_subdomain(self):
-        selected_domain = self.search_page.get_selected_subdomain().text
-        assert selected_domain == "All subdomains"
 
     def verify_selected_filters_shown(self, domains):
         actual = {i.text for i in self.search_page.selected_filter_tags()}
