@@ -17,6 +17,11 @@ class DatabaseDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         self.result = search_results.page_results[0]
+
+        self.is_esda = any(
+            term.display_name == "ESDA" for term in self.result.glossary_terms
+        )
+
         self.entities_in_database = self._get_database_entities()
         self.context = self._get_context()
 
@@ -48,6 +53,7 @@ class DatabaseDetailsService(GenericService):
             "result_type": "Database",
             "tables": self.entities_in_database,
             "h1_value": "Details",
+            "is_esda": self.is_esda,
         }
 
         return context
