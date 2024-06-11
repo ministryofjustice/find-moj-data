@@ -1,6 +1,7 @@
 import os
 import re
 from types import GeneratorType
+from urllib.parse import quote
 
 import pytest
 
@@ -29,9 +30,9 @@ class TestSearchService:
     def test_get_context_h1_value(self, search_context):
         assert search_context["h1_value"] == "Search"
 
-    def test_get_context_label_clear_href(self, search_context):
+    def test_get_context_label_clear_href(self, search_context, valid_domain):
         assert search_context["label_clear_href"]["domain"] == {
-            "Prison": (
+            valid_domain.label: (
                 "?query=test&"
                 "where_to_access=analytical_platform&"
                 "entity_types=TABLE&"
@@ -44,7 +45,7 @@ class TestSearchService:
         assert search_context["label_clear_href"]["Where To Access"] == {
             "analytical_platform": (
                 "?query=test&"
-                "domain=urn%3Ali%3Adomain%3Aprison&"
+                f"domain={quote(valid_domain.urn)}&"
                 "subdomain=&"
                 "entity_types=TABLE&"
                 "sort=ascending&"
@@ -56,7 +57,7 @@ class TestSearchService:
         assert search_context["label_clear_href"]["Entity Types"] == {
             "Table": (
                 "?query=test&"
-                "domain=urn%3Ali%3Adomain%3Aprison&"
+                f"domain={quote(valid_domain.urn)}&"
                 "subdomain=&"
                 "where_to_access=analytical_platform&"
                 "sort=ascending&"
