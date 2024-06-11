@@ -362,6 +362,7 @@ class SearchClient:
         Map a Container entity to a SearchResult
         """
         tags = parse_tags(entity)
+        terms = parse_glossary_terms(entity)
         last_modified = parse_last_modified(entity)
         properties, custom_properties = parse_properties(entity)
         domain = parse_domain(entity)
@@ -391,6 +392,7 @@ class SearchClient:
             description=properties.get("description", ""),
             metadata=metadata,
             tags=tags,
+            glossary_terms=terms,
             last_modified=last_modified,
         )
 
