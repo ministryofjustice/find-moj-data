@@ -14,6 +14,7 @@ from data_platform_catalogue.entities import (
     CustomEntityProperties,
     DataSummary,
     EntityRef,
+    FurtherInformation,
     RelationshipType,
     UsageRestrictions,
 )
@@ -244,7 +245,9 @@ def test_parse_properties():
                 {"key": "dpia_required", "value": False},
                 {"key": "dpia_location", "value": ""},
                 {"key": "data_sensitivity_level", "value": "OFFICIAL"},
-                {"key": "where_to_access_dataset", "value": "analytical_platform"},
+                {"key": "dc_where_to_access_dataset", "value": "analytical_platform"},
+                {"key": "dc_slack_channel_name", "value": "test-channel"},
+                {"key": "dc_slack_channel_url", "value": "test-url"},
                 {"key": "source_dataset_name", "value": ""},
                 {"key": "s3_location", "value": "s3://databucket/"},
                 {"key": "row_count", "value": 100},
@@ -269,11 +272,14 @@ def test_parse_properties():
             dpia_location="",
         ),
         access_information=AccessInformation(
-            where_to_access_dataset="analytical_platform",
+            dc_where_to_access_dataset="analytical_platform",
             source_dataset_name="",
             s3_location="s3://databucket/",
         ),
         data_summary=DataSummary(row_count=100),
+        further_information=FurtherInformation(
+            dc_slack_channel_name="test-channel", dc_slack_channel_url="test-url"
+        ),
     )
 
 
@@ -284,7 +290,7 @@ def test_parse_properties_with_none_values():
                 {"key": "dpia_required", "value": False},
                 {"key": "dpia_location", "value": ""},
                 {"key": "data_sensitivity_level", "value": "OFFICIAL"},
-                {"key": "where_to_access_dataset", "value": "analytical_platform"},
+                {"key": "dc_where_to_access_dataset", "value": "analytical_platform"},
                 {"key": "source_dataset_name", "value": ""},
                 {"key": "s3_location", "value": "s3://databucket/"},
                 {"key": "row_count", "value": 100},
@@ -311,9 +317,10 @@ def test_parse_properties_with_none_values():
             dpia_location="",
         ),
         access_information=AccessInformation(
-            where_to_access_dataset="analytical_platform",
+            dc_where_to_access_dataset="analytical_platform",
             source_dataset_name="",
             s3_location="s3://databucket/",
         ),
         data_summary=DataSummary(row_count=100),
+        further_information=FurtherInformation(),
     )

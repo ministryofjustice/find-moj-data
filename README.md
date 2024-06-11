@@ -14,6 +14,13 @@ You will need npm (for javascript dependencies) and poetry (for python dependenc
    `CATALOGUE_TOKEN` var in .env to be able to retrieve search data.
 1. Run `poetry run python manage.py runserver`
 
+```sh
+poetry install --no-root
+npm install
+poetry run python -m nltk.downloader punkt
+poetry run python manage.py runserver
+```
+
 ## Current Endpoints
 
 /search

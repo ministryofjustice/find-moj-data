@@ -18,6 +18,7 @@ from data_platform_catalogue.entities import (
     DataSummary,
     DomainRef,
     EntityRef,
+    FurtherInformation,
     Governance,
     OwnerRef,
     RelationshipType,
@@ -67,8 +68,12 @@ class TestCatalogueClientWithDatahub:
                     dpia_location="",
                 ),
                 access_information=AccessInformation(
-                    where_to_access_dataset="analytical_platform",
+                    dc_where_to_access_dataset="analytical_platform",
                     s3_location="s3://databucket/",
+                ),
+                further_information=FurtherInformation(
+                    dc_slack_channel_name="test-channel",
+                    dc_slack_channel_url="test-url",
                 ),
             ),
         )
@@ -125,12 +130,18 @@ class TestCatalogueClientWithDatahub:
             platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
             custom_properties=CustomEntityProperties(
                 access_information=AccessInformation(
-                    where_to_access_dataset="", source_dataset_name="", s3_location=""
+                    dc_where_to_access_dataset="",
+                    source_dataset_name="",
+                    s3_location="",
                 ),
                 data_summary=DataSummary(row_count=5),
                 usage_restrictions=UsageRestrictions(
                     dpia_required=True,
                     dpia_location="",
+                ),
+                further_information=FurtherInformation(
+                    dc_slack_channel_name="test-channel",
+                    dc_slack_channel_url="test-url",
                 ),
             ),
         )
@@ -196,12 +207,18 @@ class TestCatalogueClientWithDatahub:
             platform=EntityRef(urn="athena", display_name="athena"),
             custom_properties=CustomEntityProperties(
                 access_information=AccessInformation(
-                    where_to_access_dataset="", source_dataset_name="", s3_location=""
+                    dc_where_to_access_dataset="",
+                    source_dataset_name="",
+                    s3_location="",
                 ),
-                data_summary=DataSummary(row_count=5),
                 usage_restrictions=UsageRestrictions(
                     dpia_required=True,
                     dpia_location="",
+                ),
+                data_summary=DataSummary(row_count=5),
+                further_information=FurtherInformation(
+                    dc_slack_channel_name="test-channel",
+                    dc_slack_channel_url="test-url",
                 ),
             ),
         )
@@ -392,14 +409,16 @@ class TestCatalogueClientWithDatahub:
             platform=EntityRef(urn="datahub", display_name="datahub"),
             custom_properties=CustomEntityProperties(
                 usage_restrictions=UsageRestrictions(
-                    status=None,
                     dpia_required=None,
                     dpia_location="",
                 ),
                 access_information=AccessInformation(
-                    where_to_access_dataset="", source_dataset_name="", s3_location=""
+                    dc_where_to_access_dataset="",
+                    source_dataset_name="",
+                    s3_location="",
                 ),
                 data_summary=DataSummary(),
+                further_information=FurtherInformation(),
             ),
             column_details=[],
         )
@@ -453,14 +472,16 @@ class TestCatalogueClientWithDatahub:
             platform=EntityRef(urn="justice-data", display_name="justice-data"),
             custom_properties=CustomEntityProperties(
                 usage_restrictions=UsageRestrictions(
-                    status=None,
                     dpia_required=None,
                     dpia_location="",
                 ),
                 access_information=AccessInformation(
-                    where_to_access_dataset="", source_dataset_name="", s3_location=""
+                    dc_where_to_access_dataset="",
+                    source_dataset_name="",
+                    s3_location="",
                 ),
                 data_summary=DataSummary(),
+                further_information=FurtherInformation(),
             ),
             external_url="https://data.justice.gov.uk/prisons/public-protection/absconds",
         )
