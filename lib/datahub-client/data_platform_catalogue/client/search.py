@@ -7,6 +7,7 @@ from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     parse_created_and_modified,
     parse_domain,
+    parse_glossary_terms,
     parse_last_modified,
     parse_names,
     parse_owner,
@@ -207,7 +208,7 @@ class SearchClient:
 
     def _get_data_collection_page_results(self, response, key_for_results: str):
         """
-        for use by entities that hold collections of data, eg. data product and container
+        for use by entities that hold collections of data, eg. container
         """
         page_results = []
         for result in response[key_for_results]["searchResults"]:
@@ -254,6 +255,7 @@ class SearchClient:
         owner = parse_owner(entity)
         properties, custom_properties = parse_properties(entity)
         tags = parse_tags(entity)
+        terms = parse_glossary_terms(entity)
         last_modified = parse_last_modified(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
 
@@ -288,7 +290,8 @@ class SearchClient:
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             metadata=metadata,
-            tags=[tag_str.display_name for tag_str in tags],
+            tags=tags,
+            glossary_terms=terms,
             last_modified=modified or last_modified,
         )
 
@@ -359,6 +362,7 @@ class SearchClient:
         Map a Container entity to a SearchResult
         """
         tags = parse_tags(entity)
+        terms = parse_glossary_terms(entity)
         last_modified = parse_last_modified(entity)
         properties, custom_properties = parse_properties(entity)
         domain = parse_domain(entity)
@@ -387,7 +391,8 @@ class SearchClient:
             display_name=display_name,
             description=properties.get("description", ""),
             metadata=metadata,
-            tags=[tag.display_name for tag in tags],
+            tags=tags,
+            glossary_terms=terms,
             last_modified=last_modified,
         )
 

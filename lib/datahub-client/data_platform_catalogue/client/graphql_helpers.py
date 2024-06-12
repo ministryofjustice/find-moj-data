@@ -11,6 +11,7 @@ from data_platform_catalogue.entities import (
     DomainRef,
     EntityRef,
     FurtherInformation,
+    GlossaryTermRef,
     OwnerRef,
     RelationshipType,
     TagRef,
@@ -70,7 +71,7 @@ def parse_created_and_modified(
 
 def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
     """
-    Parse tag information into a flat list of strings for displaying
+    Parse tag information into a list of TagRef objects for displaying
     as part of the search result.
     """
     outer_tags = entity.get("tags") or {}
@@ -85,6 +86,26 @@ def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
                 )
             )
     return tags
+
+
+def parse_glossary_terms(entity: dict[str, Any]) -> list[GlossaryTermRef]:
+    """
+    Parse glossary_term information into a list of TagRef for displaying
+    as part of the search result.
+    """
+    outer_terms = entity.get("glossaryTerms") or {}
+    terms = []
+    for term in outer_terms.get("terms", []):
+        properties = term.get("term", {}).get("properties", {})
+        if properties:
+            terms.append(
+                GlossaryTermRef(
+                    display_name=properties.get("name", ""),
+                    urn=term.get("term", {}).get("urn", ""),
+                    description=properties.get("description", ""),
+                )
+            )
+    return terms
 
 
 def parse_properties(

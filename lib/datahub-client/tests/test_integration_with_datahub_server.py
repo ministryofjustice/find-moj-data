@@ -179,9 +179,7 @@ def test_paginated_search_results_unique():
 @runs_on_development_server
 def test_list_database_tables():
     client = DataHubCatalogueClient(jwt_token=jwt_token, api_url=api_url)
-    assets = client.list_database_tables(
-        urn="urn:li:dataProduct:my_data_product", count=20
-    )
+    assets = client.list_database_tables(urn="urn:li:database:foo", count=20)
     assert assets
 
 

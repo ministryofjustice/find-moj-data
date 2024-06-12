@@ -351,9 +351,9 @@ def detail_database_context(mock_catalogue):
 @pytest.fixture
 def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
     """
-    Mock the catalogue response for a dataset that is linked to a data product
+    Mock the catalogue response for a dataset that has a parent
     """
-    data_product = {"urn": "data-product-abc", "name": "parent"}
+    container = {"urn": "database-abc", "name": "parent"}
 
     table_metadata = generate_table_metadata()
     mock_catalogue.get_table_details.return_value = table_metadata
@@ -363,14 +363,14 @@ def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
         page_results=[
             generate_search_result(
                 result_type=ResultType.TABLE,
-                urn="dataset-abc",
-                metadata={"data_products": [data_product]},
+                urn="table-abc",
+                metadata={},
             )
         ],
     )
 
     return {
         "urn": "dataset-abc",
-        "parent_entity": data_product,
+        "parent_entity": container,
         "table_metadata": table_metadata,
     }

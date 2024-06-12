@@ -22,7 +22,7 @@ class TestSearch:
         selenium,
         home_page,
         search_page,
-        details_data_product_page,
+        details_database_page,
         table_details_page,
         glossary_page,
         chromedriver_path,
@@ -33,7 +33,7 @@ class TestSearch:
         self.live_server_url = live_server.url
         self.home_page = home_page
         self.search_page = search_page
-        self.details_data_product_page = details_data_product_page
+        self.details_database_page = details_database_page
         self.table_details_page = table_details_page
         self.glossary_page = glossary_page
         self.chromedriver_path = chromedriver_path
@@ -196,15 +196,15 @@ class TestSearch:
         self.enter_a_query_and_submit("court timeliness")
         item_name = self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page(item_name)
-        self.verify_data_product_details()
-        self.verify_data_product_tables_listed()
+        self.verify_database_details()
+        self.verify_database_tables_listed()
         self.click_on_table()
         self.verify_i_am_on_the_table_details_page()
 
     def start_on_the_home_page(self):
         self.selenium.get(f"{self.live_server_url}")
         assert self.selenium.title in self.page_titles
-        heading_text = self.details_data_product_page.primary_heading().text
+        heading_text = self.details_database_page.primary_heading().text
 
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
@@ -257,10 +257,10 @@ class TestSearch:
     def verify_i_am_on_the_details_page(self, item_name):
         assert self.selenium.title in self.page_titles
 
-        heading_text = self.details_data_product_page.primary_heading().text
+        heading_text = self.details_database_page.primary_heading().text
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
-        assert item_name == self.details_data_product_page.secondary_heading().text
+        assert item_name == self.details_database_page.secondary_heading().text
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
@@ -315,16 +315,16 @@ class TestSearch:
         value = self.search_page.checked_sort_option().get_attribute("value") or ""
         assert value == expected.lower()
 
-    def verify_data_product_tables_listed(self):
-        tables = self.details_data_product_page.data_product_tables()
+    def verify_database_tables_listed(self):
+        tables = self.details_database_page.database_tables()
         assert tables.text
 
-    def verify_data_product_details(self):
-        data_product_details = self.details_data_product_page.data_product_details()
-        assert data_product_details.text
+    def verify_database_details(self):
+        database_details = self.details_database_page.database_details()
+        assert database_details.text
 
     def click_on_table(self):
-        self.details_data_product_page.table_link().click()
+        self.details_database_page.table_link().click()
 
     def verify_i_am_on_the_table_details_page(self):
         assert self.table_details_page.caption() == "Table"

@@ -5,6 +5,8 @@ from datetime import datetime
 from enum import Enum, auto
 from typing import Any
 
+from data_platform_catalogue.entities import GlossaryTermRef, TagRef
+
 
 class ResultType(Enum):
     """Result type."""
@@ -62,13 +64,16 @@ class SearchResult:
     description: str = ""
     matches: dict[str, str] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
-    tags: list[str] = field(default_factory=list)
+    tags: list[TagRef] = field(default_factory=list)
+    glossary_terms: list[GlossaryTermRef] = field(default_factory=list)
     last_modified: datetime | None = None
     created: datetime | None = None
-    tags_to_display: list[str] = field(init=False)
+    tags_to_display: list[TagRef] = field(init=False)
 
     def __post_init__(self):
-        self.tags_to_display = [tag for tag in self.tags if not tag.startswith("dc_")]
+        self.tags_to_display = [
+            tag for tag in self.tags if not tag.display_name.startswith("dc_")
+        ]
 
 
 @dataclass
