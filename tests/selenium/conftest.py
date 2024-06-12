@@ -68,17 +68,17 @@ class Page:
         self.selenium = selenium
 
 
-class DataProductDetailsPage(Page):
+class DatabaseDetailsPage(Page):
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
     def secondary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h2")
 
-    def data_product_details(self):
+    def database_details(self):
         return self.selenium.find_element(By.ID, "metadata-property-list")
 
-    def data_product_tables(self):
+    def database_tables(self):
         return self.selenium.find_element(By.TAG_NAME, "table")
 
     def table_link(self):
@@ -240,8 +240,8 @@ def search_page(selenium) -> SearchPage:
 
 
 @pytest.fixture
-def details_data_product_page(selenium) -> DataProductDetailsPage:
-    return DataProductDetailsPage(selenium)
+def details_database_page(selenium) -> DatabaseDetailsPage:
+    return DatabaseDetailsPage(selenium)
 
 
 @pytest.fixture
