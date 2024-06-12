@@ -3,18 +3,6 @@ kind: Ingress
 metadata:
   name: find-moj-data-ingress
   annotations:
-    nginx.ingress.kubernetes.io/server-snippet: |
-        location /metrics {
-          allow 195.59.75.0/24;
-          allow 194.33.192.0/25;
-          allow 194.33.193.0/25;
-          allow 194.33.196.0/25;
-          allow 194.33.197.0/25;
-          allow 51.149.250.0/24;
-          allow 51.149.251.0/24;
-          allow 35.176.93.186/32;
-          deny all;
-        }
     external-dns.alpha.kubernetes.io/set-identifier: find-moj-data-ingress-${NAMESPACE}-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
 spec:
