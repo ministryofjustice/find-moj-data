@@ -98,7 +98,8 @@ def generate_table_metadata(
         name=name or fake.unique.name(),
         fully_qualified_name="Foo.Dataset",
         description=description or fake.paragraph(),
-        relationships=relations or {RelationshipType.PARENT: []},
+        relationships=relations
+        or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(

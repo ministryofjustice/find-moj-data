@@ -1,6 +1,8 @@
+import os
 from data_platform_catalogue.entities import RelationshipType
 from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
 from django.core.exceptions import ObjectDoesNotExist
+from urllib.parse import urlsplit
 
 from .base import GenericService
 
@@ -86,12 +88,31 @@ class DatasetDetailsService(GenericService):
         self.context = self._get_context()
 
     def _get_context(self):
+        split_datahub_url = urlsplit(
+            os.getenv("CATALOGUE_URL", "https://test-catalogue.gov.uk")
+        )
+
         return {
             "table": self.table_metadata,
             "parent_entity": self.parent_entity,
             "dataset_parent_type": self.dataset_parent_type,
             "h1_value": "Details",
+            "has_lineage": self.has_lineage(),
+            "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",
         }
+
+    def has_lineage(self) -> bool:
+        """
+        Inspects the relationships property of the Table model to establish if a
+        Dataset has any lineage recorded in datahub.
+        """
+        has_lineage = (
+            len(
+                self.table_metadata.relationships.get(RelationshipType.DATA_LINEAGE, [])
+            )
+            > 0
+        )
+        return has_lineage
 
 
 class ChartDetailsService(GenericService):

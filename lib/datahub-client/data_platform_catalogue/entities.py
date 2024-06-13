@@ -10,6 +10,7 @@ DATAHUB_DATE_FORMAT = "%Y%m%d"
 class RelationshipType(Enum):
     PARENT = "PARENT"
     PLATFORM = "PLATFORM"
+    DATA_LINEAGE = "DATA_LINEAGE"
 
 
 class EntityRef(BaseModel):

@@ -14,10 +14,50 @@ query getDatasetDetails($urn: String!) {
         }
       }
     }
+    downstream_lineage_relations: lineage (
+      input: {direction: DOWNSTREAM
+      start:0,
+      count:10}
+    ) {
+      total
+      relationships{
+        type
+        entity{
+          urn
+          ... on Dataset {
+            name
+            properties{
+              name
+            }
+          }
+          type
+        }
+      }
+    }
+    upstream_lineage_relations: lineage (
+      input: {direction: UPSTREAM
+      start:0,
+      count:10}
+    ) {
+      total
+      relationships{
+        type
+        entity{
+          urn
+          ... on Dataset {
+            name
+            properties{
+              name
+            }
+          }
+          type
+        }
+      }
+    }
     subTypes {
       typeNames
     }
-    container_relations: relationships(
+    parent_container_relations: relationships(
       input: { types: ["IsPartOf"], direction: OUTGOING, count: 10 }
     ) {
       total
