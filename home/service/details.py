@@ -1,6 +1,6 @@
 import os
 from data_platform_catalogue.entities import RelationshipType
-from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
+from data_platform_catalogue.search_types import ResultType
 from django.core.exceptions import ObjectDoesNotExist
 from urllib.parse import urlsplit
 
@@ -12,31 +12,25 @@ class DatabaseDetailsService(GenericService):
         self.urn = urn
         self.client = self._get_catalogue_client()
 
-        filter_value = [MultiSelectFilter("urn", [urn])]
-        search_results = self.client.search(query="", page=None, filters=filter_value)
+        self.database_metadata = self.client.get_database_details(self.urn)
 
-        if not search_results.page_results:
+        if not self.database_metadata:
             raise ObjectDoesNotExist(urn)
 
-        self.result = search_results.page_results[0]
-
-        self.is_esda = any(
-            term.display_name == "Essential Shared Data Asset (ESDA)"
-            for term in self.result.glossary_terms
-        )
-
+        self.is_esda = any(term.display_name == "Essential Shared Data Asset (ESDA)"
+            for term in self.database_metadata.glossary_terms)
         self.entities_in_database = self._get_database_entities()
         self.context = self._get_context()
 
     def _get_database_entities(self):
         # we might want to implement pagination for database children
-        # details at some point
-        database_search = self.client.list_database_tables(
+        # details    at some point
+        database_search_results = self.client.list_database_tables(
             urn=self.urn, count=500
         ).page_results
 
         entities_in_database = []
-        for result in database_search:
+        for result in database_search_results:
             entities_in_database.append(
                 {
                     "name": result.name,
@@ -52,7 +46,7 @@ class DatabaseDetailsService(GenericService):
 
     def _get_context(self):
         context = {
-            "result": self.result,
+            "database": self.database_metadata,
             "result_type": "Database",
             "tables": self.entities_in_database,
             "h1_value": "Details",
@@ -73,7 +67,6 @@ class DatasetDetailsService(GenericService):
         if not self.table_metadata:
             raise ObjectDoesNotExist(urn)
 
-        self.table_metadata
         relationships = self.table_metadata.relationships or {}
         parents = relationships.get(RelationshipType.PARENT)
         if parents:

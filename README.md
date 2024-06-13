@@ -18,6 +18,7 @@ You will need npm (for javascript dependencies) and poetry (for python dependenc
 poetry install --no-root
 npm install
 poetry run python -m nltk.downloader punkt
+poetry run python manage.py migrate
 poetry run python manage.py runserver
 ```
 
@@ -43,3 +44,7 @@ Run `pre-commit install` from inside the poetry environment to set up pre commit
 - Javascript unit tests: `npm test`
 - Selenium tests: `pytest -m tests/selenium`
 - Search benchmarks (these query the real Datahub backend): `pytest tests/benchmarks`
+
+Selenium makes use of chromedriver to run a headless browser.
+As chromedriver is updated, the local version of chromedriver and chrome may drift apart.
+If so, update your local chrome, and run `npm install -g chromedriver chromedriver@latest` to install the latest chromedriver.

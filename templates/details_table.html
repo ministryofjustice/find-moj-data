@@ -22,7 +22,6 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-l">{{h1_value}}</h1>
@@ -46,7 +45,7 @@
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with data_owner=table.governance.data_owner.display_name data_owner_email=table.governance.data_owner.email %}
+      {% include "partial/contact_info.html" with data_owner=table.governance.data_owner.display_name data_owner_email=table.governance.data_owner.email slack_channel=table.custom_properties.further_information %}
     </div>
   </div>
 
