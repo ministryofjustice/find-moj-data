@@ -256,21 +256,26 @@ def parse_columns(entity: dict[str, Any]) -> list[Column]:
 
 
 def parse_relations(
-    relationship_type: RelationshipType, relations_dict: dict
+    relationship_type: RelationshipType, relations_list: list[dict]
 ) -> dict[RelationshipType, list[EntityRef]]:
     """
     parse the relationships results returned from a graphql querys
     """
-    # we may want to do soemthing with total realtion if we are returning child
+
+    # we may want to do something with total relations if we are returning child
     # relations and need to paginate through relations - 10 relations returned as is
-    # total_relations = relations_dict.get("total", 0)
-    parent_entities = relations_dict.get("relationships", [])
-    related_entities = [
-        EntityRef(
-            urn=i["entity"]["urn"], display_name=i["entity"]["properties"]["name"]
-        )
-        for i in parent_entities
-    ]
+    # There may be more than 10 lineage entities but since we currently only care
+    # if lineage exists for a dataset we don't need to capture everything    
+    related_entities = []
+    for j in relations_list:
+        for i in j["relationships"]:
+            urn = i.get("entity").get("urn")
+            display_name = (
+                i.get("entity").get("properties").get("name")
+                if i.get("entity", {}).get("properties") is not None
+                else i.get("entity").get("name")
+            )
+            related_entities.append(EntityRef(urn=urn, display_name=display_name))
 
     relations_return = {relationship_type: related_entities}
     return relations_return
