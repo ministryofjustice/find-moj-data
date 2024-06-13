@@ -93,22 +93,20 @@ class DatasetDetailsService(GenericService):
             "parent_entity": self.parent_entity,
             "dataset_parent_type": self.dataset_parent_type,
             "h1_value": "Details",
-            "has_lineage": self.get_has_lineage(),
+            "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",
         }
 
-    def get_has_lineage(self) -> bool:
+    def has_lineage(self) -> bool:
         """
         Inspects the relationships property of the Table model to establish if a
         Dataset has any lineage recorded in datahub.
         """
         has_lineage = (
-            True
-            if len(
+            len(
                 self.table_metadata.relationships.get(RelationshipType.DATA_LINEAGE, [])
             )
             > 0
-            else False
         )
         return has_lineage
 
