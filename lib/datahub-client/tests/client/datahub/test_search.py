@@ -2,12 +2,12 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
-
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
     DataSummary,
     FurtherInformation,
+    TagRef,
     UsageRestrictions,
 )
 from data_platform_catalogue.search_types import (
@@ -1024,7 +1024,7 @@ def test_search_for_container(mock_graph, searcher):
                     "data_summary": DataSummary(),
                     "further_information": FurtherInformation(),
                 },
-                tags=["test"],
+                tags=[TagRef(display_name="test", urn="urn:li:tag:test")],
                 last_modified=None,
                 created=None,
             )
@@ -1143,9 +1143,9 @@ def test_tag_to_display(tags, result):
             "s3_location": "",
             "row_count": "",
         },
-        tags=tags,
+        tags=[TagRef(display_name=t, urn=f"urn:tag:{t}") for t in tags],
         last_modified=None,
         created=None,
     )
 
-    assert test_search_result.tags_to_display == result
+    assert [t.display_name for t in test_search_result.tags_to_display] == result

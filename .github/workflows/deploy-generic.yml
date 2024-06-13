@@ -7,14 +7,6 @@ on:
         description: "which environment to deploy to"
         required: true
         type: string
-      ecr_repository:
-        description: "ecr repo to hold container image"
-        required: true
-        type: string
-      ecr_region:
-        description: "ecr region to hold container image"
-        required: true
-        type: string
     secrets:
       kube_namespace:
         description: "the kubernetes namespace to deploy to"
@@ -58,7 +50,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
-          aws-region: ${{ inputs.ECR_REGION }}
+          aws-region: ${{ vars.ECR_REGION }}
 
       - name: Login to ECR
         id: login-to-ecr
@@ -68,7 +60,7 @@ jobs:
         id: build-docker-image
         env:
           REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-          REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
+          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
 
@@ -76,7 +68,7 @@ jobs:
         id: push-docker-image-to-ecr
         env:
           REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-          REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
+          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
@@ -93,7 +85,7 @@ jobs:
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
           IMAGE_TAG: ${{ github.sha }}
           REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-          REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
+          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}

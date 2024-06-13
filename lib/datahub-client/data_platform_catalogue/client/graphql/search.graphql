@@ -80,6 +80,28 @@ query Search(
               }
             }
           }
+          tags {
+            tags {
+              tag {
+                urn
+                properties {
+                  name
+                  description
+                }
+              }
+            }
+          }
+          glossaryTerms {
+            terms {
+              term {
+                urn
+                properties {
+                  name
+                  description
+                }
+              }
+            }
+          }
           properties {
             name
             description
@@ -87,6 +109,16 @@ query Search(
             customProperties {
               key
               value
+            }
+          }
+          domain {
+            domain {
+              urn
+              id
+              properties {
+                name
+                description
+              }
             }
           }
         }
@@ -148,6 +180,17 @@ query Search(
               }
             }
           }
+          glossaryTerms {
+            terms {
+              term {
+                urn
+                properties {
+                  name
+                  description
+                }
+              }
+            }
+          }
           lastIngested
           domain {
             domain {
@@ -160,61 +203,7 @@ query Search(
             }
           }
         }
-        ... on DataProduct {
-          urn
-          type
-          ownership {
-            owners {
-              owner {
-                ... on CorpUser {
-                  urn
-                  properties {
-                    fullName
-                    email
-                  }
-                }
-                ... on CorpGroup {
-                  urn
-                  properties {
-                    displayName
-                    email
-                  }
-                }
-              }
-            }
-          }
-          properties {
-            name
-            description
-            customProperties {
-              key
-              value
-            }
-            numAssets
-          }
-          domain {
-            domain {
-              urn
-              id
-              properties {
-                name
-                description
-              }
-            }
-          }
-          tags {
-            tags {
-              tag {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
-          }
-        }
-       ... on Container {
+        ... on Container {
           urn
           type
           subTypes {
@@ -261,6 +250,17 @@ query Search(
           tags {
             tags {
               tag {
+                urn
+                properties {
+                  name
+                  description
+                }
+              }
+            }
+          }
+          glossaryTerms {
+            terms {
+              term {
                 urn
                 properties {
                   name

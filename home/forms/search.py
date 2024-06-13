@@ -4,7 +4,8 @@ from urllib.parse import urlencode
 from data_platform_catalogue.search_types import ResultType
 from django import forms
 
-from .domain_model import Domain, DomainModel
+from ..models.domain_model import Domain, DomainModel
+from ..service.search_facet_fetcher import SearchFacetFetcher
 
 
 def get_domain_choices() -> list[Domain]:
@@ -12,13 +13,15 @@ def get_domain_choices() -> list[Domain]:
     choices = [
         Domain("", "All domains"),
     ]
-    choices.extend(DomainModel().top_level_domains)
+    facets = SearchFacetFetcher().fetch()
+    choices.extend(DomainModel(facets).top_level_domains)
     return choices
 
 
 def get_subdomain_choices() -> list[Domain]:
     choices = [Domain("", "All subdomains")]
-    choices.extend(DomainModel().all_subdomains())
+    facets = SearchFacetFetcher().fetch()
+    choices.extend(DomainModel(facets).all_subdomains())
     return choices
 
 
@@ -47,8 +50,7 @@ def get_entity_types():
 class SelectWithOptionAttribute(forms.Select):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.domain_model = DomainModel()
+        self.domain_model = None
 
     def create_option(
         self, name, urn, label, selected, index, subindex=None, attrs=None
@@ -57,6 +59,9 @@ class SelectWithOptionAttribute(forms.Select):
             name, urn, label, selected, index, subindex, attrs
         )
 
+        facets = SearchFacetFetcher().fetch()
+        self.domain_model = self.domain_model or DomainModel(facets)
+
         if urn:
             option["attrs"]["data-parent"] = self.domain_model.get_parent_urn(urn)
 
@@ -64,7 +69,7 @@ class SelectWithOptionAttribute(forms.Select):
 
 
 class SearchForm(forms.Form):
-    """Django form to represent data product search page inputs"""
+    """Django form to represent search page inputs"""
 
     query = forms.CharField(
         max_length=100,

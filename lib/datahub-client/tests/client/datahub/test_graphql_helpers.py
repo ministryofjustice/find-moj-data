@@ -4,8 +4,10 @@ import pytest
 from data_platform_catalogue.client.graphql_helpers import (
     parse_columns,
     parse_created_and_modified,
+    parse_glossary_terms,
     parse_properties,
     parse_relations,
+    parse_tags,
 )
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -15,7 +17,9 @@ from data_platform_catalogue.entities import (
     DataSummary,
     EntityRef,
     FurtherInformation,
+    GlossaryTermRef,
     RelationshipType,
+    TagRef,
     UsageRestrictions,
 )
 
@@ -324,3 +328,50 @@ def test_parse_properties_with_none_values():
         data_summary=DataSummary(row_count=100),
         further_information=FurtherInformation(),
     )
+
+
+def test_parse_tags():
+    tag = TagRef(display_name="abc", urn="urn:tag:abc")
+    result = parse_tags(
+        {
+            "tags": {
+                "tags": [
+                    {
+                        "tag": {
+                            "urn": tag.urn,
+                            "properties": {
+                                "name": tag.display_name,
+                            },
+                        }
+                    }
+                ]
+            }
+        }
+    )
+
+    assert result == [tag]
+
+
+def test_parse_glossary_terms():
+    term = GlossaryTermRef(
+        display_name="abc", urn="urn:glossaryTerm:abc", description="hello world"
+    )
+    result = parse_glossary_terms(
+        {
+            "glossaryTerms": {
+                "terms": [
+                    {
+                        "term": {
+                            "urn": term.urn,
+                            "properties": {
+                                "name": term.display_name,
+                                "description": term.description,
+                            },
+                        }
+                    }
+                ]
+            }
+        }
+    )
+
+    assert result == [term]

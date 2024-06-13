@@ -32,8 +32,10 @@ from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
 from home.service.details import DatabaseDetailsService
 from home.service.search import SearchService
+from home.service.search_facet_fetcher import SearchFacetFetcher
 
 fake = Faker()
 
@@ -145,22 +147,6 @@ def generate_page(page_size=20, result_type: ResultType | None = None):
     return results
 
 
-def generate_options(num_options=5):
-    """
-    Generate a list of options for the search facets
-    """
-    results = []
-    for _ in range(num_options):
-        results.append(
-            FacetOption(
-                value=fake.name(),
-                label=fake.name(),
-                count=fake.random_int(min=0, max=100),
-            )
-        )
-    return results
-
-
 @pytest.fixture(autouse=True)
 def client():
     client = Client()
@@ -180,7 +166,26 @@ def mock_catalogue(request):
     mock_search_response(
         mock_catalogue, page_results=generate_page(), total_results=100
     )
-    mock_search_facets_response(mock_catalogue, domains=generate_options())
+    mock_search_facets_response(
+        mock_catalogue,
+        domains=[
+            FacetOption(
+                value="urn:li:domain:prisons",
+                label="Prisons",
+                count=fake.random_int(min=0, max=100),
+            ),
+            FacetOption(
+                value="urn:li:domain:courts",
+                label="Courts",
+                count=fake.random_int(min=0, max=100),
+            ),
+            FacetOption(
+                value="urn:li:domain:finance",
+                label="Finance",
+                count=fake.random_int(min=0, max=100),
+            ),
+        ],
+    )
     mock_get_glossary_terms_response(mock_catalogue)
     mock_list_database_tables_response(
         mock_catalogue,
@@ -295,11 +300,21 @@ def mock_get_glossary_terms_response(mock_catalogue):
 
 
 @pytest.fixture
-def valid_form():
+def search_facets():
+    return SearchFacetFetcher().fetch()
+
+
+@pytest.fixture
+def valid_domain(search_facets):
+    return DomainModel(search_facets).top_level_domains[0]
+
+
+@pytest.fixture
+def valid_form(valid_domain):
     valid_form = SearchForm(
         data={
             "query": "test",
-            "domain": "urn:li:domain:prison",
+            "domain": valid_domain.urn,
             "entity_types": ["TABLE"],
             "where_to_access": ["analytical_platform"],
             "sort": "ascending",
@@ -337,9 +352,9 @@ def detail_database_context(mock_catalogue):
 @pytest.fixture
 def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
     """
-    Mock the catalogue response for a dataset that is linked to a data product
+    Mock the catalogue response for a dataset that has a parent
     """
-    data_product = {"urn": "data-product-abc", "name": "parent"}
+    container = {"urn": "database-abc", "name": "parent"}
 
     table_metadata = generate_table_metadata()
     mock_catalogue.get_table_details.return_value = table_metadata
@@ -349,14 +364,14 @@ def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
         page_results=[
             generate_search_result(
                 result_type=ResultType.TABLE,
-                urn="dataset-abc",
-                metadata={"data_products": [data_product]},
+                urn="table-abc",
+                metadata={},
             )
         ],
     )
 
     return {
         "urn": "dataset-abc",
-        "parent_entity": data_product,
+        "parent_entity": container,
         "table_metadata": table_metadata,
     }

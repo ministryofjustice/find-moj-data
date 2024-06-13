@@ -23,12 +23,8 @@ OVERLAP_THRESHOLD = 0.75
             "urn:li:chart:(justice-data,accommodation-on-release)",
         ),
         (
-            "vcms_activations",
-            "urn:li:dataset:(urn:li:dataPlatform:dbt,awsdatacatalog.alpha_vcms_data.vcms_activations,PROD)",
-        ),
-        (
             "ns_postcode_lookup_latest_2011census",
-            "urn:li:dataset:(urn:li:dataPlatform:dbt,awsdatacatalog.common_lookup.ns_postcode_lookup_latest_2011census,PROD)",
+            "urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.common_lookup.ns_postcode_lookup_latest_2011census,PROD)",
         ),
     ],
 )
@@ -46,7 +42,6 @@ def test_exact_title_match(query, expected_urn):
     assert results.page_results[0].urn == expected_urn
 
 
-@pytest.mark.xfail
 @pytest.mark.slow
 @pytest.mark.datahub
 @pytest.mark.parametrize(

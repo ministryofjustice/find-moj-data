@@ -33,35 +33,26 @@
             {{result.description|markdown:3}}
           </div>
           <ul class="govuk-list govuk-body" id="metadata-property-list">
+            {% if result.last_modified %}
             <li>
               <span class="govuk-!-font-weight-bold">Last updated date:</span>
-              {% if result.last_modified %}
-                {{result.last_modified | date:"jS F Y"}} ({{result.last_modified|naturaltime}})
-              {% endif %}
+              {{result.last_modified | date:"jS F Y"}} ({{result.last_modified|naturaltime}})
             </li>
+            {% endif %}
 
-            <li>
-              <span class="govuk-!-font-weight-bold">Refresh period:</span>
-            </li>
-
-            <li>
-              <span class="govuk-!-font-weight-bold">Retention period:</span>
-              {% if table.retention_period_in_days is None %}
-                Permanent
-              {% else %}
-                {{result.metadata.retention_period_in_days|intcomma}} days
-              {% endif %}
-            </li>
             <li>
               <span class="govuk-!-font-weight-bold">Domain:</span>
               {{result.metadata.domain_name}}
             </li>
+            {% if result.tags_to_display %}
             <li>
               <span class="govuk-!-font-weight-bold">Tags:</span>
-              {{ result.tags_to_display |join:", " }}
-            </div>
-          </li>
-        </ul>
+              {{ result.tags_to_display|lookup:'display_name'|join:", " }}
+            </li>
+            {% endif %}
+          </ul>
+          {% include "partial/esda_info.html" with is_esda=is_esda %}
+        </div>
       </div>
 
       <div class="govuk-grid-column-one-third">

@@ -7,6 +7,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Return domain metadata for Charts
+- Add `glossary_terms` list to `SearchResult`
+
+### Changed
+
+- Return lists of objects for `SearchResult.tags` and `SearchResult.tags_to_display` instead of strings.
+
+## Removed
+
+- Removed all remaining references to Data Products
+
 ## [1.0.1] 2024-05-07
 
 Change of build repo and several bug fixes following the refactor.

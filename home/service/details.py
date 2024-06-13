@@ -19,6 +19,11 @@ class DatabaseDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         self.result = search_results.page_results[0]
+
+        self.is_esda = any(
+            term.display_name == "ESDA" for term in self.result.glossary_terms
+        )
+
         self.entities_in_database = self._get_database_entities()
         self.context = self._get_context()
 
@@ -50,6 +55,7 @@ class DatabaseDetailsService(GenericService):
             "result_type": "Database",
             "tables": self.entities_in_database,
             "h1_value": "Details",
+            "is_esda": self.is_esda,
         }
 
         return context
@@ -72,9 +78,7 @@ class DatasetDetailsService(GenericService):
         if parents:
             # Pick the first entity to use as the parent in the breadcrumb.
             # If the dataset belongs to multiple parents, this may diverge
-            # from the path the user took to get to this page. However as of datahub
-            # v0.12, assigning to multiple data products is not possible and we don't
-            # have datasets with multiple parent containers.
+            # from the path the user took to get to this page.
             self.parent_entity = parents[0]
             self.dataset_parent_type = ResultType.DATABASE.name.lower()
         else:

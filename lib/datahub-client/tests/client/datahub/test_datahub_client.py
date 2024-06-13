@@ -230,12 +230,6 @@ class TestCatalogueClientWithDatahub:
         )
 
     @pytest.fixture
-    def golden_file_in_dp(self):
-        return Path(
-            Path(__file__).parent / "../../test_resources/golden_data_product_in.json"
-        )
-
-    @pytest.fixture
     def golden_file_in_db(self):
         return Path(
             Path(__file__).parent / "../../test_resources/golden_database_in.json"
@@ -268,7 +262,6 @@ class TestCatalogueClientWithDatahub:
                         }
                     ],
                 },
-                "data_product_relations": {"total": 0, "relationships": []},
                 "name": "Dataset",
                 "properties": {
                     "name": "Dataset",

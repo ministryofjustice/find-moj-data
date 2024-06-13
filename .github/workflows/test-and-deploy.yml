@@ -78,7 +78,7 @@ jobs:
       - name: run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: poetry run pytest tests/selenium --axe-version 4.9.0
+        run: poetry run pytest tests/selenium --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
 
   javascript:
     runs-on: ubuntu-latest
@@ -115,8 +115,6 @@ jobs:
     uses: "./.github/workflows/deploy-generic.yml"
     with:
       env: "dev"
-      ecr_repository: ${{ vars.DEV_ECR_REPOSITORY }}
-      ecr_region: ${{ vars.DEV_ECR_REGION }}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
