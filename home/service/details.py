@@ -21,7 +21,8 @@ class DatabaseDetailsService(GenericService):
         self.result = search_results.page_results[0]
 
         self.is_esda = any(
-            term.display_name == "ESDA" for term in self.result.glossary_terms
+            term.display_name == "Essential Shared Data Asset (ESDA)"
+            for term in self.result.glossary_terms
         )
 
         self.entities_in_database = self._get_database_entities()
