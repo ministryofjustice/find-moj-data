@@ -4,22 +4,41 @@
 
 ## Quick start
 
-You will need npm (for javascript dependencies) and poetry (for python dependencies).
+Please refer to Prerequisites for dependencies and installation instructions
 
 1. Run `poetry install` to install python dependencies
 1. Run `npm install` to download frontend static dependencies.
 1. Run `poetry run python -m nltk.downloader punkt` to install nltk data
-1. Copy `.env.example` to `.env`.
-1. You wil need to obtain an access token from Datahub catalogue and populate the
-   `CATALOGUE_TOKEN` var in .env to be able to retrieve search data.
+1. Set the `ENV` var to `local` i.e. `export ENV=local`
+1. Run `op inject --in-file .env.tpl --out-file .env` to generate a compatible `.env` file
+1. Optionally substitute value for `CATALOGUE_TOKEN` var in .env with your own PAT value to be able to retrieve search data.
 1. Run `poetry run python manage.py runserver`
 
 ```sh
 poetry install --no-root
 npm install
 poetry run python -m nltk.downloader punkt
+export ENV=local
+op inject --in-file .env.tpl --out-file .env
 poetry run python manage.py runserver
 ```
+
+# Prerequisites
+
+## Npm
+  Required for building the front end javascript dependencies
+
+## Poetry
+  Required for managing python package dependencies.
+  Follow installation instructions here https://python-poetry.org/docs/#installation
+
+## 1Password
+  Organisational level tool for storing application secrets and passwords securely.
+There are a number of 1password utilities available to manage credentials from cli and desktop environments.
+
+1. Install the 1Password desktop app - https://support.1password.com/get-the-apps/
+2. Install the 1Password CLI app - https://developer.1password.com/docs/cli/get-started/
+3. Follow the steps to turn on and test the 1password desktop app integration
 
 ## Current Endpoints
 
