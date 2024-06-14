@@ -5,6 +5,15 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+from django.conf import settings
+from django.test import Client
+from faker import Faker
+from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
+from home.service.details import DatabaseDetailsService
+from home.service.search import SearchService
+from home.service.search_facet_fetcher import SearchFacetFetcher
+
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -31,15 +40,6 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
-from django.conf import settings
-from django.test import Client
-from faker import Faker
-
-from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
-from home.service.details import DatabaseDetailsService
-from home.service.search import SearchService
-from home.service.search_facet_fetcher import SearchFacetFetcher
 
 fake = Faker()
 
@@ -129,7 +129,7 @@ def generate_table_metadata(
                 name="urn",
                 display_name="urn",
                 type="string",
-                description="The primary identifier for the dataset entity.",
+                description="description **with markdown**",
                 nullable=False,
                 is_primary_key=True,
                 foreign_keys=[
@@ -156,7 +156,7 @@ def generate_database_metadata(
     custom_properties=None,
 ) -> Database:
     """
-    Generate a fake table metadata object
+    Generate a fake database metadata object
     """
     return Database(
         urn="urn:li:container:fake",
@@ -260,62 +260,11 @@ def mock_list_database_tables_response(mock_catalogue, total_results, page_resul
 
 
 def mock_get_table_details_response(mock_catalogue):
-    mock_catalogue.get_table_details.return_value = Table(
-        urn="urn:li:table:fake",
-        display_name="abc",
-        name="abc",
-        fully_qualified_name="abc",
-        description="abc",
-        relationships={},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
-        governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
-            ],
-        ),
-        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
-        created=None,
-        column_details=[
-            Column(
-                name="foo",
-                display_name="foo",
-                type="string",
-                description="description **with markdown**",
-                nullable=False,
-                is_primary_key=True,
-                foreign_keys=[],
-            ),
-        ],
-        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
-    )
+    mock_catalogue.get_table_details.return_value = generate_table_metadata()
 
 
 def mock_get_database_details_response(mock_catalogue):
-    mock_catalogue.get_table_details.return_value = Database(
-        urn="urn:li:container:fake",
-        display_name="abc",
-        name="abc",
-        fully_qualified_name="abc",
-        description="abc",
-        relationships={},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
-        governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
-            ],
-        ),
-        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
-        created=None,
-        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
-    )
+    mock_catalogue.get_database_details.return_value = generate_database_metadata()
 
 
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
