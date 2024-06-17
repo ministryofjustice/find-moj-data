@@ -12,12 +12,12 @@
   </p>
 </div>
 <!-- placeholder until we have more contact channels than just slack -->
-{% if slack_channel.url %}
+{% if slack_channel.dc_slack_channel_url %}
   <div class="govuk-body">
     <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Contact channels for access requests</h2>
     <p class="govuk-body">
         <!-- This should become a list of populated contact channels -->
-      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" target="_blank">{{ slack_channel.dc_slack_channel_text }}</a>
+      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" target="_blank">{{ slack_channel.dc_slack_channel_name }}</a>
     </p>
   </div>
 {% endif %}
