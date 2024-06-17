@@ -5,15 +5,6 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
-from django.conf import settings
-from django.test import Client
-from faker import Faker
-from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
-from home.service.details import DatabaseDetailsService
-from home.service.search import SearchService
-from home.service.search_facet_fetcher import SearchFacetFetcher
-
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -40,6 +31,15 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
+from django.conf import settings
+from django.test import Client
+from faker import Faker
+
+from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
+from home.service.details import DatabaseDetailsService
+from home.service.search import SearchService
+from home.service.search_facet_fetcher import SearchFacetFetcher
 
 fake = Faker()
 
@@ -85,6 +85,17 @@ def generate_search_result(
         fully_qualified_name=name,
         description=fake.paragraph(),
         metadata=metadata or {"search_summary": "a"},
+    )
+
+
+def search_result_from_database(database: Database):
+    return SearchResult(
+        urn=database.urn or "",
+        result_type=ResultType.DATABASE,
+        name=database.name,
+        fully_qualified_name=database.fully_qualified_name or "",
+        description=database.description,
+        metadata={},
     )
 
 
@@ -149,6 +160,7 @@ def generate_table_metadata(
     )
 
 
+@pytest.fixture(name="example_database")
 def generate_database_metadata(
     name: str = fake.unique.name(),
     description: str = fake.unique.paragraph(),
@@ -206,7 +218,7 @@ def client():
 
 
 @pytest.fixture(autouse=True)
-def mock_catalogue(request):
+def mock_catalogue(request, example_database):
     if "datahub" in request.keywords:
         yield None
         return
@@ -245,7 +257,7 @@ def mock_catalogue(request):
         total_results=1,
     )
     mock_get_table_details_response(mock_catalogue)
-    mock_get_database_details_response(mock_catalogue)
+    mock_get_database_details_response(mock_catalogue, example_database)
 
     yield mock_catalogue
 
@@ -263,8 +275,8 @@ def mock_get_table_details_response(mock_catalogue):
     mock_catalogue.get_table_details.return_value = generate_table_metadata()
 
 
-def mock_get_database_details_response(mock_catalogue):
-    mock_catalogue.get_database_details.return_value = generate_database_metadata()
+def mock_get_database_details_response(mock_catalogue, example_database):
+    mock_catalogue.get_database_details.return_value = example_database
 
 
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):

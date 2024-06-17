@@ -1,9 +1,13 @@
 import re
 
 import pytest
-
 from data_platform_catalogue.search_types import ResultType
-from tests.conftest import generate_page, mock_search_response
+
+from tests.conftest import (
+    generate_page,
+    mock_search_response,
+    search_result_from_database,
+)
 
 from .helpers import check_for_accessibility_issues
 
@@ -197,13 +201,13 @@ class TestSearch:
         self.click_on_the_first_result()
         self.verify_i_am_on_the_table_details_page()
 
-    def test_database_search_to_table_details(self, mock_catalogue):
+    def test_database_search_to_table_details(self, mock_catalogue, example_database):
         """
         Users can search and drill down into details
         """
         mock_search_response(
             mock_catalogue=mock_catalogue,
-            page_results=generate_page(result_type=ResultType.DATABASE),
+            page_results=[search_result_from_database(example_database)],
             total_results=100,
         )
         self.start_on_the_search_page()
@@ -274,7 +278,8 @@ class TestSearch:
         heading_text = self.details_database_page.primary_heading().text
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
-        assert self.details_database_page.secondary_heading().text != ""
+        subheading_text = self.details_database_page.secondary_heading().text
+        assert subheading_text and item_name.endswith(subheading_text)
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
