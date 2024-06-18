@@ -45,10 +45,10 @@
               {{database.domain.display_name}}
             </li>
             {% if result.tags_to_display %}
-            <li>
-              <span class="govuk-!-font-weight-bold">Tags:</span>
-              {{ database.tags|lookup:'display_name'|join:", " }}
-            </li>
+              <li>
+                <span class="govuk-!-font-weight-bold">Tags:</span>
+                {{ database.tags|lookup:'display_name'|join:", " }}
+              </li>
             {% endif %}
           </ul>
           {% include "partial/esda_info.html" with is_esda=is_esda %}
@@ -56,7 +56,7 @@
       </div>
 
       <div class="govuk-grid-column-one-third">
-        {% include "partial/contact_info.html" with data_owner=table.governance.data_owner.display_name data_owner_email=database.governance.data_owner.email slack_channel=database.custom_properties.further_information %}
+        {% include "partial/contact_info.html" with data_owner=database.governance.data_owner.display_name data_owner_email=database.governance.data_owner.email slack_channel=database.custom_properties.further_information %}
       </div>
     </div>
 
