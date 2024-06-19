@@ -8,7 +8,7 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: kunalnagarco/action-cve@v1.12.36
+      - uses: kunalnagarco/action-cve@v1.13.2
         with:
           token: ${{ secrets.VULN_CHECK_PERSONAL_ACCESS_TOKEN }}
           slack_webhook: ${{ secrets.VULN_CHECK_SLACK_WEBHOOK }}
