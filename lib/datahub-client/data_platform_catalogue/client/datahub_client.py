@@ -3,30 +3,6 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
-from datahub.configuration.common import ConfigurationError
-from datahub.emitter import mce_builder
-from datahub.emitter.mcp import MetadataChangeProposalWrapper
-from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
-from datahub.ingestion.source.common.subtypes import (
-    DatasetContainerSubTypes,
-    DatasetSubTypes,
-)
-from datahub.metadata import schema_classes
-from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
-from datahub.metadata.schema_classes import (
-    ChangeTypeClass,
-    ContainerClass,
-    ContainerPropertiesClass,
-    DatasetPropertiesClass,
-    DomainPropertiesClass,
-    DomainsClass,
-    OtherSchemaClass,
-    SchemaFieldClass,
-    SchemaFieldDataTypeClass,
-    SchemaMetadataClass,
-    SubTypesClass,
-)
-
 from data_platform_catalogue.client.exceptions import (
     AspectDoesNotExist,
     ConnectivityError,
@@ -62,6 +38,29 @@ from data_platform_catalogue.search_types import (
     SearchFacets,
     SearchResponse,
     SortOption,
+)
+from datahub.configuration.common import ConfigurationError
+from datahub.emitter import mce_builder
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
+from datahub.ingestion.source.common.subtypes import (
+    DatasetContainerSubTypes,
+    DatasetSubTypes,
+)
+from datahub.metadata import schema_classes
+from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
+from datahub.metadata.schema_classes import (
+    ChangeTypeClass,
+    ContainerClass,
+    ContainerPropertiesClass,
+    DatasetPropertiesClass,
+    DomainPropertiesClass,
+    DomainsClass,
+    OtherSchemaClass,
+    SchemaFieldClass,
+    SchemaFieldDataTypeClass,
+    SchemaMetadataClass,
+    SubTypesClass,
 )
 
 logger = logging.getLogger(__name__)
@@ -309,8 +308,6 @@ class DataHubCatalogueClient:
 
         raise EntityDoesNotExist(f"Chart with urn: {urn} does not exist")
 
-    # to expand on and replace `list_database_tables` will need new graphql query i
-    # expect but will be more equivelent to the get chart and table details methods.
     def get_database_details(self, urn: str) -> Database:
         if self.check_entity_exists_by_urn(urn):
             response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
@@ -334,6 +331,9 @@ class DataHubCatalogueClient:
                     relations_list=[response["parentContainers"]],
                     relation_key="containers",
                 )
+            database_entities = []
+            if response["entities"]["total"] > 0:
+                database_entities: list = response["entities"]["searchResults"]
 
             return Database(
                 urn=urn,
@@ -342,6 +342,7 @@ class DataHubCatalogueClient:
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
                 relationships=relations,
+                database_entities=database_entities,
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,
@@ -568,10 +569,6 @@ class DataHubCatalogueClient:
             logger.info(f"Tags updated for Database {name} ")
 
         return database_urn
-
-    def list_database_tables(self, urn: str, count: int) -> SearchResponse:
-        """Wraps the client's listDatabaseEntities query"""
-        return self.search_client.list_database_tables(urn=urn, count=count)
 
     def _get_custom_property_key_value_pairs(
         self,

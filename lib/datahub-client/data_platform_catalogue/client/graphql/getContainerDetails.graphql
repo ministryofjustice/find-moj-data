@@ -34,12 +34,7 @@ query getContainer($urn: String!) {
       searchResults {
         entity {
           urn
-          ... on Dataset {
-            properties{
-              name
-              qualifiedName
-            }
-          }
+          ...datasetDetails
         }
       }
     }
@@ -166,6 +161,17 @@ fragment glossaryTerm on GlossaryTerm {
   }
 }
 
+fragment datasetDetails on Dataset {
+  urn
+  properties {
+    name
+    description
+  }
+  editableProperties {
+    description
+  }
+}
+
 fragment entityContainer on Container {
   urn
   properties {
@@ -175,7 +181,6 @@ fragment entityContainer on Container {
     typeNames
   }
 }
-
 
 fragment parentContainersFields on ParentContainersResult {
   count

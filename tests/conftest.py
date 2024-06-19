@@ -160,7 +160,6 @@ def generate_table_metadata(
     )
 
 
-@pytest.fixture(name="example_database")
 def generate_database_metadata(
     name: str = fake.unique.name(),
     description: str = fake.unique.paragraph(),
@@ -178,6 +177,18 @@ def generate_database_metadata(
         description=description,
         relationships=relations or {RelationshipType.PARENT: []},
         domain=DomainRef(display_name="LAA", urn="LAA"),
+        database_entities=[
+            {
+                "entity": {
+                    "urn": "urn:li:dataset:fake_table",
+                    "properties": {
+                        "name": "fake_table",
+                        "description": "table description",
+                    },
+                    "editableProperties": None,
+                }
+            }
+        ],
         governance=Governance(
             data_owner=OwnerRef(
                 display_name="", email="Contact email for the user", urn=""
@@ -199,6 +210,11 @@ def generate_database_metadata(
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
         custom_properties=custom_properties or CustomEntityProperties(),
     )
+
+
+@pytest.fixture(autouse=True)
+def example_database(name="example_database"):
+    return generate_database_metadata(name=name)
 
 
 def generate_page(page_size=20, result_type: ResultType | None = None):
@@ -251,11 +267,6 @@ def mock_catalogue(request, example_database):
         ],
     )
     mock_get_glossary_terms_response(mock_catalogue)
-    mock_list_database_tables_response(
-        mock_catalogue,
-        page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
-        total_results=1,
-    )
     mock_get_table_details_response(mock_catalogue)
     mock_get_database_details_response(mock_catalogue, example_database)
 

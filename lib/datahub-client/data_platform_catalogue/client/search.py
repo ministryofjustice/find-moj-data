@@ -14,7 +14,6 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_properties,
     parse_tags,
 )
-from data_platform_catalogue.entities import RelationshipType
 from data_platform_catalogue.search_types import (
     FacetOption,
     MultiSelectFilter,
@@ -179,31 +178,6 @@ class SearchClient:
 
         response = response["aggregateAcrossEntities"]
         return self._parse_facets(response.get("facets", []))
-
-    def list_database_tables(
-        self, urn: str, count: int, start: int = 0
-    ) -> SearchResponse:
-        variables = {
-            "urn": urn,
-            "start": start,
-            "count": count,
-        }
-
-        try:
-            response = self.graph.execute_graphql(
-                self.get_database_tables_query, variables
-            )
-        except GraphError as e:
-            raise CatalogueError("Unable to execute listDatabaseEntities query") from e
-
-        page_results = self._get_data_collection_page_results(
-            response["container"], "entities"
-        )
-
-        return SearchResponse(
-            total_results=response["container"]["entities"]["total"],
-            page_results=page_results,
-        )
 
     def _get_data_collection_page_results(self, response, key_for_results: str):
         """

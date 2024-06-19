@@ -1,8 +1,9 @@
 import os
+from urllib.parse import urlsplit
+
 from data_platform_catalogue.entities import RelationshipType
 from data_platform_catalogue.search_types import ResultType
 from django.core.exceptions import ObjectDoesNotExist
-from urllib.parse import urlsplit
 
 from .base import GenericService
 
@@ -17,25 +18,25 @@ class DatabaseDetailsService(GenericService):
         if not self.database_metadata:
             raise ObjectDoesNotExist(urn)
 
-        self.is_esda = any(term.display_name == "Essential Shared Data Asset (ESDA)"
-            for term in self.database_metadata.glossary_terms)
-        self.entities_in_database = self._get_database_entities()
+        self.is_esda = any(
+            term.display_name == "Essential Shared Data Asset (ESDA)"
+            for term in self.database_metadata.glossary_terms
+        )
+        self.entities_in_database = self._parse_database_entities()
         self.context = self._get_context()
 
-    def _get_database_entities(self):
+    def _parse_database_entities(self):
         # we might want to implement pagination for database children
-        # details    at some point
-        database_search_results = self.client.list_database_tables(
-            urn=self.urn, count=500
-        ).page_results
-
+        # details at some point
         entities_in_database = []
-        for result in database_search_results:
+        for entity in self.database_metadata.database_entities:
+            entity = entity["entity"]
+            properties = entity.get("properties", {})
             entities_in_database.append(
                 {
-                    "name": result.name,
-                    "urn": result.urn,
-                    "description": result.description,
+                    "urn": entity.get("urn", ""),
+                    "name": properties.get("name", ""),
+                    "description": properties.get("description", ""),
                     "type": "TABLE",
                 }
             )
@@ -92,7 +93,7 @@ class DatasetDetailsService(GenericService):
             "dataset_parent_type": self.dataset_parent_type,
             "h1_value": "Details",
             "has_lineage": self.has_lineage(),
-            "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",
+            "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
         }
 
     def has_lineage(self) -> bool:

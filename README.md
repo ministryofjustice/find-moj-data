@@ -46,5 +46,7 @@ Run `pre-commit install` from inside the poetry environment to set up pre commit
 - Search benchmarks (these query the real Datahub backend): `pytest tests/benchmarks`
 
 Selenium makes use of chromedriver to run a headless browser.
-As chromedriver is updated, the local version of chromedriver and chrome may drift apart.
-If so, update your local chrome, and run `npm install -g chromedriver chromedriver@latest` to install the latest chromedriver.
+As either the chrome browser or chromedriver are updated,
+the local version of chromedriver and chrome may drift apart.
+If so, update both to the latest version: update your local chrome
+and run `npm install -g chromedriver chromedriver@latest` to install the latest chromedriver.
