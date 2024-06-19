@@ -81,7 +81,7 @@ def test_domain_facets_are_returned():
             ],
         ),
         domain=DomainRef(urn="LAA", display_name="LAA"),
-        database_entities=[
+        tables=[
             {
                 "entity": {
                     "urn": "urn:li:dataset:fake_table",
@@ -141,7 +141,7 @@ def test_filter_by_urn():
             ],
         ),
         domain=DomainRef(urn="LAA", display_name="LAA"),
-        database_entities=[],
+        tables=[],
         last_modified=datetime(2020, 5, 17),
         created=datetime(2020, 5, 17),
         tags=[TagRef(urn="test", display_name="test")],

@@ -331,9 +331,9 @@ class DataHubCatalogueClient:
                     relations_list=[response["parentContainers"]],
                     relation_key="containers",
                 )
-            database_entities = []
+            datasets = []
             if response["entities"]["total"] > 0:
-                database_entities: list = response["entities"]["searchResults"]
+                datasets: list = response["entities"]["searchResults"]
 
             return Database(
                 urn=urn,
@@ -342,7 +342,7 @@ class DataHubCatalogueClient:
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
                 relationships=relations,
-                database_entities=database_entities,
+                tables=datasets,
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,

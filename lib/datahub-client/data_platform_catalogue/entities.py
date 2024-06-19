@@ -392,7 +392,7 @@ class Database(Entity):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:my_database"],
     )
-    database_entities: list = Field(description="list of tables in the database")
+    tables: list = Field(description="list of tables in the database")
 
 
 class Table(Entity):

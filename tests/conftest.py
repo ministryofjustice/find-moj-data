@@ -177,7 +177,7 @@ def generate_database_metadata(
         description=description,
         relationships=relations or {RelationshipType.PARENT: []},
         domain=DomainRef(display_name="LAA", urn="LAA"),
-        database_entities=[
+        tables=[
             {
                 "entity": {
                     "urn": "urn:li:dataset:fake_table",

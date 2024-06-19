@@ -29,8 +29,8 @@ class DatabaseDetailsService(GenericService):
         # we might want to implement pagination for database children
         # details at some point
         entities_in_database = []
-        for entity in self.database_metadata.database_entities:
-            entity = entity["entity"]
+        for item in self.database_metadata.tables:
+            entity = item["entity"]
             properties = entity.get("properties", {})
             entities_in_database.append(
                 {

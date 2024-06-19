@@ -58,7 +58,7 @@ class TestCatalogueClientWithDatahub:
                 ],
             ),
             domain=DomainRef(urn="LAA", display_name="LAA"),
-            database_entities=[
+            tables=[
                 {
                     "entity": {
                         "urn": "urn:li:dataset:fake_table",
