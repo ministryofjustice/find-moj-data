@@ -192,22 +192,25 @@ ENABLE_ANALYTICS: bool = (
     os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES
 ) and ANALYTICS_ID != ""
 
+TESTING = os.environ.get("TESTING") in TRUTHY_VALUES
+
 # Sentry Configuration
-sentry_sdk.init(
-    dsn=os.environ.get(
-        "SENTRY_DSN_WORKAROUND"
-    ),  # Datahub overwrites with this variable unless it is renamed,
-    # causing Sentry to tag issues with the incorrect environment
-    enable_tracing=True,
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    traces_sample_rate=1.0,
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=1.0,
-    environment=ENV or "local",
-)
+if not TESTING:
+    sentry_sdk.init(
+        dsn=os.environ.get(
+            "SENTRY_DSN_WORKAROUND"
+        ),  # Datahub overwrites with this variable unless it is renamed,
+        # causing Sentry to tag issues with the incorrect environment
+        enable_tracing=True,
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+        environment=ENV or "local",
+    )
 
 # Enable / Disable Azure Auth
 if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":

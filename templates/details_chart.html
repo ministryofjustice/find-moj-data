@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="govuk-grid-column-one-third">
-            {% include "partial/contact_info.html" with data_owner="chart owner" data_owner_email="chart owner email" %}
+            {% include "partial/contact_info.html" with data_owner="chart owner" data_owner_email="chart owner email" slack_channel=chart.custom_properties.further_information %}
         </div>
     </div>
     <div class="govuk-grid-row">
