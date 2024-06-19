@@ -35,10 +35,10 @@ mark {
 }
 
 code {
-    font-family: "Courier New", Courier, monospace;
-    font-size: 0.9em; /* Slightly smaller font size */
+    font-family: monaco, Consolas, "Lucida Console", monospace;
+    font-size: 0.8em; /* Slightly smaller font size */
     background-color: govuk-colour("light-grey");
-    border: 1px solid #ddd; /* Light grey border */
+    border: 1px solid #ddd;
     border-radius: 2px; /* Rounded corners */
     padding: 1px 3px; /* Padding around the text */
     color: govuk-colour("black");

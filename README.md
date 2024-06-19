@@ -62,3 +62,9 @@ Run `pre-commit install` from inside the poetry environment to set up pre commit
 - Javascript unit tests: `npm test`
 - Selenium tests: `pytest -m tests/selenium`
 - Search benchmarks (these query the real Datahub backend): `pytest tests/benchmarks`
+
+## Frontend styling
+
+If making changes to the css, to ensure your changes are reflected in local deployments, run:
+`npm run dependencies` followed by `poetry run python manage.py collectstatic` to write the
+local static files that reflect the stylings.
