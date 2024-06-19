@@ -10,7 +10,7 @@
         <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
       </li>
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{result.name}}</a>
+        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{database.name}}</a>
       </li>
     </ol>
   </div>
@@ -21,7 +21,7 @@
     <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-l">{{h1_value}}</h1>
       <span class="govuk-caption-m">Database</span>
-      <h2 class="govuk-heading-m">{{result.name}}</h2>
+      <h2 class="govuk-heading-m">{{database.name}}</h2>
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -30,25 +30,25 @@
             Description
           </h3>
           <div class="govuk-body">
-            {{result.description|markdown:3}}
+            {{database.description|markdown:3}}
           </div>
           <ul class="govuk-list govuk-body" id="metadata-property-list">
-            {% if result.last_modified %}
-            <li>
-              <span class="govuk-!-font-weight-bold">Last updated date:</span>
-              {{result.last_modified | date:"jS F Y"}} ({{result.last_modified|naturaltime}})
-            </li>
+            {% if database.last_modified %}
+              <li>
+                <span class="govuk-!-font-weight-bold">Last updated date:</span>
+                {{database.last_modified | date:"jS F Y"}} ({{database.last_modified|naturaltime}})
+              </li>
             {% endif %}
 
             <li>
               <span class="govuk-!-font-weight-bold">Domain:</span>
-              {{result.metadata.domain_name}}
+              {{database.domain.display_name}}
             </li>
             {% if result.tags_to_display %}
-            <li>
-              <span class="govuk-!-font-weight-bold">Tags:</span>
-              {{ result.tags_to_display|lookup:'display_name'|join:", " }}
-            </li>
+              <li>
+                <span class="govuk-!-font-weight-bold">Tags:</span>
+                {{ database.tags|lookup:'display_name'|join:", " }}
+              </li>
             {% endif %}
           </ul>
           {% include "partial/esda_info.html" with is_esda=is_esda %}
@@ -56,7 +56,7 @@
       </div>
 
       <div class="govuk-grid-column-one-third">
-        {% include "partial/contact_info.html" with data_owner=result.metadata.owner data_owner_email=result.metadata.owner_email %}
+        {% include "partial/contact_info.html" with data_owner=database.governance.data_owner.display_name data_owner_email=database.governance.data_owner.email slack_channel=database.custom_properties.further_information %}
       </div>
     </div>
 

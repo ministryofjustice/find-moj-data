@@ -1,8 +1,9 @@
 import os
-from data_platform_catalogue.entities import RelationshipType
-from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
-from django.core.exceptions import ObjectDoesNotExist
 from urllib.parse import urlsplit
+
+from data_platform_catalogue.entities import RelationshipType
+from data_platform_catalogue.search_types import ResultType
+from django.core.exceptions import ObjectDoesNotExist
 
 from .base import GenericService
 
@@ -12,36 +13,30 @@ class DatabaseDetailsService(GenericService):
         self.urn = urn
         self.client = self._get_catalogue_client()
 
-        filter_value = [MultiSelectFilter("urn", [urn])]
-        search_results = self.client.search(query="", page=None, filters=filter_value)
+        self.database_metadata = self.client.get_database_details(self.urn)
 
-        if not search_results.page_results:
+        if not self.database_metadata:
             raise ObjectDoesNotExist(urn)
-
-        self.result = search_results.page_results[0]
 
         self.is_esda = any(
             term.display_name == "Essential Shared Data Asset (ESDA)"
-            for term in self.result.glossary_terms
+            for term in self.database_metadata.glossary_terms
         )
-
-        self.entities_in_database = self._get_database_entities()
+        self.entities_in_database = self._parse_database_entities()
         self.context = self._get_context()
 
-    def _get_database_entities(self):
+    def _parse_database_entities(self):
         # we might want to implement pagination for database children
         # details at some point
-        database_search = self.client.list_database_tables(
-            urn=self.urn, count=500
-        ).page_results
-
         entities_in_database = []
-        for result in database_search:
+        for item in self.database_metadata.tables:
+            entity = item["entity"]
+            properties = entity.get("properties", {})
             entities_in_database.append(
                 {
-                    "name": result.name,
-                    "urn": result.urn,
-                    "description": result.description,
+                    "urn": entity.get("urn", ""),
+                    "name": properties.get("name", ""),
+                    "description": properties.get("description", ""),
                     "type": "TABLE",
                 }
             )
@@ -52,7 +47,7 @@ class DatabaseDetailsService(GenericService):
 
     def _get_context(self):
         context = {
-            "result": self.result,
+            "database": self.database_metadata,
             "result_type": "Database",
             "tables": self.entities_in_database,
             "h1_value": "Details",
@@ -73,7 +68,6 @@ class DatasetDetailsService(GenericService):
         if not self.table_metadata:
             raise ObjectDoesNotExist(urn)
 
-        self.table_metadata
         relationships = self.table_metadata.relationships or {}
         parents = relationships.get(RelationshipType.PARENT)
         if parents:
@@ -99,7 +93,7 @@ class DatasetDetailsService(GenericService):
             "dataset_parent_type": self.dataset_parent_type,
             "h1_value": "Details",
             "has_lineage": self.has_lineage(),
-            "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",
+            "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
         }
 
     def has_lineage(self) -> bool:

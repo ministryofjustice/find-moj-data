@@ -1,16 +1,25 @@
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">IAO or Data Owner</h2>
   <p class="govuk-body">
-    {{data_owner}}<br>
-    {{data_owner_email|urlize}}
+    {{ data_owner }}
   </p>
 </div>
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Contact for access requests</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Contact email for access requests</h2>
   <p class="govuk-body">
-    {{data_owner_email|urlize}}
+    {{ data_owner_email|urlize }}
   </p>
 </div>
+<!-- placeholder until we have more contact channels than just slack -->
+{% if slack_channel.dc_slack_channel_url %}
+  <div class="govuk-body">
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Contact channels for access requests</h2>
+    <p class="govuk-body">
+        <!-- This should become a list of populated contact channels -->
+      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
+    </p>
+  </div>
+{% endif %}
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Access requirements</h2>
   <p class="govuk-body">

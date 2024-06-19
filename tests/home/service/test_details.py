@@ -1,18 +1,23 @@
 from data_platform_catalogue.entities import (
     Chart,
+    CustomEntityProperties,
     DomainRef,
     EntityRef,
+    FurtherInformation,
     Governance,
     OwnerRef,
     RelationshipType,
 )
-from data_platform_catalogue.search_types import ResultType
 
-from home.service.details import ChartDetailsService, DatasetDetailsService
-from tests.conftest import generate_table_metadata
+from home.service.details import (
+    ChartDetailsService,
+    DatabaseDetailsService,
+    DatasetDetailsService,
+)
+from tests.conftest import generate_database_metadata, generate_table_metadata
 
 
-class TestDetailsDatasetService:
+class TestDatasetDetailsService:
     def test_get_context_contains_table_metadata(self, dataset_with_parent):
         service = DatasetDetailsService(dataset_with_parent["urn"])
         context = service.context
@@ -33,35 +38,87 @@ class TestDetailsDatasetService:
             urn="urn:li:container:parent", display_name="parent"
         )
 
+    def test_get_context_contains_slack(self, mock_catalogue):
+        custom_properties = CustomEntityProperties(
+            further_information=FurtherInformation(
+                dc_slack_channel_name="test",
+                dc_slack_channel_url="https://test_url.com",
+            )
+        )
+        mock_table = generate_table_metadata(custom_properties=custom_properties)
+        mock_catalogue.get_table_details.return_value = mock_table
+
+        service = DatasetDetailsService("urn:li:datsset:test")
+        context = service.context
+        assert context["table"].custom_properties == custom_properties
+        assert (
+            context["table"].custom_properties.further_information.dc_slack_channel_name
+            == "test"
+        )
+
 
 class TestDatabaseDetailsService:
-    def test_get_context_database(self, detail_database_context, mock_catalogue):
+
+    def test_get_context_database(self, mock_catalogue, example_database):
+        """
+        Tests that the context contains the database metadata returned by the
+        mock catalogue.
+        """
+        mock_database_name = "example_database"
+
+        service = DatabaseDetailsService(mock_database_name)
+        context = service.context
+        assert context["database"] == example_database
+
+    def test_get_context_contains_slack(self, mock_catalogue):
+        """
+        Tests that the context contains the slack channel name and URL
+        from the custom properties of the database
+        """
+        custom_properties = CustomEntityProperties(
+            further_information=FurtherInformation(
+                dc_slack_channel_name="test",
+                dc_slack_channel_url="https://test_url.com",
+            )
+        )
+        mock_database_name = "urn:li:container:fake"
+        mock_database_metadata = generate_database_metadata(
+            name=mock_database_name, custom_properties=custom_properties
+        )
+        mock_catalogue.get_database_details.return_value = mock_database_metadata
+
+        service = DatabaseDetailsService(mock_database_name)
+        context = service.context
+
+        assert context["database"].custom_properties == custom_properties
         assert (
-            detail_database_context["result"] == mock_catalogue.search().page_results[0]
+            context[
+                "database"
+            ].custom_properties.further_information.dc_slack_channel_name
+            == "test"
         )
-        result_type = (
-            "Database"
-            if mock_catalogue.search().page_results[0].result_type
-            == ResultType.DATABASE
-            else "Table"
-        )
-        assert detail_database_context["result_type"] == result_type
-        assert detail_database_context["h1_value"] == "Details"
 
-    def test_get_context_database_tables(self, detail_database_context, mock_catalogue):
-        name = mock_catalogue.list_database_tables().page_results[0].name
-        mock_table = {
-            "name": name,
-            "urn": mock_catalogue.list_database_tables().page_results[0].urn,
-            "description": mock_catalogue.list_database_tables()
-            .page_results[0]
-            .description,
-            "type": "TABLE",
-        }
-        assert detail_database_context["tables"][0] == mock_table
+    def test_parsed_database_entities_in_context(self, example_database):
+        parsed_tables = DatabaseDetailsService(
+            example_database
+        )._parse_database_entities()
+        service = DatabaseDetailsService("example_database")
+        context = service.context
+
+        assert context["tables"] == parsed_tables
+        expected = [
+            {
+                "urn": "urn:li:dataset:fake_table",
+                "name": "fake_table",
+                "description": "table description",
+                "type": "TABLE",
+            }
+        ]
+
+        assert context["tables"] == expected
 
 
-class TestDetailsChartService:
+class TestChartDetailsService:
     def test_get_context(self, mock_catalogue):
         chart_metadata = Chart(
             urn="urn:li:chart:(justice-data,test)",

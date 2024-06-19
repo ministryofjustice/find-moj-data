@@ -349,6 +349,19 @@ class Entity(BaseModel):
         description="Additional tags to add.",
         examples=[[TagRef(display_name="ESDA", urn="urn:li:tag:PII")]],
     )
+    glossary_terms: list[GlossaryTermRef] = Field(
+        default_factory=list,
+        description="Glossary Terms the entity relates to.",
+        examples=[
+            [
+                GlossaryTermRef(
+                    display_name="Essential Shared Data Asset (ESDA)",
+                    urn="urn:li:glossaryTerm:ESDA",
+                    description="An ESDA is...",
+                )
+            ]
+        ],
+    )
     last_modified: Optional[datetime] = Field(
         description="When the metadata was last updated in the catalogue",
         default=None,
@@ -379,6 +392,7 @@ class Database(Entity):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:my_database"],
     )
+    tables: list = Field(description="list of tables in the database")
 
 
 class Table(Entity):

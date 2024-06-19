@@ -1,3 +1,4 @@
+from dataclasses import field
 from datetime import datetime, timezone
 from random import choice
 from typing import Any
@@ -10,9 +11,12 @@ from data_platform_catalogue.entities import (
     Column,
     ColumnRef,
     CustomEntityProperties,
+    Database,
     DataSummary,
     DomainRef,
+    Entity,
     EntityRef,
+    GlossaryTermRef,
     Governance,
     OwnerRef,
     RelationshipType,
@@ -84,20 +88,32 @@ def generate_search_result(
     )
 
 
+def search_result_from_database(database: Database):
+    return SearchResult(
+        urn=database.urn or "",
+        result_type=ResultType.DATABASE,
+        name=database.name,
+        fully_qualified_name=database.fully_qualified_name or "",
+        description=database.description,
+        metadata={},
+    )
+
+
 def generate_table_metadata(
-    name=None,
-    description=None,
+    name: str = fake.unique.name(),
+    description: str = fake.unique.paragraph(),
     relations=None,
+    custom_properties=None,
 ) -> Table:
     """
     Generate a fake table metadata object
     """
     return Table(
-        urn="urn:li:table:fake",
-        display_name="Foo.Dataset",
-        name=name or fake.unique.name(),
-        fully_qualified_name="Foo.Dataset",
-        description=description or fake.paragraph(),
+        urn="urn:li:Dataset:fake",
+        display_name=f"Foo.{name}",
+        name=name,
+        fully_qualified_name=f"Foo.{name}",
+        description=description,
         relationships=relations
         or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
         domain=DomainRef(display_name="LAA", urn="LAA"),
@@ -110,6 +126,13 @@ def generate_table_metadata(
             ],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        glossary_terms=[
+            GlossaryTermRef(
+                display_name="some-term",
+                urn="urn:li:glossaryTerm:Entity",
+                description="some description",
+            )
+        ],
         last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
         created=None,
         column_details=[
@@ -117,7 +140,7 @@ def generate_table_metadata(
                 name="urn",
                 display_name="urn",
                 type="string",
-                description="The primary identifier for the dataset entity.",
+                description="description **with markdown**",
                 nullable=False,
                 is_primary_key=True,
                 foreign_keys=[
@@ -133,8 +156,65 @@ def generate_table_metadata(
             ),
         ],
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
-        custom_properties=CustomEntityProperties(),
+        custom_properties=custom_properties or CustomEntityProperties(),
     )
+
+
+def generate_database_metadata(
+    name: str = fake.unique.name(),
+    description: str = fake.unique.paragraph(),
+    relations=None,
+    custom_properties=None,
+) -> Database:
+    """
+    Generate a fake database metadata object
+    """
+    return Database(
+        urn="urn:li:container:fake",
+        display_name=f"Foo.{name}",
+        name=name,
+        fully_qualified_name=f"Foo.{name}",
+        description=description,
+        relationships=relations or {RelationshipType.PARENT: []},
+        domain=DomainRef(display_name="LAA", urn="LAA"),
+        tables=[
+            {
+                "entity": {
+                    "urn": "urn:li:dataset:fake_table",
+                    "properties": {
+                        "name": "fake_table",
+                        "description": "table description",
+                    },
+                    "editableProperties": None,
+                }
+            }
+        ],
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
+            ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        glossary_terms=[
+            GlossaryTermRef(
+                display_name="some-term",
+                urn="urn:li:glossaryTerm:Entity",
+                description="some description",
+            )
+        ],
+        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        created=None,
+        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
+        custom_properties=custom_properties or CustomEntityProperties(),
+    )
+
+
+@pytest.fixture(autouse=True)
+def example_database(name="example_database"):
+    return generate_database_metadata(name=name)
 
 
 def generate_page(page_size=20, result_type: ResultType | None = None):
@@ -154,7 +234,7 @@ def client():
 
 
 @pytest.fixture(autouse=True)
-def mock_catalogue(request):
+def mock_catalogue(request, example_database):
     if "datahub" in request.keywords:
         yield None
         return
@@ -187,12 +267,8 @@ def mock_catalogue(request):
         ],
     )
     mock_get_glossary_terms_response(mock_catalogue)
-    mock_list_database_tables_response(
-        mock_catalogue,
-        page_results=generate_page(page_size=1, result_type=ResultType.TABLE),
-        total_results=1,
-    )
     mock_get_table_details_response(mock_catalogue)
+    mock_get_database_details_response(mock_catalogue, example_database)
 
     yield mock_catalogue
 
@@ -207,38 +283,11 @@ def mock_list_database_tables_response(mock_catalogue, total_results, page_resul
 
 
 def mock_get_table_details_response(mock_catalogue):
-    mock_catalogue.get_table_details.return_value = Table(
-        urn="urn:li:table:fake",
-        display_name="abc",
-        name="abc",
-        fully_qualified_name="abc",
-        description="abc",
-        relationships={},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
-        governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
-            ],
-        ),
-        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
-        created=None,
-        column_details=[
-            Column(
-                name="foo",
-                display_name="foo",
-                type="string",
-                description="description **with markdown**",
-                nullable=False,
-                is_primary_key=True,
-                foreign_keys=[],
-            ),
-        ],
-        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
-    )
+    mock_catalogue.get_table_details.return_value = generate_table_metadata()
+
+
+def mock_get_database_details_response(mock_catalogue, example_database):
+    mock_catalogue.get_database_details.return_value = example_database
 
 
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
@@ -270,7 +319,7 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type="GLOSSARY_TERM",
+                result_type=ResultType.GLOSSARY_TERM,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
@@ -286,14 +335,14 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type="GLOSSARY_TERM",
+                result_type=ResultType.GLOSSARY_TERM,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
                 name="Security classification",
                 description="Only data that is 'official'",
                 metadata={"parentNodes": []},
-                result_type="GLOSSARY_TERM",
+                result_type=ResultType.GLOSSARY_TERM,
             ),
         ],
     )
