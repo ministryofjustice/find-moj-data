@@ -3,6 +3,9 @@ import logging
 from importlib.resources import files
 from typing import Any, Sequence
 
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     parse_created_and_modified,
@@ -23,8 +26,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -45,12 +46,6 @@ class SearchClient:
         self.get_glossary_terms_query = (
             files("data_platform_catalogue.client.graphql")
             .joinpath("getGlossaryTerms.graphql")
-            .read_text()
-        )
-
-        self.get_database_tables_query = (
-            files("data_platform_catalogue.client.graphql")
-            .joinpath("listContainerEntities.graphql")
             .read_text()
         )
 
