@@ -3,6 +3,9 @@ import logging
 from importlib.resources import files
 from typing import Any, Sequence
 
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     parse_created_and_modified,
@@ -14,7 +17,6 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_properties,
     parse_tags,
 )
-from data_platform_catalogue.entities import RelationshipType
 from data_platform_catalogue.search_types import (
     FacetOption,
     MultiSelectFilter,
@@ -24,8 +26,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -46,12 +46,6 @@ class SearchClient:
         self.get_glossary_terms_query = (
             files("data_platform_catalogue.client.graphql")
             .joinpath("getGlossaryTerms.graphql")
-            .read_text()
-        )
-
-        self.get_database_tables_query = (
-            files("data_platform_catalogue.client.graphql")
-            .joinpath("listContainerEntities.graphql")
             .read_text()
         )
 
@@ -179,31 +173,6 @@ class SearchClient:
 
         response = response["aggregateAcrossEntities"]
         return self._parse_facets(response.get("facets", []))
-
-    def list_database_tables(
-        self, urn: str, count: int, start: int = 0
-    ) -> SearchResponse:
-        variables = {
-            "urn": urn,
-            "start": start,
-            "count": count,
-        }
-
-        try:
-            response = self.graph.execute_graphql(
-                self.get_database_tables_query, variables
-            )
-        except GraphError as e:
-            raise CatalogueError("Unable to execute listDatabaseEntities query") from e
-
-        page_results = self._get_data_collection_page_results(
-            response["container"], "entities"
-        )
-
-        return SearchResponse(
-            total_results=response["container"]["entities"]["total"],
-            page_results=page_results,
-        )
 
     def _get_data_collection_page_results(self, response, key_for_results: str):
         """

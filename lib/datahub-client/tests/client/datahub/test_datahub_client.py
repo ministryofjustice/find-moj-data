@@ -58,6 +58,18 @@ class TestCatalogueClientWithDatahub:
                 ],
             ),
             domain=DomainRef(urn="LAA", display_name="LAA"),
+            tables=[
+                {
+                    "entity": {
+                        "urn": "urn:li:dataset:fake_table",
+                        "properties": {
+                            "name": "fake_table",
+                            "description": "table description",
+                        },
+                        "editableProperties": None,
+                    }
+                }
+            ],
             last_modified=datetime(2020, 5, 17),
             created=datetime(2020, 5, 17),
             tags=[TagRef(urn="test", display_name="test")],

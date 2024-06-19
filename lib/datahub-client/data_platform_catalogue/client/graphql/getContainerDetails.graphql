@@ -1,0 +1,238 @@
+query getContainer($urn: String!) {
+  container(urn: $urn) {
+    urn
+    exists
+    lastIngested
+    platform {
+      ...platformFields
+    }
+    properties {
+      name
+      description
+      qualifiedName
+      customProperties {
+        key
+        value
+      }
+    }
+    editableProperties {
+      description
+    }
+    ownership {
+      ...ownershipFields
+    }
+    tags {
+      ...globalTagsFields
+    }
+    glossaryTerms {
+      ...glossaryTerms
+    }
+    subTypes {
+      typeNames
+    }
+    entities(input: {start: 0, count: 500}) {
+      total
+      searchResults {
+        entity {
+          urn
+          ...datasetDetails
+        }
+      }
+    }
+    container {
+      ...entityContainer
+    }
+    parentContainers {
+      ...parentContainersFields
+    }
+    domain {
+      ...entityDomain
+    }
+    dataPlatformInstance {
+      ...dataPlatformInstanceFields
+    }
+    status {
+      removed
+    }
+  }
+}
+
+fragment platformFields on DataPlatform {
+  urn
+  type
+  lastIngested
+  name
+  properties {
+    type
+    displayName
+    datasetNameDelimiter
+    logoUrl
+  }
+}
+
+fragment ownershipFields on Ownership {
+  owners {
+    owner {
+      ... on CorpUser {
+        urn
+        type
+        username
+        properties {
+          active
+          displayName
+          title
+          email
+          firstName
+          lastName
+          fullName
+        }
+        editableProperties {
+          displayName
+          title
+          pictureLink
+          email
+        }
+      }
+      ... on CorpGroup {
+        urn
+        type
+        name
+        properties {
+          displayName
+          email
+        }
+      }
+    }
+    ownershipType {
+      urn
+      type
+      info {
+        name
+        description
+      }
+      status {
+        removed
+      }
+    }
+    associatedUrn
+  }
+  lastModified {
+    time
+  }
+}
+
+fragment globalTagsFields on GlobalTags {
+  tags {
+    tag {
+      urn
+      type
+      properties {
+        name
+        colorHex
+      }
+    }
+    associatedUrn
+  }
+}
+
+fragment glossaryTerms on GlossaryTerms {
+  terms {
+    term {
+      ...glossaryTerm
+    }
+    associatedUrn
+  }
+}
+
+fragment glossaryTerm on GlossaryTerm {
+  urn
+  type
+  hierarchicalName
+  properties {
+    name
+    description
+    termSource
+    customProperties {
+      key
+      value
+    }
+  }
+  ownership {
+    ...ownershipFields
+  }
+}
+
+fragment datasetDetails on Dataset {
+  urn
+  properties {
+    name
+    description
+  }
+  editableProperties {
+    description
+  }
+}
+
+fragment entityContainer on Container {
+  urn
+  properties {
+    name
+  }
+  subTypes {
+    typeNames
+  }
+}
+
+fragment parentContainersFields on ParentContainersResult {
+  count
+  containers {
+    ...parentContainerFields
+  }
+}
+
+fragment parentContainerFields on Container {
+  urn
+  properties {
+    name
+  }
+  subTypes {
+    typeNames
+  }
+}
+
+fragment entityDomain on DomainAssociation {
+  domain {
+    urn
+    type
+    properties {
+      name
+    }
+    parentDomains {
+      ...parentDomainsFields
+    }
+  }
+  associatedUrn
+}
+
+fragment parentDomainsFields on ParentDomainsResult {
+  count
+  domains {
+    urn
+    type
+    ... on Domain {
+      properties {
+        name
+        description
+      }
+    }
+  }
+}
+
+fragment dataPlatformInstanceFields on DataPlatformInstance {
+  urn
+  type
+  platform {
+    ...platformFields
+  }
+  instanceId
+}

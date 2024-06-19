@@ -14,6 +14,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_columns,
     parse_created_and_modified,
     parse_domain,
+    parse_glossary_terms,
     parse_names,
     parse_owner,
     parse_properties,
@@ -95,7 +96,7 @@ class DataHubCatalogueClient:
 
     If there is a problem communicating with the catalogue, methods will raise an
     instance of CatalogueError.
-    """
+    """  # noqa: E501
 
     def __init__(self, jwt_token, api_url: str, graph=None):
         """Create a connection to the DataHub GMS endpoint for class methods to use.
@@ -103,7 +104,7 @@ class DataHubCatalogueClient:
         Args:
             jwt_token: client token for interacting with the provided DataHub instance.
             api_url (str, optional): GMS endpoint for the DataHub instance for the client object.
-        """
+        """  # noqa: E501
         if api_url.endswith("/"):
             api_url = api_url[:-1]
         if api_url.endswith("/api/gms") or api_url.endswith(":8080"):
@@ -124,6 +125,11 @@ class DataHubCatalogueClient:
 
         self.search_client = SearchClient(self.graph)
 
+        self.database_query = (
+            files("data_platform_catalogue.client.graphql")
+            .joinpath("getContainerDetails.graphql")
+            .read_text()
+        )
         self.dataset_query = (
             files("data_platform_catalogue.client.graphql")
             .joinpath("getDatasetDetails.graphql")
@@ -156,7 +162,7 @@ class DataHubCatalogueClient:
 
         Returns:
             str: urn of the created Domain
-        """
+        """  # noqa: E501
         domain_properties = DomainPropertiesClass(
             name=domain, description=description, parentDomain=parent_domain
         )
@@ -229,6 +235,7 @@ class DataHubCatalogueClient:
             domain = parse_domain(response)
             owner = parse_owner(response)
             tags = parse_tags(response)
+            glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
@@ -255,6 +262,7 @@ class DataHubCatalogueClient:
                     data_stewards=[owner],
                 ),
                 tags=tags,
+                glossary_terms=glossary_terms,
                 last_modified=modified,
                 created=created,
                 column_details=columns,
@@ -273,6 +281,7 @@ class DataHubCatalogueClient:
             domain = parse_domain(response)
             owner = parse_owner(response)
             tags = parse_tags(response)
+            glossary_terms = parse_glossary_terms(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             return Chart(
@@ -292,16 +301,61 @@ class DataHubCatalogueClient:
                     ],
                 ),
                 tags=tags,
+                glossary_terms=glossary_terms,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
                 custom_properties=custom_properties,
             )
 
         raise EntityDoesNotExist(f"Chart with urn: {urn} does not exist")
 
-    # to expand on and replace `list_database_tables` will need new graphql query i expect
-    # but will be more equivelent to the get chart and table details methods.
     def get_database_details(self, urn: str) -> Database:
-        raise NotImplementedError
+        if self.check_entity_exists_by_urn(urn):
+            response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
+                "container"
+            ]
+            platform_name = response["platform"]["name"]
+            properties, custom_properties = parse_properties(response)
+            domain = parse_domain(response)
+            owner = parse_owner(response)
+            tags = parse_tags(response)
+            glossary_terms = parse_glossary_terms(response)
+            created, modified = parse_created_and_modified(properties)
+            name, display_name, qualified_name = parse_names(response, properties)
+
+            # A container can't have multiple parents, but if we did
+            # start to use in that we'd need to change this
+            relations = {}
+            if response["parentContainers"]["count"] > 0:
+                relations = parse_relations(
+                    relationship_type=RelationshipType.PARENT,
+                    relations_list=[response["parentContainers"]],
+                    relation_key="containers",
+                )
+            datasets = []
+            if response["entities"]["total"] > 0:
+                datasets: list = response["entities"]["searchResults"]
+
+            return Database(
+                urn=urn,
+                display_name=display_name,
+                name=name,
+                fully_qualified_name=qualified_name,
+                description=properties.get("description", ""),
+                relationships=relations,
+                tables=datasets,
+                domain=domain,
+                governance=Governance(
+                    data_owner=owner,
+                    data_stewards=[owner],
+                ),
+                tags=tags,
+                glossary_terms=glossary_terms,
+                last_modified=modified,
+                created=created,
+                custom_properties=custom_properties,
+                platform=EntityRef(display_name=platform_name, urn=platform_name),
+            )
+        raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
     def upsert_table(self, table: Table) -> str:
         """Define a table. Must belong to a domain."""
@@ -418,7 +472,7 @@ class DataHubCatalogueClient:
         domain_exists = self.check_entity_exists_by_urn(domain_urn)
         if not domain_exists:
             raise InvalidDomain(
-                f"{table.domain} does not exist in datahub - please align data to an existing domain"
+                f"{table.domain} does not exist in datahub - please align data to an existing domain"  # noqa: E501
             )
 
         if domain_urn is not None:
@@ -453,7 +507,7 @@ class DataHubCatalogueClient:
         # when it doesn't exist
         if not self.check_entity_exists_by_urn(domain_urn):
             raise InvalidDomain(
-                f"{domain} does not exist in datahub - please align data to an existing domain"
+                f"{domain} does not exist in datahub - please align data to an existing domain"  # noqa: E501
             )
 
         database_domain = DomainsClass(domains=[domain_urn])  # type: ignore
@@ -515,10 +569,6 @@ class DataHubCatalogueClient:
             logger.info(f"Tags updated for Database {name} ")
 
         return database_urn
-
-    def list_database_tables(self, urn: str, count: int) -> SearchResponse:
-        """Wraps the client's listDatabaseEntities query"""
-        return self.search_client.list_database_tables(urn=urn, count=count)
 
     def _get_custom_property_key_value_pairs(
         self,
