@@ -55,4 +55,4 @@ USER 31337
 
 EXPOSE 8000
 
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+ENTRYPOINT ["gunicorn", "--workers", "3","--bind", "0.0.0.0:8000", "core.wsgi:application"]
