@@ -39,14 +39,12 @@
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                        {% for _, description in schema_json.properties.items %}
-                            {% with description|format_metadata_field_type as field_info %}
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell govuk-!-width-one-third"><code>{{ field_info.field_name }}</code> ({{ field_info.field_type }})</td>
-                                    <td class="govuk-table__cell govuk-!-width-one-third">{{ description.description }}</td>
-                                    <td class="govuk-table__cell govuk-!-width-one-third">{{ description.examples|join:", " }}</td>
-                                </tr>
-                            {% endwith %}
+                        {% for name, description in schema_json.properties.items %}
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell govuk-!-width-one-third"><code>{{ name }}</code> ({{ description|format_metadata_field_type }})</td>
+                                <td class="govuk-table__cell govuk-!-width-one-third">{{ description.description }}</td>
+                                <td class="govuk-table__cell govuk-!-width-one-third">{{ description.examples|join:", " }}</td>
+                            </tr>
                         {%endfor%}
                     </tbody>
                 </table>
