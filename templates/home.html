@@ -1,16 +1,18 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block content %}
+{% block main %}
+  <main class="main-wrapper-with-masthead" id="main-content" role="main">
+    <div class="fmj-masthead">
+      <div class="govuk-width-container app-width-container">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-xl fmj-masthead__title">Find MOJ Data</h1>
+            <h2 class="govuk-heading-m fmj-masthead__title">Search metadata catalogue</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-  <a onclick="history.back()" class="govuk-back-link">Back</a>
-  <h1 class="govuk-heading-l">{{h1_value}}</h1>
-
-  <p class="govuk-body">
-    <a href="{% url 'home:glossary' %}" class="govuk-link">Glossary</a>
-  </p>
-  <p class="govuk-body">
-    <a href="{% url 'home:metadata_specification' %}" class="govuk-link">Metadata specification</a>
-  </p>
-
-{% endblock content %}
+{% endblock main %}

@@ -1,0 +1,17 @@
+.fmj-masthead {
+  @include govuk-responsive-padding(6, "top");
+  @include govuk-responsive-padding(6, "bottom");
+  border-bottom: 1px solid govuk-colour("blue");
+  color: govuk-colour("white");
+  background-color: govuk-colour("blue");
+}
+
+.fmj-masthead__title {
+  color: govuk-colour("white");
+  @include govuk-responsive-margin(6, "bottom");
+}
+
+.fmj-masthead__description {
+  @include govuk-font(24);
+  margin-bottom: 0;
+}
