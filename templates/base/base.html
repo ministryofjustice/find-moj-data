@@ -9,20 +9,21 @@
       document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
     </script>
     {% block skiplinks %}
-    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
     {% endblock %}
 
     {% include "base/navigation.html" %}
-    <div class="govuk-width-container app-width-container">
-      {% block breadcrumbs %}
-      {% endblock breadcrumbs %}
+    {% block main %}
+      <div class="govuk-width-container app-width-container">
+        {% block breadcrumbs %}
+        {% endblock breadcrumbs %}
 
-      <main class="govuk-main-wrapper" id="main-content" role="main">
-        {% block content %}
-        {% endblock content %}
-      </main>
-
-    </div>
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+          {% block content %}
+          {% endblock content %}
+        </main>
+      </div>
+    {% endblock main %}
     {% include "base/footer.html" %}
     <script type="module" src="{% static 'assets/js/govuk-frontend.min.js' %}"></script>
     <script src="{% static 'assets/js/moj-frontend.min.js' %}"></script>
@@ -39,8 +40,8 @@
     {% block scripts %}
     {% endblock scripts %}
     {% if ENABLE_ANALYTICS %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_ID }}"></script>
-    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ ANALYTICS_ID }}');</script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_ID }}"></script>
+      <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ ANALYTICS_ID }}');</script>
     {% endif %}
   </body>
 </html>

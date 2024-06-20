@@ -1,5 +1,5 @@
-$govuk-assets-path: '/static/assets/';
-$moj-assets-path: '/static/assets/';
+$govuk-assets-path: "/static/assets/";
+$moj-assets-path: "/static/assets/";
 
 // Removes need to put classes on all elements
 $govuk-global-styles: true;
@@ -8,31 +8,33 @@ $govuk-global-styles: true;
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 
 .js-required {
-    display: none;
+  display: none;
 }
 
 mark {
-    background-color: inherit;
-    color: inherit;
-    @include govuk-typography-weight-bold($important: false);
+  background-color: inherit;
+  color: inherit;
+  @include govuk-typography-weight-bold($important: false);
 }
 
-.extra-skip-link:active, .extra-skip-link:focus {
-    margin-bottom: govuk-spacing(3) !important;
+.extra-skip-link:active,
+.extra-skip-link:focus {
+  margin-bottom: govuk-spacing(3) !important;
 }
 
 .column-description {
-    @include govuk-media-query($from: desktop) {
-        max-width: $govuk-page-width / 2;
-        overflow-wrap: break-word;
-    }
+  @include govuk-media-query($from: desktop) {
+    max-width: $govuk-page-width / 2;
+    overflow-wrap: break-word;
+  }
 }
 
 .wide-table {
-    table-layout: fixed;
-    width: 100%;
-    overflow-wrap: break-word;
+  table-layout: fixed;
+  width: 100%;
+  overflow-wrap: break-word;
 }
 
-@import './glossary';
-@import './details';
+@import "./glossary";
+@import "./details";
+@import "./masthead";
