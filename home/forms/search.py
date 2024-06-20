@@ -75,7 +75,9 @@ class SearchForm(forms.Form):
         max_length=100,
         strip=False,
         required=False,
-        widget=forms.TextInput(attrs={"class": "govuk-input search-input"}),
+        widget=forms.TextInput(
+            attrs={"class": "govuk-input search-input", "type": "search"}
+        ),
     )
     domain = forms.ChoiceField(
         choices=get_domain_choices,
