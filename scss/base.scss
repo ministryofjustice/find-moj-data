@@ -36,7 +36,7 @@ mark {
 
 code {
     font-family: monaco, Consolas, "Lucida Console", monospace;
-    font-size: 0.8em; /* Slightly smaller font size */
+    @include govuk-font-size($size: 16); /* Slightly smaller font size */
     background-color: govuk-colour("light-grey");
     border: 1px solid #ddd;
     border-radius: 2px; /* Rounded corners */
