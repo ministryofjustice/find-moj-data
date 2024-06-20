@@ -3,7 +3,7 @@ export const init = () => {
   jsRequired.style.display = "block";
 
   const input = document.getElementById("filter-input");
-  input.addEventListener("keyup", updateResults);
+  input.addEventListener("input", updateResults);
 };
 
 const updateResults = () => {

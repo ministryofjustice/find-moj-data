@@ -3,7 +3,7 @@ import { expect, test } from "@jest/globals";
 
 const simplifiedPage = `
 <div class="js-required">
-<input class="govuk-input" id="filter-input" placeholder="Filter this page">
+<input type="search" class="govuk-input" id="filter-input" placeholder="Filter this page">
 <div id="things" class="term-group">
   <h2>Things</h2>
   <p>Bla bla bla</p>
@@ -40,7 +40,7 @@ beforeEach(() => {
 
 test("everything is shown when the filter is empty", () => {
   filter.value = "";
-  filter.dispatchEvent(new Event("keyup"));
+  filter.dispatchEvent(new Event("input"));
 
   expect(things).not.toHaveClass("govuk-!-display-none");
   expect(apple).not.toHaveClass("govuk-!-display-none");
@@ -49,7 +49,7 @@ test("everything is shown when the filter is empty", () => {
 
 test("filtering to a term by its prefix", () => {
   filter.value = "ap";
-  filter.dispatchEvent(new Event("keyup"));
+  filter.dispatchEvent(new Event("input"));
 
   expect(things).not.toHaveClass("govuk-!-display-none");
   expect(apple).not.toHaveClass("govuk-!-display-none");
@@ -58,7 +58,7 @@ test("filtering to a term by its prefix", () => {
 
 test("filtering out all terms within a group", () => {
   filter.value = "carrot";
-  filter.dispatchEvent(new Event("keyup"));
+  filter.dispatchEvent(new Event("input"));
 
   expect(things).toHaveClass("govuk-!-display-none");
   expect(apple).toHaveClass("govuk-!-display-none");
