@@ -71,6 +71,5 @@ and run `npm install -g chromedriver chromedriver@latest` to install the latest 
 
 ## Frontend styling
 
-If making changes to the css, to ensure your changes are reflected in local deployments, run:
-`npm run dependencies` followed by `poetry run python manage.py collectstatic` to write the
-local static files that reflect the stylings.
+If making changes to the scss, to ensure your changes are reflected in local deployments, run:
+`npm run dependencies` to update the css files. If you have `DEBUG=False` you will then need to rerun `poetry run python manage.py collectstatic`.
