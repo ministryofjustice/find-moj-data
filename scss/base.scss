@@ -23,7 +23,7 @@ mark {
 
 .column-description {
     @include govuk-media-query($from: desktop) {
-        max-width: $govuk-page-width / 2;
+        max-width: calc($govuk-page-width / 2);
         overflow-wrap: break-word;
     }
 }
@@ -32,6 +32,16 @@ mark {
     table-layout: fixed;
     width: 100%;
     overflow-wrap: break-word;
+}
+
+code {
+    font-family: monaco, Consolas, "Lucida Console", monospace;
+    @include govuk-font-size($size: 16); /* Slightly smaller font size */
+    background-color: govuk-colour("light-grey");
+    border: 1px solid #ddd;
+    border-radius: 2px; /* Rounded corners */
+    padding: 1px 3px; /* Padding around the text */
+    color: govuk-colour("black");
 }
 
 @import './glossary';

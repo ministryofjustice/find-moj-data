@@ -68,3 +68,8 @@ As either the chrome browser or chromedriver are updated,
 the local version of chromedriver and chrome may drift apart.
 If so, update both to the latest version: update your local chrome
 and run `npm install -g chromedriver chromedriver@latest` to install the latest chromedriver.
+
+## Frontend styling
+
+If making changes to the scss, to ensure your changes are reflected in local deployments, run:
+`npm run dependencies` to update the css files. If you have `DEBUG=False` you will then need to rerun `poetry run python manage.py collectstatic`.
