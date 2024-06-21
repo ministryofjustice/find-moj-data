@@ -61,7 +61,7 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(_, entity_types: list[str]) -> tuple[ResultType]:
+    def _build_entity_types(self, entity_types: list[str]) -> tuple[ResultType, ...]:
         default_entities = tuple(
             entity for entity in ResultType if entity.name != "GLOSSARY_TERM"
         )
@@ -84,9 +84,9 @@ class SearchService(GenericService):
             domain, subdomain, self.domain_model
         )
         where_to_access = self._build_custom_property_filter(
-            "whereToAccessDataset=", form_data.get("where_to_access", [])
+            "dc_where_to_access_dataset=", form_data.get("where_to_access", [])
         )
-        entity_types = self._build_entity_types(form_data.get("entity_types"))
+        entity_types = self._build_entity_types(form_data.get("entity_types", []))
         filter_value = []
         if domains_and_subdomains:
             filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
@@ -177,7 +177,7 @@ class SearchService(GenericService):
             "highlighted_results": self.highlighted_results.page_results,
             "h1_value": "Search",
             "page_obj": self.paginator.get_page(self.page),
-            "page_range": self.paginator.get_elided_page_range(
+            "page_range": self.paginator.get_elided_page_range(  # type: ignore
                 self.page, on_each_side=2, on_ends=1
             ),
             "number_of_words": len(self.form_data.get("query", "").split()),
@@ -231,6 +231,6 @@ class SearchService(GenericService):
             "fieldPaths": "Column name",
             "fieldDescriptions": "Column description",
             "sensitivityLevel": "Sensitivity level",
-            "whereToAccessDataset": "Availability",
+            "dc_where_to_access_dataset": "Available on",
             "qualifiedName": "Qualified name",
         }
