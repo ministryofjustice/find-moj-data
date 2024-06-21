@@ -68,11 +68,13 @@ class SearchResult:
     glossary_terms: list[GlossaryTermRef] = field(default_factory=list)
     last_modified: datetime | None = None
     created: datetime | None = None
-    tags_to_display: list[TagRef] = field(init=False)
+    tags_to_display: list[str] = field(init=False)
 
     def __post_init__(self):
         self.tags_to_display = [
-            tag for tag in self.tags if not tag.display_name.startswith("dc_")
+            tag.display_name
+            for tag in self.tags
+            if not tag.display_name.startswith("dc_")
         ]
 
 
