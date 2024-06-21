@@ -119,6 +119,8 @@ class SearchForm(forms.Form):
     clear_filter = forms.BooleanField(initial=False, required=False)
     clear_label = forms.BooleanField(initial=False, required=False)
 
+    tags = forms.CharField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial["sort"] = "relevance"
