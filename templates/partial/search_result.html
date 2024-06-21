@@ -1,5 +1,6 @@
 {% load markdown %}
 {% load humanize %}
+{% load future %}
 <div id="search-results">
   {% for result in highlighted_results %}
     <div class="govuk-grid-row">
@@ -35,14 +36,24 @@
             </dd>
           </div>
           <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Domain name</dt>
+            <dt class="govuk-summary-list__key">Domain:</dt>
             <dd class="govuk-summary-list__value">
               {{result.metadata.domain_name}}
             </dd>
           </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Tags:</dt>
+            <dd class="govuk-summary-list__value">
+              {% if result.tags_to_display %}
+                {% for tag in result.tags_to_display %}
+                  <a href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              {% endif %}
+            </dd>
+          </div>
           {% if result.matches %}
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Matched fields</dt>
+              <dt class="govuk-summary-list__key">Matched fields:</dt>
               <dd class="govuk-summary-list__value">
                 {{ result.matches|lookup:readable_match_reasons|join:", " }}
               </dd>
