@@ -43,9 +43,9 @@
     {% include "partial/filter.html" %}
     <div class="govuk-grid-column-two-thirds">
       {% if results %}
-      <h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{{total_results|intcomma}} results</h2>
+        <h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{{total_results_str|intcomma}} results</h2>
       {% else %}
-      {% include "partial/no_results.html" %}
+        {% include "partial/no_results.html" %}
       {% endif %}
       {% include "partial/sort.html" %}
       {% include "partial/search_result.html" %}

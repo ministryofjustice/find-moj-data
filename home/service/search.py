@@ -53,7 +53,7 @@ class SearchService(GenericService):
         self.results = self._get_search_results(page, items_per_page)
         self.highlighted_results = self._highlight_results()
         self.paginator = self._get_paginator(items_per_page)
-        self.context = self._get_context()
+        self.context = self._get_context(items_per_page)
 
     @staticmethod
     def _build_custom_property_filter(
@@ -165,7 +165,7 @@ class SearchService(GenericService):
             )
         }
 
-    def _get_context(self) -> dict[str, Any]:
+    def _get_context(self, items_per_page: int) -> dict[str, Any]:
         if self.results.total_results >= settings.MAX_RESULTS:
             total_results = f"{settings.MAX_RESULTS}+"
         else:
@@ -182,7 +182,9 @@ class SearchService(GenericService):
             ),
             "number_of_words": len(self.form_data.get("query", "").split()),
             "paginator": self.paginator,
-            "total_results": total_results,
+            "results_per_page": items_per_page,
+            "total_results_str": total_results,
+            "total_results": self.results.total_results,
             "label_clear_href": self._generate_label_clear_ref(),
             "readable_match_reasons": self._get_match_reason_display_names(),
         }
