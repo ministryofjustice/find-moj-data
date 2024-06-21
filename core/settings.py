@@ -230,6 +230,8 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
         "PUBLIC_PATHS": [
             "/metrics",
         ],
+        "USERNAME_ATTRIBUTE": "mail",
+        "USER_MAPPING_FN": "users.helper.user_mapping_fn",
     }
     LOGIN_URL = "/azure_auth/login"
     LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
