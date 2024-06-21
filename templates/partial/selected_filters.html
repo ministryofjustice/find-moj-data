@@ -7,11 +7,13 @@
         </div>
         <div class="moj-filter__heading-action">
             <p>
-                <a class="govuk-link govuk-link--no-visited-state"
-                   href="{% url 'home:search' %}{% query_string domain=None entity_types=None where_to_access=None %}"
-                   id="clear_filter">
-                    Clear filter
-                </a>
+                {% if label_clear_href|get_keys|length > 0 %}
+                    <a class="govuk-link govuk-link--no-visited-state"
+                       href="{% url 'home:search' %}{% query_string domain=None entity_types=None where_to_access=None tags=None%}"
+                       id="clear_filter">
+                        Clear filter
+                    </a>
+                {% endif %}
             </p>
         </div>
     </div>
