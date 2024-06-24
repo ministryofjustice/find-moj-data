@@ -347,7 +347,7 @@ class Entity(BaseModel):
     tags: list[TagRef] = Field(
         default_factory=list,
         description="Additional tags to add.",
-        examples=[[TagRef(display_name="ESDA", urn="urn:li:tag:PII")]],
+        examples=[[TagRef(display_name="ESDA", urn="urn:li:tag:ESDA")]],
     )
     glossary_terms: list[GlossaryTermRef] = Field(
         default_factory=list,
@@ -383,6 +383,18 @@ class Entity(BaseModel):
         description="Fields to add to DataHub custom properties",
         default_factory=CustomEntityProperties,
     )
+    tags_to_display: list[str] = Field(
+        description="a list of tag display_names where tags starting 'dc_' are filtered out",  # noqa: E501
+        init=False,
+        default=[],
+    )
+
+    def model_post_init(self, __context):
+        self.tags_to_display = [
+            tag.display_name
+            for tag in self.tags
+            if not tag.display_name.startswith("dc_")
+        ]
 
 
 class Database(Entity):
