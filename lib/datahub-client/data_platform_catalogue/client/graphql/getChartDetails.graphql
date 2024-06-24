@@ -5,6 +5,17 @@ query getChartDetails($urn: String!) {
     platform {
       name
     }
+    tags {
+      tags {
+        tag {
+          urn
+          properties {
+            name
+            description
+          }
+        }
+      }
+    }
     domain {
       domain {
         urn
