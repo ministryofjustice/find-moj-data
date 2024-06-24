@@ -30,8 +30,13 @@ def parse_owner(entity: dict[str, Any]) -> OwnerRef:
     owners = [i["owner"] for i in ownership.get("owners", [])]
     if owners:
         properties = owners[0].get("properties") or {}
+        display_name = (
+            properties.get("displayName")
+            if properties.get("displayName") is not None
+            else properties.get("fullName", "")
+        )
         owner_details = OwnerRef(
-            display_name=properties.get("displayName", properties.get("fullName", "")),
+            display_name=display_name,
             email=properties.get("email", ""),
             urn=owners[0].get("urn", ""),
         )
