@@ -10,7 +10,9 @@
       </div>
     </div>
     <div class="moj-filter__content">
-      {% include "partial/selected_filters.html" %}
+      {% if label_clear_href|get_keys|length > 0 %}
+        {% include "partial/selected_filters.html" %}
+      {% endif %}
       <div class="moj-filter__options">
         <a href="#search-results" class="govuk-skip-link extra-skip-link" data-module="govuk-skip-link">Skip to results</a>
         <button form="searchform" class="govuk-button" data-module="govuk-button" data-test-id="apply-filters">
@@ -24,10 +26,10 @@
               {{form.domain}}
             </div>
             {% if form.subdomain.choices %}
-            <div class="govuk-form-group js-required">
-              <label class="govuk-label" for="{{form.subdomain.id_for_label}}">Subdomain</label>
-              {{form.subdomain}}
-            </div>
+              <div class="govuk-form-group js-required">
+                <label class="govuk-label" for="{{form.subdomain.id_for_label}}">Subdomain</label>
+                {{form.subdomain}}
+              </div>
             {% endif %}
           </fieldset>
         </div>
