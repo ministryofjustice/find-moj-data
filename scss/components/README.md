@@ -28,7 +28,11 @@ See `enhanced-glossary.js`.
 ```html
 <div class="fmj-search govuk-form-group">
   <label for="filter-input" class="govuk-label">Filter this page</label>
-  <input class="govuk-input" type="search" placeholder="Filter this page" />
+  <input
+    id="filter-input"
+    class="govuk-input"
+    type="search"
+    placeholder="Filter this page" />
 </div>
 ```
 
@@ -45,7 +49,7 @@ This variant submits the form when the button is pressed or the user presses ent
       >Search query</label
     >
     <input class="search-input govuk-input" type="search" />
-    <button type="submit">
+    <button id="search-input" type="submit">
       <svg
         aria-hidden="true"
         focusable="false"
@@ -57,11 +61,7 @@ This variant submits the form when the button is pressed or the user presses ent
           d="M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z"
           fill="currentColor"></path>
       </svg>
-      <label
-        for="search-button"
-        class="govuk-label govuk-visually-hidden-focusable"
-        >Search</label
-      >
+      <label class="govuk-label govuk-visually-hidden-focusable">Search</label>
     </button>
   </div>
 </form>
@@ -78,7 +78,7 @@ Use this variant on a blue background to change the button colour to black.
   >
   <div
     class="fmj-search fmj-search--compact fmj-search--on-govuk-blue govuk-form-group">
-    <input class="search-input govuk-input" type="search" />
+    <input id="search-input" class="search-input govuk-input" type="search" />
     <button type="submit">
       <svg
         aria-hidden="true"
@@ -91,11 +91,7 @@ Use this variant on a blue background to change the button colour to black.
           d="M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z"
           fill="currentColor"></path>
       </svg>
-      <label
-        for="search-button"
-        class="govuk-label govuk-visually-hidden-focusable"
-        >Search</label
-      >
+      <label class="govuk-label govuk-visually-hidden-focusable">Search</label>
     </button>
   </div>
 </form>

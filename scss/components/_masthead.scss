@@ -1,8 +1,8 @@
 // Based on https://github.com/alphagov/govuk-design-system/blob/b3223714d8f2e9564b7e9d2ca703a3f902bf1ce8/src/stylesheets/components/_masthead.scss
 
 .fmj-masthead {
-  @include govuk-responsive-padding(6, "top");
-  @include govuk-responsive-padding(6, "bottom");
+  @include govuk-responsive-padding(8, "top");
+  @include govuk-responsive-padding(8, "bottom");
   border-bottom: 1px solid govuk-colour("blue");
   color: govuk-colour("white");
   background-color: govuk-colour("blue");
