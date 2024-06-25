@@ -8,11 +8,42 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl fmj-masthead__title">Find MOJ Data</h1>
-            <h2 class="govuk-heading-m fmj-masthead__title">Search metadata catalogue</h2>
+
+            <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-4">
+              <label
+                for="search-input"
+                class="govuk-label govuk-label--m"
+              >Search metadata catalogue</label>
+              <div
+                class="fmj-search fmj-search--compact fmj-search--on-govuk-blue govuk-form-group"
+              >
+                <input class="search-input govuk-input" type="search" />
+                <button type="submit">
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 36 36"
+                    width="40"
+                    height="40"
+                  >
+                    <path
+                      d="M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                  <label
+                    for="search-button"
+                    class="govuk-label govuk-visually-hidden-focusable"
+                  >Search</label
+                    >
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
 
 {% endblock main %}

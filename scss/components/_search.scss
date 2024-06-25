@@ -62,13 +62,20 @@
 
 // Variant for blue backgrounds
 .fmj-search--on-govuk-blue {
+  .govuk-input[type="search"] {
+    border-width: 0;
+
+    &:focus {
+      border-width: 2px;
+    }
+  }
+
   button {
-    background-color: govuk-colour("black");
-    border: 0;
-    color: govuk-colour("white");
+    background-color: #d2e2f1;
+    color: govuk-colour("blue");
 
     &:hover {
-      background-color: lighten(govuk-colour("black"), 5%);
+      background-color: lighten(#d2e2f1, 5%);
     }
   }
 }
