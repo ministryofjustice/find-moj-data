@@ -9,7 +9,7 @@
       <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4" id="searchform">
         <div class="govuk-form-group">
           <h1 class="govuk-heading-l">{{h1_value}}</h1>
-          <div class="search-container">
+          <div class="fmj-search fmj-search--compact">
             <label for="{{ form.query.id_for_label }}" class="govuk-label govuk-visually-hidden-focusable">Search MOJ Data</label>
             {{ form.query }}
             <button class="search-button" type="submit" id="search-button">
