@@ -11,18 +11,34 @@ It's intended for use as a service-wide search or as a way of filtering long man
 - [MOJ search](https://design-patterns.service.justice.gov.uk/components/search/) and [icon](https://github.com/dfe-analytical-services/explore-education-statistics/blob/8a9aa729636eade2808895ad71a56bcb984d3c53/src/explore-education-statistics-common/src/components/SearchIcon.tsx#L4)
 - [MOJ filter](https://design-patterns.service.justice.gov.uk/components/filter/)
 
+## Expected behaviours
+
+- Clearable via the "X" button or pressing escape
+- Focusable, with a focus outline
+
 ## Usage
 
+The search box should:
+
+- be used inside a form or other element with `role="search"`, to indicate it as a [search landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/).
+- have a visually hidden label to identify the search functionality
+
 ### With no search icon
+
+This variant should be used only for search-as-you-type behaviour that does not require submitting a form.
+
+See `enhanced-glossary.js`.
 
 ```html
 <div class="fmj-search govuk-form-group">
   <label for="filter-input" class="govuk-label">Filter this page</label>
-  <input class="govuk-input" type="search" />
+  <input class="govuk-input" type="search" placeholder="Filter this page" />
 </div>
 ```
 
 ### With an integrated search button
+
+This variant submits the form when the button is pressed or the user presses enter.
 
 ```html
 <form action="" method="get" role="search" class="govuk-!-margin-bottom-4">
