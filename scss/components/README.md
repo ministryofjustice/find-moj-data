@@ -15,6 +15,7 @@ It's intended for use as a service-wide search or as a way of filtering long man
 
 - Clearable via the "X" button or pressing escape
 - Focusable, with a focus outline
+- Highlight the button on hover
 
 ## Usage
 
