@@ -31,8 +31,8 @@ class TestSearchService:
     def test_get_context_h1_value(self, search_context):
         assert search_context["h1_value"] == "Search"
 
-    def test_get_context_label_clear_href(self, search_context, valid_domain):
-        assert search_context["label_clear_href"]["domain"] == {
+    def test_get_context_remove_filter_hrefs(self, search_context, valid_domain):
+        assert search_context["remove_filter_hrefs"]["domain"] == {
             valid_domain.label: (
                 "?query=test&"
                 "where_to_access=analytical_platform&"
@@ -43,7 +43,7 @@ class TestSearchService:
             )
         }
 
-        assert search_context["label_clear_href"]["Where To Access"] == {
+        assert search_context["remove_filter_hrefs"]["Where To Access"] == {
             "analytical_platform": (
                 "?query=test&"
                 f"domain={quote(valid_domain.urn)}&"
@@ -55,7 +55,7 @@ class TestSearchService:
             )
         }
 
-        assert search_context["label_clear_href"]["Entity Types"] == {
+        assert search_context["remove_filter_hrefs"]["Entity Types"] == {
             "Table": (
                 "?query=test&"
                 f"domain={quote(valid_domain.urn)}&"

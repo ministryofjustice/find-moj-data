@@ -117,14 +117,14 @@ class SearchService(GenericService):
 
         return Paginator(pages_list, items_per_page)
 
-    def _generate_label_clear_ref(self) -> dict[str, dict[str, str]] | None:
+    def _generate_remove_filter_hrefs(self) -> dict[str, dict[str, str]] | None:
         if self.form.is_bound:
             domain = self.form.cleaned_data.get("domain", "")
             entity_types = self.form.cleaned_data.get("entity_types", [])
             where_to_access = self.form.cleaned_data.get("where_to_access", [])
-            label_clear_href = {}
+            remove_filter_hrefs = {}
             if domain:
-                label_clear_href["domain"] = self._generate_domain_clear_href()
+                remove_filter_hrefs["domain"] = self._generate_domain_clear_href()
             if entity_types:
                 entity_types_clear_href = {}
                 for entity_type in entity_types:
@@ -133,7 +133,7 @@ class SearchService(GenericService):
                             filter_name="entity_types", filter_value=entity_type
                         )
                     )
-                label_clear_href["Entity Types"] = entity_types_clear_href
+                remove_filter_hrefs["Entity Types"] = entity_types_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}
@@ -143,11 +143,11 @@ class SearchService(GenericService):
                             filter_name="where_to_access", filter_value=access
                         )
                     )
-                label_clear_href["Where To Access"] = where_to_access_clear_href
+                remove_filter_hrefs["Where To Access"] = where_to_access_clear_href
         else:
-            label_clear_href = None
+            remove_filter_hrefs = None
 
-        return label_clear_href
+        return remove_filter_hrefs
 
     def _generate_domain_clear_href(
         self,
@@ -185,7 +185,7 @@ class SearchService(GenericService):
             "results_per_page": items_per_page,
             "total_results_str": total_results,
             "total_results": self.results.total_results,
-            "label_clear_href": self._generate_label_clear_ref(),
+            "remove_filter_hrefs": self._generate_remove_filter_hrefs(),
             "readable_match_reasons": self._get_match_reason_display_names(),
         }
 
