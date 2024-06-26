@@ -39,7 +39,8 @@ class TestSearchService:
                 "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
-                "clear_label=False"
+                "clear_label=False&"
+                "tags=tag-1"
             )
         }
 
@@ -51,7 +52,8 @@ class TestSearchService:
                 "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
-                "clear_label=False"
+                "clear_label=False&"
+                "tags=tag-1"
             )
         }
 
@@ -61,6 +63,20 @@ class TestSearchService:
                 f"domain={quote(valid_domain.urn)}&"
                 "subdomain=&"
                 "where_to_access=analytical_platform&"
+                "sort=ascending&"
+                "clear_filter=False&"
+                "clear_label=False&"
+                "tags=tag-1"
+            )
+        }
+
+        assert search_context["label_clear_href"]["Tags"] == {
+            "tag-1": (
+                "?query=test&"
+                f"domain={quote(valid_domain.urn)}&"
+                "subdomain=&"
+                "where_to_access=analytical_platform&"
+                "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
                 "clear_label=False"
