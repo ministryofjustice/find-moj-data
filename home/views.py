@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
 from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
 from home.service.details import (
     ChartDetailsService,
     DatabaseDetailsService,
@@ -11,11 +12,12 @@ from home.service.details import (
 from home.service.glossary import GlossaryService
 from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
+from home.service.search_facet_fetcher import SearchFacetFetcher
 
 
 def home_view(request):
-    context = {}
-    context["h1_value"] = "Home"
+    facets = SearchFacetFetcher().fetch()
+    context = {"domains": DomainModel(facets), "h1_value": "Home"}
     return render(request, "home.html", context)
 
 

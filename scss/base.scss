@@ -8,6 +8,7 @@ $govuk-global-styles: true;
 @import "node_modules/govuk-frontend/dist/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "./components/search";
+@import "./components/masthead";
 @import "./glossary";
 @import "./details";
 
@@ -47,4 +48,9 @@ code {
   border-radius: 2px; /* Rounded corners */
   padding: 1px 3px; /* Padding around the text */
   color: govuk-colour("black");
+}
+
+.main-wrapper-with-masthead {
+  @extend .govuk-main-wrapper;
+  padding-top: govuk-spacing(3);
 }

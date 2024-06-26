@@ -1,22 +1,16 @@
 import re
 
 import pytest
-from data_platform_catalogue.search_types import ResultType
-
-from tests.conftest import (
-    generate_page,
-    mock_search_response,
-    search_result_from_database,
-)
 
 from .helpers import check_for_accessibility_issues
 
 
 @pytest.mark.slow
-class TestSearch:
+class TestSearchInteractions:
     """
-    Test interacting with the search form through the browser,
-    as a user would
+    Given I am on the search page
+    When I interact with the search bar, filters, or pagination options
+    Then the form is resubmitted and my choices should persist
     """
 
     @pytest.fixture(autouse=True)
@@ -24,30 +18,17 @@ class TestSearch:
         self,
         live_server,
         selenium,
-        home_page,
         search_page,
-        details_database_page,
-        table_details_page,
-        glossary_page,
         chromedriver_path,
         axe_version,
         page_titles,
     ):
         self.selenium = selenium
         self.live_server_url = live_server.url
-        self.home_page = home_page
         self.search_page = search_page
-        self.details_database_page = details_database_page
-        self.table_details_page = table_details_page
-        self.glossary_page = glossary_page
         self.chromedriver_path = chromedriver_path
         self.page_titles = page_titles
         self.axe_version = axe_version
-
-    def verify_glossary_link_from_homepage_works(self):
-        self.start_on_the_home_page()
-        self.click_on_the_glossary_link()
-        self.verify_i_am_on_the_glossary_page()
 
     def test_search_with_query(self):
         """
@@ -171,14 +152,6 @@ class TestSearch:
         self.verify_unselected_domain()
         self.verfiy_unselected_checkbox_filters()
 
-    def test_automated_accessibility_home(self):
-        self.start_on_the_home_page()
-        check_for_accessibility_issues(
-            self.selenium.current_url,
-            chromedriver_path=self.chromedriver_path,
-            axe_version=self.axe_version,
-        )
-
     def test_automated_accessibility_search(self):
         self.start_on_the_search_page()
         check_for_accessibility_issues(
@@ -187,54 +160,9 @@ class TestSearch:
             axe_version=self.axe_version,
         )
 
-    def test_table_search_to_details(self, mock_catalogue):
-        """
-        Users can search for a table and access a detail page
-        """
-        mock_search_response(
-            mock_catalogue=mock_catalogue,
-            page_results=generate_page(result_type=ResultType.TABLE),
-            total_results=100,
-        )
-        self.start_on_the_search_page()
-        self.enter_a_query_and_submit("court timeliness")
-        self.click_on_the_first_result()
-        self.verify_i_am_on_the_table_details_page()
-
-    def test_database_search_to_table_details(self, mock_catalogue, example_database):
-        """
-        Users can search and drill down into details
-        """
-        mock_search_response(
-            mock_catalogue=mock_catalogue,
-            page_results=[search_result_from_database(example_database)],
-            total_results=100,
-        )
-        self.start_on_the_search_page()
-        self.enter_a_query_and_submit("court timeliness")
-        item_name = self.click_on_the_first_result()
-        self.verify_i_am_on_the_database_details_page(item_name)
-        self.verify_database_details()
-        self.verify_database_tables_listed()
-        self.click_on_table()
-        self.verify_i_am_on_the_table_details_page()
-
-    def start_on_the_home_page(self):
-        self.selenium.get(f"{self.live_server_url}")
-        assert self.selenium.title in self.page_titles
-        heading_text = self.details_database_page.primary_heading().text
-
-        assert heading_text == self.selenium.title.split("-")[0].strip()
-
     def start_on_the_search_page(self):
         self.selenium.get(f"{self.live_server_url}/search?new=True")
         assert self.selenium.title in self.page_titles
-
-    def click_on_the_search_link(self):
-        self.home_page.search_nav_link().click()
-
-    def click_on_the_glossary_link(self):
-        self.home_page.glossary_nav_link().click()
 
     def click_on_the_search_button(self):
         self.search_page.search_button().click()
@@ -253,12 +181,6 @@ class TestSearch:
 
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
-    def verify_i_am_on_the_glossary_page(self):
-        assert self.selenium.title in self.page_titles
-        heading_text = self.glossary_page.primary_heading().text
-
-        assert heading_text == self.selenium.title.split("-")[0].strip()
-
     def verify_i_have_results(self):
         result_count = self.search_page.result_count().text
         assert re.match(r"[1-9]\d* results", result_count)
@@ -271,15 +193,6 @@ class TestSearch:
         item_name = first_link.text
         first_link.click()
         return item_name
-
-    def verify_i_am_on_the_database_details_page(self, item_name):
-        assert self.selenium.title in self.page_titles
-
-        heading_text = self.details_database_page.primary_heading().text
-        assert heading_text == self.selenium.title.split("-")[0].strip()
-
-        subheading_text = self.details_database_page.secondary_heading().text
-        assert subheading_text and item_name.endswith(subheading_text)
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
@@ -333,25 +246,3 @@ class TestSearch:
     def verify_sort_selected(self, expected):
         value = self.search_page.checked_sort_option().get_attribute("value") or ""
         assert value == expected.lower()
-
-    def verify_database_tables_listed(self):
-        tables = self.details_database_page.database_tables()
-        assert tables.text
-
-    def verify_database_details(self):
-        database_details = self.details_database_page.database_details()
-        assert database_details.text
-
-    def click_on_table(self):
-        self.details_database_page.table_link().click()
-
-    def verify_i_am_on_the_table_details_page(self):
-        assert self.selenium.title in self.page_titles
-
-        heading_text = self.details_database_page.primary_heading().text
-        assert heading_text == self.selenium.title.split("-")[0].strip()
-
-        assert self.table_details_page.caption() == "Table"
-        assert self.table_details_page.column_descriptions() == [
-            "description with markdown"
-        ]
