@@ -53,7 +53,7 @@
                             <li>
                                 <span class="govuk-!-font-weight-bold">Tags:</span>
                                 {% for tag in chart.tags_to_display %}
-                                    <a href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                                    <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </li>
                         {% endif %}
