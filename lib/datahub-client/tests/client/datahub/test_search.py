@@ -1077,3 +1077,28 @@ def test_tag_to_display(tags, result):
     )
 
     assert test_search_result.tags_to_display == result
+
+
+def test_get_tags(mock_graph, searcher):
+
+    datahub_response = {
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 200,
+            "total": 47,
+            "searchResults": [
+                {"entity": {"urn": "urn:li:tag:tag1"}},
+                {"entity": {"urn": "urn:li:tag:tag2"}},
+                {"entity": {"urn": "urn:li:tag:tag3"}},
+            ],
+        }
+    }
+    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+    response = searcher.get_tags()
+
+    assert response == [
+        ("tag1", "urn:li:tag:tag1"),
+        ("tag2", "urn:li:tag:tag2"),
+        ("tag3", "urn:li:tag:tag3"),
+    ]
