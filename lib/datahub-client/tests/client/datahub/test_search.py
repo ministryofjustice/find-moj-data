@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
+
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -1075,4 +1076,4 @@ def test_tag_to_display(tags, result):
         created=None,
     )
 
-    assert [t.display_name for t in test_search_result.tags_to_display] == result
+    assert test_search_result.tags_to_display == result
