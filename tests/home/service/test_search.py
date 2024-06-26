@@ -70,7 +70,7 @@ class TestSearchService:
             )
         }
 
-        assert search_context["label_clear_href"]["Tags"] == {
+        assert search_context["remove_filter_hrefs"]["Tags"] == {
             "tag-1": (
                 "?query=test&"
                 f"domain={quote(valid_domain.urn)}&"
