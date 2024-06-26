@@ -3,11 +3,11 @@
 
 {% block main %}
   <main class="main-wrapper-with-masthead" id="main-content" role="main">
-    <div class="fmj-masthead">
+    <div class="app-masthead">
       <div class="govuk-width-container app-width-container">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl fmj-masthead__title">Find MOJ data</h1>
+            <h1 class="govuk-heading-xl app-masthead__title">Find MOJ data</h1>
 
             <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0">
               <label
@@ -15,7 +15,7 @@
                 class="govuk-label govuk-label--m"
               >Search metadata catalogue</label>
               <div
-                class="fmj-search fmj-search--compact fmj-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
+                class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
               >
                 <input id="search-input" name="query" class="search-input govuk-input" type="search" />
                 <button type="submit">

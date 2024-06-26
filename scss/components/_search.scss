@@ -1,5 +1,5 @@
 // Base enhancements to search fields
-.fmj-search {
+.app-search {
   .govuk-input[type="search"] {
     &:focus {
       z-index: 1;
@@ -10,7 +10,7 @@
     // https://caniuse.com/mdn-css_selectors_-webkit-search-cancel-button
     &::-webkit-search-cancel-button {
       -webkit-appearance: none;
-      background-image: url(#{$fmj-images-path}/icon-close-cross-black.svg);
+      background-image: url(#{$app-images-path}/icon-close-cross-black.svg);
       background-position: center;
       background-repeat: no-repeat;
       cursor: pointer;
@@ -23,7 +23,7 @@
 }
 
 // Variant with search button adjacent to the input
-.fmj-search--compact {
+.app-search--compact {
   display: flex;
 
   .govuk-input[type="search"] {
@@ -61,7 +61,7 @@
 }
 
 // Variant for blue backgrounds
-.fmj-search--on-govuk-blue {
+.app-search--on-govuk-blue {
   .govuk-input[type="search"] {
     border-width: 0;
 
