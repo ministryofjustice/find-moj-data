@@ -1085,7 +1085,7 @@ def test_get_tags(mock_graph, searcher):
         "searchAcrossEntities": {
             "start": 0,
             "count": 200,
-            "total": 47,
+            "total": 3,
             "searchResults": [
                 {"entity": {"urn": "urn:li:tag:tag1"}},
                 {"entity": {"urn": "urn:li:tag:tag2"}},
