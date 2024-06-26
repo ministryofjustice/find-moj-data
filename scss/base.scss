@@ -54,3 +54,7 @@ code {
   @extend .govuk-main-wrapper;
   padding-top: govuk-spacing(3);
 }
+
+.moj-filter .govuk-select {
+  min-width: 5.5em;
+}
