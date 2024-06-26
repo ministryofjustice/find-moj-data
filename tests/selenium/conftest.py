@@ -67,6 +67,9 @@ class Page:
     def __init__(self, selenium):
         self.selenium = selenium
 
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
 
 class DatabaseDetailsPage(Page):
     def primary_heading(self):
@@ -103,10 +106,22 @@ class HomePage(Page):
     def glossary_nav_link(self) -> WebElement:
         return self.selenium.find_element(By.LINK_TEXT, "Glossary")
 
+    def search_bar(self) -> WebElement:
+        return self.selenium.find_element(By.NAME, "query")
+
+    def domain_link(self, domain) -> WebElement:
+        all_domains = self.selenium.find_elements(
+            By.CSS_SELECTOR, "ul#domain-list li a"
+        )
+        all_domain_names = [d.text for d in all_domains]
+        result = next((d for d in all_domains if domain == d.text), None)
+        if not result:
+            raise Exception(f"{domain!r} not found in {all_domain_names!r}")
+        return result
+
 
 class GlossaryPage(Page):
-    def primary_heading(self):
-        return self.selenium.find_element(By.TAG_NAME, "h1")
+    pass
 
 
 class SearchResultWrapper:

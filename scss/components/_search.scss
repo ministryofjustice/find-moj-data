@@ -48,10 +48,34 @@
     margin-bottom: 0;
     padding: 0;
     width: 40px;
+
+    &:hover {
+      background-color: lighten(govuk-colour("blue"), 5%);
+    }
+
+    &:focus {
+      box-shadow: inset 0 0 0 4px govuk-colour("black");
+      outline: 3px solid govuk-colour("yellow");
+    }
+  }
+}
+
+// Variant for blue backgrounds
+.fmj-search--on-govuk-blue {
+  .govuk-input[type="search"] {
+    border-width: 0;
+
+    &:focus {
+      border-width: 2px;
+    }
   }
 
-  button:focus {
-    box-shadow: inset 0 0 0 4px govuk-colour("black");
-    outline: 3px solid govuk-colour("yellow");
+  button {
+    background-color: #d2e2f1;
+    color: govuk-colour("blue");
+
+    &:hover {
+      background-color: lighten(#d2e2f1, 5%);
+    }
   }
 }
