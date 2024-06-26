@@ -1,0 +1,42 @@
+name: Check pre-commit hooks ran
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  check-precommit-hook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11.1
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Check that the pre-commit hook has been run
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          output=$(pre-commit run --all-files 2>&1)
+          exit_code=$?
+          set -e
+
+          if [[ $exit_code -eq 0 ]]; then
+              echo "Pre-commit hook ran successfully"
+          else
+              PR_NUMBER=${{ github.event.pull_request.number }}
+              COMMENT="⚠️ Make sure you have [pre-commit](https://pre-commit.com]) installed.\n\npre-commit output: ${output}"
+
+              echo "pre-commit output: $output"
+              gh pr comment $COMMENT_URL "https://github.com/${{ github.repository }}/pull/${PR_NUMBER}" -b "$COMMENT"
+          fi
