@@ -26,7 +26,7 @@ This variant should be used only for search-as-you-type behaviour that does not 
 See `enhanced-glossary.js`.
 
 ```html
-<div class="fmj-search govuk-form-group">
+<div class="app-search govuk-form-group">
   <label for="filter-input" class="govuk-label">Filter this page</label>
   <input
     id="filter-input"
@@ -42,7 +42,7 @@ This variant submits the form when the button is pressed or the user presses ent
 
 ```html
 <form action="" method="get" role="search" class="govuk-!-margin-bottom-4">
-  <div class="fmj-search fmj-search--compact govuk-form-group">
+  <div class="app-search app-search--compact govuk-form-group">
     <label
       for="search-input"
       class="govuk-label govuk-visually-hidden-focusable"
@@ -77,7 +77,7 @@ Use this variant on a blue background to change the button colour to black.
     >Search query</label
   >
   <div
-    class="fmj-search fmj-search--compact fmj-search--on-govuk-blue govuk-form-group">
+    class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group">
     <input id="search-input" class="search-input govuk-input" type="search" />
     <button type="submit">
       <svg
@@ -111,12 +111,12 @@ The masthead is an extended header with search included.
 ### Usage
 
 ```html
-<div class="fmj-masthead">
+<div class="app-masthead">
   <div class="govuk-width-container app-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl fmj-masthead__title">Find MOJ Data</h1>
-        <h2 class="govuk-heading-m fmj-masthead__title">
+        <h1 class="govuk-heading-xl app-masthead__title">Find MOJ Data</h1>
+        <h2 class="govuk-heading-m app-masthead__title">
           Search metadata catalogue
         </h2>
       </div>

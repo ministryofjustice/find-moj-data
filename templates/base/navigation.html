@@ -11,16 +11,18 @@
 
       </svg>
 
-      <a class="moj-header__link moj-header__link--service-name" href="#">Find MOJ data
-      {% if ENV == "dev" or ENV is None %}&nbsp;
-      <strong class="govuk-tag govuk-tag--yellow">Development</strong>
-      {% endif %}
-      {% if ENV == "test" %}&nbsp;
-      <strong class="govuk-tag govuk-tag--green">{{ ENV|title }}</strong>
-      {% endif %}
-      {% if ENV == "preprod" %}&nbsp;
-        <strong class="govuk-tag govuk-tag--blue">{{ ENV|title }}</strong>
-      {% endif %}</a>
+      <span class="moj-header__link moj-header__link--service-name">
+        <a href="{% url 'home:home' %}">Find MOJ data</a>
+        {% if ENV == "dev" or ENV is None %}&nbsp;
+        <strong class="govuk-tag govuk-tag--yellow">Development</strong>
+        {% endif %}
+        {% if ENV == "test" %}&nbsp;
+        <strong class="govuk-tag govuk-tag--green">{{ ENV|title }}</strong>
+        {% endif %}
+        {% if ENV == "preprod" %}&nbsp;
+          <strong class="govuk-tag govuk-tag--blue">{{ ENV|title }}</strong>
+        {% endif %}
+      </span>
     </div>
     <div class="moj-header__content">
 
