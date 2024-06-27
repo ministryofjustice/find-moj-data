@@ -55,6 +55,8 @@ code {
   padding-top: govuk-spacing(3);
 }
 
+// we've reduced the minimum here as the default value was higher
+// than the minumum of the moj filter component
 .moj-filter .govuk-select {
   min-width: 5.5em;
 }
