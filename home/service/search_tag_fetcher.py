@@ -7,7 +7,7 @@ class SearchTagFetcher(GenericService):
     def __init__(self):
         self.client = self._get_catalogue_client()
         self.cache_key = "search_tags"
-        self.cache_timeout_seconds = 5
+        self.cache_timeout_seconds = 300
 
     def fetch(self) -> list:
         """
