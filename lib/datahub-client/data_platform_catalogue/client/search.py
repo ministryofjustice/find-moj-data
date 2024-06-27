@@ -48,6 +48,11 @@ class SearchClient:
             .joinpath("getGlossaryTerms.graphql")
             .read_text()
         )
+        self.get_tags_query = (
+            files("data_platform_catalogue.client.graphql")
+            .joinpath("getTags.graphql")
+            .read_text()
+        )
 
     def search(
         self,
@@ -320,6 +325,36 @@ class SearchClient:
         return SearchResponse(
             total_results=response["total"], page_results=page_results
         )
+
+    def get_tags(self, count: int = 2000):
+        """
+        gets a list of tag urns from datahub.
+
+        If the total tags in datahub is more
+        than 2000 (we have too many tags) but the count should be increased to get
+        all tags
+        """
+        variables = {"count": count}
+        try:
+            response = self.graph.execute_graphql(self.get_tags_query, variables)
+        except GraphError as e:
+            raise CatalogueError("Unable to execute getTags query") from e
+
+        response = response["searchAcrossEntities"]
+        logger.debug(json.dumps(response, indent=2))
+
+        return self._parse_global_tags(response)
+
+    def _parse_global_tags(self, tag_query_results) -> list[tuple[str, str]]:
+        """parse results of get tags query"""
+
+        # name properties of tags are often not set, i.e. all those from dbt
+        # so better to get tag name from tag urn.
+        tags_list = [
+            (tag["entity"]["urn"].replace("urn:li:tag:", ""), tag["entity"]["urn"])
+            for tag in tag_query_results["searchResults"]
+        ]
+        return tags_list
 
     def _parse_container(self, entity: dict[str, Any], matches) -> SearchResult:
         """

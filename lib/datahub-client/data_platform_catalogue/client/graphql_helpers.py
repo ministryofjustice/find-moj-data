@@ -83,6 +83,13 @@ def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
     tags = []
     for tag in outer_tags.get("tags", []):
         properties = tag.get("tag", {}).get("properties", {})
+        # This is needed because tags cerated by dbt seemily don't have properties
+        # populated
+        if not properties and tag.get("tag", {}).get("urn"):
+            properties = {
+                "name": tag.get("tag", {}).get("urn").replace("urn:li:tag:", "")
+            }
+
         if properties:
             tags.append(
                 TagRef(

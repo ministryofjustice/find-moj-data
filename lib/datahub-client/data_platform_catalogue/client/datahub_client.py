@@ -3,6 +3,30 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
+from datahub.configuration.common import ConfigurationError
+from datahub.emitter import mce_builder
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
+from datahub.ingestion.source.common.subtypes import (
+    DatasetContainerSubTypes,
+    DatasetSubTypes,
+)
+from datahub.metadata import schema_classes
+from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
+from datahub.metadata.schema_classes import (
+    ChangeTypeClass,
+    ContainerClass,
+    ContainerPropertiesClass,
+    DatasetPropertiesClass,
+    DomainPropertiesClass,
+    DomainsClass,
+    OtherSchemaClass,
+    SchemaFieldClass,
+    SchemaFieldDataTypeClass,
+    SchemaMetadataClass,
+    SubTypesClass,
+)
+
 from data_platform_catalogue.client.exceptions import (
     AspectDoesNotExist,
     ConnectivityError,
@@ -38,29 +62,6 @@ from data_platform_catalogue.search_types import (
     SearchFacets,
     SearchResponse,
     SortOption,
-)
-from datahub.configuration.common import ConfigurationError
-from datahub.emitter import mce_builder
-from datahub.emitter.mcp import MetadataChangeProposalWrapper
-from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
-from datahub.ingestion.source.common.subtypes import (
-    DatasetContainerSubTypes,
-    DatasetSubTypes,
-)
-from datahub.metadata import schema_classes
-from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
-from datahub.metadata.schema_classes import (
-    ChangeTypeClass,
-    ContainerClass,
-    ContainerPropertiesClass,
-    DatasetPropertiesClass,
-    DomainPropertiesClass,
-    DomainsClass,
-    OtherSchemaClass,
-    SchemaFieldClass,
-    SchemaFieldDataTypeClass,
-    SchemaMetadataClass,
-    SubTypesClass,
 )
 
 logger = logging.getLogger(__name__)
@@ -210,6 +211,7 @@ class DataHubCatalogueClient:
         result_types: Sequence[ResultType] = (
             ResultType.TABLE,
             ResultType.CHART,
+            ResultType.DATABASE,
         ),
         filters: Sequence[MultiSelectFilter] = (),
     ) -> SearchFacets:
@@ -223,6 +225,10 @@ class DataHubCatalogueClient:
     def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
         """Wraps the client's glossary terms query"""
         return self.search_client.get_glossary_terms(count)
+
+    def get_tags(self, count: int = 2000):
+        """Wraps the client's get tags query"""
+        return self.search_client.get_tags(count)
 
     def get_table_details(self, urn) -> Table:
         if self.check_entity_exists_by_urn(urn):
