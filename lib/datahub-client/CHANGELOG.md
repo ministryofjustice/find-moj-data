@@ -9,14 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Search results and container entities are now filtered to those that include
+  a special tag, dc:display_in_catalogue. This allows the frontend to display
+  only the entities we think users are directly interested in, while still
+  ingesting intermediate tables (which are still relevant in the context of
+  lineage, governance, data quality etc.)
+- Return lists of objects for `SearchResult.tags` and
+  `SearchResult.tags_to_display` instead of strings.
+
 ### Added
 
 - Return domain metadata for Charts
 - Add `glossary_terms` list to `SearchResult`
-
-### Changed
-
-- Return lists of objects for `SearchResult.tags` and `SearchResult.tags_to_display` instead of strings.
 
 ## Removed
 

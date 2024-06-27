@@ -171,6 +171,7 @@ fragment datasetDetails on Dataset {
   editableProperties {
     description
   }
+  ..globalTagsFields
 }
 
 fragment entityContainer on Container {
