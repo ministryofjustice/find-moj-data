@@ -1,0 +1,16 @@
+query getTags(
+    $count: Int!
+) {
+searchAcrossEntities(
+    input: {types: TAG, query: "*", start: 0, count: $count}
+) {
+    start
+    count
+    total
+    searchResults {
+    entity {
+        urn
+    }
+    }
+}
+}

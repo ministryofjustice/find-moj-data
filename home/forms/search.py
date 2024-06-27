@@ -6,6 +6,7 @@ from django import forms
 
 from ..models.domain_model import Domain, DomainModel
 from ..service.search_facet_fetcher import SearchFacetFetcher
+from ..service.search_tag_fetcher import SearchTagFetcher
 
 
 def get_domain_choices() -> list[Domain]:
@@ -45,6 +46,11 @@ def get_entity_types():
             if entity.name != "GLOSSARY_TERM"
         ]
     )
+
+
+def get_tags():
+    tags = SearchTagFetcher().fetch()
+    return tags
 
 
 class SelectWithOptionAttribute(forms.Select):
@@ -118,6 +124,8 @@ class SearchForm(forms.Form):
     )
     clear_filter = forms.BooleanField(initial=False, required=False)
     clear_label = forms.BooleanField(initial=False, required=False)
+
+    tags = forms.MultipleChoiceField(choices=get_tags, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

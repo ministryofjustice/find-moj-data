@@ -80,6 +80,7 @@ class SearchService(GenericService):
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         subdomain = form_data.get("subdomain", "")
+        tags = form_data.get("tags", "")
         domains_and_subdomains = domains_with_their_subdomains(
             domain, subdomain, self.domain_model
         )
@@ -92,6 +93,10 @@ class SearchService(GenericService):
             filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
         if where_to_access:
             filter_value.append(MultiSelectFilter("customProperties", where_to_access))
+        if tags:
+            filter_value.append(
+                MultiSelectFilter("tags", [f"urn:li:tag:{tag}" for tag in tags])
+            )
 
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
@@ -122,6 +127,7 @@ class SearchService(GenericService):
             domain = self.form.cleaned_data.get("domain", "")
             entity_types = self.form.cleaned_data.get("entity_types", [])
             where_to_access = self.form.cleaned_data.get("where_to_access", [])
+            tags = self.form.cleaned_data.get("tags", [])
             remove_filter_hrefs = {}
             if domain:
                 remove_filter_hrefs["domain"] = self._generate_domain_clear_href()
@@ -144,6 +150,14 @@ class SearchService(GenericService):
                         )
                     )
                 remove_filter_hrefs["Where To Access"] = where_to_access_clear_href
+
+            if tags:
+                tags_clear_href = {}
+                for tag in tags:
+                    tags_clear_href[tag] = self.form.encode_without_filter(
+                        filter_name="tags", filter_value=tag
+                    )
+                remove_filter_hrefs["Tags"] = tags_clear_href
         else:
             remove_filter_hrefs = None
 

@@ -2,6 +2,7 @@
 {% load static %}
 {% load markdown %}
 {% load humanize %}
+{% load future %}
 
 {% block breadcrumbs %}
     <div class="govuk-breadcrumbs">
@@ -48,7 +49,14 @@
                         <span class="govuk-!-font-weight-bold">Domain:</span>
                     </li>
                     <li>
-                        <span class="govuk-!-font-weight-bold">Tags:</span>
+                        {% if chart.tags_to_display %}
+                            <li>
+                                <span class="govuk-!-font-weight-bold">Tags:</span>
+                                {% for tag in chart.tags_to_display %}
+                                    <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% endif %}
                     </li>
                 </ul>
             </div>

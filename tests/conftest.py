@@ -40,6 +40,7 @@ from home.models.domain_model import DomainModel
 from home.service.details import DatabaseDetailsService
 from home.service.search import SearchService
 from home.service.search_facet_fetcher import SearchFacetFetcher
+from home.service.search_tag_fetcher import SearchTagFetcher
 
 fake = Faker()
 
@@ -269,6 +270,7 @@ def mock_catalogue(request, example_database):
     mock_get_glossary_terms_response(mock_catalogue)
     mock_get_table_details_response(mock_catalogue)
     mock_get_database_details_response(mock_catalogue, example_database)
+    mock_get_tags_response(mock_catalogue)
 
     yield mock_catalogue
 
@@ -299,6 +301,14 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 def mock_search_facets_response(mock_catalogue, domains):
     mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
+
+
+def mock_get_tags_response(mock_catalogue):
+    mock_catalogue.get_tags.return_value = [
+        ("tag-1", "urn:li:tag:tag-1"),
+        ("tag-2", "urn:li:tag:tag-2"),
+        ("tag-3", "urn:li:tag:tag-3"),
+    ]
 
 
 def mock_get_glossary_terms_response(mock_catalogue):
@@ -354,6 +364,11 @@ def search_facets():
 
 
 @pytest.fixture
+def search_tags():
+    return SearchTagFetcher().fetch()
+
+
+@pytest.fixture
 def valid_domain(search_facets):
     return DomainModel(search_facets).top_level_domains[0]
 
@@ -369,6 +384,7 @@ def valid_form(valid_domain):
             "sort": "ascending",
             "clear_filter": False,
             "clear_label": False,
+            "tags": ["tag-1"],
         }
     )
     assert valid_form.is_valid()
