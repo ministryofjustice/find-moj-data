@@ -30,7 +30,7 @@ query getContainer($urn: String!) {
     subTypes {
       typeNames
     }
-    entities(input: {start: 0, count: 500}) {
+    entities(input: { start: 0, count: 500 }) {
       total
       searchResults {
         entity {
@@ -171,7 +171,9 @@ fragment datasetDetails on Dataset {
   editableProperties {
     description
   }
-  ..globalTagsFields
+  tags {
+    ...globalTagsFields
+  }
 }
 
 fragment entityContainer on Container {

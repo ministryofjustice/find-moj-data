@@ -344,7 +344,7 @@ class DataHubCatalogueClient:
                     for entity in response["entities"]["searchResults"]
                     if any(
                         tag.urn == "urn:li:tag:dc_display_in_catalogue"
-                        for tag in parse_tags(entity)
+                        for tag in parse_tags(entity["entity"])
                     )
                 ]
 

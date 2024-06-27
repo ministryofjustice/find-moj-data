@@ -517,31 +517,35 @@ class TestCatalogueClientWithDatahub:
                     "total": 2,
                     "searchResults": [
                         {
-                            "name": "DatasetToShow",
-                            "properties": {
+                            "entity": {
                                 "name": "DatasetToShow",
-                                "description": "Dataset to show",
-                            },
-                            "tags": {
-                                "tags": [
-                                    {
-                                        "tag": {
-                                            "urn": "urn:li:tag:dc_display_in_catalogue",
-                                            "properties": {
-                                                "name": "dc:display_in_catalogue",
-                                            },
+                                "properties": {
+                                    "name": "DatasetToShow",
+                                    "description": "Dataset to show",
+                                },
+                                "tags": {
+                                    "tags": [
+                                        {
+                                            "tag": {
+                                                "urn": "urn:li:tag:dc_display_in_catalogue",
+                                                "properties": {
+                                                    "name": "dc:display_in_catalogue",
+                                                },
+                                            }
                                         }
-                                    }
-                                ]
-                            },
+                                    ]
+                                },
+                            }
                         },
                         {
-                            "name": "DatasetToHide",
-                            "properties": {
+                            "entity": {
                                 "name": "DatasetToHide",
-                                "description": "Dataset to hide",
-                            },
-                            "tags": {"tags": []},
+                                "properties": {
+                                    "name": "DatasetToHide",
+                                    "description": "Dataset to hide",
+                                },
+                                "tags": {"tags": []},
+                            }
                         },
                     ],
                 },
@@ -564,23 +568,25 @@ class TestCatalogueClientWithDatahub:
             database = datahub_client.get_database_details(urn)
             assert database.tables == [
                 {
-                    "name": "DatasetToShow",
-                    "properties": {
-                        "description": "Dataset to show",
+                    "entity": {
                         "name": "DatasetToShow",
-                    },
-                    "tags": {
-                        "tags": [
-                            {
-                                "tag": {
-                                    "properties": {
-                                        "name": "dc:display_in_catalogue",
+                        "properties": {
+                            "description": "Dataset to show",
+                            "name": "DatasetToShow",
+                        },
+                        "tags": {
+                            "tags": [
+                                {
+                                    "tag": {
+                                        "properties": {
+                                            "name": "dc:display_in_catalogue",
+                                        },
+                                        "urn": "urn:li:tag:dc_display_in_catalogue",
                                     },
-                                    "urn": "urn:li:tag:dc_display_in_catalogue",
                                 },
-                            },
-                        ],
-                    },
+                            ],
+                        },
+                    }
                 }
             ]
 
