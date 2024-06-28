@@ -86,8 +86,6 @@ class TestInteractWithSearchResults:
         return item_name
 
     def verify_i_am_on_the_database_details_page(self, item_name):
-        assert self.selenium.title in self.page_titles
-
         heading_text = self.details_database_page.primary_heading().text
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
@@ -115,8 +113,6 @@ class TestInteractWithSearchResults:
         self.details_database_page.table_link().click()
 
     def verify_i_am_on_the_table_details_page(self):
-        assert self.selenium.title in self.page_titles
-
         heading_text = self.details_database_page.primary_heading().text
         assert heading_text == self.selenium.title.split("-")[0].strip()
 

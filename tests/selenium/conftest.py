@@ -271,5 +271,5 @@ def glossary_page(selenium) -> GlossaryPage:
 
 @pytest.fixture
 def page_titles():
-    pages = ["Home", "Search", "Details", "Glossary"]
+    pages = ["Home", "Search", "Glossary"]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
