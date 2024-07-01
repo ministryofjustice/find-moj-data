@@ -47,8 +47,8 @@ class DatabaseDetailsService(GenericService):
 
     def _get_context(self):
         context = {
-            "database": self.database_metadata,
-            "result_type": "Database",
+            "entity": self.database_metadata,
+            "entity_type": "Database",
             "tables": self.entities_in_database,
             "h1_value": self.database_metadata.name,
             "is_esda": self.is_esda,
@@ -88,7 +88,8 @@ class DatasetDetailsService(GenericService):
         )
 
         return {
-            "table": self.table_metadata,
+            "entity": self.table_metadata,
+            "entity_type": "Table",
             "parent_entity": self.parent_entity,
             "dataset_parent_type": self.dataset_parent_type,
             "h1_value": self.table_metadata.name,
@@ -118,6 +119,7 @@ class ChartDetailsService(GenericService):
 
     def _get_context(self):
         return {
-            "chart": self.chart_metadata,
+            "entity": self.chart_metadata,
+            "entity_type": "Chart",
             "h1_value": self.chart_metadata.name,
         }
