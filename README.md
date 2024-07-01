@@ -78,7 +78,9 @@ If making changes to the scss, to ensure your changes are reflected in local dep
 
 We have enabled feature switches in `find-moj-data`. These have been enabled using a package called [django-waffle](https://github.com/jazzband/django-waffle).
 
-Switches can be managed via the [cli](https://waffle.readthedocs.io/en/stable/usage/cli.html#usage-cli) or via the [django admin page](https://docs.djangoproject.com/en/dev/ref/contrib/admin/)
+Switches can be managed via the [cli](https://waffle.readthedocs.io/en/stable/usage/cli.html#usage-cli) or via the [django admin page](https://docs.djangoproject.com/en/dev/ref/contrib/admin/).
+
+Our switches are created via the cli; the commands can be seen in the Dockerfile.
 
 Current swicthes and default settings:
 
