@@ -40,16 +40,22 @@
         </h3>
         <div class="govuk-body">
           {% if entity.description %}
-            {{entity.description}}
+            {{entity.description|markdown:3}}
           {% else %}
             No description available.
           {% endif %}
         </div>
         {% block metadata_list %}
           <ul class="govuk-list govuk-body" id="metadata-property-list">
+            {% if entity.created %}
+              <li>
+                <span class="govuk-!-font-weight-bold">First created:</span>
+                {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
+              </li>
+            {% endif %}
             {% if entity.last_modified %}
               <li>
-                <span class="govuk-!-font-weight-bold">Last updated date:</span>
+                <span class="govuk-!-font-weight-bold">Last updated:</span>
                 {{entity.last_modified | date:"jS F Y"}} ({{entity.last_modified|naturaltime}})
               </li>
             {% endif %}

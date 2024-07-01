@@ -4,7 +4,7 @@
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      {% if table.column_details %}
+      {% if entity.column_details %}
         <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--m">Table schema</caption>
           <thead class="govuk-table__head">
@@ -16,7 +16,7 @@
             </tr>
           </thead>
           <tbody class="govuk-table__body">
-            {% for column in table.column_details %}
+            {% for column in entity.column_details %}
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">{{column.display_name}}</td>
                 <td class="govuk-table__cell column-description">{{column.description|default:''|markdown:3|truncatechars_html:300}}</td>

@@ -21,7 +21,7 @@ class TestDatasetDetailsService:
     def test_get_context_contains_table_metadata(self, dataset_with_parent):
         service = DatasetDetailsService(dataset_with_parent["urn"])
         context = service.context
-        assert context["table"] == dataset_with_parent["table_metadata"]
+        assert context["entity"] == dataset_with_parent["table_metadata"]
 
     def test_get_context_contains_parent(self, mock_catalogue):
         parent = {
@@ -50,9 +50,11 @@ class TestDatasetDetailsService:
 
         service = DatasetDetailsService("urn:li:datsset:test")
         context = service.context
-        assert context["table"].custom_properties == custom_properties
+        assert context["entity"].custom_properties == custom_properties
         assert (
-            context["table"].custom_properties.further_information.dc_slack_channel_name
+            context[
+                "entity"
+            ].custom_properties.further_information.dc_slack_channel_name
             == "test"
         )
 
@@ -68,7 +70,7 @@ class TestDatabaseDetailsService:
 
         service = DatabaseDetailsService(mock_database_name)
         context = service.context
-        assert context["database"] == example_database
+        assert context["entity"] == example_database
 
     def test_get_context_contains_slack(self, mock_catalogue):
         """
@@ -90,10 +92,10 @@ class TestDatabaseDetailsService:
         service = DatabaseDetailsService(mock_database_name)
         context = service.context
 
-        assert context["database"].custom_properties == custom_properties
+        assert context["entity"].custom_properties == custom_properties
         assert (
             context[
-                "database"
+                "entity"
             ].custom_properties.further_information.dc_slack_channel_name
             == "test"
         )
@@ -143,6 +145,10 @@ class TestChartDetailsService:
         mock_catalogue.get_chart_details.return_value = chart_metadata
 
         context = ChartDetailsService("urn").context
-        expected = {"chart": chart_metadata, "h1_value": "test"}
+        expected = {
+            "entity": chart_metadata,
+            "entity_type": "Chart",
+            "h1_value": "test",
+        }
 
         assert context == expected
