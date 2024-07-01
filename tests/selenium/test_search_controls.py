@@ -63,6 +63,7 @@ class TestSearchInteractions:
         self.click_previous_page()
         self.verify_page("1")
 
+    @pytest.mark.skip(reason="search sort is currently switched off")
     def test_sorting(self):
         """
         Interact with the sort control. Note: without javascript, this requires
@@ -78,6 +79,7 @@ class TestSearchInteractions:
         self.verify_i_have_results()
         self.verify_sort_selected("Ascending")
 
+    @pytest.mark.skip(reason="search sort is currently switched off")
     def test_filters_query_and_sort_persist(self):
         """
         Search settings persist as the user continues to
