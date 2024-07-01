@@ -46,6 +46,9 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 RUN python manage.py collectstatic --noinput
 RUN python manage.py migrate
 
+# create switch with default setting
+RUN ./manage.py waffle_switch search-sort-radio-buttons off --create
+
 # Use a non-root user
 RUN addgroup --gid 31337 --system appuser \
   && adduser --uid 31337 --system appuser --ingroup appuser
