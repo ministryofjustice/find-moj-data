@@ -2,6 +2,7 @@
 {% load static %}
 {% load markdown %}
 {% load humanize %}
+{% load waffle_tags %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -47,7 +48,9 @@
       {% else %}
         {% include "partial/no_results.html" %}
       {% endif %}
-      {% include "partial/sort.html" %}
+      {% switch 'search-sort-radio-buttons' %}
+        {% include "partial/sort.html" %}
+      {% endswitch %}
       {% include "partial/search_result.html" %}
       {% include "partial/pagination.html" %}
     </div>

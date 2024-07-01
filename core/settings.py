@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "home.apps.HomeConfig",
     "django_prometheus",
     "users",
+    "waffle",
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.CustomErrorMiddleware",
+    "waffle.middleware.WaffleMiddleware",
     # Prometheus needs to be the last middleware in the list.
     # Avoid appending to this list and rather insert into -1.
     "django_prometheus.middleware.PrometheusAfterMiddleware",
