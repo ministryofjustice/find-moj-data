@@ -17,6 +17,13 @@ spec:
       containers:
         - name: find-moj-data
           image: ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "300Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1000Mi"
           ports:
             - name: http
               containerPort: 8000
@@ -45,7 +52,7 @@ spec:
             - name: AZURE_REDIRECT_URI
               value: "$AZURE_REDIRECT_URI"
             - name: AZURE_AUTHORITY
-              value: "$AZURE_AUTHORITY"      
+              value: "$AZURE_AUTHORITY"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
