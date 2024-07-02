@@ -75,8 +75,8 @@ class DatabaseDetailsPage(Page):
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
-    def secondary_heading(self):
-        return self.selenium.find_element(By.TAG_NAME, "h2")
+    # def secondary_heading(self):
+    #     return self.selenium.find_element(By.TAG_NAME, "h2")
 
     def database_details(self):
         return self.selenium.find_element(By.ID, "metadata-property-list")
