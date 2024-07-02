@@ -89,9 +89,6 @@ class DatabaseDetailsPage(Page):
 
 
 class TableDetailsPage(Page):
-    def caption(self):
-        return self.selenium.find_element(By.CSS_SELECTOR, ".govuk-caption-m").text
-
     def column_descriptions(self):
         return [
             c.text
