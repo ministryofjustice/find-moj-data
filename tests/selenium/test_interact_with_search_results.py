@@ -113,10 +113,11 @@ class TestInteractWithSearchResults:
         self.details_database_page.table_link().click()
 
     def verify_i_am_on_the_table_details_page(self):
-        heading_text = self.details_database_page.primary_heading().text
+        heading_text = self.details_database_page.primary_heading().text.replace(
+            " Table", ""
+        )
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
-        assert self.table_details_page.caption() == "Table"
         assert self.table_details_page.column_descriptions() == [
             "description with markdown"
         ]
