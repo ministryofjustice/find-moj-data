@@ -15,8 +15,8 @@ OVERLAP_THRESHOLD = 0.75
     "query,expected_urn",
     [
         (
-            "bold_common_platform_linked_tables.all_offence",
-            "urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.bold_common_platform_linked_tables.all_offence,PROD)",
+            "dummy_pnc_ids_to_send",
+            "urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.bold_rr_pnc_ids.dummy_pnc_ids_to_send,PROD)",  # noqa E501
         ),
         (
             "Accommodation on the first night following release",
@@ -24,7 +24,7 @@ OVERLAP_THRESHOLD = 0.75
         ),
         (
             "ns_postcode_lookup_latest_2011census",
-            "urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.common_lookup.ns_postcode_lookup_latest_2011census,PROD)",
+            "urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.common_lookup.ns_postcode_lookup_latest_2011census,PROD)",  # noqa E501
         ),
     ],
 )

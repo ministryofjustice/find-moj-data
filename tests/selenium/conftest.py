@@ -75,9 +75,6 @@ class DatabaseDetailsPage(Page):
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
-    def secondary_heading(self):
-        return self.selenium.find_element(By.TAG_NAME, "h2")
-
     def database_details(self):
         return self.selenium.find_element(By.ID, "metadata-property-list")
 
@@ -89,9 +86,6 @@ class DatabaseDetailsPage(Page):
 
 
 class TableDetailsPage(Page):
-    def caption(self):
-        return self.selenium.find_element(By.CSS_SELECTOR, ".govuk-caption-m").text
-
     def column_descriptions(self):
         return [
             c.text
@@ -271,5 +265,5 @@ def glossary_page(selenium) -> GlossaryPage:
 
 @pytest.fixture
 def page_titles():
-    pages = ["Home", "Search", "Details", "Glossary"]
+    pages = ["Home", "Search", "Glossary"]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]

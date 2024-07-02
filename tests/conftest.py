@@ -8,6 +8,7 @@ import pytest
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
+    Chart,
     Column,
     ColumnRef,
     CustomEntityProperties,
@@ -161,6 +162,47 @@ def generate_table_metadata(
     )
 
 
+def generate_chart_metadata(
+    name: str = fake.unique.name(),
+    description: str = fake.unique.paragraph(),
+    relations=None,
+    custom_properties=None,
+) -> Chart:
+    """
+    Generate a fake database metadata object
+    """
+    return Chart(
+        urn="urn:li:container:fake",
+        external_url="https://data.justice.gov.uk/prisons/public-protection/absconds",
+        display_name=f"Foo.{name}",
+        name=name,
+        fully_qualified_name=f"Foo.{name}",
+        description=description,
+        relationships=relations or {RelationshipType.PARENT: []},
+        domain=DomainRef(display_name="LAA", urn="LAA"),
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
+            ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        glossary_terms=[
+            GlossaryTermRef(
+                display_name="some-term",
+                urn="urn:li:glossaryTerm:Entity",
+                description="some description",
+            )
+        ],
+        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        created=None,
+        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
+        custom_properties=custom_properties or CustomEntityProperties(),
+    )
+
+
 def generate_database_metadata(
     name: str = fake.unique.name(),
     description: str = fake.unique.paragraph(),
@@ -268,6 +310,7 @@ def mock_catalogue(request, example_database):
         ],
     )
     mock_get_glossary_terms_response(mock_catalogue)
+    mock_get_chart_details_response(mock_catalogue)
     mock_get_table_details_response(mock_catalogue)
     mock_get_database_details_response(mock_catalogue, example_database)
     mock_get_tags_response(mock_catalogue)
@@ -282,6 +325,10 @@ def mock_list_database_tables_response(mock_catalogue, total_results, page_resul
         total_results=total_results, page_results=page_results
     )
     mock_catalogue.list_database_tables.return_value = search_response
+
+
+def mock_get_chart_details_response(mock_catalogue):
+    mock_catalogue.get_chart_details.return_value = generate_chart_metadata()
 
 
 def mock_get_table_details_response(mock_catalogue):

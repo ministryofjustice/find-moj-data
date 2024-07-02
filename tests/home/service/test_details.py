@@ -143,6 +143,6 @@ class TestChartDetailsService:
         mock_catalogue.get_chart_details.return_value = chart_metadata
 
         context = ChartDetailsService("urn").context
-        expected = {"chart": chart_metadata, "h1_value": "Details"}
+        expected = {"chart": chart_metadata, "h1_value": "test"}
 
         assert context == expected

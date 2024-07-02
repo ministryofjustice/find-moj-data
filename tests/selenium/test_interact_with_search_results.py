@@ -86,13 +86,11 @@ class TestInteractWithSearchResults:
         return item_name
 
     def verify_i_am_on_the_database_details_page(self, item_name):
-        assert self.selenium.title in self.page_titles
-
-        heading_text = self.details_database_page.primary_heading().text
+        heading_text = self.details_database_page.primary_heading().text.replace(
+            " Database", ""
+        )
         assert heading_text == self.selenium.title.split("-")[0].strip()
-
-        subheading_text = self.details_database_page.secondary_heading().text
-        assert subheading_text and item_name.endswith(subheading_text)
+        assert item_name.endswith(heading_text)
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
@@ -115,12 +113,11 @@ class TestInteractWithSearchResults:
         self.details_database_page.table_link().click()
 
     def verify_i_am_on_the_table_details_page(self):
-        assert self.selenium.title in self.page_titles
-
-        heading_text = self.details_database_page.primary_heading().text
+        heading_text = self.details_database_page.primary_heading().text.replace(
+            " Table", ""
+        )
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
-        assert self.table_details_page.caption() == "Table"
         assert self.table_details_page.column_descriptions() == [
             "description with markdown"
         ]

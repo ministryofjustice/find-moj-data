@@ -50,7 +50,7 @@ class DatabaseDetailsService(GenericService):
             "database": self.database_metadata,
             "result_type": "Database",
             "tables": self.entities_in_database,
-            "h1_value": "Details",
+            "h1_value": self.database_metadata.name,
             "is_esda": self.is_esda,
         }
 
@@ -91,7 +91,7 @@ class DatasetDetailsService(GenericService):
             "table": self.table_metadata,
             "parent_entity": self.parent_entity,
             "dataset_parent_type": self.dataset_parent_type,
-            "h1_value": "Details",
+            "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
         }
@@ -119,5 +119,5 @@ class ChartDetailsService(GenericService):
     def _get_context(self):
         return {
             "chart": self.chart_metadata,
-            "h1_value": "Details",
+            "h1_value": self.chart_metadata.name,
         }
