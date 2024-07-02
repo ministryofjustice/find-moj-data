@@ -1,6 +1,7 @@
 import logging
 
 from data_platform_catalogue.client.exceptions import ConnectivityError
+from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.http import Http404
 from django.shortcuts import render
@@ -17,6 +18,8 @@ class CustomErrorMiddleware:
 
     def process_exception(self, request, exception):
         logger.exception(exception)
+        if settings.DEBUG:
+            return
         if isinstance(exception, ConnectivityError):
             return render(
                 request,

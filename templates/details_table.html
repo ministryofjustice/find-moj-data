@@ -1,81 +1,10 @@
-{% extends "base/base.html" %}
-{% load static %}
+{% extends "details_base.html" %}
 {% load markdown %}
-{% load humanize %}
-{% load future %}
 
-{% block breadcrumbs %}
-  <div class="govuk-breadcrumbs">
-    <ol class="govuk-breadcrumbs__list">
-      <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
-      </li>
-      {% if parent_entity %}
-        <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
-        </li>
-      {% endif %}
-      <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{table.name}}</a>
-      </li>
-    </ol>
-  </div>
-{% endblock breadcrumbs %}
-
-{% block content %}
+{% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">{{h1_value}}
-        <strong class="govuk-tag govuk-!-margin-left-2">
-          Table
-        </strong>
-      </h1>
-    </div>
-  </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <div class="summary-card">
-        <h3 class="govuk-heading-s govuk-!-margin-top-3">
-          Description
-        </h3>
-        <div class="govuk-body">
-          {% if table.description %}
-            {{table.description}}
-          {% else %}
-            No description available.
-          {% endif %}
-        </div>
-        <ul class="govuk-list govuk-body" id="metadata-property-list">
-          {% if table.last_modified %}
-            <li>
-              <span class="govuk-!-font-weight-bold">Last updated date:</span>
-              {{table.last_modified | date:"jS F Y"}} ({{table.last_modified|naturaltime}})
-            </li>
-          {% endif %}
-
-          <li>
-            <span class="govuk-!-font-weight-bold">Domain:</span>
-            {{table.domain.display_name}}
-          </li>
-          {% if table.tags_to_display %}
-            <li>
-              <span class="govuk-!-font-weight-bold">Tags:</span>
-              {% for tag in table.tags_to_display %}
-                <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
-              {% endfor %}
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with data_owner=table.governance.data_owner.display_name data_owner_email=table.governance.data_owner.email slack_channel=table.custom_properties.further_information %}
-    </div>
-  </div>
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      {% if table.column_details %}
+      {% if entity.column_details %}
         <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--m">Table schema</caption>
           <thead class="govuk-table__head">
@@ -87,7 +16,7 @@
             </tr>
           </thead>
           <tbody class="govuk-table__body">
-            {% for column in table.column_details %}
+            {% for column in entity.column_details %}
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">{{column.display_name}}</td>
                 <td class="govuk-table__cell column-description">{{column.description|default:''|markdown:3|truncatechars_html:300}}</td>
@@ -113,5 +42,4 @@
         </div>
       {% endif %}
     </div>
-
-{% endblock content %}
+{% endblock extra_details %}

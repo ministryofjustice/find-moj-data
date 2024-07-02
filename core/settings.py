@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-    "azure_auth",
     "home.apps.HomeConfig",
     "django_prometheus",
     "users",
     "waffle",
 ]
+
+if os.environ.get("AZURE_AUTH_ENABLED", "true") != "false":
+    INSTALLED_APPS.append("azure_auth")
 
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",

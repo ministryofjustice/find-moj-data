@@ -1,106 +1,42 @@
-{% extends "base/base.html" %}
-{% load static %}
+{% extends "details_base.html" %}
 {% load markdown %}
-{% load humanize %}
-{% load future %}
 
-{% block breadcrumbs %}
-  <div class="govuk-breadcrumbs">
-    <ol class="govuk-breadcrumbs__list">
-      <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
-      </li>
-      <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{database.name}}</a>
-      </li>
-    </ol>
-  </div>
-{% endblock breadcrumbs %}
-
-{% block content %}
+{% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">{{h1_value}}
-        <strong class="govuk-tag govuk-!-margin-left-2">
-          Database
-        </strong>
-      </h1>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <div class="summary-card">
-          <h3 class="govuk-heading-s govuk-!-margin-top-3">
-            Description
-          </h3>
-          <div class="govuk-body">
-            {{database.description|markdown:3}}
-          </div>
-          <ul class="govuk-list govuk-body" id="metadata-property-list">
-            {% if database.last_modified %}
-              <li>
-                <span class="govuk-!-font-weight-bold">Last updated date:</span>
-                {{database.last_modified | date:"jS F Y"}} ({{database.last_modified|naturaltime}})
-              </li>
-            {% endif %}
-
-            <li>
-              <span class="govuk-!-font-weight-bold">Domain:</span>
-              {{database.domain.display_name}}
-            </li>
-            {% if database.tags_to_display %}
-              <li>
-                <span class="govuk-!-font-weight-bold">Tags:</span>
-                {% for tag in database.tags_to_display %}
-                  <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </li>
-            {% endif %}
-          </ul>
-          {% include "partial/esda_info.html" with is_esda=is_esda %}
-        </div>
-      </div>
-
-      <div class="govuk-grid-column-one-third">
-        {% include "partial/contact_info.html" with data_owner=database.governance.data_owner.display_name data_owner_email=database.governance.data_owner.email slack_channel=database.custom_properties.further_information %}
-      </div>
-    </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        {% if tables %}
-          <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">Database content</caption>
-            <thead class="govuk-table__head">
-              <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header app-custom-class">Table name</th>
-                <th scope="col" class="govuk-table__header app-custom-class">Description</th>
-                <th scope="col" class="govuk-table__header app-custom-class">Schema details</th>
-              </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-              {% for table in tables %}
-                {% with table_type=table.type|lower %}
-                  <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">{{table.name}}</td>
-                    <td class="govuk-table__cell">
-                      {% if table.description|length > 200 %}
-                        {{ table.description|slice:":200"|add:"..."|markdown:3 }}
-                      {% else %}
-                        {{ table.description|markdown:3 }}
-                      {% endif %}
-                    </td>
-                    <td class="govuk-table__cell">  <a href="{% url 'home:details' result_type=table_type urn=table.urn %}" class="govuk-link">Table details</a></td>
-                  </tr>
-                {% endwith %}
-              {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
-          <h2 class="govuk-heading-m">Database content</h2>
-          <p class="govuk-body">This database is missing table information.</p>
-        {% endif %}
-      </div>
+      {% if tables %}
+        <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--m">Database content</caption>
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header app-custom-class">Table name</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Description</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Schema details</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for table in tables %}
+              {% with table_type=table.type|lower %}
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">{{table.name}}</td>
+                  <td class="govuk-table__cell">
+                    {% if table.description|length > 200 %}
+                      {{ table.description|slice:":200"|add:"..."|markdown:3 }}
+                    {% else %}
+                      {{ table.description|markdown:3 }}
+                    {% endif %}
+                  </td>
+                  <td class="govuk-table__cell">  <a href="{% url 'home:details' result_type=table_type urn=table.urn %}" class="govuk-link">Table details</a></td>
+                </tr>
+              {% endwith %}
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <h2 class="govuk-heading-m">Database content</h2>
+        <p class="govuk-body">This database is missing table information.</p>
+      {% endif %}
     </div>
   </div>
 
-{% endblock content %}
+{% endblock extra_details %}
