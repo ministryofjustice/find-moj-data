@@ -86,11 +86,11 @@ class TestInteractWithSearchResults:
         return item_name
 
     def verify_i_am_on_the_database_details_page(self, item_name):
-        heading_text = self.details_database_page.primary_heading().text
+        heading_text = self.details_database_page.primary_heading().text.replace(
+            " Database", ""
+        )
         assert heading_text == self.selenium.title.split("-")[0].strip()
-
-        subheading_text = self.details_database_page.secondary_heading().text
-        assert subheading_text and item_name.endswith(subheading_text)
+        assert item_name.endswith(heading_text)
 
     def enter_a_query_and_submit(self, query):
         search_bar = self.search_page.search_bar()
