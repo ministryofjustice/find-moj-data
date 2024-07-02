@@ -20,9 +20,11 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">{{h1_value}}</h1>
-      <span class="govuk-caption-m">Database</span>
-      <h2 class="govuk-heading-m">{{database.name}}</h2>
+      <h1 class="govuk-heading-l">{{h1_value}}
+        <strong class="govuk-tag govuk-!-margin-left-2">
+          Database
+        </strong>
+      </h1>
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
