@@ -36,7 +36,7 @@ def parse_owner(entity: dict[str, Any]) -> OwnerRef:
             else properties.get("fullName", "")
         )
         owner_details = OwnerRef(
-            display_name=display_name,
+            display_name=display_name or "",
             email=properties.get("email", ""),
             urn=owners[0].get("urn", ""),
         )

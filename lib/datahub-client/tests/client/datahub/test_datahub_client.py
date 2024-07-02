@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,
@@ -499,6 +500,95 @@ class TestCatalogueClientWithDatahub:
             ),
             external_url="https://data.justice.gov.uk/prisons/public-protection/absconds",
         )
+
+    def test_get_database_details_filters_entities(
+        self, datahub_client, base_mock_graph
+    ):
+        urn = "urn:li:container:foo"
+        datahub_response = {
+            "container": {
+                "urn": "urn:li:container",
+                "type": "CONTAINER",
+                "platform": {"name": "platform"},
+                "parentContainers": {
+                    "count": 0,
+                },
+                "entities": {
+                    "total": 2,
+                    "searchResults": [
+                        {
+                            "entity": {
+                                "name": "DatasetToShow",
+                                "properties": {
+                                    "name": "DatasetToShow",
+                                    "description": "Dataset to show",
+                                },
+                                "tags": {
+                                    "tags": [
+                                        {
+                                            "tag": {
+                                                "urn": "urn:li:tag:dc_display_in_catalogue",
+                                                "properties": {
+                                                    "name": "dc:display_in_catalogue",
+                                                },
+                                            }
+                                        }
+                                    ]
+                                },
+                            }
+                        },
+                        {
+                            "entity": {
+                                "name": "DatasetToHide",
+                                "properties": {
+                                    "name": "DatasetToHide",
+                                    "description": "Dataset to hide",
+                                },
+                                "tags": {"tags": []},
+                            }
+                        },
+                    ],
+                },
+                "ownership": None,
+                "properties": {
+                    "name": "Some database",
+                    "description": "a test description",
+                    "customProperties": [],
+                    "lastModified": {"time": 0},
+                },
+            },
+            "extensions": {},
+        }
+        base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        with patch(
+            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+        ) as mock_exists:
+            mock_exists.return_value = True
+            database = datahub_client.get_database_details(urn)
+            assert database.tables == [
+                {
+                    "entity": {
+                        "name": "DatasetToShow",
+                        "properties": {
+                            "description": "Dataset to show",
+                            "name": "DatasetToShow",
+                        },
+                        "tags": {
+                            "tags": [
+                                {
+                                    "tag": {
+                                        "properties": {
+                                            "name": "dc:display_in_catalogue",
+                                        },
+                                        "urn": "urn:li:tag:dc_display_in_catalogue",
+                                    },
+                                },
+                            ],
+                        },
+                    }
+                }
+            ]
 
     def test_upsert_table_and_database(
         self,

@@ -88,7 +88,13 @@ class SearchForm(forms.Form):
     domain = forms.ChoiceField(
         choices=get_domain_choices,
         required=False,
-        widget=forms.Select(attrs={"form": "searchform", "class": "govuk-select"}),
+        widget=forms.Select(
+            attrs={
+                "form": "searchform",
+                "class": "govuk-select",
+                "aria-label": "Domain",
+            }
+        ),
     )
     subdomain = forms.ChoiceField(
         choices=get_subdomain_choices,

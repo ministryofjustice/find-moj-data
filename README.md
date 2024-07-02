@@ -73,3 +73,15 @@ and run `npm install -g chromedriver chromedriver@latest` to install the latest 
 
 If making changes to the scss, to ensure your changes are reflected in local deployments, run:
 `npm run dependencies` to update the css files. If you have `DEBUG=False` you will then need to rerun `poetry run python manage.py collectstatic`.
+
+## Feature Switches
+
+We have enabled feature switches in `find-moj-data`. These have been enabled using a package called [django-waffle](https://github.com/jazzband/django-waffle).
+
+Switches can be managed via the [cli](https://waffle.readthedocs.io/en/stable/usage/cli.html#usage-cli) or via the [django admin page](https://docs.djangoproject.com/en/dev/ref/contrib/admin/).
+
+Our switches are created via the cli; the commands can be seen in the Dockerfile.
+
+Current swicthes and default settings:
+
+- `search-sort-radio-buttons` off - switches on/off radio selection buttons for sort order of search results.
