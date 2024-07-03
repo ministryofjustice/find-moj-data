@@ -17,6 +17,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_properties,
     parse_tags,
 )
+from data_platform_catalogue.entities import EntityRef
 from data_platform_catalogue.search_types import (
     FacetOption,
     MultiSelectFilter,
@@ -231,7 +232,11 @@ class SearchClient:
         terms = parse_glossary_terms(entity)
         last_modified = parse_last_modified(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
-
+        container = entity.get("container")
+        if container:
+            container_name, container_display_name, container_qualified_name = (
+                parse_names(container, container.get("properties"))
+            )
         domain = parse_domain(entity)
 
         metadata = {
@@ -257,6 +262,11 @@ class SearchClient:
             name=name,
             display_name=display_name,
             fully_qualified_name=qualified_name,
+            parent_entity=(
+                EntityRef(urn=container.get("urn"), display_name=container_display_name)
+                if container
+                else None
+            ),
             description=properties.get("description", ""),
             metadata=metadata,
             tags=tags,

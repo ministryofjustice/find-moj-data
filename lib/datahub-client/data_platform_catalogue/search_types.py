@@ -5,7 +5,7 @@ from datetime import datetime
 from enum import Enum, auto
 from typing import Any
 
-from data_platform_catalogue.entities import GlossaryTermRef, TagRef
+from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef
 
 
 class ResultType(Enum):
@@ -68,6 +68,7 @@ class SearchResult:
     glossary_terms: list[GlossaryTermRef] = field(default_factory=list)
     last_modified: datetime | None = None
     created: datetime | None = None
+    parent_entity: EntityRef | None = None
     tags_to_display: list[str] = field(init=False)
 
     def __post_init__(self):

@@ -7,6 +7,7 @@ from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
     DataSummary,
+    EntityRef,
     FurtherInformation,
     TagRef,
     UsageRestrictions,
@@ -79,6 +80,13 @@ def test_one_search_result(mock_graph, searcher):
                         "type": "DATASET",
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
+                        "container": {
+                            "urn": "urn:li:container:abc",
+                            "properties": {
+                                "name": "abc",
+                                "qualifiedName": None,
+                            },
+                        },
                         "ownership": None,
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
@@ -140,6 +148,7 @@ def test_one_search_result(mock_graph, searcher):
                 tags=[],
                 last_modified=None,
                 created=None,
+                parent_entity=EntityRef(urn="urn:li:container:abc", display_name="abc"),
             )
         ],
         facets=SearchFacets(facets={}),
@@ -161,6 +170,7 @@ def test_dataset_result(mock_graph, searcher):
                         "type": "DATASET",
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
+                        "container": None,
                         "ownership": None,
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
