@@ -247,7 +247,7 @@ class SearchClient:
                 if container is not None
                 else None
             ),
-            "parent_cotainer_urn": (
+            "parent_container_urn": (
                 container.get("urn") if container is not None else None
             ),
             "total_parents": entity.get("relationships", {}).get("total", 0),
