@@ -7,7 +7,11 @@
       <div class="govuk-grid-column-full">
         <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
           {% with result_type=result.result_type.name|lower %}
-            <a href="{% url 'home:details' result_type=result_type urn=result.urn %}" class="govuk-link">{{result.fully_qualified_name}}</a>
+            {% if result.display_name %}
+              <a href="{% url 'home:details' result_type=result_type urn=result.urn %}" class="govuk-link">{{result.display_name}}</a>
+            {% else %}
+              <a href="{% url 'home:details' result_type=result_type urn=result.urn %}" class="govuk-link">{{result.fully_qualified_name}}</a>
+            {% endif %}
           {% endwith %}
           {% if result.result_type.name == "TABLE" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
@@ -34,19 +38,29 @@
             <span>TBC</span>
           </li>
           <li>
-            <span class="govuk-!-font-weight-bold">Domain name:</span>
+            <span class="govuk-!-font-weight-bold">Domain:</span>
             <span>{{result.metadata.domain_name}}</span>
           </li>
-        <li>
+          {% if result.result_type.name == "TABLE" %}
+            <li>
+              <span class="govuk-!-font-weight-bold">Database:</span>
+              {% if result.metadata.parent_container_display_name %}
+                <span>{{result.metadata.parent_container_display_name}}</span>
+              {% else %}
+                <span>{{result.metadata.parent_container_fqn}}</span>
+              {% endif %}
+            </li>
+          {% endif %}
+          <li>
             <span class="govuk-!-font-weight-bold">Tags:</span>
             <span>
-                {% if result.tags_to_display %}
-                    {% for tag in result.tags_to_display %}
-                        <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                {% endif %}
+              {% if result.tags_to_display %}
+                {% for tag in result.tags_to_display %}
+                  <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              {% endif %}
             </span>
-        </li>
+          </li>
           {% if result.matches %}
             <li>
               <span class="govuk-!-font-weight-bold">Matched fields:</span>
