@@ -79,6 +79,13 @@ def test_one_search_result(mock_graph, searcher):
                         "type": "DATASET",
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
+                        "container": {
+                            "urn": "urn:li:container:abc",
+                            "properties": {
+                                "name": "abc",
+                                "qualifiedName": None,
+                            },
+                        },
                         "ownership": None,
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
@@ -123,6 +130,9 @@ def test_one_search_result(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
+                    "parent_container_display_name": "abc",
+                    "parent_container_fqn": None,
+                    "parent_container_urn": "urn:li:container:abc",
                     "total_parents": 0,
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
@@ -161,6 +171,7 @@ def test_dataset_result(mock_graph, searcher):
                         "type": "DATASET",
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
+                        "container": None,
                         "ownership": None,
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
@@ -209,6 +220,9 @@ def test_dataset_result(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
+                    "parent_container_display_name": None,
+                    "parent_container_fqn": None,
+                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
@@ -300,6 +314,9 @@ def test_full_page(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
+                    "parent_container_display_name": None,
+                    "parent_container_fqn": None,
+                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -331,6 +348,9 @@ def test_full_page(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
+                    "parent_container_display_name": None,
+                    "parent_container_fqn": None,
+                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -360,6 +380,9 @@ def test_full_page(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
+                    "parent_container_display_name": None,
+                    "parent_container_fqn": None,
+                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -439,6 +462,9 @@ def test_query_match(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
+                    "parent_container_display_name": None,
+                    "parent_container_fqn": None,
+                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -514,6 +540,9 @@ def test_result_with_owner(mock_graph, searcher):
                 metadata={
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
+                    "parent_container_display_name": None,
+                    "parent_container_fqn": None,
+                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -884,6 +913,9 @@ def test_search_for_charts(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
+                    "parent_container_display_name": None,
+                    "parent_container_fqn": None,
+                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -1056,6 +1088,9 @@ def test_tag_to_display(tags, result):
         metadata={
             "owner": "",
             "owner_email": "",
+            "parent_container_display_name": None,
+            "parent_container_fqn": None,
+            "parent_container_urn": None,
             "total_parents": 0,
             "parents": [],
             "domain_name": "",
