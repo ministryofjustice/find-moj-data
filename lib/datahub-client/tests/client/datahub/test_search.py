@@ -7,6 +7,7 @@ from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
     DataSummary,
+    EntityRef,
     FurtherInformation,
     TagRef,
     UsageRestrictions,
@@ -130,9 +131,6 @@ def test_one_search_result(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
-                    "parent_container_display_name": "abc",
-                    "parent_container_fqn": None,
-                    "parent_container_urn": "urn:li:container:abc",
                     "total_parents": 0,
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
@@ -150,6 +148,7 @@ def test_one_search_result(mock_graph, searcher):
                 tags=[],
                 last_modified=None,
                 created=None,
+                parent_entity=EntityRef(urn="urn:li:container:abc", display_name="abc"),
             )
         ],
         facets=SearchFacets(facets={}),
@@ -220,9 +219,6 @@ def test_dataset_result(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
-                    "parent_container_display_name": None,
-                    "parent_container_fqn": None,
-                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
@@ -314,9 +310,6 @@ def test_full_page(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
-                    "parent_container_display_name": None,
-                    "parent_container_fqn": None,
-                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -348,9 +341,6 @@ def test_full_page(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
-                    "parent_container_display_name": None,
-                    "parent_container_fqn": None,
-                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -380,9 +370,6 @@ def test_full_page(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
-                    "parent_container_display_name": None,
-                    "parent_container_fqn": None,
-                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -462,9 +449,6 @@ def test_query_match(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
-                    "parent_container_display_name": None,
-                    "parent_container_fqn": None,
-                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -540,9 +524,6 @@ def test_result_with_owner(mock_graph, searcher):
                 metadata={
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
-                    "parent_container_display_name": None,
-                    "parent_container_fqn": None,
-                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -913,9 +894,6 @@ def test_search_for_charts(mock_graph, searcher):
                 metadata={
                     "owner": "",
                     "owner_email": "",
-                    "parent_container_display_name": None,
-                    "parent_container_fqn": None,
-                    "parent_container_urn": None,
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -1088,9 +1066,6 @@ def test_tag_to_display(tags, result):
         metadata={
             "owner": "",
             "owner_email": "",
-            "parent_container_display_name": None,
-            "parent_container_fqn": None,
-            "parent_container_urn": None,
             "total_parents": 0,
             "parents": [],
             "domain_name": "",
