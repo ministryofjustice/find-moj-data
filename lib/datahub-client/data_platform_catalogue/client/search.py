@@ -231,12 +231,25 @@ class SearchClient:
         terms = parse_glossary_terms(entity)
         last_modified = parse_last_modified(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
-
+        container = entity.get("container")
         domain = parse_domain(entity)
 
         metadata = {
             "owner": owner.display_name,
             "owner_email": owner.email,
+            "parent_container_display_name": (
+                container.get("properties").get("name")
+                if container is not None
+                else None
+            ),
+            "parent_container_fqn": (
+                container.get("properties").get("qualifiedName")
+                if container is not None
+                else None
+            ),
+            "parent_cotainer_urn": (
+                container.get("urn") if container is not None else None
+            ),
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
