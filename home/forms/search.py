@@ -93,6 +93,7 @@ class SearchForm(forms.Form):
                 "form": "searchform",
                 "class": "govuk-select",
                 "aria-label": "Domain",
+                "oninput": "submitForm()",
             }
         ),
     )
@@ -107,14 +108,22 @@ class SearchForm(forms.Form):
         choices=get_where_to_access_choices,
         required=False,
         widget=forms.CheckboxSelectMultiple(
-            attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
+            attrs={
+                "class": "govuk-checkboxes__input",
+                "form": "searchform",
+                "oninput": "submitForm()",
+            }
         ),
     )
     entity_types = forms.MultipleChoiceField(
         choices=get_entity_types,
         required=False,
         widget=forms.CheckboxSelectMultiple(
-            attrs={"class": "govuk-checkboxes__input", "form": "searchform"}
+            attrs={
+                "class": "govuk-checkboxes__input",
+                "form": "searchform",
+                "oninput": "submitForm()",
+            }
         ),
     )
     sort = forms.ChoiceField(
