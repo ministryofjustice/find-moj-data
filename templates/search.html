@@ -57,12 +57,6 @@
   </div>
 {% endblock content %}
 {% block scripts %}
-  <script>
-    function submitForm() {
-      var form = document.getElementById('searchform')
-      form.submit();
-    }
-  </script>
   <script type="module">
     import {initDomainFilter} from "{% static 'assets/js/enhanced-search.js' %}"
     initDomainFilter();
