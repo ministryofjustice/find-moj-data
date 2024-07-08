@@ -93,7 +93,7 @@ class SearchForm(forms.Form):
                 "form": "searchform",
                 "class": "govuk-select",
                 "aria-label": "Domain",
-                "oninput": "document.getElementById('searchform').submit();",
+                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -111,7 +111,7 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "oninput": "document.getElementById('searchform').submit();",
+                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -122,7 +122,7 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "oninput": "document.getElementById('searchform').submit();",
+                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
