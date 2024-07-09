@@ -47,7 +47,6 @@ class TestSearchInteractions:
         domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
-        self.click_apply_filters()
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
         self.verify_domain_selected(domain)
@@ -88,7 +87,6 @@ class TestSearchInteractions:
         domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
-        self.click_apply_filters()
         self.enter_a_query_and_submit("nomis")
         self.click_option("Ascending")
         self.click_on_the_search_button()
@@ -117,9 +115,7 @@ class TestSearchInteractions:
         self.start_on_the_search_page()
         self.click_next_page()
         self.verify_page("2")
-
         self.select_domain("Prisons")
-        self.click_apply_filters()
         self.verify_page("1")
 
     def test_clear_single_filter(self):
@@ -130,7 +126,6 @@ class TestSearchInteractions:
         domain = "Prisons"
         self.start_on_the_search_page()
         self.select_domain(domain)
-        self.click_apply_filters()
         self.verify_domain_selected(domain)
         self.click_clear_selected_filter(domain)
         self.verify_unselected_domain()
@@ -147,7 +142,6 @@ class TestSearchInteractions:
         self.select_domain(domain)
         for filter in filters:
             self.click_option(filter)
-        self.click_apply_filters()
         self.verify_domain_selected(domain)
         self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
@@ -206,9 +200,6 @@ class TestSearchInteractions:
 
     def click_option(self, sortby):
         self.search_page.sort_label(sortby).click()
-
-    def click_apply_filters(self):
-        self.search_page.apply_filters_button().click()
 
     def click_clear_selected_filter(self, name):
         self.search_page.selected_filter_tag(name).click()

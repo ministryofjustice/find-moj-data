@@ -217,11 +217,6 @@ class SearchPage(Page):
     def clear_filters(self) -> WebElement:
         return self.selenium.find_element(By.ID, "clear_filter")
 
-    def apply_filters_button(self) -> WebElement:
-        return self.selenium.find_element(
-            By.CSS_SELECTOR, 'button[data-test-id="apply-filters"]'
-        )
-
     def current_page(self) -> WebElement:
         return self.selenium.find_element(
             By.CLASS_NAME, "govuk-pagination__item--current"
