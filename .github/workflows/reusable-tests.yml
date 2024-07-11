@@ -1,0 +1,146 @@
+name: Deploy
+
+on:
+  workflow_call:
+
+jobs:
+  datahub-client-path-filter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            datahub-client:
+              - 'lib/datahub-client/**'
+
+  datahub-client-tests:
+    name: Run datahub client tests
+    needs: datahub-client-path-filter
+    if: ${{ needs.datahub-client-path-filter.steps.changes.outputs.datahub-client == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lib/datahub-client
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        python-version:
+          - "3.10"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: poetry
+          cache-dependency-path: lib/datahub-client/poetry.lock
+
+      - name: Poetry install
+        run: |
+          poetry install
+
+      - name: Run tests
+        run: |
+          poetry run pytest
+
+  app-unit-tests:
+    name: Django app unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Set up Python
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: "3.11"
+          cache: poetry
+          cache-dependency-path: ./poetry.lock
+
+      - name: Install project
+        run: poetry install --no-interaction --no-root
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "21"
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install npm dependencies
+        id: install_dependencies
+        run: npm install
+
+      - name: Collect static files
+        run: poetry run python manage.py collectstatic --no-input
+
+      - name: Run unit tests with coverage
+        id: fast-tests
+        run: TESTING=True poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1.7.1
+        with:
+          install-chromedriver: true
+
+      - name: Set up chromedriver
+        # https://github.com/marketplace/actions/setup-chromedriver
+        uses: nanasess/setup-chromedriver@v2.2.2
+
+      - name: Run selenium tests
+        id: slow-tests
+        if: steps.fast-tests.outcome == 'success'
+        run: TESTING=True poetry run pytest tests/selenium --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
+
+  javascript-only-tests:
+    name: Javascript tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "21"
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - name: Load cached npm
+        uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        id: install_dependencies
+        run: npm install
+
+      - name: Run javascript tests
+        run: npm test

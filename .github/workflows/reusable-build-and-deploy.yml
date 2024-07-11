@@ -37,8 +37,8 @@ on:
         required: true
 
 jobs:
-  deploy:
-    name: Deploy Helm chart into Cloud Platform
+  build-and-push:
+    name: Build and push Docker image to CP namespace ECR
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
     permissions:
@@ -56,22 +56,36 @@ jobs:
         id: login-to-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker image
-        id: build-docker-image
+      - name: Output image path
+        id: image-path
         env:
           REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
-        run: docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        run: |
+          echo "image_path=${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        id: build-docker-image
+        env:
+          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
+        run: docker build -t ${IMAGE_PATH} .
 
       - name: Push Docker image to ECR
         id: push-docker-image-to-ecr
         env:
-          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
+        run: docker push ${IMAGE_PATH}
 
+  deploy:
+    name: Deploy Helm chart into Cloud Platform
+    needs: build-and-push
+    environment: ${{ inputs.env }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
       - name: Prepare Helm deployment
         id: prepare-helm-deployment
         env:
@@ -83,9 +97,7 @@ jobs:
           SENTRY_DSN_WORKAROUND: ${{ vars.SENTRY_DSN_WORKAROUND }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
-          IMAGE_TAG: ${{ github.sha }}
-          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          IMAGE_PATH: ${{ job.build-and-push.steps.image-path.outputs.image_path }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
@@ -121,3 +133,13 @@ jobs:
         env:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
         run: kubectl -n ${KUBE_NAMESPACE} apply -f deployments/
+
+      - name: Slack failure notification
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e # v1.26.0
+        with:
+          payload: |
+            {"blocks":[{"type": "section","text": {"type": "mrkdwn","text": ":no_entry: Failed GitHub Action:"}},{"type": "section","fields":[{"type": "mrkdwn","text": "*Workflow:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }}>"},{"type": "mrkdwn","text": "*Job:*\n${{ github.job }}"},{"type": "mrkdwn","text": "*Repo:*\n${{ github.repository }}"}]}]}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

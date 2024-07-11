@@ -1,0 +1,31 @@
+name: Deploy to Test from branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      run-tests:
+        description: 'Run code tests'
+        required: false
+        type: boolean
+
+jobs:
+  code-tests:
+    if: ${{ inputs.run-tests }}
+    uses: "./.github/workflows/reusable-tests.yml"
+
+  deploy-test:
+    needs: code-tests
+    if: ${{ always() && !failure() && !cancelled() }} # don't skip if tests are skipped
+    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+    with:
+      env: "test"
+    secrets:
+      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
+      kube_cert: ${{ secrets.KUBE_CERT }}
+      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
+      kube_token: ${{ secrets.KUBE_TOKEN }}
+      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
+      secret_key: ${{ secrets.SECRET_KEY }}
+      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+      azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
