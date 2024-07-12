@@ -8,6 +8,11 @@ jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
 
+  release-datahub-client:
+    needs: code-tests
+    if: ${{ needs.code-tests.outputs.datahub-client-path == 'true' }}
+    uses: "./.github/workflows/reusable-release-datahub-client.yml"
+
   deploy-test:
     uses: "./.github/workflows/reusable-build-and-deploy.yml"
     needs: code-tests
