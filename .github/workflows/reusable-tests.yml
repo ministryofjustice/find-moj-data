@@ -99,6 +99,7 @@ jobs:
         run: TESTING=True poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
       - name: Setup Chrome
+        id: setup-chrome
         uses: browser-actions/setup-chrome@v1.7.1
         with:
           install-chromedriver: true
@@ -106,7 +107,7 @@ jobs:
       - name: Run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: TESTING=True poetry run pytest tests/selenium --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
+        run: TESTING=True poetry run pytest tests/selenium --axe-version 4.9.1 --chromedriver-path ${{ steps.setup-chrome.outputs.chromedriver-path }}
 
   javascript-only-tests:
     name: Javascript tests
