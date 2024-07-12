@@ -8,6 +8,10 @@ on:
         required: false
         type: boolean
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   code-tests:
     if: ${{ inputs.run-tests }}
