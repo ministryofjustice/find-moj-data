@@ -41,7 +41,7 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
   deploy-prod:
-    uses: "./.github/workflows/deploy-generic.yml"
+    uses: "./.github/workflows/reusable-build-and-deploy.yml"
     needs: preprod
     with:
       env: "prod"
