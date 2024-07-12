@@ -3,7 +3,7 @@ FROM node:22-bullseye as node_builder
 WORKDIR /app
 COPY . .
 
-RUN npm install
+RUN npm install --omit=dev
 
 # The builder image, used to build the virtual environment
 FROM python:3.11-buster as builder
