@@ -103,10 +103,6 @@ jobs:
         with:
           install-chromedriver: true
 
-      - name: Set up chromedriver
-        # https://github.com/marketplace/actions/setup-chromedriver
-        uses: nanasess/setup-chromedriver@v2.2.2
-
       - name: Run selenium tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
