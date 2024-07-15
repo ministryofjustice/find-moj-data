@@ -1,4 +1,4 @@
-name: Deploy to Test from branch
+name: Deploy to Dev from branch
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
     if: ${{ always() && !failure() && !cancelled() }} # don't skip if tests are skipped
     uses: "./.github/workflows/reusable-build-and-deploy.yml"
     with:
-      env: "test"
+      env: "dev"
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
