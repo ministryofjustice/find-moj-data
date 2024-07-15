@@ -2,6 +2,10 @@ name: Deploy
 
 on:
   workflow_call:
+    outputs:
+      datahub-client-path:
+        description: "Boolean string indicating if files in the the datahub-client were changed"
+        value: ${{ jobs.datahub-client-path-filter.steps.changes.outputs.datahub-client }}
 
 jobs:
   datahub-client-path-filter:
