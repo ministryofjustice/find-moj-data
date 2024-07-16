@@ -17,7 +17,7 @@ jobs:
     if: ${{ inputs.run-tests }}
     uses: "./.github/workflows/reusable-tests.yml"
 
-  deploy-test:
+  deploy-dev:
     needs: code-tests
     if: ${{ always() && !failure() && !cancelled() }} # don't skip if tests are skipped
     uses: "./.github/workflows/reusable-build-and-deploy.yml"
