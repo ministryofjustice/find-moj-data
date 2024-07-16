@@ -44,6 +44,8 @@ jobs:
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
+    outputs:
+      image_path: ${{ steps.image-path.outputs.image_path }}
     steps:
       - uses: actions/checkout@v4
 
@@ -98,7 +100,7 @@ jobs:
           SENTRY_DSN_WORKAROUND: ${{ vars.SENTRY_DSN_WORKAROUND }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
-          IMAGE_PATH: ${{ job.build-and-push.steps.image-path.outputs.image_path }}
+          IMAGE_PATH: ${{ needs.build-and-push.outputs.image_path }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
