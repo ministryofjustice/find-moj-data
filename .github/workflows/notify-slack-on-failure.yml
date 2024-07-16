@@ -2,7 +2,10 @@ name: Check for Deployment failure (Test and above)
 # based on: https://github.com/integrations/slack/issues/1563#issuecomment-1588009077
 on:
   workflow_run:
-    workflows: ["Deploy to Test from branch", "Staged deploy to Test, Preprod and Prod"]
+    workflows: [
+      "Deploy to Dev from branch", "Deploy (with tests) to dev", "Deploy to Prod on Published Release",
+      "Staged deploy to Test and Preprod"
+    ]
     types: [completed]
 
 jobs:
