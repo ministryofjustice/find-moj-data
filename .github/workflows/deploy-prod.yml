@@ -1,30 +1,29 @@
-name: Deploy (with tests) to dev
-# based on https://jacobian.org/til/github-actions-poetry/
+name: Deploy to Prod on Published Release
 
 on:
-  pull_request:
-      types: [opened, synchronize, reopened]
-
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+  release:
+    types: [published]
 
 jobs:
-  tests:
+  code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
 
-  # Deploys to the 'dev' frontend unless pushed to main
-  deploy-to-dev:
-    needs: [tests]
+  release-datahub-client:
+    needs: code-tests
+    if: ${{ needs.code-tests.outputs.datahub-client-path == 'true' }}
+    uses: "./.github/workflows/reusable-publish-datahub-client.yml"
+
+  deploy-prod:
     uses: "./.github/workflows/reusable-build-and-deploy.yml"
+    needs: code-tests
     with:
-      env: "dev"
+      env: "prod"
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
       kube_cluster: ${{ secrets.KUBE_CLUSTER }}
       kube_token: ${{ secrets.KUBE_TOKEN }}
-      ecr_role_to_assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
+      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}

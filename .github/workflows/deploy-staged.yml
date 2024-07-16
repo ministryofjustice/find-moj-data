@@ -1,17 +1,12 @@
-name: Staged deploy to Test, Preprod and Prod
+name: Staged deploy to Test and Preprod
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
 
 jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
-
-  release-datahub-client:
-    needs: code-tests
-    if: ${{ needs.code-tests.outputs.datahub-client-path == 'true' }}
-    uses: "./.github/workflows/reusable-release-datahub-client.yml"
 
   deploy-test:
     uses: "./.github/workflows/reusable-build-and-deploy.yml"
@@ -31,7 +26,7 @@ jobs:
 
   deploy-preprod:
     uses: "./.github/workflows/reusable-build-and-deploy.yml"
-    needs: test
+    needs: deploy-test
     with:
       env: "preprod"
     secrets:
@@ -40,22 +35,6 @@ jobs:
       kube_cluster: ${{ secrets.KUBE_CLUSTER }}
       kube_token: ${{ secrets.KUBE_TOKEN }}
       ecr_role_to_assume: ${{ secrets.PREPROD_ECR_ROLE_TO_ASSUME }}
-      secret_key: ${{ secrets.SECRET_KEY }}
-      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
-      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
-      azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-
-  deploy-prod:
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
-    needs: preprod
-    with:
-      env: "prod"
-    secrets:
-      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
-      kube_cert: ${{ secrets.KUBE_CERT }}
-      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
-      kube_token: ${{ secrets.KUBE_TOKEN }}
-      ecr_role_to_assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
