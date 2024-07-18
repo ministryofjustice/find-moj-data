@@ -234,8 +234,8 @@ class SearchClient:
         name, display_name, qualified_name = parse_names(entity, properties)
         container = entity.get("container")
         if container:
-            container_name, container_display_name, container_qualified_name = (
-                parse_names(container, container.get("properties"))
+            _container_name, container_display_name, _container_qualified_name = (
+                parse_names(container, container.get("properties") or {})
             )
         domain = parse_domain(entity)
 

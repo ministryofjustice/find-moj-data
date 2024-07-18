@@ -4,11 +4,11 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h2 class="govuk-heading-s govuk-!-margin-top-3">
-                URL
+                URL<span aria-hidden="true"> (link opens in new tab)</span>
             </h2>
             <div class="govuk-body">
-                <a href="{{entity.external_url}}" class="govuk-link">
-                    {{entity.external_url}}
+                <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">
+                    {{entity.external_url}} <span class="govuk-visually-hidden">(opens in new tab)</span>
                 </a>
             </div>
         </div>
