@@ -30,7 +30,7 @@ except gaierror:
     pass
 
 # Application definition
-INSTALLED_APPS = [
+INSTALLED_APPS: list[str] = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,10 +45,14 @@ INSTALLED_APPS = [
     "waffle",
 ]
 
+INTERNAL_IPS: list[str] = [
+    "127.0.0.1",
+]
+
 if os.environ.get("AZURE_AUTH_ENABLED", "true") != "false":
     INSTALLED_APPS.append("azure_auth")
 
-MIDDLEWARE = [
+MIDDLEWARE: list[str] = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -225,6 +229,11 @@ if not TESTING:
         profiles_sample_rate=1.0,
         environment=ENV or "local",
     )
+
+# add debug toolbar when not running tests
+if not TESTING:
+    INSTALLED_APPS.insert(-1, "debug_toolbar")
+    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 # Enable / Disable Azure Auth
 if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
