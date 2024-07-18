@@ -176,7 +176,7 @@ def parse_names(
     The third value is the fully qualified name (e.g. my_database.my_table), which
     can be used to show the entity out of context.
     """
-    top_level_name = entity.get("name")
+    top_level_name = entity.get("name", "")
     name = properties.get("name", top_level_name)
     display_name = properties.get("displayName") or name
     qualified_name = properties.get("qualifiedName") or top_level_name or name
@@ -287,7 +287,7 @@ def parse_relations(
             display_name = (
                 i.get("entity").get("properties").get("name")
                 if i.get("entity", {}).get("properties") is not None
-                else i.get("entity").get("name")
+                else i.get("entity").get("name", "")
             )
             related_entities.append(EntityRef(urn=urn, display_name=display_name))
 
