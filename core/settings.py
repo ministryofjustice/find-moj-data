@@ -146,8 +146,16 @@ ENV = os.environ.get("ENV")
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "db.sqlite3",
+        "ENGINE": (
+            "django.db.backends.postgresql"
+            if os.environ.get("RDS_INSTANCE_ADDRESS")
+            else "django.db.backends.sqlite3"
+        ),
+        "NAME": os.environ.get("DATABASE_NAME", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("DATABASE_USERNAME", ""),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+        "HOST": os.environ.get("RDS_INSTANCE_ADDRESS", ""),
+        "PORT": "5432",
     }
 }
 # Define a service name setting for page titles
