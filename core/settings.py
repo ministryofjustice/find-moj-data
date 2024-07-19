@@ -231,7 +231,7 @@ if not TESTING:
     )
 
 # add debug toolbar when not running tests
-if not TESTING:
+if (not TESTING) or (not DEBUG):
     INSTALLED_APPS.insert(-1, "debug_toolbar")
     MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
