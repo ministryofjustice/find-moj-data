@@ -49,8 +49,6 @@ COPY --chown=appuser:appuser . .
 COPY --chown=appuser:appuser --from=builder /app/static ./static
 COPY --chown=appuser:appuser --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-# create switch with default setting
-RUN ./manage.py waffle_switch search-sort-radio-buttons off --create
 RUN chmod +x ./scripts/app-entrypoint.sh
 
 USER 31337
