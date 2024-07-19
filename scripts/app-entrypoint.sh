@@ -12,6 +12,5 @@ fi
 
 python manage.py migrate
 python manage.py waffle_switch search-sort-radio-buttons off --create # create switch with default setting
-python manage.py collectstatic --noinput
 
 gunicorn --bind 0.0.0.0:8000 core.wsgi:application --workers 2 --threads 4

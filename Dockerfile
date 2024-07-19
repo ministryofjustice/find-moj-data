@@ -40,16 +40,20 @@ WORKDIR /app
 ENV VIRTUAL_ENV=/app/.venv \
   PATH="/app/.venv/bin:$PATH"
 
-# Use a non-root user
-RUN addgroup --gid 31337 --system appuser \
-&& adduser --uid 31337 --system appuser --ingroup appuser
 
 # copy project and dependencies
-COPY --chown=appuser:appuser . .
-COPY --chown=appuser:appuser --from=builder /app/static ./static
-COPY --chown=appuser:appuser --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY . .
+COPY --from=builder /app/static ./static
+COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 RUN chmod +x ./scripts/app-entrypoint.sh
+
+RUN python manage.py collectstatic --noinput
+
+# Use a non-root user
+RUN addgroup --gid 31337 --system appuser \
+  && adduser --uid 31337 --system appuser --ingroup appuser
+RUN chown --recursive appuser:appuser /app
 
 USER 31337
 
