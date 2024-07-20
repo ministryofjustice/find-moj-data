@@ -158,6 +158,7 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
 # Define a service name setting for page titles
 SERVICE_NAME = "Find MOJ data"
 GOV_UK_SUFFIX = "GOV.UK"
