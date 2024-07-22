@@ -309,6 +309,6 @@ def _make_user_email_from_urn(urn) -> str:
     but for now this will fix the issue of owners being flagged in datahub but not
     showing in find-moj-data
     """
-  username = urn.replace("urn:li:corpuser:", "")
-  email = f"{username}@justice.gov.uk"
+    username = urn.replace("urn:li:corpuser:", "")
+    email = f"{username}@justice.gov.uk"
     return email
