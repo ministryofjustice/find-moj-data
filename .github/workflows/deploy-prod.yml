@@ -23,7 +23,7 @@ jobs:
       kube_cert: ${{ secrets.KUBE_CERT }}
       kube_cluster: ${{ secrets.KUBE_CLUSTER }}
       kube_token: ${{ secrets.KUBE_TOKEN }}
-      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
+      ecr_role_to_assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
       secret_key: ${{ secrets.SECRET_KEY }}
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
