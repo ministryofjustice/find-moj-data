@@ -12,6 +12,9 @@ Please refer to Prerequisites for dependencies and installation instructions
 1. Set the `ENV` var to `local` i.e. `export ENV=local`
 1. Run `op inject --in-file .env.tpl --out-file .env` to generate a compatible `.env` file
 1. Optionally substitute value for `CATALOGUE_TOKEN` var in .env with your own PAT value to be able to retrieve search data.
+1. Run `poetry run python manage.py collectstatic --noinput` to collect static files
+1. Run `poetry run python manage.py migrate` this will create a local sqlite3 database and migrate any tables
+1. Run `poetry run python manage.py waffle_switch search-sort-radio-buttons off --create` to setup the waffle switch tables
 1. Run `poetry run python manage.py runserver`
 
 ```sh
@@ -20,64 +23,123 @@ npm install
 poetry run python -m nltk.downloader punkt
 export ENV=local
 op inject --in-file .env.tpl --out-file .env
+poetry run python manage.py collectstatic --noinput
 poetry run python manage.py migrate
+poetry run python manage.py waffle_switch search-sort-radio-buttons off --create
 poetry run python manage.py runserver
 ```
 
 # Running the app against the RDS database(s)
 In order to run the app against the RDS database, you will need to do the following.
-1) Create a loop back pod for the given environment.
-```
-kubectl -n data-platform-find-moj-data-dev \
-run port-forward-pod \
---image=ministryofjustice/port-forward \
---port=5432 \
---env="REMOTE_HOST=cloud-platform-2d5acdf1ab5379e3.cdwm328dlye6.eu-west-2.rds.amazonaws.com" \
---env="LOCAL_PORT=1234" \
---env="REMOTE_PORT=5432"
-```
+1) Create a loop back pod for the given namespace.
+    ```
+    kubectl -n data-platform-find-moj-data-dev \
+    run port-forward-pod \
+    --image=ministryofjustice/port-forward \
+    --port=5432 \
+    --env="REMOTE_HOST=cloud-platform-2d5acdf1ab5379e3.cdwm328dlye6.eu-west-2.rds.amazonaws.com" \
+    --env="LOCAL_PORT=1234" \
+    --env="REMOTE_PORT=5432"
+    ```
 2) Forward traffic from your local host to the remote pod and keep the connection open. Note the local port.
 
-```
-kubectl -n data-platform-find-moj-data-dev port-forward port-forward-pod 1234:5432
-```
-3) You can test connectivity as follows using postgres utility `psql`
+    ```
+    kubectl -n data-platform-find-moj-data-dev port-forward port-forward-pod 1234:5432
+    ```
+3) You can test connectivity as follows using postgres utility psql.
 
-`psql postgres://< Database Username >:< Database Password >@localhost:5432/< database name >`
+    ```
+    psql postgres://< Database Username >:< Database Password >@localhost:5432/< Database Name >
+    ```
+    ```
+    psql (14.11 (Homebrew), server 16.3)
+    WARNING: psql major version 14, server major version 16.
+            Some psql features might not work.
+    SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
+    Type "help" for help.
 
-```
-psql (14.11 (Homebrew), server 16.3)
-WARNING: psql major version 14, server major version 16.
-         Some psql features might not work.
-SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
-Type "help" for help.
-
-db2d5acdf1ab5379e3=>
-```
+    db2d5acdf1ab5379e3=>
+    ```
 
 4) Via Netcat
 
-  `nc -z localhost 5432`
+    ```
+    nc -z localhost 1234
+    ```
+    ```
+    Connection to localhost port 1234 [tcp/search-agent] succeeded!
+    ```
 
-  `Connection to localhost port 1234 [tcp/search-agent] succeeded!`
+5) Populate env file & add additional environment variables
 
-5) Populate env file
+    ```
+    op inject --in-file .env.tpl --out-file .env
+    ```
 
-  `op inject --in-file .env.tpl --out-file .env`
+    ```
+    RDS_INSTANCE_ADDRESS=< 1pass >
+    DATABASE_NAME=< 1pass >
+    DATABASE_USERNAME=< 1pass >
+    DATABASE_PASSWORD=< 1pass >
+    ```
+
 
 6) Important note for running loop back connections on Mac OS.
-Ensure that your database host variable is set to `docker.for.mac.host.internal`,
+Ensure that your `RDS_INSTANCE_ADDRESS` variable is set to `docker.for.mac.host.internal`,
 otherwise it will fail to connect.
 
-  `RDS_INSTANCE_ADDRESS=docker.for.mac.host.internal`
+  ```RDS_INSTANCE_ADDRESS=docker.for.mac.host.internal```
 
-7) Building and running as a Docker image
+7) Change the postgres port number in ```settings.py``` and addionally in ```./scripts/app-entrypoint.sh``` if you are running as a docker image, to match the value used for the loopback connection local port value.
 
-  ```
-  docker build -t find-moj-data:latest . && docker run --env-file .env -it -p 8000:8000 find-moj-data:latest
-  ```
+    ```
+    "default": {
+        "ENGINE": (
+            "django.db.backends.postgresql"
+            if os.environ.get("RDS_INSTANCE_ADDRESS")
+            else "django.db.backends.sqlite3"
+        ),
+        "NAME": os.environ.get("DATABASE_NAME", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("DATABASE_USERNAME", ""),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+        "HOST": os.environ.get("RDS_INSTANCE_ADDRESS", ""),
+        "PORT": "1234",
+    }
+    ```
+    If running the app on the development server rather than as a docker image, ignore changing the startup script value as below.
+
+    ```
+    if [ -n "$RDS_INSTANCE_ADDRESS" ]; then
+      echo "Waiting for postgres..."
+
+      while ! nc -z $RDS_INSTANCE_ADDRESS 1234; do
+        sleep 0.1
+      done
+
+      echo "PostgreSQL started"
+    fi
+    ```
+
+7) Building and running as a Docker image.
+
+    ```
+    docker build -t find-moj-data:latest . && docker run --env-file .env -it -p 8000:8000 find-moj-data:latest
+    ```
+
+8) Alternatively run the development server
+    ```
+    poetry run python manage.py collectstatic --noinput
+    poetry run python manage.py migrate
+    poetry run python manage.py waffle_switch search-sort-radio-buttons off --create
+    poetry run python manage.py runserver
+    ```
 
 8) The app should be running at http://localhost:8000
+
+9) Delete the port forward pod
+
+    ```kubectl delete pod port-forward-pod -n data-platform-find-moj-data-dev```
+
 
 
 
