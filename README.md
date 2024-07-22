@@ -140,9 +140,6 @@ otherwise it will fail to connect.
 
     ```kubectl delete pod port-forward-pod -n data-platform-find-moj-data-dev```
 
-
-
-
 # Prerequisites
 
 ## Npm

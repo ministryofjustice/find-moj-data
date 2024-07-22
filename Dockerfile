@@ -40,7 +40,6 @@ WORKDIR /app
 ENV VIRTUAL_ENV=/app/.venv \
   PATH="/app/.venv/bin:$PATH"
 
-
 # copy project and dependencies
 COPY . .
 COPY --from=builder /app/static ./static
