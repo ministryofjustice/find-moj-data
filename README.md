@@ -38,7 +38,7 @@ In order to run the app against the RDS database, you will need to do the follow
     --image=ministryofjustice/port-forward \
     --port=5432 \
     --env="REMOTE_HOST=cloud-platform-2d5acdf1ab5379e3.cdwm328dlye6.eu-west-2.rds.amazonaws.com" \
-    --env="LOCAL_PORT=1234" \
+    --env="LOCAL_PORT=5432" \
     --env="REMOTE_PORT=5432"
     ```
 2) Forward traffic from your local host to the remote pod and keep the connection open. Note the local port.
@@ -49,7 +49,7 @@ In order to run the app against the RDS database, you will need to do the follow
 3) You can test connectivity as follows using postgres utility psql.
 
     ```
-    psql postgres://< Database Username >:< Database Password >@localhost:5432/< Database Name >
+    psql postgres://< Database Username >:< Database Password >@localhost:1234/< Database Name >
     ```
     ```
     psql (14.11 (Homebrew), server 16.3)
