@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
 
 import pytest
+
 from data_platform_catalogue.client.graphql_helpers import (
+    _make_user_email_from_urn,
     parse_columns,
     parse_created_and_modified,
     parse_glossary_terms,
@@ -375,3 +377,25 @@ def test_parse_glossary_terms():
     )
 
     assert result == [term]
+
+
+@pytest.mark.parametrize(
+    "urn, expected_email",
+    [
+        (
+            "urn:li:corpuser:jon.smith",
+            "jon.smith@justice.gov.uk",
+        ),
+        (
+            "urn:li:corpuser:jon.smith54",
+            "jon.smith54@justice.gov.uk",
+        ),
+        (
+            "urn:li:corpuser:jon.smith.sullivan",
+            "jon.smith.sullivan@justice.gov.uk",
+        ),
+    ],
+)
+def test_make_user_email_from_urn(urn, expected_email):
+    email = _make_user_email_from_urn(urn)
+    assert email == expected_email

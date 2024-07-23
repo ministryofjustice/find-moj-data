@@ -37,7 +37,10 @@ def parse_owner(entity: dict[str, Any]) -> OwnerRef:
         )
         owner_details = OwnerRef(
             display_name=display_name or "",
-            email=properties.get("email", ""),
+            email=properties.get(
+                "email",
+                _make_user_email_from_urn(owners[0].get("urn")),
+            ),
             urn=owners[0].get("urn", ""),
         )
     else:
@@ -293,3 +296,19 @@ def parse_relations(
 
     relations_return = {relationship_type: related_entities}
     return relations_return
+
+
+def _make_user_email_from_urn(urn) -> str:
+    """
+    Creates a user email using a user entity urn. This should only be called
+    when an urn exists for a user that has not signed into datahub via sso,
+    so has not been created as an entity and has no associated email address.
+
+    We will look to revist our approach to ownership user creation, see
+    github issue https://github.com/ministryofjustice/find-moj-data/issues/578,
+    but for now this will fix the issue of owners being flagged in datahub but not
+    showing in find-moj-data
+    """
+    username = urn.replace("urn:li:corpuser:", "")
+    email = f"{username}@justice.gov.uk"
+    return email
