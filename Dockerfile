@@ -31,6 +31,10 @@ RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 # The runtime image, used to just run the code provided its virtual environment
 FROM python:3.11-slim-buster as runtime
 
+# Update and Install Netcat
+RUN apt-get update && \
+    apt-get install -y netcat
+
 WORKDIR /app
 
 ENV VIRTUAL_ENV=/app/.venv \
@@ -41,20 +45,17 @@ COPY . .
 COPY --from=builder /app/static ./static
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
+RUN chmod +x ./scripts/app-entrypoint.sh
 
 RUN python manage.py collectstatic --noinput
-RUN python manage.py migrate
-
-# create switch with default setting
-RUN ./manage.py waffle_switch search-sort-radio-buttons off --create
 
 # Use a non-root user
 RUN addgroup --gid 31337 --system appuser \
   && adduser --uid 31337 --system appuser --ingroup appuser
 RUN chown --recursive appuser:appuser /app
-USER 31337
 
+USER 31337
 
 EXPOSE 8000
 
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+ENTRYPOINT [ "./scripts/app-entrypoint.sh" ]
