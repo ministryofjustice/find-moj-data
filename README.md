@@ -8,7 +8,6 @@ Please refer to Prerequisites for dependencies and installation instructions
 
 1. Run `poetry install` to install python dependencies
 1. Run `npm install` to download frontend static dependencies.
-1. Run `poetry run python -m nltk.downloader punkt` to install nltk data
 1. Set the `ENV` var to `local` i.e. `export ENV=local`
 1. Run `op inject --in-file .env.tpl --out-file .env` to generate a compatible `.env` file
 1. Optionally substitute value for `CATALOGUE_TOKEN` var in .env with your own PAT value to be able to retrieve search data.
@@ -20,7 +19,6 @@ Please refer to Prerequisites for dependencies and installation instructions
 ```sh
 poetry install --no-root
 npm install
-poetry run python -m nltk.downloader punkt
 export ENV=local
 op inject --in-file .env.tpl --out-file .env
 poetry run python manage.py collectstatic --noinput
