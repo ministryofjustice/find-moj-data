@@ -45,16 +45,19 @@
               <span>{{result.parent_entity.display_name}}</span>
             </li>
           {% endif %}
-          <li>
-            <span class="govuk-!-font-weight-bold">Tags:</span>
-            <span>
-              {% if result.tags_to_display %}
-                {% for tag in result.tags_to_display %}
-                  <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              {% endif %}
-            </span>
-          </li>
+          {% switch 'display-result-tags' %}
+            <li>
+              <span class="govuk-!-font-weight-bold">Tags:</span>
+              <span>
+                {% if result.tags_to_display %}
+                  {% for tag in result.tags_to_display %}
+                    <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </span>
+            </li>
+          {% endswitch %}
+        
           {% if result.matches %}
             <li>
               <span class="govuk-!-font-weight-bold">Matched fields:</span>
