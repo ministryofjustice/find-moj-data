@@ -10,6 +10,7 @@ spec:
   tls:
     - hosts:
         - ${NAMESPACE}.apps.live.cloud-platform.service.justice.gov.uk
+    - hosts
         - find-moj-data.service.justice.gov.uk
       secretName: find-moj-data-cert # pragma: allowlist secret
   rules:
