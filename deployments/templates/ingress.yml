@@ -23,7 +23,6 @@ spec:
                 name: find-moj-data-service # this should match the metadata.name in service.yml
                 port:
                   number: 80
-
     - host: find-moj-data.service.justice.gov.uk
       http:
         paths:
