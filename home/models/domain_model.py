@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 class Domain(NamedTuple):
     urn: str
     label: str
+    assets: int
 
 
 class DomainModel:
@@ -20,7 +21,7 @@ class DomainModel:
         self.labels = {}
 
         self.top_level_domains = [
-            Domain(option.value, option.label)
+            Domain(option.value, option.label, option.count)
             for option in search_facets.options("domains")
         ]
         self.top_level_domains.sort(key=lambda d: d.label)
@@ -29,7 +30,7 @@ class DomainModel:
 
         self.subdomains = {}
 
-        for urn, label in self.top_level_domains:
+        for urn, label, assets in self.top_level_domains:
             self.labels[urn] = label
 
     def all_subdomains(self) -> list[Domain]:  # -> list[Any]

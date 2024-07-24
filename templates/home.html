@@ -49,7 +49,7 @@
             <h2 id="browse-by-domain" class="govuk-heading-l">Browse by domain</h2>
             <ul id="domain-list" class="govuk-list govuk-list--bullet">
               {% for domain in domains.top_level_domains  %}
-                <li><a href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.label}}</a></li>
+                <li><a href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.label}} ({{domain.assets}})</a></li>
               {% endfor %}
             </ul>
 
