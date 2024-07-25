@@ -20,6 +20,7 @@ from data_platform_catalogue.client.graphql_helpers import (
 from data_platform_catalogue.entities import EntityRef
 from data_platform_catalogue.search_types import (
     FacetOption,
+    ListDomainOption,
     MultiSelectFilter,
     ResultType,
     SearchFacets,
@@ -42,6 +43,11 @@ class SearchClient:
         self.facets_query = (
             files("data_platform_catalogue.client.graphql")
             .joinpath("facets.graphql")
+            .read_text()
+        )
+        self.list_domains_query = (
+            files("data_platform_catalogue.client.graphql")
+            .joinpath("listDomains.graphql")
             .read_text()
         )
         self.get_glossary_terms_query = (
@@ -180,6 +186,33 @@ class SearchClient:
         response = response["aggregateAcrossEntities"]
         return self._parse_facets(response.get("facets", []))
 
+    def list_domains(
+        self,
+        query: str = "*",
+        filters: Sequence[MultiSelectFilter] = [
+            MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
+        ],
+        count: int = 1000,
+    ) -> list[ListDomainOption]:
+        """
+        Returns domains that can be used to filter the search results.
+        """
+        formatted_filters = self._map_filters(filters)
+
+        variables = {
+            "count": count,
+            "query": query,
+            "filters": formatted_filters,
+        }
+
+        try:
+            response = self.graph.execute_graphql(self.list_domains_query, variables)
+        except GraphError as e:
+            raise CatalogueError("Unable to execute list domains query") from e
+
+        response = response["listDomains"]
+        return self._parse_list_domains(response.get("domains"))
+
     def _get_data_collection_page_results(self, response, key_for_results: str):
         """
         for use by entities that hold collections of data, eg. container
@@ -219,6 +252,21 @@ class SearchClient:
             for filter in filters
         ]
         return result
+
+    def _parse_list_domains(
+        self, list_domains_result: list[dict[str, Any]]
+    ) -> list[ListDomainOption]:
+        list_domain_options: list[ListDomainOption] = []
+
+        for domain in list_domains_result:
+            urn = domain.get("urn", "")
+            properties = domain.get("properties", {})
+            name = properties.get("name", "")
+            entities = domain.get("entities", {})
+            total = entities.get("total", 0)
+
+            list_domain_options.append(ListDomainOption(urn, name, total))
+        return list_domain_options
 
     def _parse_result(
         self, entity: dict[str, Any], matches, result_type: ResultType
