@@ -110,6 +110,7 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_REDIRECT_URI: ${{ vars.AZURE_REDIRECT_URI }}
           AZURE_AUTHORITY: ${{ vars.AZURE_AUTHORITY }}
+          EXTERNAL_DOMAIN_PREFIX: ${{ vars.EXTERNAL_DOMAIN_PREFIX }}
 
         run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
