@@ -14,6 +14,7 @@ Please refer to Prerequisites for dependencies and installation instructions
 1. Run `poetry run python manage.py collectstatic --noinput` to collect static files
 1. Run `poetry run python manage.py migrate` this will create a local sqlite3 database and migrate any tables
 1. Run `poetry run python manage.py waffle_switch search-sort-radio-buttons off --create` to setup the waffle switch tables
+1. Run `poetry run python manage.py waffle_switch display-result-tags off --create` to setup the waffle switch for tags
 1. Run `poetry run python manage.py runserver`
 
 ```sh
@@ -199,3 +200,4 @@ Our switches are created via the cli; the commands can be seen in the Dockerfile
 Current swicthes and default settings:
 
 - `search-sort-radio-buttons` off - switches on/off radio selection buttons for sort order of search results.
+- `display-result-tags` off - switches on/off the display of tags in search and results pages
