@@ -1,6 +1,6 @@
 query getDomains(
     $count: Int!
-  	$filters:[FacetFilterInput!]
+    $filters:[FacetFilterInput!]
     $query: String!
 ) {
 listDomains(
