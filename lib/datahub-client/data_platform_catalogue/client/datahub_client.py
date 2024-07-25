@@ -57,6 +57,7 @@ from data_platform_catalogue.entities import (
     Table,
 )
 from data_platform_catalogue.search_types import (
+    ListDomainOption,
     MultiSelectFilter,
     ResultType,
     SearchFacets,
@@ -220,6 +221,21 @@ class DataHubCatalogueClient:
         """
         return self.search_client.search_facets(
             query=query, result_types=result_types, filters=filters
+        )
+
+    def list_domains(
+        self,
+        query: str = "*",
+        filters: Sequence[MultiSelectFilter] = [
+            MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
+        ],
+        count: int = 1000,
+    ) -> list[ListDomainOption]:
+        """
+        Returns a list of ListDomainOption objects
+        """
+        return self.search_client.list_domains(
+            query=query, filters=filters, count=count
         )
 
     def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
