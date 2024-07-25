@@ -25,6 +25,7 @@ class ListDomainFetcher(GenericService):
         result = cache.get(self.cache_key)
         if not result:
             result = self.client.list_domains()
+            result = sorted(result, key=lambda d: d.urn)
             cache.set(self.cache_key, result, timeout=self.cache_timeout_seconds)
 
         if self.filter_zero_entities:
