@@ -297,17 +297,22 @@ def mock_catalogue(request, example_database):
             ListDomainOption(
                 urn="urn:li:domain:prisons",
                 name="Prisons",
-                total=fake.random_int(min=0, max=100),
+                total=fake.random_int(min=1, max=100),
             ),
             ListDomainOption(
                 urn="urn:li:domain:courts",
                 name="Courts",
-                total=fake.random_int(min=0, max=100),
+                total=fake.random_int(min=1, max=100),
             ),
             ListDomainOption(
                 urn="urn:li:domain:finance",
                 name="Finance",
-                total=fake.random_int(min=0, max=100),
+                total=fake.random_int(min=1, max=100),
+            ),
+            ListDomainOption(
+                urn="urn:li:domain:hq",
+                name="HQ",
+                total=0,
             ),
         ],
     )
@@ -437,8 +442,8 @@ def search_facets():
 
 
 @pytest.fixture
-def list_domains():
-    return ListDomainFetcher().fetch()
+def list_domains(filter_zero_entities):
+    return ListDomainFetcher(filter_zero_entities).fetch()
 
 
 @pytest.fixture
