@@ -55,6 +55,18 @@ class FacetOption:
 
 
 @dataclass
+class ListDomainOption:
+    """
+    A representation of a domain and the number of associated entities
+    represented by total.
+    """
+
+    urn: str
+    name: str
+    total: int
+
+
+@dataclass
 class SearchResult:
     urn: str
     result_type: ResultType
