@@ -12,6 +12,7 @@ import time
 from datetime import datetime, timezone
 
 import pytest
+
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -35,6 +36,13 @@ from data_platform_catalogue.search_types import MultiSelectFilter, ResultType
 jwt_token = os.environ.get("CATALOGUE_TOKEN")
 api_url = os.environ.get("CATALOGUE_URL", "")
 runs_on_development_server = pytest.mark.skipif("not jwt_token or not api_url")
+
+
+@runs_on_development_server
+def test_list_domains():
+    client = DataHubCatalogueClient(jwt_token=jwt_token, api_url=api_url)
+    response = client.list_domains()
+    assert len(response) > 0
 
 
 @runs_on_development_server
