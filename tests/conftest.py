@@ -27,6 +27,7 @@ from data_platform_catalogue.entities import (
 )
 from data_platform_catalogue.search_types import (
     FacetOption,
+    ListDomainOption,
     ResultType,
     SearchFacets,
     SearchResponse,
@@ -39,6 +40,7 @@ from faker import Faker
 from home.forms.search import SearchForm
 from home.models.domain_model import DomainModel
 from home.service.details import DatabaseDetailsService
+from home.service.list_domain_fetcher import ListDomainFetcher
 from home.service.search import SearchService
 from home.service.search_facet_fetcher import SearchFacetFetcher
 from home.service.search_tag_fetcher import SearchTagFetcher
@@ -289,6 +291,26 @@ def mock_catalogue(request, example_database):
     mock_search_response(
         mock_catalogue, page_results=generate_page(), total_results=100
     )
+    mock_list_domains_response(
+        mock_catalogue,
+        domains=[
+            ListDomainOption(
+                urn="urn:li:domain:prisons",
+                name="Prisons",
+                total=fake.random_int(min=0, max=100),
+            ),
+            ListDomainOption(
+                urn="urn:li:domain:courts",
+                name="Courts",
+                total=fake.random_int(min=0, max=100),
+            ),
+            ListDomainOption(
+                urn="urn:li:domain:finance",
+                name="Finance",
+                total=fake.random_int(min=0, max=100),
+            ),
+        ],
+    )
     mock_search_facets_response(
         mock_catalogue,
         domains=[
@@ -344,6 +366,10 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
         total_results=total_results, page_results=page_results
     )
     mock_catalogue.search.return_value = search_response
+
+
+def mock_list_domains_response(mock_catalogue, domains):
+    mock_catalogue.list_domains.return_value = domains
 
 
 def mock_search_facets_response(mock_catalogue, domains):
@@ -408,6 +434,11 @@ def mock_get_glossary_terms_response(mock_catalogue):
 @pytest.fixture
 def search_facets():
     return SearchFacetFetcher().fetch()
+
+
+@pytest.fixture
+def list_domains():
+    return ListDomainFetcher().fetch()
 
 
 @pytest.fixture
