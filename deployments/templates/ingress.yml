@@ -10,21 +10,8 @@ spec:
   tls:
     - hosts:
         - ${NAMESPACE}.apps.live.cloud-platform.service.justice.gov.uk
-    - hosts:
-        - find-moj-data.service.justice.gov.uk
-      secretName: find-moj-data-cert # pragma: allowlist secret
   rules:
     - host: ${NAMESPACE}.apps.live.cloud-platform.service.justice.gov.uk
-      http:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: find-moj-data-service # this should match the metadata.name in service.yml
-                port:
-                  number: 80
-    - host: find-moj-data.service.justice.gov.uk
       http:
         paths:
           - path: /
