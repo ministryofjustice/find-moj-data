@@ -23,7 +23,11 @@
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Access requirements</h2>
   <p class="govuk-body">
-    Processing the data might require
-    permission from IAO or Data owner.
+    {% if access_requirements %}
+      {{ access_requirements }}
+    {% else %}
+      Processing the data might require
+      permission from IAO or Data owner.
+    {% endif %}
   </p>
 </div>

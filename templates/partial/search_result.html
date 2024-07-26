@@ -33,7 +33,7 @@
         <ul class="govuk-list govuk-body" id="metadata-property-list">
           <li>
             <span class="govuk-!-font-weight-bold">Refresh period:</span>
-            <span>TBC</span>
+            <span>{{result.metadata.refresh_period}}</span>
           </li>
           <li>
             <span class="govuk-!-font-weight-bold">Domain:</span>
@@ -57,7 +57,7 @@
               </span>
             </li>
           {% endswitch %}
-        
+
           {% if result.matches %}
             <li>
               <span class="govuk-!-font-weight-bold">Matched fields:</span>

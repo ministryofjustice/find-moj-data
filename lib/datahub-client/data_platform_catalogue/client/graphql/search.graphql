@@ -106,6 +106,7 @@ query Search(
             name
             description
             externalUrl
+            lastRefreshed
             customProperties {
               key
               value

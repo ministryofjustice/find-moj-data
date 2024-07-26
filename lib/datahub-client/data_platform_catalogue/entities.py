@@ -230,6 +230,13 @@ class AccessInformation(BaseModel):
             "s3://alpha-hmpps-reports-data",
         ],
     )
+    access_requirements: str = Field(
+        description="Paragraph explaning whether there are any specific access requirements related these data.",
+        default="",
+        examples=[
+            "Processing of these data requires a DPIA",
+        ],
+    )
 
 
 class FurtherInformation(BaseModel):
@@ -263,6 +270,18 @@ class DataSummary(BaseModel):
         description="Row count when the metadata was last updated",
         default="",
         examples=["123", 123],
+    )
+
+    refresh_period: str = Field(
+        description="Indicates the frequency that the data are refreshed/updated",
+        default="",
+        examples=["Annually", "Quarterly", "Monthly", "Weekly", "Daily"],
+    )
+
+    last_updated: str = Field(
+        description="Indicates the date when the data were last refreshed/updated",
+        default="",
+        examples=["05 May 2024", "25 December 2023"],
     )
 
 

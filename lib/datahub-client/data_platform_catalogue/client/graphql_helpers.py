@@ -152,7 +152,15 @@ def parse_properties(
     access_information = AccessInformation.model_validate(custom_properties_dict)
     usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
     data_summary = DataSummary.model_validate(custom_properties_dict)
+
     further_information = FurtherInformation.model_validate(custom_properties_dict)
+
+    last_updated_timestamp = properties.get("lastRefreshed")
+    if last_updated_timestamp:
+        last_updated_date_str = datetime.fromtimestamp(last_updated_timestamp).strftime(
+            "%d %B %Y"
+        )
+        data_summary.last_updated = last_updated_date_str
 
     custom_properties = CustomEntityProperties(
         access_information=access_information,
@@ -312,3 +320,7 @@ def _make_user_email_from_urn(urn) -> str:
     username = urn.replace("urn:li:corpuser:", "")
     email = f"{username}@justice.gov.uk"
     return email
+
+
+def parse_refresh_period(entity: dict[str, Any]) -> str:
+    pass
