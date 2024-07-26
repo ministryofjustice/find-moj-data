@@ -1,10 +1,11 @@
 from copy import deepcopy
 from urllib.parse import urlencode
 
-from data_platform_catalogue.search_types import ResultType
+from data_platform_catalogue.search_types import ListDomainOption, ResultType
 from django import forms
 
 from ..models.domain_model import Domain, DomainModel
+from ..service.list_domain_fetcher import ListDomainFetcher
 from ..service.search_facet_fetcher import SearchFacetFetcher
 from ..service.search_tag_fetcher import SearchTagFetcher
 
@@ -16,6 +17,17 @@ def get_domain_choices() -> list[Domain]:
     ]
     facets = SearchFacetFetcher().fetch()
     choices.extend(DomainModel(facets).top_level_domains)
+    return choices
+
+
+def get_list_domain_choices() -> list[Domain]:
+    """Make ListDomains API call to obtain domain choices"""
+    choices = [
+        Domain("", "All domains"),
+    ]
+    list_domain_options: list[ListDomainOption] = ListDomainFetcher().fetch()
+    domains: list[Domain] = [Domain(d.urn, d.name) for d in list_domain_options]
+    choices.extend(domains)
     return choices
 
 
@@ -86,7 +98,7 @@ class SearchForm(forms.Form):
         ),
     )
     domain = forms.ChoiceField(
-        choices=get_domain_choices,
+        choices=get_list_domain_choices,
         required=False,
         widget=forms.Select(
             attrs={
