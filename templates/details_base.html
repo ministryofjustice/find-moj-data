@@ -55,10 +55,16 @@
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
-            {% if entity.last_modified %}
+            {% if entity.custom_properties.data_summary.last_updated %}
               <li>
                 <span class="govuk-!-font-weight-bold">Last updated:</span>
-                {{entity.last_modified | date:"jS F Y"}} ({{entity.last_modified|naturaltime}})
+                {{entity.custom_properties.data_summary.last_updated}}
+              </li>
+            {% endif %}
+            {% if entity.custom_properties.data_summary.refresh_period %}
+              <li>
+                <span class="govuk-!-font-weight-bold">Last updated:</span>
+                {{entity.custom_properties.data_summary.refresh_period}}
               </li>
             {% endif %}
             {% if entity.domain %}

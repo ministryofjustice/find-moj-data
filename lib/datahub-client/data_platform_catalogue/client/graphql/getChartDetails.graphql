@@ -49,6 +49,7 @@ query getChartDetails($urn: String!) {
     properties {
       name
       description
+      lastRefreshed
       externalUrl
       customProperties {
         key
