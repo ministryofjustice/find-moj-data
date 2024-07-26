@@ -45,11 +45,11 @@
       </div>
       <div class="govuk-main-wrapper govuk-main-wrapper--l">
         <div class="govuk-width-container app-width-container">
-          {% if domains.top_level_domains %}
+          {% if domains %}
             <h2 id="browse-by-domain" class="govuk-heading-l">Browse by domain</h2>
             <ul id="domain-list" class="govuk-list govuk-list--bullet">
-              {% for domain in domains.top_level_domains  %}
-                <li><a href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.label}}</a></li>
+              {% for domain in domains  %}
+                <li><a href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}})</a></li>
               {% endfor %}
             </ul>
 

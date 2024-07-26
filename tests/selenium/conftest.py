@@ -108,7 +108,9 @@ class HomePage(Page):
             By.CSS_SELECTOR, "ul#domain-list li a"
         )
         all_domain_names = [d.text for d in all_domains]
-        result = next((d for d in all_domains if domain == d.text), None)
+        result = next(
+            (d for d in all_domains if domain == d.text.split("(")[0].strip()), None
+        )
         if not result:
             raise Exception(f"{domain!r} not found in {all_domain_names!r}")
         return result
