@@ -55,7 +55,7 @@ class FacetOption:
 
 
 @dataclass
-class ListDomainOption:
+class DomainOption:
     """
     A representation of a domain and the number of associated entities
     represented by total.

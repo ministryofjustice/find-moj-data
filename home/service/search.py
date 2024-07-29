@@ -3,7 +3,7 @@ from copy import deepcopy
 from typing import Any
 
 from data_platform_catalogue.search_types import (
-    ListDomainOption,
+    DomainOption,
     MultiSelectFilter,
     ResultType,
     SearchResponse,
@@ -14,16 +14,16 @@ from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
-from home.models.domain_model import ListDomainModel
+from home.models.domain_model import DomainModel
 
 from .base import GenericService
-from .list_domain_fetcher import ListDomainFetcher
+from .domain_fetcher import DomainFetcher
 
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
-        domains: list[ListDomainOption] = ListDomainFetcher().fetch()
-        self.domain_model = ListDomainModel(domains)
+        domains: list[DomainOption] = DomainFetcher().fetch()
+        self.domain_model = DomainModel(domains)
         self.stemmer = PorterStemmer()
         self.form = form
         if self.form.is_bound:

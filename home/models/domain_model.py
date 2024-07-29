@@ -1,7 +1,7 @@
 import logging
 from typing import NamedTuple
 
-from data_platform_catalogue.search_types import ListDomainOption
+from data_platform_catalogue.search_types import DomainOption
 
 logger = logging.getLogger(__name__)
 
@@ -11,8 +11,8 @@ class Domain(NamedTuple):
     label: str
 
 
-class ListDomainModel:
-    def __init__(self, domains: list[ListDomainOption]):
+class DomainModel:
+    def __init__(self, domains: list[DomainOption]):
         self.labels = {}
 
         self.top_level_domains = [Domain(domain.urn, domain.name) for domain in domains]

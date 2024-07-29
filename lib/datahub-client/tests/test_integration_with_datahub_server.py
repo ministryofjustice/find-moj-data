@@ -12,7 +12,6 @@ import time
 from datetime import datetime, timezone
 
 import pytest
-
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -32,7 +31,7 @@ from data_platform_catalogue.entities import (
     UsageRestrictions,
 )
 from data_platform_catalogue.search_types import (
-    ListDomainOption,
+    DomainOption,
     MultiSelectFilter,
     ResultType,
 )
@@ -48,7 +47,7 @@ def test_list_domains():
     response = client.list_domains()
     assert len(response) > 0
     domain = response[0]
-    assert isinstance(domain, ListDomainOption)
+    assert isinstance(domain, DomainOption)
     assert "urn:li:domain" in domain.urn
 
 

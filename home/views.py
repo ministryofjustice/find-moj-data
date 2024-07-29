@@ -1,5 +1,5 @@
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
-from data_platform_catalogue.search_types import ListDomainOption
+from data_platform_catalogue.search_types import DomainOption
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
@@ -9,8 +9,8 @@ from home.service.details import (
     DatabaseDetailsService,
     DatasetDetailsService,
 )
+from home.service.domain_fetcher import DomainFetcher
 from home.service.glossary import GlossaryService
-from home.service.list_domain_fetcher import ListDomainFetcher
 from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 
@@ -19,7 +19,7 @@ def home_view(request):
     """
     Displys only domains that have entities tagged for display in the catalog.
     """
-    domains: list[ListDomainOption] = ListDomainFetcher().fetch()
+    domains: list[DomainOption] = DomainFetcher().fetch()
     context = {"domains": domains, "h1_value": "Home"}
     return render(request, "home.html", context)
 
