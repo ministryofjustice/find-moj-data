@@ -62,9 +62,6 @@ class SearchService(GenericService):
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         tags = form_data.get("tags", "")
-        # domains_and_subdomains = domains_with_their_subdomains(
-        #     domain, subdomain, self.domain_model
-        # )
         where_to_access = self._build_custom_property_filter(
             "dc_where_to_access_dataset=", form_data.get("where_to_access", [])
         )
@@ -148,7 +145,6 @@ class SearchService(GenericService):
         self,
     ) -> dict[str, str]:
         domain = self.form.cleaned_data.get("domain", "")
-        # subdomain = self.form.cleaned_data.get("subdomain", "")
 
         label = self.domain_model.get_label(domain)
 
