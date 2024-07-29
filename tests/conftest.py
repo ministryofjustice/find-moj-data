@@ -38,7 +38,7 @@ from django.test import Client
 from faker import Faker
 
 from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
+from home.models.domain_model import DomainModel, ListDomainModel
 from home.service.details import DatabaseDetailsService
 from home.service.list_domain_fetcher import ListDomainFetcher
 from home.service.search import SearchService
@@ -452,8 +452,8 @@ def search_tags():
 
 
 @pytest.fixture
-def valid_domain(search_facets):
-    return DomainModel(search_facets).top_level_domains[0]
+def valid_domain(list_domains):
+    return ListDomainModel(list_domains).top_level_domains[0]
 
 
 @pytest.fixture
