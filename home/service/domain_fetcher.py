@@ -1,12 +1,12 @@
-from data_platform_catalogue.search_types import ListDomainOption
+from data_platform_catalogue.search_types import DomainOption
 from django.core.cache import cache
 
 from .base import GenericService
 
 
-class ListDomainFetcher(GenericService):
+class DomainFetcher(GenericService):
     """
-    ListDomainFetcher implementation to fetch domains with the total number of
+    DomainFetcher implementation to fetch domains with the total number of
     associated entities from the backend.
     """
 
@@ -16,7 +16,7 @@ class ListDomainFetcher(GenericService):
         self.cache_timeout_seconds = 300
         self.filter_zero_entities = filter_zero_entities
 
-    def fetch(self) -> list[ListDomainOption]:
+    def fetch(self) -> list[DomainOption]:
         """
         Fetch a static list of options that is independent of the search query
         and any applied filters. Values are cached for 5 seconds to avoid

@@ -26,8 +26,8 @@ from data_platform_catalogue.entities import (
     UsageRestrictions,
 )
 from data_platform_catalogue.search_types import (
+    DomainOption,
     FacetOption,
-    ListDomainOption,
     ResultType,
     SearchFacets,
     SearchResponse,
@@ -40,7 +40,7 @@ from faker import Faker
 from home.forms.search import SearchForm
 from home.models.domain_model import DomainModel
 from home.service.details import DatabaseDetailsService
-from home.service.list_domain_fetcher import ListDomainFetcher
+from home.service.domain_fetcher import DomainFetcher
 from home.service.search import SearchService
 from home.service.search_facet_fetcher import SearchFacetFetcher
 from home.service.search_tag_fetcher import SearchTagFetcher
@@ -294,22 +294,22 @@ def mock_catalogue(request, example_database):
     mock_list_domains_response(
         mock_catalogue,
         domains=[
-            ListDomainOption(
+            DomainOption(
                 urn="urn:li:domain:prisons",
                 name="Prisons",
                 total=fake.random_int(min=1, max=100),
             ),
-            ListDomainOption(
+            DomainOption(
                 urn="urn:li:domain:courts",
                 name="Courts",
                 total=fake.random_int(min=1, max=100),
             ),
-            ListDomainOption(
+            DomainOption(
                 urn="urn:li:domain:finance",
                 name="Finance",
                 total=fake.random_int(min=1, max=100),
             ),
-            ListDomainOption(
+            DomainOption(
                 urn="urn:li:domain:hq",
                 name="HQ",
                 total=0,
@@ -443,7 +443,7 @@ def search_facets():
 
 @pytest.fixture
 def list_domains(filter_zero_entities):
-    return ListDomainFetcher(filter_zero_entities).fetch()
+    return DomainFetcher(filter_zero_entities).fetch()
 
 
 @pytest.fixture
@@ -452,8 +452,11 @@ def search_tags():
 
 
 @pytest.fixture
-def valid_domain(search_facets):
-    return DomainModel(search_facets).top_level_domains[0]
+def valid_domain():
+    domains = DomainFetcher().fetch()
+    return DomainModel(
+        domains,
+    ).top_level_domains[0]
 
 
 @pytest.fixture

@@ -3,30 +3,6 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
-from datahub.configuration.common import ConfigurationError
-from datahub.emitter import mce_builder
-from datahub.emitter.mcp import MetadataChangeProposalWrapper
-from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
-from datahub.ingestion.source.common.subtypes import (
-    DatasetContainerSubTypes,
-    DatasetSubTypes,
-)
-from datahub.metadata import schema_classes
-from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
-from datahub.metadata.schema_classes import (
-    ChangeTypeClass,
-    ContainerClass,
-    ContainerPropertiesClass,
-    DatasetPropertiesClass,
-    DomainPropertiesClass,
-    DomainsClass,
-    OtherSchemaClass,
-    SchemaFieldClass,
-    SchemaFieldDataTypeClass,
-    SchemaMetadataClass,
-    SubTypesClass,
-)
-
 from data_platform_catalogue.client.exceptions import (
     AspectDoesNotExist,
     ConnectivityError,
@@ -57,12 +33,35 @@ from data_platform_catalogue.entities import (
     Table,
 )
 from data_platform_catalogue.search_types import (
-    ListDomainOption,
+    DomainOption,
     MultiSelectFilter,
     ResultType,
     SearchFacets,
     SearchResponse,
     SortOption,
+)
+from datahub.configuration.common import ConfigurationError
+from datahub.emitter import mce_builder
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
+from datahub.ingestion.source.common.subtypes import (
+    DatasetContainerSubTypes,
+    DatasetSubTypes,
+)
+from datahub.metadata import schema_classes
+from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
+from datahub.metadata.schema_classes import (
+    ChangeTypeClass,
+    ContainerClass,
+    ContainerPropertiesClass,
+    DatasetPropertiesClass,
+    DomainPropertiesClass,
+    DomainsClass,
+    OtherSchemaClass,
+    SchemaFieldClass,
+    SchemaFieldDataTypeClass,
+    SchemaMetadataClass,
+    SubTypesClass,
 )
 
 logger = logging.getLogger(__name__)
@@ -230,9 +229,9 @@ class DataHubCatalogueClient:
             MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
         ],
         count: int = 1000,
-    ) -> list[ListDomainOption]:
+    ) -> list[DomainOption]:
         """
-        Returns a list of ListDomainOption objects
+        Returns a list of DomainOption objects
         """
         return self.search_client.list_domains(
             query=query, filters=filters, count=count

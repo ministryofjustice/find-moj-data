@@ -6,7 +6,7 @@ from urllib.parse import quote
 import pytest
 
 from home.forms.search import SearchForm
-from home.service.search import SearchService, domains_with_their_subdomains
+from home.service.search import SearchService
 
 dev_env = True if os.environ.get("ENV") == "dev" else False
 run_for_dev = pytest.mark.skipif(
@@ -48,7 +48,6 @@ class TestSearchService:
             "analytical_platform": (
                 "?query=test&"
                 f"domain={quote(valid_domain.urn)}&"
-                "subdomain=&"
                 "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
@@ -61,7 +60,6 @@ class TestSearchService:
             "Table": (
                 "?query=test&"
                 f"domain={quote(valid_domain.urn)}&"
-                "subdomain=&"
                 "where_to_access=analytical_platform&"
                 "sort=ascending&"
                 "clear_filter=False&"
@@ -74,7 +72,6 @@ class TestSearchService:
             "tag-1": (
                 "?query=test&"
                 f"domain={quote(valid_domain.urn)}&"
-                "subdomain=&"
                 "where_to_access=analytical_platform&"
                 "entity_types=TABLE&"
                 "sort=ascending&"
@@ -157,28 +154,3 @@ class TestSearchService:
             search_service.results.page_results
             != search_service.highlighted_results.page_results
         )
-
-
-@run_for_dev
-@pytest.mark.parametrize(
-    "domain, subdomain, expected_subdomains",
-    [
-        ("does-not-exist", "", []),
-        (
-            "urn:li:domain:HMPPS",
-            "",
-            [
-                "urn:li:domain:HMPPS",
-                "urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9",
-                "urn:li:domain:abe153c1-416b-4abb-be7f-6accf2abb10a",
-            ],
-        ),
-        (
-            "urn:li:domain:HMPPS",
-            "urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9",
-            ["urn:li:domain:2feb789b-44d3-4412-b998-1f26819fabf9"],
-        ),
-    ],
-)
-def test_domain_expansion(domain, subdomain, expected_subdomains):
-    assert domains_with_their_subdomains(domain, subdomain) == expected_subdomains

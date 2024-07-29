@@ -3,9 +3,6 @@ import logging
 from importlib.resources import files
 from typing import Any, Sequence
 
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
-
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     parse_created_and_modified,
@@ -19,8 +16,8 @@ from data_platform_catalogue.client.graphql_helpers import (
 )
 from data_platform_catalogue.entities import EntityRef
 from data_platform_catalogue.search_types import (
+    DomainOption,
     FacetOption,
-    ListDomainOption,
     MultiSelectFilter,
     ResultType,
     SearchFacets,
@@ -28,6 +25,8 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -193,7 +192,7 @@ class SearchClient:
             MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
         ],
         count: int = 1000,
-    ) -> list[ListDomainOption]:
+    ) -> list[DomainOption]:
         """
         Returns domains that can be used to filter the search results.
         """
@@ -255,8 +254,8 @@ class SearchClient:
 
     def _parse_list_domains(
         self, list_domains_result: list[dict[str, Any]]
-    ) -> list[ListDomainOption]:
-        list_domain_options: list[ListDomainOption] = []
+    ) -> list[DomainOption]:
+        list_domain_options: list[DomainOption] = []
 
         for domain in list_domains_result:
             urn = domain.get("urn", "")
@@ -265,7 +264,7 @@ class SearchClient:
             entities = domain.get("entities", {})
             total = entities.get("total", 0)
 
-            list_domain_options.append(ListDomainOption(urn, name, total))
+            list_domain_options.append(DomainOption(urn, name, total))
         return list_domain_options
 
     def _parse_result(

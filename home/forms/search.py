@@ -1,28 +1,22 @@
 from copy import deepcopy
 from urllib.parse import urlencode
 
-from data_platform_catalogue.search_types import ResultType
+from data_platform_catalogue.search_types import DomainOption, ResultType
 from django import forms
 
-from ..models.domain_model import Domain, DomainModel
-from ..service.search_facet_fetcher import SearchFacetFetcher
+from ..models.domain_model import Domain
+from ..service.domain_fetcher import DomainFetcher
 from ..service.search_tag_fetcher import SearchTagFetcher
 
 
 def get_domain_choices() -> list[Domain]:
-    """Make API call to obtain domain choices"""
+    """Make Domains API call to obtain domain choices"""
     choices = [
         Domain("", "All domains"),
     ]
-    facets = SearchFacetFetcher().fetch()
-    choices.extend(DomainModel(facets).top_level_domains)
-    return choices
-
-
-def get_subdomain_choices() -> list[Domain]:
-    choices = [Domain("", "All subdomains")]
-    facets = SearchFacetFetcher().fetch()
-    choices.extend(DomainModel(facets).all_subdomains())
+    list_domain_options: list[DomainOption] = DomainFetcher().fetch()
+    domains: list[Domain] = [Domain(d.urn, d.name) for d in list_domain_options]
+    choices.extend(domains)
     return choices
 
 
@@ -53,27 +47,6 @@ def get_tags():
     return tags
 
 
-class SelectWithOptionAttribute(forms.Select):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.domain_model = None
-
-    def create_option(
-        self, name, urn, label, selected, index, subindex=None, attrs=None
-    ):
-        option = super().create_option(
-            name, urn, label, selected, index, subindex, attrs
-        )
-
-        facets = SearchFacetFetcher().fetch()
-        self.domain_model = self.domain_model or DomainModel(facets)
-
-        if urn:
-            option["attrs"]["data-parent"] = self.domain_model.get_parent_urn(urn)
-
-        return option
-
-
 class SearchForm(forms.Form):
     """Django form to represent search page inputs"""
 
@@ -95,13 +68,6 @@ class SearchForm(forms.Form):
                 "aria-label": "Domain",
                 "onchange": "document.getElementById('searchform').submit();",
             }
-        ),
-    )
-    subdomain = forms.ChoiceField(
-        choices=get_subdomain_choices,
-        required=False,
-        widget=SelectWithOptionAttribute(
-            attrs={"form": "searchform", "class": "govuk-select"}
         ),
     )
     where_to_access = forms.MultipleChoiceField(
@@ -171,6 +137,4 @@ class SearchForm(forms.Form):
             value.remove(filter_value)
         elif isinstance(value, str) and filter_value == value:
             query_params.pop(filter_name)
-            if filter_name == "domain":
-                query_params.pop("subdomain")
         return f"?{urlencode(query_params, doseq=True)}"
