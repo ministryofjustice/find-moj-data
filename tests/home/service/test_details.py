@@ -1,8 +1,12 @@
 from data_platform_catalogue.entities import (
+    AccessInformation,
     Chart,
     CustomEntityProperties,
+    Dashboard,
+    Database,
     DomainRef,
     EntityRef,
+    EntitySummary,
     FurtherInformation,
     Governance,
     OwnerRef,
@@ -11,10 +15,15 @@ from data_platform_catalogue.entities import (
 
 from home.service.details import (
     ChartDetailsService,
+    DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
 )
-from tests.conftest import generate_database_metadata, generate_table_metadata
+from tests.conftest import (
+    generate_dashboard_metadata,
+    generate_database_metadata,
+    generate_table_metadata,
+)
 
 
 class TestDatasetDetailsService:
@@ -26,7 +35,14 @@ class TestDatasetDetailsService:
     def test_get_context_contains_parent(self, mock_catalogue):
         parent = {
             RelationshipType.PARENT: [
-                EntityRef(urn="urn:li:container:parent", display_name="parent")
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:container:parent", display_name="parent"
+                    ),
+                    description="",
+                    tags=[],
+                    entity_type="DATABASE",
+                )
             ],
         }
         mock_table = generate_table_metadata(relations=parent)
@@ -100,22 +116,11 @@ class TestDatabaseDetailsService:
             == "test"
         )
 
-    def test_parsed_database_entities_in_context(self, example_database):
-        parsed_tables = DatabaseDetailsService(
-            example_database
-        )._parse_database_entities()
+    def test_database_entities_in_context(self, example_database: Database):
         service = DatabaseDetailsService("example_database")
         context = service.context
 
-        assert context["tables"] == parsed_tables
-        expected = [
-            {
-                "urn": "urn:li:dataset:fake_table",
-                "name": "fake_table",
-                "description": "table description",
-                "type": "TABLE",
-            }
-        ]
+        expected = example_database.relationships[RelationshipType.CHILD]
 
         assert context["tables"] == expected
 
@@ -152,3 +157,41 @@ class TestChartDetailsService:
         }
 
         assert context == expected
+
+
+class TestDashboardDetailsService:
+    def test_get_context_dashboard(self, mock_catalogue, example_dashboard: Dashboard):
+        """
+        Tests that the context contains the dashboard metadata returned by the
+        mock catalogue.
+        """
+        mock_dashboard_name = "example_dashboard"
+
+        service = DashboardDetailsService(mock_dashboard_name)
+        context = service.context
+        assert context["entity"] == example_dashboard
+
+    def test_chart_entities_in_context(self, example_dashboard: Dashboard):
+        service = DashboardDetailsService("example_dashboard")
+        context = service.context
+
+        expected = example_dashboard.relationships[RelationshipType.CHILD]
+
+        assert context["charts"] == expected
+
+    def test_custom_properties_in_context(self, mock_catalogue):
+        custom_properties = CustomEntityProperties(
+            access_information=AccessInformation(
+                access_requirements="This is a test there's nothing to access"
+            )
+        )
+        mock_dashboard_name = "urn:li:dashboard:fake"
+        mock_dashboard_metadata = generate_dashboard_metadata(
+            name=mock_dashboard_name, custom_properties=custom_properties
+        )
+        mock_catalogue.get_dashboard_details.return_value = mock_dashboard_metadata
+
+        service = DashboardDetailsService(mock_dashboard_name)
+        context = service.context
+
+        assert context["entity"].custom_properties == custom_properties
