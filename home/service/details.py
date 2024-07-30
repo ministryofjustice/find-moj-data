@@ -8,6 +8,23 @@ from django.core.exceptions import ObjectDoesNotExist
 from .base import GenericService
 
 
+def _parse_parent(relationships):
+    """
+    returns the EntityRef of the first parent if one exists
+    """
+    parents = relationships.get(RelationshipType.PARENT)
+    if parents:
+        # Pick the first entity to use as the parent in the breadcrumb.
+        # If the dataset belongs to multiple parents, this may diverge
+        # from the path the user took to get to this page.
+        parent_entity = parents[0].entity_ref
+        # dataset_parent_type = ResultType.DATABASE.name.lower()
+    else:
+        parent_entity = None
+        # dataset_parent_type = None
+    return parent_entity
+
+
 class DatabaseDetailsService(GenericService):
     def __init__(self, urn: str):
         self.urn = urn
@@ -54,16 +71,17 @@ class DatasetDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         relationships = self.table_metadata.relationships or {}
-        parents = relationships.get(RelationshipType.PARENT)
-        if parents:
-            # Pick the first entity to use as the parent in the breadcrumb.
-            # If the dataset belongs to multiple parents, this may diverge
-            # from the path the user took to get to this page.
-            self.parent_entity = parents[0].entity_ref
-            self.dataset_parent_type = ResultType.DATABASE.name.lower()
-        else:
-            self.parent_entity = None
-            self.dataset_parent_type = None
+        # parents = relationships.get(RelationshipType.PARENT)
+        # if parents:
+        #     # Pick the first entity to use as the parent in the breadcrumb.
+        #     # If the dataset belongs to multiple parents, this may diverge
+        #     # from the path the user took to get to this page.
+        #     self.parent_entity = parents[0].entity_ref
+        #     self.dataset_parent_type = ResultType.DATABASE.name.lower()
+        # else:
+        #     self.parent_entity = None
+        #     self.dataset_parent_type = None
+        self.parent_entity = _parse_parent(relationships)
 
         self.context = self._get_context()
 
@@ -76,7 +94,7 @@ class DatasetDetailsService(GenericService):
             "entity": self.table_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
-            "dataset_parent_type": self.dataset_parent_type,
+            "parent_type": ResultType.DATABASE.name.lower(),
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
@@ -100,12 +118,15 @@ class ChartDetailsService(GenericService):
     def __init__(self, urn: str):
         self.client = self._get_catalogue_client()
         self.chart_metadata = self.client.get_chart_details(urn)
+        self.parent_entity = _parse_parent(self.chart_metadata.relationships or {})
         self.context = self._get_context()
 
     def _get_context(self):
         return {
             "entity": self.chart_metadata,
             "entity_type": "Chart",
+            "parent_entity": self.parent_entity,
+            "parent_type": ResultType.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
         }
 

@@ -3,7 +3,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,
@@ -496,7 +495,7 @@ class TestCatalogueClientWithDatahub:
             name="Absconds",
             fully_qualified_name="Absconds",
             description="a test description",
-            relationships={},
+            relationships={RelationshipType.PARENT: []},
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
