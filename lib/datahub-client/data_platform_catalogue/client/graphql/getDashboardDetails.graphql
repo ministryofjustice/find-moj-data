@@ -1,0 +1,43 @@
+query getDashboard($urn: String!) {
+  dashboard(urn: $urn) {
+    urn
+    exists
+    lastIngested
+    platform {
+			urn
+      name
+    }
+    properties {
+      name
+      description
+      externalUrl
+      customProperties {
+        key
+        value
+      }
+    }
+    editableProperties {
+      description
+    }
+    relationships(input: {types: ["Contains"], direction:OUTGOING start: 0, count: 500 }) {
+      total
+      relationships {
+        entity {
+          urn
+          type
+          ... on Chart {
+            properties {
+              name
+              description
+            }
+            tags {
+              tags {
+                tag{urn}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
