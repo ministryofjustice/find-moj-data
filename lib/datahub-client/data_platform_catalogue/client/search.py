@@ -3,6 +3,9 @@ import logging
 from importlib.resources import files
 from typing import Any, Sequence
 
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     parse_created_and_modified,
@@ -25,8 +28,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -446,7 +447,7 @@ class SearchClient:
         metadata.update(custom_properties.usage_restrictions.model_dump())
         metadata.update(custom_properties.access_information.model_dump())
         metadata.update(custom_properties.data_summary.model_dump())
-        metadata.update(custom_properties)
+        # metadata.update(custom_properties)
 
         return SearchResult(
             urn=entity["urn"],
