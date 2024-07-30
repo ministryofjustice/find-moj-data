@@ -137,7 +137,13 @@ class SearchClient:
                     self._parse_result(entity, matched_fields, ResultType.CHART)
                 )
             elif entity_type == "CONTAINER":
-                page_results.append(self._parse_container(entity, matched_fields))
+                page_results.append(
+                    self._parse_container(entity, matched_fields, ResultType.DATABASE)
+                )
+            elif entity_type == "DASHBOARD":
+                page_results.append(
+                    self._parse_container(entity, matched_fields, ResultType.DASHBOARD)
+                )
             else:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
 
@@ -242,6 +248,8 @@ class SearchClient:
             types.append("CHART")
         if ResultType.DATABASE in result_types:
             types.append("CONTAINER")
+        if ResultType.DASHBOARD in result_types:
+            types.append("DASHBOARD")
 
         return types
 
@@ -413,7 +421,9 @@ class SearchClient:
         ]
         return tags_list
 
-    def _parse_container(self, entity: dict[str, Any], matches) -> SearchResult:
+    def _parse_container(
+        self, entity: dict[str, Any], matches, subtype: ResultType
+    ) -> SearchResult:
         """
         Map a Container entity to a SearchResult
         """
@@ -440,7 +450,7 @@ class SearchClient:
 
         return SearchResult(
             urn=entity["urn"],
-            result_type=ResultType.DATABASE,
+            result_type=subtype,
             matches=matches,
             name=name,
             fully_qualified_name=qualified_name,
