@@ -22,34 +22,19 @@ class DatabaseDetailsService(GenericService):
             term.display_name == "Essential Shared Data Asset (ESDA)"
             for term in self.database_metadata.glossary_terms
         )
-        self.entities_in_database = self._parse_database_entities()
+        self.entities_in_database = self.database_metadata.relationships[
+            RelationshipType.CHILD
+        ]
         self.context = self._get_context()
-
-    def _parse_database_entities(self):
-        # we might want to implement pagination for database children
-        # details at some point
-        entities_in_database = []
-        for item in self.database_metadata.tables:
-            entity = item["entity"]
-            properties = entity.get("properties", {})
-            entities_in_database.append(
-                {
-                    "urn": entity.get("urn", ""),
-                    "name": properties.get("name", ""),
-                    "description": properties.get("description", ""),
-                    "type": "TABLE",
-                }
-            )
-
-        entities_in_database = sorted(entities_in_database, key=lambda d: d["name"])
-
-        return entities_in_database
 
     def _get_context(self):
         context = {
             "entity": self.database_metadata,
             "entity_type": "Database",
-            "tables": self.entities_in_database,
+            "tables": sorted(
+                self.entities_in_database,
+                key=lambda d: d.entity_ref.display_name,
+            ),
             "h1_value": self.database_metadata.name,
             "is_esda": self.is_esda,
         }
@@ -74,7 +59,7 @@ class DatasetDetailsService(GenericService):
             # Pick the first entity to use as the parent in the breadcrumb.
             # If the dataset belongs to multiple parents, this may diverge
             # from the path the user took to get to this page.
-            self.parent_entity = parents[0]
+            self.parent_entity = parents[0].entity_ref
             self.dataset_parent_type = ResultType.DATABASE.name.lower()
         else:
             self.parent_entity = None
@@ -122,4 +107,28 @@ class ChartDetailsService(GenericService):
             "entity": self.chart_metadata,
             "entity_type": "Chart",
             "h1_value": self.chart_metadata.name,
+        }
+
+
+class DashboardDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.client = self._get_catalogue_client()
+        self.dashboard_metadata = self.client.get_dashboard_details(urn)
+        self.children = [
+            child
+            for child in self.dashboard_metadata.relationships[RelationshipType.CHILD]
+            if "urn:li:tag:dc_display_in_catalogue" in [tag.urn for tag in child.tags]
+        ]
+        self.context = self._get_context()
+
+    def _get_context(self):
+
+        return {
+            "entity": self.dashboard_metadata,
+            "entity_type": "Dashboard",
+            "h1_value": self.dashboard_metadata.name,
+            "charts": sorted(
+                self.children,
+                key=lambda d: d.entity_ref.display_name,
+            ),
         }
