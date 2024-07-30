@@ -1041,12 +1041,6 @@ def test_search_for_container(mock_graph, searcher):
                         "entity_type": "Container",
                         "entity_sub_types": ["Database"],
                     },
-                    "dpia_required": False,
-                    "dpia_location": "",
-                    "dc_where_to_access_dataset": "",
-                    "source_dataset_name": "",
-                    "s3_location": "",
-                    "row_count": "",
                     "usage_restrictions": UsageRestrictions(
                         dpia_required=False,
                         dpia_location="",
