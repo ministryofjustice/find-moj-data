@@ -2,14 +2,12 @@ name: Run tests
 
 on:
   workflow_call:
-    outputs:
-      datahub-client-path:
-        description: "Boolean string indicating if files in the the datahub-client were changed"
-        value: ${{ jobs.datahub-client-path-filter.steps.changes.outputs.datahub-client }}
 
 jobs:
   datahub-client-path-filter:
     runs-on: ubuntu-latest
+    outputs:
+      datahub-client: ${{ steps.changes.outputs.datahub-client }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -22,7 +20,7 @@ jobs:
   datahub-client-tests:
     name: Run datahub client tests
     needs: datahub-client-path-filter
-    if: ${{ needs.datahub-client-path-filter.steps.changes.outputs.datahub-client == 'true' }}
+    if: ${{ needs.datahub-client-path-filter.outputs.datahub-client == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
