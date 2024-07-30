@@ -25,6 +25,7 @@ from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     Chart,
     CustomEntityProperties,
+    Dashboard,
     Database,
     EntityRef,
     Governance,
@@ -139,6 +140,11 @@ class DataHubCatalogueClient:
         self.chart_query = (
             files("data_platform_catalogue.client.graphql")
             .joinpath("getChartDetails.graphql")
+            .read_text()
+        )
+        self.dashboard_query = (
+            files("data_platform_catalogue.client.graphql")
+            .joinpath("getDashboardDetails.graphql")
             .read_text()
         )
 
@@ -346,22 +352,20 @@ class DataHubCatalogueClient:
             # A container can't have multiple parents, but if we did
             # start to use in that we'd need to change this
             relations = {}
-            if response["parentContainers"]["count"] > 0:
+            if response["relationships"]["total"] > 0:
                 relations = parse_relations(
-                    relationship_type=RelationshipType.PARENT,
-                    relations_list=[response["parentContainers"]],
-                    relation_key="containers",
+                    relationship_type=RelationshipType.CHILD,
+                    relations_list=[response["relationships"]],
+                    entity_type_of_relations="TABLE",
                 )
-            datasets = []
-            if response["entities"]["total"] > 0:
-                datasets: list = [
-                    entity
-                    for entity in response["entities"]["searchResults"]
-                    if any(
-                        tag.urn == "urn:li:tag:dc_display_in_catalogue"
-                        for tag in parse_tags(entity["entity"])
-                    )
-                ]
+                relations_to_display = {
+                    RelationshipType.CHILD: [
+                        child
+                        for child in relations[RelationshipType.CHILD]
+                        if "urn:li:tag:dc_display_in_catalogue"
+                        in [tag.urn for tag in child.tags]
+                    ]
+                }
 
             return Database(
                 urn=urn,
@@ -369,8 +373,7 @@ class DataHubCatalogueClient:
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships=relations,
-                tables=datasets,
+                relationships=relations_to_display,
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,
@@ -385,13 +388,55 @@ class DataHubCatalogueClient:
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
+    def get_dashboard_details(self, urn: str) -> Dashboard:
+        if self.check_entity_exists_by_urn(urn):
+            response = self.graph.execute_graphql(self.dashboard_query, {"urn": urn})[
+                "dashboard"
+            ]
+            platform_name = response["platform"]["name"]
+            properties, custom_properties = parse_properties(response)
+            domain = parse_domain(response)
+            owner = parse_owner(response)
+            tags = parse_tags(response)
+            glossary_terms = parse_glossary_terms(response)
+            created, modified = parse_created_and_modified(properties)
+            name, display_name, qualified_name = parse_names(response, properties)
+            children = parse_relations(
+                RelationshipType.CHILD, [response["relationships"]]
+            )
+
+            return Dashboard(
+                urn=urn,
+                display_name=display_name,
+                name=name,
+                fully_qualified_name=qualified_name,
+                description=properties.get("description", ""),
+                relationships=children,
+                domain=domain,
+                governance=Governance(
+                    data_owner=owner,
+                    data_stewards=[owner],
+                ),
+                external_url=properties.get("externalUrl", ""),
+                tags=tags,
+                glossary_terms=glossary_terms,
+                last_modified=modified,
+                created=created,
+                custom_properties=custom_properties,
+                platform=EntityRef(display_name=platform_name, urn=platform_name),
+            )
+
+        raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")
+
     def upsert_table(self, table: Table) -> str:
         """Define a table. Must belong to a domain."""
         parent_relationships = table.relationships.get(RelationshipType.PARENT, [])
         if not parent_relationships:
             raise ValueError("A parent entity needs to be included in relationships")
 
-        parent_name = table.relationships[RelationshipType.PARENT][0].display_name
+        parent_name = table.relationships[RelationshipType.PARENT][
+            0
+        ].entity_ref.display_name
         fully_qualified_name = generate_fqn(
             parent_name=parent_name, dataset_name=table.name
         )
@@ -465,7 +510,7 @@ class DataHubCatalogueClient:
             self.graph.emit(event)
         # jscpd:ignore-end
 
-        database_urn = table.relationships[RelationshipType.PARENT][0].urn
+        database_urn = table.relationships[RelationshipType.PARENT][0].entity_ref.urn
 
         database_exists = self.check_entity_exists_by_urn(urn=database_urn)
 
