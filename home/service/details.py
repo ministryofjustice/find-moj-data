@@ -18,10 +18,8 @@ def _parse_parent(relationships):
         # If the dataset belongs to multiple parents, this may diverge
         # from the path the user took to get to this page.
         parent_entity = parents[0].entity_ref
-        # dataset_parent_type = ResultType.DATABASE.name.lower()
     else:
         parent_entity = None
-        # dataset_parent_type = None
     return parent_entity
 
 
@@ -71,16 +69,7 @@ class DatasetDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         relationships = self.table_metadata.relationships or {}
-        # parents = relationships.get(RelationshipType.PARENT)
-        # if parents:
-        #     # Pick the first entity to use as the parent in the breadcrumb.
-        #     # If the dataset belongs to multiple parents, this may diverge
-        #     # from the path the user took to get to this page.
-        #     self.parent_entity = parents[0].entity_ref
-        #     self.dataset_parent_type = ResultType.DATABASE.name.lower()
-        # else:
-        #     self.parent_entity = None
-        #     self.dataset_parent_type = None
+
         self.parent_entity = _parse_parent(relationships)
 
         self.context = self._get_context()
