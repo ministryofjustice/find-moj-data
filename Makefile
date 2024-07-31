@@ -1,15 +1,19 @@
 # Define variables
-ENV_FILE=.env
-ENV=local
+ENV_FILE := .env
+ENV := local
 
 # Default target
 all: build
 
 # Setup the application
-build: install_deps set_env generate_env collect_static migrate setup_waffle_switches
+build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches
 
 # Install dependencies
 install_deps:
+	if ! command -v op >/dev/null 2>&1; then \
+		echo "1password CLI is not installed. Please install it from https://1password.com/downloads/"; \
+		exit 1; \
+	fi
 	if ! command -v npm >/dev/null 2>&1; then \
 		echo "npm is not installed. Please install it from https://nodejs.org/"; \
 		exit 1; \
@@ -25,13 +29,10 @@ install_deps:
 	poetry install
 	npm install
 
-
-
 # Generate .env file
-generate_env:
-
+$(ENV_FILE): .env.tpl
 	@echo "Setting ENV to ${ENV}"
-	op inject --in-file .env.tpl --out-file ${ENV_FILE}
+	op inject --in-file .env.tpl --out-file $(ENV_FILE)
 	@echo "Optionally, set CATALOGUE_TOKEN in ${ENV_FILE}"
 
 # Collect static files
@@ -52,20 +53,23 @@ run:
 	poetry run python manage.py runserver
 
 # Run unit tests
-test: integration unit
+test: unit integration
 
 # Run Python unit tests
 unit:
-	poetry run pytest
-
-# Run JavaScript unit tests
-integration:
+	poetry run pytest --cov -m 'not slow'
 	npm test
+
+# run selenium test - version works with chromedriver 127.0.1 use - `npm install -g chromedriver@127.0.1`
+integration:
+	export CHROMEDRIVER_PATH=$(which chromedriver)
+	poetry run pytest tests/selenium --axe-version 4.9.1 --chromedriver-path ${CHROMEDRIVER_PATH}
+
 
 # Clean up (optional)
 clean:
 	rm -rf staticfiles
-	rm -f ${ENV_FILE}
+	rm -f $(ENV_FILE)
 	find . -name "*.pyc" -exec rm -f {} \;
 
-.PHONY: all build install_deps set_env generate_env collect_static migrate setup_waffle_switches run test unit integration clean
+.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches run test unit integration clean
