@@ -8,30 +8,41 @@ uses the GOV.UK design system, and focuses on data discovery.
 
 ![Screenshot of the service showing the search page](homepage.png)
 
-## Quick start
+# Prerequisites
+
+## Npm
+  Required for building the front end javascript dependencies
+
+## Poetry
+  Required for managing python package dependencies.
+  Follow installation instructions here https://python-poetry.org/docs/#installation
+
+## 1Password
+  Organisational level tool for storing application secrets and passwords securely.
+There are a number of 1password utilities available to manage credentials from cli and desktop environments.
+
+1. Install the 1Password desktop app - https://support.1password.com/get-the-apps/
+2. Install the 1Password CLI app - https://developer.1password.com/docs/cli/get-started/
+3. Follow the steps to turn on and test the 1password desktop app integration
+
+## Chromedriver
+  Tests will require chromedriver at a version compatible with your chrome browser (https://googlechromelabs.github.io/chrome-for-testing/)
+
+# Quick start
 
 Please refer to Prerequisites for dependencies and installation instructions
 
-1. Run `poetry install` to install python dependencies
-1. Run `npm install` to download frontend static dependencies.
-1. Set the `ENV` var to `local` i.e. `export ENV=local`
-1. Run `op inject --in-file .env.tpl --out-file .env` to generate a compatible `.env` file
-1. Optionally substitute value for `CATALOGUE_TOKEN` var in .env with your own PAT value to be able to retrieve search data.
-1. Run `poetry run python manage.py collectstatic --noinput` to collect static files
-1. Run `poetry run python manage.py migrate` this will create a local sqlite3 database and migrate any tables
-1. Run `poetry run python manage.py waffle_switch search-sort-radio-buttons off --create` to setup the waffle switch tables
-1. Run `poetry run python manage.py waffle_switch display-result-tags off --create` to setup the waffle switch for tags
-1. Run `poetry run python manage.py runserver`
+1. Export a local var with the environment name `export ENV=local`
+1. Run `make build` to install dependencies and build the app
+    1. Make any needed customizations required to `.env` file
+1. Run  `make tests` to run unit tests for the app. This step requires `chromedriver` up-to-date with your google chrome version: https://googlechromelabs.github.io/chrome-for-testing/
+1. Run `make run` to run the app locally on http://localhost:8000
 
 ```sh
-poetry install --no-root
-npm install
 export ENV=local
-op inject --in-file .env.tpl --out-file .env
-poetry run python manage.py collectstatic --noinput
-poetry run python manage.py migrate
-poetry run python manage.py waffle_switch search-sort-radio-buttons off --create
-poetry run python manage.py runserver
+make build
+make test
+make run
 ```
 
 # Running the app against the RDS database(s)
