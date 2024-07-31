@@ -1,14 +1,14 @@
 import os
 from urllib.parse import urlsplit
 
-from data_platform_catalogue.entities import RelationshipType
+from data_platform_catalogue.entities import EntityRef, RelationshipType
 from data_platform_catalogue.search_types import ResultType
 from django.core.exceptions import ObjectDoesNotExist
 
 from .base import GenericService
 
 
-def _parse_parent(relationships):
+def _parse_parent(relationships) -> EntityRef | None:
     """
     returns the EntityRef of the first parent if one exists
     """
@@ -124,11 +124,7 @@ class DashboardDetailsService(GenericService):
     def __init__(self, urn: str):
         self.client = self._get_catalogue_client()
         self.dashboard_metadata = self.client.get_dashboard_details(urn)
-        self.children = [
-            child
-            for child in self.dashboard_metadata.relationships[RelationshipType.CHILD]
-            if "urn:li:tag:dc_display_in_catalogue" in [tag.urn for tag in child.tags]
-        ]
+        self.children = self.dashboard_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()
 
     def _get_context(self):

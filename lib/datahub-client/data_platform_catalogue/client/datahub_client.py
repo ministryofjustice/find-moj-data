@@ -28,6 +28,7 @@ from data_platform_catalogue.entities import (
     Dashboard,
     Database,
     EntityRef,
+    EntitySummary,
     Governance,
     OwnerRef,
     RelationshipType,
@@ -273,16 +274,22 @@ class DataHubCatalogueClient:
                     response.get("upstream_lineage_relations", {}),
                 ],
             )
+
             parent_relations = parse_relations(
-                RelationshipType.PARENT, [response["parent_container_relations"]]
+                RelationshipType.PARENT,
+                [response.get("parent_container_relations", {})],
             )
+            parent_relations_to_display = self.list_relations_to_display(
+                parent_relations
+            )
+
             return Table(
                 urn=urn,
                 display_name=display_name,
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships={**lineage_relations, **parent_relations},
+                relationships={**lineage_relations, **parent_relations_to_display},
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,
@@ -312,8 +319,9 @@ class DataHubCatalogueClient:
             name, display_name, qualified_name = parse_names(response, properties)
 
             parent_relations = parse_relations(
-                RelationshipType.PARENT, [response["relationships"]]
+                RelationshipType.PARENT, [response.get("relationships", {})]
             )
+            relations_to_display = self.list_relations_to_display(parent_relations)
 
             return Chart(
                 urn=urn,
@@ -331,7 +339,7 @@ class DataHubCatalogueClient:
                         )
                     ],
                 ),
-                relationships=parent_relations,
+                relationships=relations_to_display,
                 tags=tags,
                 glossary_terms=glossary_terms,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
@@ -354,22 +362,12 @@ class DataHubCatalogueClient:
             created, modified = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
-            if response["relationships"]["total"] > 0:
-                relations = parse_relations(
-                    relationship_type=RelationshipType.CHILD,
-                    relations_list=[response["relationships"]],
-                    entity_type_of_relations="TABLE",
-                )
-                relations_to_display = {
-                    RelationshipType.CHILD: [
-                        child
-                        for child in relations[RelationshipType.CHILD]
-                        if "urn:li:tag:dc_display_in_catalogue"
-                        in [tag.urn for tag in child.tags]
-                    ]
-                }
-            else:
-                relations_to_display = {RelationshipType.CHILD: []}
+            child_relations = parse_relations(
+                relationship_type=RelationshipType.CHILD,
+                relations_list=[response["relationships"]],
+                entity_type_of_relations="TABLE",
+            )
+            relations_to_display = self.list_relations_to_display(child_relations)
 
             return Database(
                 urn=urn,
@@ -408,6 +406,7 @@ class DataHubCatalogueClient:
             children = parse_relations(
                 RelationshipType.CHILD, [response["relationships"]]
             )
+            relations_to_display = self.list_relations_to_display(children)
 
             return Dashboard(
                 urn=urn,
@@ -415,7 +414,7 @@ class DataHubCatalogueClient:
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships=children,
+                relationships=relations_to_display,
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,
@@ -675,6 +674,24 @@ class DataHubCatalogueClient:
             else:
                 custom_properties[key] = value
         return custom_properties
+
+    def list_relations_to_display(
+        self, relations: dict[RelationshipType, list[EntitySummary]]
+    ) -> dict[RelationshipType, list[EntitySummary]]:
+        """
+        returns a dict of relationships tagged to display
+        """
+        relations_to_display = {}
+
+        for key, value in relations.items():
+            relations_to_display[key] = [
+                entity
+                for entity in value
+                if "urn:li:tag:dc_display_in_catalogue"
+                in [tag.urn for tag in entity.tags]
+            ]
+
+        return relations_to_display
 
 
 def generate_fqn(parent_name, dataset_name) -> str:
