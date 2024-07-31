@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,
@@ -288,6 +289,18 @@ class TestCatalogueClientWithDatahub:
                                 "type": "CONTAINER",
                                 "subTypes": {"typeNames": ["Database"]},
                                 "properties": {"name": "database"},
+                                "tags": {
+                                    "tags": [
+                                        {
+                                            "tag": {
+                                                "urn": "urn:li:tag:dc_display_in_catalogue",
+                                                "properties": {
+                                                    "name": "dc_display_in_catalogue"
+                                                },
+                                            }
+                                        }
+                                    ]
+                                },
                             },
                         }
                     ],
@@ -364,7 +377,12 @@ class TestCatalogueClientWithDatahub:
                             urn="urn:li:container:database", display_name="database"
                         ),
                         description="",
-                        tags=[],
+                        tags=[
+                            TagRef(
+                                urn="urn:li:tag:dc_display_in_catalogue",
+                                display_name="dc_display_in_catalogue",
+                            )
+                        ],
                         entity_type="Database",
                     )
                 ],
