@@ -35,7 +35,7 @@ Please refer to Prerequisites for dependencies and installation instructions
 1. Export a local var with the environment name `export ENV=local`
 1. Run `make build` to install dependencies and build the app
     1. Make any needed customizations required to `.env` file
-1. Run  `make tests` to run unit tests for the app. This step requires `chromedriver` up-to-date with your google chrome version: https://googlechromelabs.github.io/chrome-for-testing/
+1. Run  `make test` to run unit tests for the app. This step requires `chromedriver` up-to-date with your google chrome version: https://googlechromelabs.github.io/chrome-for-testing/
 1. Run `make run` to run the app locally on http://localhost:8000
 
 ```sh
