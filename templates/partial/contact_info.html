@@ -1,11 +1,13 @@
+{% load i18n %}
+
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">IAO or Data Owner</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "IAO or Data Owner" %}</h2>
   <p class="govuk-body">
     {{ data_owner }}
   </p>
 </div>
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Contact email for access requests</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact email for access requests" %}</h2>
   <p class="govuk-body">
     {{ data_owner_email|urlize }}
   </p>
@@ -13,7 +15,7 @@
 <!-- placeholder until we have more contact channels than just slack -->
 {% if slack_channel.dc_slack_channel_url %}
   <div class="govuk-body">
-    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Contact channels for access requests</h2>
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for access requests" %}</h2>
     <p class="govuk-body">
         <!-- This should become a list of populated contact channels -->
       Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
@@ -21,13 +23,12 @@
   </div>
 {% endif %}
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Access requirements</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Access requirements" %}</h2>
   <p class="govuk-body">
     {% if access_requirements %}
       {{ access_requirements }}
     {% else %}
-      Processing the data might require
-      permission from IAO or Data owner.
+    {% translate "Processing the data might require permission from IAO or Data owner." %}
     {% endif %}
   </p>
 </div>

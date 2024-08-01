@@ -4,6 +4,7 @@ from urllib.parse import urlsplit
 from data_platform_catalogue.entities import EntityRef, RelationshipType
 from data_platform_catalogue.search_types import ResultType
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import gettext as _
 
 from .base import GenericService
 
@@ -45,7 +46,7 @@ class DatabaseDetailsService(GenericService):
     def _get_context(self):
         context = {
             "entity": self.database_metadata,
-            "entity_type": "Database",
+            "entity_type": _("Database"),
             "tables": sorted(
                 self.entities_in_database,
                 key=lambda d: d.entity_ref.display_name,
@@ -113,7 +114,7 @@ class ChartDetailsService(GenericService):
     def _get_context(self):
         return {
             "entity": self.chart_metadata,
-            "entity_type": "Chart",
+            "entity_type": _("Chart"),
             "parent_entity": self.parent_entity,
             "parent_type": ResultType.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,

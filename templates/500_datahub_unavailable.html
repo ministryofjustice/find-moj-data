@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block content %}
@@ -9,7 +10,7 @@
         <div class="govuk-grid-column-two-thirds">
           <h1 class="govuk-heading-l">{{h1_value}}</h1>
           <p class="govuk-body">
-            The DataHub catalogue is currently unavailable. Please try again in a few minutes.
+            {% translate "The DataHub catalogue is currently unavailable. Please try again in a few minutes." %}
           </p>
           {% include "partial/contact_team.html" %}
         </div>

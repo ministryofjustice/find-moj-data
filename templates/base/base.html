@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en" class="govuk-template app-html-class">
 
@@ -9,7 +10,7 @@
       document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
     </script>
     {% block skiplinks %}
-      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">{% translate 'Skip to main content' %}</a>
     {% endblock %}
 
     {% include "base/navigation.html" %}

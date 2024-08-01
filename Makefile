@@ -6,7 +6,7 @@ ENV := local
 all: build
 
 # Setup the application
-build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches
+build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches compile_messages
 
 # Install dependencies
 install_deps:
@@ -48,6 +48,14 @@ setup_waffle_switches:
 	poetry run python manage.py waffle_switch search-sort-radio-buttons off --create
 	poetry run python manage.py waffle_switch display-result-tags off --create
 
+# Run makemessages
+messages:
+	poetry run django-admin makemessages --locale=en --pythonpath=$(pwd) --settings=core.settings
+
+# Compile messages
+compile_messages:
+	poetry run django-admin compilemessages --pythonpath=$(pwd) --settings=core.settings
+
 # Run the application
 run:
 	poetry run python manage.py runserver
@@ -72,4 +80,4 @@ clean:
 	rm -f $(ENV_FILE)
 	find . -name "*.pyc" -exec rm -f {} \;
 
-.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches run test unit integration clean
+.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compile_messages run test unit integration clean

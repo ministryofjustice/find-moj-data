@@ -2,6 +2,7 @@
 {% load humanize %}
 {% load future %}
 {% load waffle_tags %}
+{% load i18n %}
 
 <div id="search-results">
   {% for result in highlighted_results %}
@@ -13,15 +14,15 @@
           {% endwith %}
           {% if result.result_type.name == "TABLE" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
-              Table
+              {% translate "Table" %}
             </strong>
           {% elif result.result_type.name == "DATABASE" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
-              Database
+              {% translate "Database" %}
             </strong>
           {% elif result.result_type.name == "CHART" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
-              Chart
+              {% translate "Chart" %}
             </strong>
           {% elif result.result_type.name == "DASHBOARD" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
@@ -36,12 +37,12 @@
         {% endif %}
         <ul class="govuk-list govuk-body" id="metadata-property-list">
           <li>
-            <span class="govuk-!-font-weight-bold">Domain:</span>
+            <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
             <span>{{result.metadata.domain_name}}</span>
           </li>
           {% if result.result_type.name == "TABLE" %}
             <li>
-              <span class="govuk-!-font-weight-bold">Database:</span>
+              <span class="govuk-!-font-weight-bold">{% translate "Database:" %}</span>
               <span>{{result.parent_entity.display_name}}</span>
             </li>
           {% endif %}
@@ -60,7 +61,7 @@
 
           {% if result.matches %}
             <li>
-              <span class="govuk-!-font-weight-bold">Matched fields:</span>
+              <span class="govuk-!-font-weight-bold">{% translate "Matched fields:" %}</span>
               <span>{{ result.matches|lookup:readable_match_reasons|join:", " }}</span>
             </li>
           {% endif %}

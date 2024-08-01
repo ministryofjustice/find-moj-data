@@ -48,6 +48,7 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 RUN chmod +x ./scripts/app-entrypoint.sh
 
 RUN python manage.py collectstatic --noinput
+RUN make compile_messages
 
 # Use a non-root user
 RUN addgroup --gid 31337 --system appuser \
