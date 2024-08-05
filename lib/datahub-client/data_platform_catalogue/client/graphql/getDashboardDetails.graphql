@@ -4,7 +4,7 @@ query getDashboard($urn: String!) {
     exists
     lastIngested
     platform {
-			urn
+      urn
       name
     }
     properties {

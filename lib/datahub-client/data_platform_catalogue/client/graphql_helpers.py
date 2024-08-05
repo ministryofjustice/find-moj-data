@@ -297,7 +297,7 @@ def parse_relations(
     for all_relations in relations_list:
         for relation in all_relations.get(relation_key, []):
             urn = relation.get("entity").get("urn")
-            # we sometimes have mulitple sub-types loaded or no subtype
+            # we sometimes have multiple sub-types loaded or no subtype
             if entity_type_of_relations is None:
                 entity_type = (
                     relation.get("entity")
