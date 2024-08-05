@@ -6,6 +6,7 @@ from django.shortcuts import render
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,
+    DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
 )
@@ -34,6 +35,9 @@ def details_view(request, result_type, urn):
     if result_type == "chart":
         context = chart_details(urn)
         return render(request, "details_chart.html", context)
+    if result_type == "dashboard":
+        context = dashboard_details(urn)
+        return render(request, "details_dashboard.html", context)
 
 
 def database_details(urn):
@@ -61,6 +65,17 @@ def dataset_details(urn):
 def chart_details(urn):
     try:
         service = ChartDetailsService(urn)
+    except EntityDoesNotExist:
+        raise Http404("Asset does not exist")
+
+    context = service.context
+
+    return context
+
+
+def dashboard_details(urn):
+    try:
+        service = DashboardDetailsService(urn)
     except EntityDoesNotExist:
         raise Http404("Asset does not exist")
 
