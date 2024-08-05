@@ -625,28 +625,6 @@ class TestCatalogueClientWithDatahub:
                     ],
                 )
             ]
-            #     {
-            #         "entity": {
-            #             "name": "DatasetToShow",
-            #             "properties": {
-            #                 "description": "Dataset to show",
-            #                 "name": "DatasetToShow",
-            #             },
-            #             "tags": {
-            #                 "tags": [
-            #                     {
-            #                         "tag": {
-            #                             "properties": {
-            #                                 "name": "dc:display_in_catalogue",
-            #                             },
-            #                             "urn": "urn:li:tag:dc_display_in_catalogue",
-            #                         },
-            #                     },
-            #                 ],
-            #             },
-            #         }
-            #     }
-            # ]
 
     def test_upsert_table_and_database(
         self,
