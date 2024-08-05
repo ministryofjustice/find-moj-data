@@ -30,12 +30,26 @@ query getContainer($urn: String!) {
     subTypes {
       typeNames
     }
-    entities(input: { start: 0, count: 500 }) {
+    relationships(input: {types: ["IsPartOf"], direction:INCOMING start: 0, count: 500 }) {
       total
-      searchResults {
+      relationships {
         entity {
           urn
-          ...datasetDetails
+          type
+          ... on Dataset {
+            properties {
+              name
+              description
+            }
+            tags {
+              tags {
+                tag{urn}
+              }
+            }
+            subTypes {
+              typeNames
+            }
+          }
         }
       }
     }
@@ -159,20 +173,6 @@ fragment glossaryTerm on GlossaryTerm {
   }
   ownership {
     ...ownershipFields
-  }
-}
-
-fragment datasetDetails on Dataset {
-  urn
-  properties {
-    name
-    description
-  }
-  editableProperties {
-    description
-  }
-  tags {
-    ...globalTagsFields
   }
 }
 

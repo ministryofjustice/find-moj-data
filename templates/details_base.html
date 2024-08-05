@@ -14,7 +14,7 @@
       </li>
       {% if parent_entity %}
         <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
+          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
         </li>
       {% endif %}
       <li class="govuk-breadcrumbs__list-item">
@@ -27,11 +27,11 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">{{h1_value}}
-            <strong class="govuk-tag govuk-!-margin-left-2">
-              {{entity_type}}
-            </strong>
-          </h1>
+      <h1 class="govuk-heading-l">{{h1_value}}
+        <strong class="govuk-tag govuk-!-margin-left-2">
+          {{entity_type}}
+        </strong>
+      </h1>
     </div>
   </div>
   <div class="govuk-grid-row">
@@ -55,10 +55,16 @@
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
-            {% if entity.last_modified %}
+            {% if entity.custom_properties.data_summary.last_updated %}
               <li>
                 <span class="govuk-!-font-weight-bold">Last updated:</span>
-                {{entity.last_modified | date:"jS F Y"}} ({{entity.last_modified|naturaltime}})
+                {{entity.custom_properties.data_summary.last_updated}}
+              </li>
+            {% endif %}
+            {% if entity.custom_properties.data_summary.refresh_period %}
+              <li>
+                <span class="govuk-!-font-weight-bold">Refresh Period:</span>
+                {{entity.custom_properties.data_summary.refresh_period}}
               </li>
             {% endif %}
             {% if entity.domain %}
@@ -83,7 +89,7 @@
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with data_owner=entity.governance.data_owner.display_name data_owner_email=entity.governance.data_owner.email slack_channel=entity.custom_properties.further_information %}
+      {% include "partial/contact_info.html" with data_owner=entity.governance.data_owner.display_name data_owner_email=entity.governance.data_owner.email slack_channel=entity.custom_properties.further_information access_requirements=entity.custom_properties.access_information.access_requirements%}
     </div>
   </div>
 
