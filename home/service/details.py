@@ -3,7 +3,8 @@ from urllib.parse import urlsplit
 
 from data_platform_catalogue.entities import EntityRef, RelationshipType
 from data_platform_catalogue.search_types import ResultType
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.validators import URLValidator
 from django.utils.translation import gettext as _
 
 from .base import GenericService
@@ -22,6 +23,21 @@ def _parse_parent(relationships) -> EntityRef | None:
     else:
         parent_entity = None
     return parent_entity
+
+
+def is_access_requirements_a_url(access_requirements) -> bool:
+    """
+    return a bool indicating if the passed access_requirements arg is a url
+    """
+    validator = URLValidator()
+
+    try:
+        validator(access_requirements)
+        is_url = True
+    except ValidationError:
+        is_url = False
+
+    return is_url
 
 
 class DatabaseDetailsService(GenericService):
@@ -53,6 +69,9 @@ class DatabaseDetailsService(GenericService):
             ),
             "h1_value": self.database_metadata.name,
             "is_esda": self.is_esda,
+            "is_access_requirements_url": is_access_requirements_a_url(
+                self.database_metadata.custom_properties.access_information.access_requirements
+            ),
         }
 
         return context
@@ -88,6 +107,9 @@ class DatasetDetailsService(GenericService):
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
+            "is_access_requirements_url": is_access_requirements_a_url(
+                self.table_metadata.custom_properties.access_information.access_requirements
+            ),
         }
 
     def has_lineage(self) -> bool:
@@ -118,6 +140,9 @@ class ChartDetailsService(GenericService):
             "parent_entity": self.parent_entity,
             "parent_type": ResultType.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
+            "is_access_requirements_url": is_access_requirements_a_url(
+                self.chart_metadata.custom_properties.access_information.access_requirements
+            ),
         }
 
 
@@ -137,5 +162,8 @@ class DashboardDetailsService(GenericService):
             "charts": sorted(
                 self.children,
                 key=lambda d: d.entity_ref.display_name,
+            ),
+            "is_access_requirements_url": is_access_requirements_a_url(
+                self.dashboard_metadata.custom_properties.access_information.access_requirements
             ),
         }
