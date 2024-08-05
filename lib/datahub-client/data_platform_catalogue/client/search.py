@@ -444,9 +444,6 @@ class SearchClient:
             "entity_types": self._parse_types_and_sub_types(entity, "Container"),
         }
 
-        # metadata.update(custom_properties.usage_restrictions.model_dump())
-        # metadata.update(custom_properties.access_information.model_dump())
-        # metadata.update(custom_properties.data_summary.model_dump())
         metadata.update(custom_properties)
 
         return SearchResult(
