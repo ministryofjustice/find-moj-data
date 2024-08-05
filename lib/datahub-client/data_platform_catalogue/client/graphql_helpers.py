@@ -294,32 +294,32 @@ def parse_relations(
     # There may be more than 10 lineage entities but since we currently only care
     # if lineage exists for a dataset we don't need to capture everything
     related_entities = []
-    for j in relations_list:
-        for i in j.get(relation_key, []):
-            urn = i.get("entity").get("urn")
+    for all_relations in relations_list:
+        for relation in all_relations.get(relation_key, []):
+            urn = relation.get("entity").get("urn")
             # we sometimes have mulitple sub-types loaded or no subtype
             if entity_type_of_relations is None:
                 entity_type = (
-                    i.get("entity")
+                    relation.get("entity")
                     .get("subTypes", {})
-                    .get("typeNames", [i.get("entity").get("type")])[0]
-                    if i.get("entity").get("subTypes") is not None
-                    else [i.get("entity").get("type")][0]
+                    .get("typeNames", [relation.get("entity").get("type")])[0]
+                    if relation.get("entity").get("subTypes") is not None
+                    else [relation.get("entity").get("type")][0]
                 )
             else:
                 entity_type = entity_type_of_relations
 
             display_name = (
-                i.get("entity").get("properties").get("name")
-                if i.get("entity", {}).get("properties") is not None
-                else i.get("entity").get("name", "")
+                relation.get("entity").get("properties").get("name")
+                if relation.get("entity", {}).get("properties") is not None
+                else relation.get("entity").get("name", "")
             )
             description = (
-                i.get("entity").get("properties", {}).get("description", "")
-                if i.get("entity", {}).get("properties") is not None
+                relation.get("entity").get("properties", {}).get("description", "")
+                if relation.get("entity", {}).get("properties") is not None
                 else ""
             )
-            tags = parse_tags(i.get("entity"))
+            tags = parse_tags(relation.get("entity"))
             related_entities.append(
                 EntitySummary(
                     entity_ref=EntityRef(urn=urn, display_name=display_name),
