@@ -28,11 +28,5 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'success'
     steps:
-      - uses: ravsamhq/notify-slack-action@v2
-        with:
-            status: ${{ github.event.workflow_run.conclusion }}
-            notification_title: " ${{github.event.workflow_run.name}} - ${{github.event.workflow_run.conclusion}} on ${{github.event.workflow_run.head_branch}} - <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View Failure>"
-            message_format: ":rocket: *${{github.event.workflow_run.name}}* ${{github.event.workflow_run.conclusion}} in <${{github.server_url}}/${{github.repository}}/${{github.event.workflow_run.head_branch}}|${{github.repository}}>"
-            footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View Failure>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+      - run: ${{ tojson(github.event) }}
+        shell: cat {0}
