@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block main %}
   <main class="main-wrapper-with-masthead" id="main-content" role="main">
@@ -7,13 +8,13 @@
       <div class="govuk-width-container app-width-container">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl app-masthead__title">Find MOJ data</h1>
+            <h1 class="govuk-heading-xl app-masthead__title">{% translate "Find MOJ data" %}</h1>
 
             <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0">
               <label
                 for="search-input"
                 class="govuk-label govuk-label--m"
-              >Search metadata catalogue</label>
+              >{% translate "Search metadata catalogue" %}</label>
               <div
                 class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
               >
@@ -34,7 +35,7 @@
                   </svg>
                   <label
                     class="govuk-label govuk-visually-hidden-focusable"
-                  >Search</label
+                  >{% translate "Search"}</label
                     >
                   </button>
                 </div>
@@ -46,7 +47,7 @@
       <div class="govuk-main-wrapper govuk-main-wrapper--l">
         <div class="govuk-width-container app-width-container">
           {% if domains %}
-            <h2 id="browse-by-domain" class="govuk-heading-l">Browse by domain</h2>
+            <h2 id="browse-by-domain" class="govuk-heading-l">{% translate "Browse by domain" %}</h2>
             <ul id="domain-list" class="govuk-list govuk-list--bullet">
               {% for domain in domains  %}
                 <li><a href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}})</a></li>
@@ -56,13 +57,13 @@
             <details class="govuk-details">
               <summary class="govuk-details__summary  govuk-!-margin-top-4">
                 <span class="govuk-details__summary-text">
-                  What are domains?
+                  {% translate "What are domains?" %}
                 </span>
               </summary>
               <div class="govuk-details__text">
-                <p>Data in the catalogue is organised into data 'domains'. These are a grouping of data by subject area.</p>
-                <p>When data is related to more than one domain, we have assigned it to the one that appears most relevant.</p>
-                <p>Domains may be influenced by the organisational structure but they are intended to be narrower in scope than an entire agency.</p>
+                <p>{% translate "Data in the catalogue is organised into data 'domains'. These are a grouping of data by subject area." %}</p>
+                <p>{% translate "When data is related to more than one domain, we have assigned it to the one that appears most relevant." %}</p>
+                <p>{% translate "Domains may be influenced by the organisational structure but they are intended to be narrower in scope than an entire agency." %}</p>
               </div>
             </details>
           {% endif %}

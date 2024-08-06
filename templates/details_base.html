@@ -4,13 +4,14 @@
 {% load humanize %}
 {% load future %}
 {% load waffle_tags %}
+{% load i18n %}
 
 
 {% block breadcrumbs %}
   <div class="govuk-breadcrumbs">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
+        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">{% translate "Search" %}</a>
       </li>
       {% if parent_entity %}
         <li class="govuk-breadcrumbs__list-item">
@@ -38,26 +39,26 @@
     <div class="govuk-grid-column-two-thirds">
       <div class="summary-card">
         <h3 class="govuk-heading-s govuk-!-margin-top-3">
-          Description
+          {% translate "Description" %}
         </h3>
         <div class="govuk-body">
           {% if entity.description %}
             {{entity.description|markdown:3}}
           {% else %}
-            No description available.
+            {% translate "No description available." %}
           {% endif %}
         </div>
         {% block metadata_list %}
           <ul class="govuk-list govuk-body" id="metadata-property-list">
             {% if entity.created %}
               <li>
-                <span class="govuk-!-font-weight-bold">First created:</span>
+                <span class="govuk-!-font-weight-bold">{% translate "First created:" %}</span>
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
             {% if entity.custom_properties.data_summary.last_updated %}
               <li>
-                <span class="govuk-!-font-weight-bold">Last updated:</span>
+                <span class="govuk-!-font-weight-bold">{% translate "Last updated:" %}</span>
                 {{entity.custom_properties.data_summary.last_updated}}
               </li>
             {% endif %}
@@ -69,7 +70,7 @@
             {% endif %}
             {% if entity.domain %}
               <li>
-                <span class="govuk-!-font-weight-bold">Domain:</span>
+                <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
                 {{entity.domain.display_name}}
               </li>
             {% endif %}

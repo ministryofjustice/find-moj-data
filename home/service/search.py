@@ -11,6 +11,7 @@ from data_platform_catalogue.search_types import (
 )
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.utils.translation import gettext as _
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
@@ -166,7 +167,7 @@ class SearchService(GenericService):
             "form": self.form,
             "results": self.results.page_results,
             "highlighted_results": self.highlighted_results.page_results,
-            "h1_value": "Search",
+            "h1_value": _("Search"),
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(  # type: ignore
                 self.page, on_each_side=2, on_ends=1

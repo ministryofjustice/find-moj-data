@@ -23,17 +23,23 @@ ENV POETRY_NO_INTERACTION=1 \
   POETRY_VIRTUALENVS_CREATE=1 \
   POETRY_CACHE_DIR=/tmp/poetry_cache
 
-COPY pyproject.toml poetry.lock ./
+# Update and install dependencies for compiling .po files
+RUN apt-get update && \
+  apt-get install -y make gettext
+
+COPY pyproject.toml poetry.lock Makefile ./
 COPY lib ./lib
+COPY locale ./
 
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
+RUN make compile_messages
 
 # The runtime image, used to just run the code provided its virtual environment
 FROM python:3.11-slim-buster as runtime
 
 # Update and Install Netcat
 RUN apt-get update && \
-    apt-get install -y netcat
+  apt-get install -y netcat
 
 WORKDIR /app
 
