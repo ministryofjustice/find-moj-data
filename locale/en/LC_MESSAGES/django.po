@@ -156,7 +156,7 @@ msgstr ""
 # Service name - note the capitalisation
 #: templates/base/navigation.html:16 templates/home.html:11
 msgid "Find MOJ data"
-msgstr "Find MOJ data"
+msgstr "Find MoJ data"
 
 # Header link
 #: templates/base/navigation.html:34
