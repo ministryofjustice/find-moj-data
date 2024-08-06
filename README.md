@@ -202,7 +202,7 @@ so that we can review and edit the copy in one place,
 
 When adding new copy to the service, developers should mark it up with
 [translation strings](https://docs.djangoproject.com/en/5.0/topics/i18n/translation/),
-before running `make messages` (or `django-admin makemessages`).
+before running `make messages` (or `manage.py makemessages`).
 
 To change a message in github:
 

@@ -50,11 +50,11 @@ setup_waffle_switches:
 
 # Run makemessages
 messages:
-	poetry run django-admin makemessages --locale=en --pythonpath=$(pwd) --settings=core.settings
+	poetry run python manage.py makemessages --locale=en
 
 # Compile messages
 compile_messages:
-	poetry run django-admin compilemessages --pythonpath=$(pwd) --settings=core.settings
+	poetry run python manage.py compilemessages
 
 # Run the application
 run:
