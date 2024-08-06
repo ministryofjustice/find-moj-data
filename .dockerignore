@@ -15,7 +15,6 @@
 .vscode/
 Jenkinsfile
 LICENSE
-Makefile
 README.md
 __pycache__
 doc
