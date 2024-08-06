@@ -74,7 +74,7 @@ jobs:
         run: poetry install --no-interaction --no-root
 
       - name: compile messages
-        run: make compile_messages
+        run: poetry run python manage.py compilemessages
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
