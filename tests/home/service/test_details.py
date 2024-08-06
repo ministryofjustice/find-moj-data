@@ -216,7 +216,7 @@ class TestChartDetailsService:
             "parent_entity": None,
             "parent_type": "dashboard",
             "h1_value": "test",
-            "is_access_requirements_url": False,
+            "is_access_requirements_a_url": False,
         }
 
         assert context == expected
