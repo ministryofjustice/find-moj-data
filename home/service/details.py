@@ -10,7 +10,7 @@ from django.utils.translation import gettext as _
 from .base import GenericService
 
 
-def _parse_parent(relationships) -> EntityRef | None:
+def _parse_parent(relationships: dict) -> EntityRef | None:
     """
     returns the EntityRef of the first parent if one exists
     """
