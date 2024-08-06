@@ -1,9 +1,9 @@
-# Message file for Find MOJ data (english)
+# Message file for Find MoJ data (english)
 # This is essentially translating from developer-ese to
 # the final copy.
 msgid ""
 msgstr ""
-"Project-Id-Version: Find MOJ data\n"
+"Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-05 16:47+0100\n"
 "Language: en\n"
@@ -95,7 +95,7 @@ msgstr "Skip to main content"
 # Page heading
 #: templates/base/cookie.html:3 templates/base/cookie.html:7
 msgid "Cookies on Find MOJ data"
-msgstr "Cookies on Find MOJ data"
+msgstr "Cookies on Find MoJ data"
 
 # Cookie usage
 #: templates/base/cookie.html:9
@@ -502,7 +502,7 @@ msgstr "Sort results"
 # Heading
 #: templates/search.html:15 templates/search.html:21
 msgid "Search MOJ data"
-msgstr "Search MOJ data"
+msgstr "Search MoJ data"
 
 # Heading
 #: templates/search.html:29
