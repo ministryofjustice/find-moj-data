@@ -25,7 +25,10 @@
                 "dc_where_to_access_dataset": "analytical_platform",
                 "source_dataset_name": "",
                 "s3_location": "s3://databucket/",
+                "access_requirements": "",
                 "row_count": "",
+                "refresh_period": "",
+                "last_updated": "",
                 "dc_slack_channel_name": "test-channel",
                 "dc_slack_channel_url": "test-url"
             },
@@ -86,7 +89,10 @@
                 "dc_where_to_access_dataset": "",
                 "source_dataset_name": "",
                 "s3_location": "",
+                "access_requirements": "",
                 "row_count": "5",
+                "refresh_period": "",
+                "last_updated": "",
                 "dc_slack_channel_name": "test-channel",
                 "dc_slack_channel_url": "test-url"
             },

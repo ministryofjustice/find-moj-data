@@ -3,6 +3,9 @@ import logging
 from importlib.resources import files
 from typing import Any, Sequence
 
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     parse_created_and_modified,
@@ -25,8 +28,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -137,7 +138,13 @@ class SearchClient:
                     self._parse_result(entity, matched_fields, ResultType.CHART)
                 )
             elif entity_type == "CONTAINER":
-                page_results.append(self._parse_container(entity, matched_fields))
+                page_results.append(
+                    self._parse_container(entity, matched_fields, ResultType.DATABASE)
+                )
+            elif entity_type == "DASHBOARD":
+                page_results.append(
+                    self._parse_container(entity, matched_fields, ResultType.DASHBOARD)
+                )
             else:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
 
@@ -242,6 +249,8 @@ class SearchClient:
             types.append("CHART")
         if ResultType.DATABASE in result_types:
             types.append("CONTAINER")
+        if ResultType.DASHBOARD in result_types:
+            types.append("DASHBOARD")
 
         return types
 
@@ -413,7 +422,9 @@ class SearchClient:
         ]
         return tags_list
 
-    def _parse_container(self, entity: dict[str, Any], matches) -> SearchResult:
+    def _parse_container(
+        self, entity: dict[str, Any], matches, subtype: ResultType
+    ) -> SearchResult:
         """
         Map a Container entity to a SearchResult
         """
@@ -433,14 +444,11 @@ class SearchClient:
             "entity_types": self._parse_types_and_sub_types(entity, "Container"),
         }
 
-        metadata.update(custom_properties.usage_restrictions.model_dump())
-        metadata.update(custom_properties.access_information.model_dump())
-        metadata.update(custom_properties.data_summary.model_dump())
         metadata.update(custom_properties)
 
         return SearchResult(
             urn=entity["urn"],
-            result_type=ResultType.DATABASE,
+            result_type=subtype,
             matches=matches,
             name=name,
             fully_qualified_name=qualified_name,

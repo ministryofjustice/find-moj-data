@@ -15,6 +15,7 @@ class ResultType(Enum):
     GLOSSARY_TERM = auto()
     CHART = auto()
     DATABASE = auto()
+    DASHBOARD = auto()
 
 
 @dataclass

@@ -18,6 +18,7 @@ from data_platform_catalogue.entities import (
     CustomEntityProperties,
     DataSummary,
     EntityRef,
+    EntitySummary,
     FurtherInformation,
     GlossaryTermRef,
     RelationshipType,
@@ -187,7 +188,13 @@ def test_parse_relations():
                 {
                     "entity": {
                         "urn": "urn:li:dataProduct:test",
-                        "properties": {"name": "test"},
+                        "type": "DATA_PRODUCT",
+                        "properties": {"name": "test", "description": "a test entity"},
+                        "tags": {
+                            "tags": [
+                                {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}
+                            ]
+                        },
                     }
                 }
             ],
@@ -196,7 +203,19 @@ def test_parse_relations():
     result = parse_relations(RelationshipType.PARENT, [relations["relationships"]])
     assert result == {
         RelationshipType.PARENT: [
-            EntityRef(urn="urn:li:dataProduct:test", display_name="test")
+            EntitySummary(
+                entity_ref=EntityRef(
+                    urn="urn:li:dataProduct:test", display_name="test"
+                ),
+                description="a test entity",
+                entity_type="DATA_PRODUCT",
+                tags=[
+                    TagRef(
+                        urn="urn:li:tag:dc_display_in_catalogue",
+                        display_name="dc_display_in_catalogue",
+                    )
+                ],
+            )
         ]
     }
 

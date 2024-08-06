@@ -10,6 +10,7 @@ from data_platform_catalogue.entities import (
     DataSummary,
     DomainRef,
     EntityRef,
+    EntitySummary,
     FurtherInformation,
     GlossaryTermRef,
     OwnerRef,
@@ -152,7 +153,15 @@ def parse_properties(
     access_information = AccessInformation.model_validate(custom_properties_dict)
     usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
     data_summary = DataSummary.model_validate(custom_properties_dict)
+
     further_information = FurtherInformation.model_validate(custom_properties_dict)
+
+    last_updated_timestamp = properties.get("lastRefreshed")
+    if last_updated_timestamp:
+        last_updated_date_str = datetime.fromtimestamp(last_updated_timestamp).strftime(
+            "%d %B %Y"
+        )
+        data_summary.last_updated = last_updated_date_str
 
     custom_properties = CustomEntityProperties(
         access_information=access_information,
@@ -274,7 +283,8 @@ def parse_relations(
     relationship_type: RelationshipType,
     relations_list: list[dict],
     relation_key="relationships",
-) -> dict[RelationshipType, list[EntityRef]]:
+    entity_type_of_relations: None | str = None,
+) -> dict[RelationshipType, list[EntitySummary]]:
     """
     parse the relationships results returned from a graphql querys
     """
@@ -284,15 +294,40 @@ def parse_relations(
     # There may be more than 10 lineage entities but since we currently only care
     # if lineage exists for a dataset we don't need to capture everything
     related_entities = []
-    for j in relations_list:
-        for i in j.get(relation_key, []):
-            urn = i.get("entity").get("urn")
+    for all_relations in relations_list:
+        for relation in all_relations.get(relation_key, []):
+            urn = relation.get("entity").get("urn")
+            # we sometimes have multiple sub-types loaded or no subtype
+            if entity_type_of_relations is None:
+                entity_type = (
+                    relation.get("entity")
+                    .get("subTypes", {})
+                    .get("typeNames", [relation.get("entity").get("type")])[0]
+                    if relation.get("entity").get("subTypes") is not None
+                    else [relation.get("entity").get("type")][0]
+                )
+            else:
+                entity_type = entity_type_of_relations
+
             display_name = (
-                i.get("entity").get("properties").get("name")
-                if i.get("entity", {}).get("properties") is not None
-                else i.get("entity").get("name", "")
+                relation.get("entity").get("properties").get("name")
+                if relation.get("entity", {}).get("properties") is not None
+                else relation.get("entity").get("name", "")
             )
-            related_entities.append(EntityRef(urn=urn, display_name=display_name))
+            description = (
+                relation.get("entity").get("properties", {}).get("description", "")
+                if relation.get("entity", {}).get("properties") is not None
+                else ""
+            )
+            tags = parse_tags(relation.get("entity"))
+            related_entities.append(
+                EntitySummary(
+                    entity_ref=EntityRef(urn=urn, display_name=display_name),
+                    description=description,
+                    entity_type=entity_type,
+                    tags=tags,
+                )
+            )
 
     relations_return = {relationship_type: related_entities}
     return relations_return
@@ -312,3 +347,7 @@ def _make_user_email_from_urn(urn) -> str:
     username = urn.replace("urn:li:corpuser:", "")
     email = f"{username}@justice.gov.uk"
     return email
+
+
+def parse_refresh_period(entity: dict[str, Any]) -> str:
+    pass

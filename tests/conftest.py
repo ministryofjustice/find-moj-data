@@ -12,11 +12,13 @@ from data_platform_catalogue.entities import (
     Column,
     ColumnRef,
     CustomEntityProperties,
+    Dashboard,
     Database,
     DataSummary,
     DomainRef,
     Entity,
     EntityRef,
+    EntitySummary,
     GlossaryTermRef,
     Governance,
     OwnerRef,
@@ -220,20 +222,83 @@ def generate_database_metadata(
         name=name,
         fully_qualified_name=f"Foo.{name}",
         description=description,
-        relationships=relations or {RelationshipType.PARENT: []},
+        relationships=relations
+        or {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:dataset:fake_table", display_name="fake_table"
+                    ),
+                    description="table description",
+                    tags=[
+                        TagRef(
+                            display_name="some-tag",
+                            urn="urn:li:tag:dc_display_in_catalogue",
+                        )
+                    ],
+                    entity_type="TABLE",
+                )
+            ]
+        },
         domain=DomainRef(display_name="LAA", urn="LAA"),
-        tables=[
-            {
-                "entity": {
-                    "urn": "urn:li:dataset:fake_table",
-                    "properties": {
-                        "name": "fake_table",
-                        "description": "table description",
-                    },
-                    "editableProperties": None,
-                }
-            }
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
+            ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        glossary_terms=[
+            GlossaryTermRef(
+                display_name="some-term",
+                urn="urn:li:glossaryTerm:Entity",
+                description="some description",
+            )
         ],
+        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        created=None,
+        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
+        custom_properties=custom_properties or CustomEntityProperties(),
+    )
+
+
+def generate_dashboard_metadata(
+    name: str = fake.unique.name(),
+    description: str = fake.unique.paragraph(),
+    relations=None,
+    custom_properties=None,
+) -> Dashboard:
+    """
+    Generate a fake database metadata object
+    """
+    return Dashboard(
+        urn="urn:li:dashboard:fake",
+        display_name=f"Foo.{name}",
+        name=name,
+        fully_qualified_name=f"Foo.{name}",
+        description=description,
+        relationships=relations
+        or {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:chart:fake_chart", display_name="fake_chart"
+                    ),
+                    description="chart description",
+                    tags=[
+                        TagRef(
+                            display_name="some-tag",
+                            urn="urn:li:tag:dc_display_in_catalogue",
+                        )
+                    ],
+                    entity_type="CHART",
+                )
+            ]
+        },
+        external_url="www.a-great-exmaple-dashboard.com",
+        domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
                 display_name="", email="Contact email for the user", urn=""
@@ -262,6 +327,11 @@ def example_database(name="example_database"):
     return generate_database_metadata(name=name)
 
 
+@pytest.fixture(autouse=True)
+def example_dashboard(name="example_dashboard"):
+    return generate_dashboard_metadata(name=name)
+
+
 def generate_page(page_size=20, result_type: ResultType | None = None):
     """
     Generate a fake search page
@@ -279,7 +349,7 @@ def client():
 
 
 @pytest.fixture(autouse=True)
-def mock_catalogue(request, example_database):
+def mock_catalogue(request, example_database, example_dashboard):
     if "datahub" in request.keywords:
         yield None
         return
@@ -340,6 +410,7 @@ def mock_catalogue(request, example_database):
     mock_get_chart_details_response(mock_catalogue)
     mock_get_table_details_response(mock_catalogue)
     mock_get_database_details_response(mock_catalogue, example_database)
+    mock_get_dashboard_details_response(mock_catalogue, example_dashboard)
     mock_get_tags_response(mock_catalogue)
 
     yield mock_catalogue
@@ -360,6 +431,10 @@ def mock_get_chart_details_response(mock_catalogue):
 
 def mock_get_table_details_response(mock_catalogue):
     mock_catalogue.get_table_details.return_value = generate_table_metadata()
+
+
+def mock_get_dashboard_details_response(mock_catalogue, example_dashboard):
+    mock_catalogue.get_dashboard_details.return_value = example_dashboard
 
 
 def mock_get_database_details_response(mock_catalogue, example_database):
