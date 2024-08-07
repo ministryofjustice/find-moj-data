@@ -1,3 +1,4 @@
+import pytest
 from data_platform_catalogue.entities import (
     AccessInformation,
     Chart,
@@ -18,12 +19,71 @@ from home.service.details import (
     DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
+    _parse_parent,
+    is_access_requirements_a_url,
 )
 from tests.conftest import (
     generate_dashboard_metadata,
     generate_database_metadata,
     generate_table_metadata,
 )
+
+
+@pytest.mark.parametrize(
+    "input, expected_output",
+    [
+        (
+            {
+                RelationshipType.PARENT: [
+                    EntitySummary(
+                        entity_ref=EntityRef(urn="urn:li:db", display_name="db"),
+                        description="test",
+                        entity_type="database",
+                        tags=[],
+                    )
+                ]
+            },
+            EntityRef(urn="urn:li:db", display_name="db"),
+        ),
+        ({}, None),
+        (
+            {
+                RelationshipType.DATA_LINEAGE: [
+                    EntitySummary(
+                        entity_ref=EntityRef(urn="urn:li:db", display_name="db"),
+                        description="test",
+                        entity_type="database",
+                        tags=[],
+                    )
+                ]
+            },
+            None,
+        ),
+    ],
+)
+def test_parse_parent(input, expected_output):
+    result = _parse_parent(input)
+    assert result == expected_output
+
+
+@pytest.mark.parametrize(
+    "input, expected_output",
+    [
+        ("122", False),
+        ("https://test.gov.uk", True),
+        ("https://test.gov.uk/data/#readme", True),
+        ("http://test.co.uk", True),
+        ("ftp.example.com/how-to-access.txt", False),
+        ("Just some instructions", False),
+        ("", False),
+        (123, False),
+        (None, False),
+        (["https://test.gov.uk"], False),
+    ],
+)
+def test_is_access_requirements_a_url(input, expected_output):
+    result = is_access_requirements_a_url(input)
+    assert result == expected_output
 
 
 class TestDatasetDetailsService:
@@ -156,6 +216,7 @@ class TestChartDetailsService:
             "parent_entity": None,
             "parent_type": "dashboard",
             "h1_value": "test",
+            "is_access_requirements_a_url": False,
         }
 
         assert context == expected

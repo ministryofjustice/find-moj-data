@@ -353,9 +353,9 @@ msgstr ""
 "intended to be narrower in scope than an entire agency."
 
 # Heading
-#: templates/partial/contact_info.html:4
+#: templates/partial/contact_info.html:29
 msgid "IAO or Data Owner"
-msgstr "IAO or Data Owner"
+msgstr "Data owner"
 
 # Heading
 #: templates/partial/contact_info.html:10
@@ -363,19 +363,24 @@ msgid "Contact email for access requests"
 msgstr "Contact email for access requests"
 
 # Heading
-#: templates/partial/contact_info.html:18
-msgid "Contact channels for access requests"
-msgstr "Contact channels for access requests"
+#: templates/partial/contact_info.html:21
+msgid "Contact channels for questions"
+msgstr "Contact channels for questions"
 
 # Heading
-#: templates/partial/contact_info.html:26
+#: templates/partial/contact_info.html:4
 msgid "Access requirements"
-msgstr "Access requirements"
+msgstr "Request access"
+
+# Request access link
+#: templates/partial/contact_info.html:8
+msgid "Click link for access information (opens in new tab)"
+msgstr "Click link for access information (opens in new tab)"
 
 # Default text for contact info
-#: templates/partial/contact_info.html:31
+#: templates/partial/contact_info.html:13
 msgid "Processing the data might require permission from IAO or Data owner."
-msgstr "Processing the data might require permission from IAO or Data owner."
+msgstr "Processing the data might require permission from the Data owner."
 
 # Contact us link on error pages
 #: templates/partial/contact_team.html:4
