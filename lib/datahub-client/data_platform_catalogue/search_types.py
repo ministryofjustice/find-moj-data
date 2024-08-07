@@ -75,7 +75,7 @@ class SearchResult:
     display_name: str = ""
     fully_qualified_name: str = ""
     description: str = ""
-    matches: dict[str, str] = field(default_factory=dict)
+    matches: dict[str, Any] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
     tags: list[TagRef] = field(default_factory=list)
     glossary_terms: list[GlossaryTermRef] = field(default_factory=list)

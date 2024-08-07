@@ -178,10 +178,9 @@ Run `pre-commit install` from inside the poetry environment to set up pre commit
 
 ## Testing
 
-- Python unit tests: `pytest -m 'not slow'`
-- Javascript unit tests: `npm test`
-- Selenium tests: `pytest -m tests/selenium`
-- Search benchmarks (these query the real Datahub backend): `pytest tests/benchmarks`
+- All tests `make test`
+- Unit tests: `make unit`
+- Integration tests: `make integration`
 
 Selenium makes use of chromedriver to run a headless browser.
 As either the chrome browser or chromedriver are updated,
