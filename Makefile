@@ -68,10 +68,10 @@ unit:
 	poetry run pytest --cov -m 'not slow'
 	npm test
 
-# run selenium test - version works with chromedriver 127.0.1 use - `npm install -g chromedriver@127.0.1`
+# Run integration tests. Requires chromedriver - version works with chromedriver 127.0.1 use - `npm install -g chromedriver@127.0.1`
 integration:
 	export CHROMEDRIVER_PATH=$(which chromedriver)
-	poetry run pytest tests/selenium --axe-version 4.9.1 --chromedriver-path ${CHROMEDRIVER_PATH}
+	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path ${CHROMEDRIVER_PATH}
 
 
 # Clean up (optional)
