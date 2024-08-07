@@ -12,6 +12,8 @@
 
       </svg>
 
+      <a class="moj-header__link moj-header__link--organisation-name" href="#">{% translate "Ministry of Justice" %}</a>
+
       <span class="moj-header__link moj-header__link--service-name">
         <a href="{% url 'home:home' %}">{% translate "Find MOJ data" %}</a>
         {% if ENV == "dev" or ENV is None %}&nbsp;
