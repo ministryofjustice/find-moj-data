@@ -1,34 +1,33 @@
 {% load i18n %}
 
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "IAO or Data Owner" %}</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Access requirements" %}</h2>
   <p class="govuk-body">
-    {{ data_owner }}
-  </p>
-</div>
-<div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact email for access requests" %}</h2>
-  <p class="govuk-body">
-    {{ data_owner_email|urlize }}
+    {% if access_requirements %}
+      {% if is_access_url %}
+        <a id="request-access" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% translate "Click link for access information (opens in new tab)" %}</a><br>
+      {% else %}
+        <p id="request-access">{{ access_requirements }} </p>
+      {% endif %}
+    {% else %}
+      <p id="request-access"> {% translate "Processing the data might require permission from IAO or Data owner." %} </p>
+
+    {% endif %}
   </p>
 </div>
 <!-- placeholder until we have more contact channels than just slack -->
 {% if slack_channel.dc_slack_channel_url %}
   <div class="govuk-body">
-    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for access requests" %}</h2>
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for questions" %}</h2>
     <p class="govuk-body">
         <!-- This should become a list of populated contact channels -->
-      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
+      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
     </p>
   </div>
 {% endif %}
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Access requirements" %}</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "IAO or Data Owner" %}</h2>
   <p class="govuk-body">
-    {% if access_requirements %}
-      {{ access_requirements }}
-    {% else %}
-    {% translate "Processing the data might require permission from IAO or Data owner." %}
-    {% endif %}
+    {{ data_owner_email|urlize }}
   </p>
 </div>

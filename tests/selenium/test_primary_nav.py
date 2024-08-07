@@ -37,7 +37,7 @@ class TestPrimaryNav:
         assert self.selenium.title in self.page_titles
         heading_text = self.home_page.primary_heading().text
 
-        assert heading_text == "Find MOJ data"
+        assert heading_text == "Find MoJ data"
         assert self.selenium.title.split("-")[0].strip() == "Home"
 
     def click_on_the_glossary_link(self):

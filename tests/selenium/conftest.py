@@ -84,6 +84,9 @@ class DatabaseDetailsPage(Page):
     def table_link(self):
         return self.selenium.find_element(By.LINK_TEXT, "Table details")
 
+    def request_access(self):
+        return self.selenium.find_element(By.ID, "request-access")
+
 
 class TableDetailsPage(Page):
     def column_descriptions(self):
