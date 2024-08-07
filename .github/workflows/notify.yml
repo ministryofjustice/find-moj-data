@@ -1,0 +1,88 @@
+name: Notify Deployment Status
+# based on: https://github.com/integrations/slack/issues/1563#issuecomment-1588009077
+on:
+  workflow_run:
+    workflows: [
+      "Deploy to Dev from branch",
+      "Deploy (with tests) to dev",
+      "Deploy to Prod on Published Release",
+      "Staged deploy to Test and Preprod"
+    ]
+    types: [completed]
+
+jobs:
+  on-failure:
+    name: All deployment failures
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out'
+    steps:
+      - uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ github.event.workflow_run.conclusion }}
+          notification_title: " ${{github.event.workflow_run.name}} - ${{github.event.workflow_run.conclusion}} on ${{github.event.workflow_run.head_branch}} - <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View Failure>"
+          message_format: ":fire: *${{github.event.workflow_run.name}}* ${{github.event.workflow_run.conclusion}} in <${{github.server_url}}/${{github.repository}}/${{github.event.workflow_run.head_branch}}|${{github.repository}}>"
+          footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View Failure>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+  on-dev-and-test-deploy-success:
+    name: Dev and Test Deploy Success
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.name == 'Deploy (with tests) to dev' || github.event.workflow_run.name == 'Deploy to Dev from branch')
+    steps:
+      # Deploy to existing slack alerts channel on success for dev
+      - uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ github.event.workflow_run.conclusion }}
+          notification_title: " <${{github.event.workflow_run.actor.html_url}}|${{github.event.workflow_run.actor.avatar_url}}> ${{github.event.workflow_run.name}} - ${{github.event.workflow_run.conclusion}} on ${{github.event.workflow_run.head_branch}} - <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
+          message_format: ":rocket: *${{github.event.workflow_run.name}}* ${{github.event.workflow_run.conclusion}} in <${{github.server_url}}/${{github.repository}}/${{github.event.workflow_run.head_branch}}|${{github.repository}}>"
+          footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+  on-preprod-deploy-success:
+    name: Preprod Deploy Success
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Staged deploy to Test and Preprod'
+    steps:
+      # Notify Slack - data-catalogue-preprod-deployments
+      - uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ github.event.workflow_run.conclusion }}
+          notification_title: "Deployment Successful"
+          message_format: ":rocket: <https://data-platform-find-moj-data-preprod.apps.live.cloud-platform.service.justice.gov.uk/|New Preproduction Deployment>"
+          footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_PREPROD_DEPLOYMENTS }}
+      # Notify MS TEAMS - preprod deployment notifications
+      - uses: jdcargile/ms-teams-notification@v1.4
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_PREPROD_DEPLOYMENTS }}
+          notification-summary: "Deployment Successful"
+          notification-color: 17a2b8
+          timezone: Europe/London
+          verbose-logging: true
+
+  on-prod-deploy-success:
+    name: Prod Deploy Success
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Deploy to Prod on Published Release'
+    steps:
+      # Notify Slack - data-catalogue-prod-deployments
+      - uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ github.event.workflow_run.conclusion }}
+          notification_title: "Deployment Successful"
+          message_format: ":rocket: <https://data-platform-find-moj-data-prod.apps.live.cloud-platform.service.justice.gov.uk/|New Production Deployment>"
+          footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_PROD_DEPLOYMENTS }}
+
+      # Notify MS TEAMS - prod deployment notifications
+      - uses: jdcargile/ms-teams-notification@v1.4
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_PROD_DEPLOYMENTS }}
+          notification-summary: "Deployment Successful"
+          notification-color: 17a2b8
+          timezone: Europe/London
+          verbose-logging: true
