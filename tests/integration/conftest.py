@@ -100,9 +100,6 @@ class HomePage(Page):
     def search_nav_link(self) -> WebElement:
         return self.selenium.find_element(By.LINK_TEXT, "Search")
 
-    def glossary_nav_link(self) -> WebElement:
-        return self.selenium.find_element(By.LINK_TEXT, "Glossary")
-
     def search_bar(self) -> WebElement:
         return self.selenium.find_element(By.NAME, "query")
 
@@ -117,10 +114,6 @@ class HomePage(Page):
         if not result:
             raise Exception(f"{domain!r} not found in {all_domain_names!r}")
         return result
-
-
-class GlossaryPage(Page):
-    pass
 
 
 class SearchResultWrapper:
@@ -259,11 +252,6 @@ def table_details_page(selenium) -> TableDetailsPage:
 
 
 @pytest.fixture
-def glossary_page(selenium) -> GlossaryPage:
-    return GlossaryPage(selenium)
-
-
-@pytest.fixture
 def page_titles():
-    pages = ["Home", "Search", "Glossary"]
+    pages = ["Home", "Search",]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
