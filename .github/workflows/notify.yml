@@ -24,6 +24,7 @@ jobs:
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View Failure>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+
   on-dev-and-test-deploy-success:
     name: Dev and Test Deploy Success
     runs-on: ubuntu-latest
@@ -37,13 +38,14 @@ jobs:
           message_format: ":rocket: *${{github.event.workflow_run.name}}* ${{github.event.workflow_run.conclusion}} in <${{github.server_url}}/${{github.repository}}/${{github.event.workflow_run.head_branch}}|${{github.repository}}>"
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DATA_CATALOGUE_DEVS }}
+
   on-preprod-deploy-success:
     name: Preprod Deploy Success
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Staged deploy to Test and Preprod'
     steps:
-      # Notify Slack - data-catalogue-preprod-deployments
+      # Notify Slack - data-catalogue
       - uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ github.event.workflow_run.conclusion }}
@@ -51,7 +53,7 @@ jobs:
           message_format: ":rocket: <https://data-platform-find-moj-data-preprod.apps.live.cloud-platform.service.justice.gov.uk/|New Preproduction Deployment>"
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_PREPROD_DEPLOYMENTS }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DATA_CATALOGUE }}
       # Notify MS TEAMS - preprod deployment notifications
       - uses: jdcargile/ms-teams-notification@v1.4
         with:
@@ -67,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Deploy to Prod on Published Release'
     steps:
-      # Notify Slack - data-catalogue-prod-deployments
+      # Notify Slack - ask-data-catalogue
       - uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ github.event.workflow_run.conclusion }}
@@ -75,7 +77,7 @@ jobs:
           message_format: ":rocket: <https://data-platform-find-moj-data-prod.apps.live.cloud-platform.service.justice.gov.uk/|New Production Deployment>"
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_PROD_DEPLOYMENTS }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ASK_DATA_CATALOGUE }}
 
       # Notify MS TEAMS - prod deployment notifications
       - uses: jdcargile/ms-teams-notification@v1.4
