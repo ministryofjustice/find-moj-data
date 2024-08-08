@@ -42,18 +42,6 @@
             </div>
           </fieldset>
         </div>
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-              {% for access_option in form.where_to_access %}
-                <div class="govuk-checkboxes__item">
-                  {{ access_option.tag}}
-                  <label class="govuk-label govuk-checkboxes__label" for="{{ access_option.id_for_label }}">{{access_option.choice_label}}</label>
-                </div>
-              {% endfor %}
-            </div>
-          </fieldset>
-        </div>
       </div>
     </div>
   </div>

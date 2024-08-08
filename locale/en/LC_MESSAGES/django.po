@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-05 16:47+0100\n"
+"POT-Creation-Date: 2024-08-07 14:56+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,17 +33,17 @@ msgid "Server error"
 msgstr "Server error"
 
 # Entity type displayed with as a tag component
-#: home/service/details.py:49 templates/partial/search_result.html:21
+#: home/service/details.py:65 templates/partial/search_result.html:21
 msgid "Database"
 msgstr "Database"
 
 # Entity type displayed with as a tag component
-#: home/service/details.py:117 templates/partial/search_result.html:25
+#: home/service/details.py:139 templates/partial/search_result.html:25
 msgid "Chart"
 msgstr "Chart"
 
 # Page title
-#: home/service/glossary.py:61 templates/base/navigation.html:70
+#: home/service/glossary.py:61 templates/base/navigation.html:72
 msgid "Glossary"
 msgstr "Glossary"
 
@@ -53,13 +53,13 @@ msgid "Metadata specification"
 msgstr "Metadata specification"
 
 # Page title
-#: home/service/search.py:170 templates/base/navigation.html:65
+#: home/service/search.py:170 templates/base/navigation.html:67
 #: templates/details_base.html:14
 msgid "Search"
 msgstr "Search"
 
 # Page title
-#: home/views.py:25 templates/base/navigation.html:60
+#: home/views.py:25 templates/base/navigation.html:62
 msgid "Home"
 msgstr "Home"
 
@@ -153,13 +153,17 @@ msgstr ""
 "<a class=\"govuk-footer__link govuk-footer__copyright-logo\" "
 "href=\"%(href)s\">© Crown copyright</a>"
 
+#: templates/base/navigation.html:15
+msgid "Ministry of Justice"
+msgstr "Ministry of Justice"
+
 # Service name - note the capitalisation
-#: templates/base/navigation.html:16 templates/home.html:11
+#: templates/base/navigation.html:18 templates/home.html:11
 msgid "Find MOJ data"
 msgstr "Find MoJ data"
 
 # Header link
-#: templates/base/navigation.html:34
+#: templates/base/navigation.html:36
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -185,7 +189,7 @@ msgid "Last updated:"
 msgstr "Last updated:"
 
 # Metadata field
-#: templates/details_base.html:73 templates/partial/search_result.html:44
+#: templates/details_base.html:73 templates/partial/search_result.html:40
 msgid "Domain:"
 msgstr "Domain:"
 
@@ -353,21 +357,6 @@ msgstr ""
 "intended to be narrower in scope than an entire agency."
 
 # Heading
-#: templates/partial/contact_info.html:29
-msgid "IAO or Data Owner"
-msgstr "Data owner"
-
-# Heading
-#: templates/partial/contact_info.html:10
-msgid "Contact email for access requests"
-msgstr "Contact email for access requests"
-
-# Heading
-#: templates/partial/contact_info.html:21
-msgid "Contact channels for questions"
-msgstr "Contact channels for questions"
-
-# Heading
 #: templates/partial/contact_info.html:4
 msgid "Access requirements"
 msgstr "Request access"
@@ -381,6 +370,16 @@ msgstr "Click link for access information (opens in new tab)"
 #: templates/partial/contact_info.html:13
 msgid "Processing the data might require permission from IAO or Data owner."
 msgstr "Processing the data might require permission from the Data owner."
+
+# Heading
+#: templates/partial/contact_info.html:21
+msgid "Contact channels for questions"
+msgstr "Contact channels for questions"
+
+# Heading
+#: templates/partial/contact_info.html:29
+msgid "IAO or Data Owner"
+msgstr "Data owner"
 
 # Contact us link on error pages
 #: templates/partial/contact_team.html:4
@@ -475,12 +474,12 @@ msgid "Table"
 msgstr "Table"
 
 # Search result metadata
-#: templates/partial/search_result.html:49
+#: templates/partial/search_result.html:45
 msgid "Database:"
 msgstr "Database:"
 
 # Search result metadata
-#: templates/partial/search_result.html:68
+#: templates/partial/search_result.html:64
 msgid "Matched fields:"
 msgstr "Matched fields:"
 
@@ -564,3 +563,7 @@ msgstr "first name"
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
+
+# Heading
+#~ msgid "Contact email for access requests"
+#~ msgstr "Contact email for access requests"

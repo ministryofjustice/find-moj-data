@@ -49,6 +49,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 # copy project and dependencies
 COPY . .
 COPY --from=builder /app/static ./static
+COPY --from=builder /app/locale ./locale
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 RUN chmod +x ./scripts/app-entrypoint.sh

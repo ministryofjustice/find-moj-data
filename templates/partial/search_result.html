@@ -59,12 +59,14 @@
             </li>
           {% endswitch %}
 
-          {% if result.matches %}
-            <li>
-              <span class="govuk-!-font-weight-bold">{% translate "Matched fields:" %}</span>
-              <span>{{ result.matches|lookup:readable_match_reasons|join:", " }}</span>
-            </li>
-          {% endif %}
+          {% with match_reasons=result.matches|lookup:readable_match_reasons|join:", " %}
+            {% if match_reasons %}
+              <li>
+                <span class="govuk-!-font-weight-bold">{% translate "Matched fields:" %}</span>
+                <span>{{ match_reasons }}</span>
+              </li>
+            {% endif %}
+          {% endwith %}
         </ul>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
       </div>
