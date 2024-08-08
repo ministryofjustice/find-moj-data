@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-08 16:39+0100\n"
+"POT-Creation-Date: 2024-08-08 16:54+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -188,14 +188,14 @@ msgstr "First created:"
 msgid "Last updated:"
 msgstr "Last updated:"
 
-#: templates/details_base.html:72
-msgid "Not provided"
-msgstr "Not provided."
-
 # Metadata field
-#: templates/details_base.html:73 templates/partial/search_result.html:40
+#: templates/details_base.html:72 templates/partial/search_result.html:40
 msgid "Domain:"
 msgstr "Domain:"
+
+#: templates/details_base.html:73 templates/partial/search_result.html:41
+msgid "Not provided"
+msgstr "Not provided."
 
 # Contact info heading
 #: templates/details_chart.html:8
@@ -376,12 +376,12 @@ msgid "Processing the data might require permission from IAO or Data owner."
 msgstr "Processing the data might require permission from the Data owner."
 
 # Heading
-#: templates/partial/contact_info.html:21
+#: templates/partial/contact_info.html:20
 msgid "Contact channels for questions"
 msgstr "Contact channels for questions"
 
 # Heading
-#: templates/partial/contact_info.html:29
+#: templates/partial/contact_info.html:32
 msgid "IAO or Data Owner"
 msgstr "Data owner"
 
