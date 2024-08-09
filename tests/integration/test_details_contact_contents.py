@@ -61,7 +61,7 @@ class TestDetailsPageContactDetails:
         """
         test_database = generate_database_metadata(
             custom_properties=CustomEntityProperties(
-                access_information=AccessInformation(access_requirements=access_reqs)
+                access_information=AccessInformation(dc_access_requirements=access_reqs)
             )
         )
         mock_get_database_details_response(mock_catalogue, test_database)

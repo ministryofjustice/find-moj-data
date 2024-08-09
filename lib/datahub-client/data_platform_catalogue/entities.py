@@ -231,7 +231,7 @@ class AccessInformation(BaseModel):
             "s3://alpha-hmpps-reports-data",
         ],
     )
-    access_requirements: str = Field(
+    dc_access_requirements: str = Field(
         description="Paragraph explaning whether there are any specific access requirements related these data.",
         default="",
         examples=[

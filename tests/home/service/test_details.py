@@ -245,7 +245,7 @@ class TestDashboardDetailsService:
     def test_custom_properties_in_context(self, mock_catalogue):
         custom_properties = CustomEntityProperties(
             access_information=AccessInformation(
-                access_requirements="This is a test there's nothing to access"
+                dc_access_requirements="This is a test there's nothing to access"
             )
         )
         mock_dashboard_name = "urn:li:dashboard:fake"
