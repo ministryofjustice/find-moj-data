@@ -70,7 +70,7 @@ class DatabaseDetailsService(GenericService):
             "h1_value": self.database_metadata.name,
             "is_esda": self.is_esda,
             "is_access_requirements_a_url": is_access_requirements_a_url(
-                self.database_metadata.custom_properties.access_information.access_requirements
+                self.database_metadata.custom_properties.access_information.dc_access_requirements
             ),
         }
 
@@ -108,7 +108,7 @@ class DatasetDetailsService(GenericService):
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
             "is_access_requirements_a_url": is_access_requirements_a_url(
-                self.table_metadata.custom_properties.access_information.access_requirements
+                self.table_metadata.custom_properties.access_information.dc_access_requirements
             ),
         }
 
@@ -141,7 +141,7 @@ class ChartDetailsService(GenericService):
             "parent_type": ResultType.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
             "is_access_requirements_a_url": is_access_requirements_a_url(
-                self.chart_metadata.custom_properties.access_information.access_requirements
+                self.chart_metadata.custom_properties.access_information.dc_access_requirements
             ),
         }
 
@@ -164,6 +164,6 @@ class DashboardDetailsService(GenericService):
                 key=lambda d: d.entity_ref.display_name,
             ),
             "is_access_requirements_a_url": is_access_requirements_a_url(
-                self.dashboard_metadata.custom_properties.access_information.access_requirements
+                self.dashboard_metadata.custom_properties.access_information.dc_access_requirements
             ),
         }

@@ -12,7 +12,7 @@
                 "dc_where_to_access_dataset": "",
                 "source_dataset_name": "",
                 "s3_location": "",
-                "access_requirements": "",
+                "dc_access_requirements": "",
                 "row_count": "5",
                 "refresh_period": "",
                 "last_updated": "",
