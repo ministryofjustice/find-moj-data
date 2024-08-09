@@ -1,7 +1,7 @@
 import json
 import logging
 from importlib.resources import files
-from typing import Any, Sequence
+from typing import Any, Sequence, Tuple
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
@@ -28,6 +28,7 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
+from pydantic_core import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -35,31 +36,20 @@ logger = logging.getLogger(__name__)
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
         self.graph = graph
-        self.search_query = (
+        self.search_query = self.get_graphql_query("search")
+        self.facets_query = self.get_graphql_query("facets")
+        self.list_domains_query = self.get_graphql_query("listDomains")
+        self.get_glossary_terms_query = self.get_graphql_query("getGlossaryTerms")
+        self.get_tags_query = self.get_graphql_query("getTags")
+
+    @staticmethod
+    def get_graphql_query(graphql_query_file_name: str) -> str:
+        query_text = (
             files("data_platform_catalogue.client.graphql")
-            .joinpath("search.graphql")
+            .joinpath(f"{graphql_query_file_name}.graphql")
             .read_text()
         )
-        self.facets_query = (
-            files("data_platform_catalogue.client.graphql")
-            .joinpath("facets.graphql")
-            .read_text()
-        )
-        self.list_domains_query = (
-            files("data_platform_catalogue.client.graphql")
-            .joinpath("listDomains.graphql")
-            .read_text()
-        )
-        self.get_glossary_terms_query = (
-            files("data_platform_catalogue.client.graphql")
-            .joinpath("getGlossaryTerms.graphql")
-            .read_text()
-        )
-        self.get_tags_query = (
-            files("data_platform_catalogue.client.graphql")
-            .joinpath("getTags.graphql")
-            .read_text()
-        )
+        return query_text
 
     def search(
         self,
@@ -114,41 +104,47 @@ class SearchClient:
 
         logger.debug(json.dumps(response, indent=2))
 
-        page_results = self._parse_search_results(response)
+        # Should these 2 variables be bound or unbound?
+        page_results, malformed_result_urns = self._parse_search_results(response)
 
         return SearchResponse(
             total_results=response["total"],
             page_results=page_results,
+            malformed_result_urns=malformed_result_urns,
             facets=self._parse_facets(response.get("facets", [])),
         )
 
-    def _parse_search_results(self, response):
-        page_results = []
+    def _parse_search_results(self, response) -> Tuple[list, list]:
+        self.page_results = []
+        self.malformed_result_urns = []
         for result in response["searchResults"]:
-            entity = result["entity"]
-            entity_type = entity["type"]
-            matched_fields = self._get_matched_fields(result=result)
+            self._parse_result(result)
 
-            if entity_type == "DATASET":
-                page_results.append(
-                    self._parse_result(entity, matched_fields, ResultType.TABLE)
-                )
-            elif entity_type == "CHART":
-                page_results.append(
-                    self._parse_result(entity, matched_fields, ResultType.CHART)
-                )
-            elif entity_type == "CONTAINER":
-                page_results.append(
-                    self._parse_container(entity, matched_fields, ResultType.DATABASE)
-                )
-            elif entity_type == "DASHBOARD":
-                page_results.append(
-                    self._parse_container(entity, matched_fields, ResultType.DASHBOARD)
-                )
-            else:
-                raise ValueError(f"Unexpected entity type: {entity_type}")
+        return self.page_results, self.malformed_result_urns
 
-        return page_results
+    def _parse_result(self, result):
+        entity = result["entity"]
+        entity_type = entity["type"]
+        entity_urn = entity["urn"]
+        matched_fields = self._get_matched_fields(result=result)
+
+        if entity_type in ["DATASET", "CHART"]:
+            try:
+                parsed_result = self._parse_dataset(entity, matched_fields, ResultType[entity_type])
+                self.page_results.append(parsed_result)
+            except Exception:
+                logger.warn(f"Parsing for result {entity_urn} failed")
+                self.malformed_result_urns.append(entity_urn)
+        elif entity_type in ["CONTAINER", "DATASET"]:
+            try:
+                parsed_result = self._parse_container(entity, matched_fields, ResultType[entity_type])
+                self.page_results.append(parsed_result)
+            except Exception:
+                logger.warn(f"Parsing for result {entity_urn} failed")
+                self.malformed_result_urns.append(entity_urn)
+        else:
+            logger.error(f"Unexpected entity type: {entity_type}")
+            raise ValueError(f"Unexpected entity type: {entity_type}")
 
     @staticmethod
     def _get_matched_fields(result: dict) -> dict:
@@ -230,7 +226,7 @@ class SearchClient:
             matched_fields: dict = {}
             if entity_type == "DATASET":
                 page_results.append(
-                    self._parse_result(entity, matched_fields, ResultType.TABLE)
+                    self._parse_dataset(entity, matched_fields, ResultType.TABLE)
                 )
             else:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
@@ -276,7 +272,7 @@ class SearchClient:
             list_domain_options.append(DomainOption(urn, name, total))
         return list_domain_options
 
-    def _parse_result(
+    def _parse_dataset(
         self, entity: dict[str, Any], matches, result_type: ResultType
     ) -> SearchResult:
         """
