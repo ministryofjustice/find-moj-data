@@ -34,7 +34,7 @@ jobs:
       - uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ github.event.workflow_run.conclusion }}
-          notification_title: " <${{github.event.workflow_run.actor.html_url}}|${{github.event.workflow_run.actor.avatar_url}}> ${{github.event.workflow_run.name}} - ${{github.event.workflow_run.conclusion}} on ${{github.event.workflow_run.head_branch}} - <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
+          notification_title: "${{github.event.workflow_run.actor.login}} Successfully Deployed ${{github.event.workflow_run.head_branch}} to Dev - <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
           message_format: ":rocket: *${{github.event.workflow_run.name}}* ${{github.event.workflow_run.conclusion}} in <${{github.server_url}}/${{github.repository}}/${{github.event.workflow_run.head_branch}}|${{github.repository}}>"
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
         env:
