@@ -264,7 +264,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                         "platform": {"name": "bigquery"},
                         "container": None,
                         "ownership": None,
-                        "name": "calm-pagoda-323403.jaffle_shop.customers",
+                        "name": 123,
                         "properties": {
                             "name": "customers",
                             "qualifiedName": "jaffle_shop.customers",
