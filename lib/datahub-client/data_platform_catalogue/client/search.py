@@ -144,7 +144,7 @@ class SearchClient:
                 self.malformed_result_urns.append(entity_urn)
         elif entity_type == "CONTAINER":
             try:
-                parsed_result = self._parse_dataset(entity, matched_fields, ResultType.DATABASE)
+                parsed_result = self._parse_container(entity, matched_fields, ResultType.DATABASE)
                 self.page_results.append(parsed_result)
             except Exception:
                 logger.warn(f"Parsing for result {entity_urn} failed")
