@@ -356,7 +356,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                 created=None,
             )
         ],
-        malformed_result_urns=["malformed"]
+        malformed_result_urns=["malformed"],
         facets=SearchFacets(facets={}),
     )
     assert response == expected
