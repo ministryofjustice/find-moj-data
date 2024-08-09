@@ -128,16 +128,30 @@ class SearchClient:
         entity_urn = entity["urn"]
         matched_fields = self._get_matched_fields(result=result)
 
-        if entity_type in ["DATASET", "CHART"]:
+        if entity_type == "DATASET":
             try:
-                parsed_result = self._parse_dataset(entity, matched_fields, ResultType[entity_type])
+                parsed_result = self._parse_dataset(entity, matched_fields, ResultType.TABLE)
                 self.page_results.append(parsed_result)
             except Exception:
                 logger.warn(f"Parsing for result {entity_urn} failed")
                 self.malformed_result_urns.append(entity_urn)
-        elif entity_type in ["CONTAINER", "DATASET"]:
+        elif entity_type == "CHART":
             try:
-                parsed_result = self._parse_container(entity, matched_fields, ResultType[entity_type])
+                parsed_result = self._parse_dataset(entity, matched_fields, ResultType.CHART)
+                self.page_results.append(parsed_result)
+            except Exception:
+                logger.warn(f"Parsing for result {entity_urn} failed")
+                self.malformed_result_urns.append(entity_urn)
+        elif entity_type == "CONTAINER":
+            try:
+                parsed_result = self._parse_dataset(entity, matched_fields, ResultType.DATABASE)
+                self.page_results.append(parsed_result)
+            except Exception:
+                logger.warn(f"Parsing for result {entity_urn} failed")
+                self.malformed_result_urns.append(entity_urn)
+        elif entity_type in "DASHBOARD":
+            try:
+                parsed_result = self._parse_container(entity, matched_fields, ResultType.DASHBOARD)
                 self.page_results.append(parsed_result)
             except Exception:
                 logger.warn(f"Parsing for result {entity_urn} failed")
