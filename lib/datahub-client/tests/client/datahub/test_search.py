@@ -247,6 +247,57 @@ def test_dataset_result(mock_graph, searcher):
     )
     assert response == expected
 
+def test_dataset_result(mock_graph, searcher):
+    datahub_response = {
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 1,
+            "total": 1,
+            "searchResults": [
+                {
+                    "insights": [],
+                    "matchedFields": [],
+                    "entity": {
+                        "type": "UNKNOWN",
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "platform": {"name": "bigquery"},
+                        "container": None,
+                        "ownership": None,
+                        "name": "calm-pagoda-323403.jaffle_shop.customers",
+                        "properties": {
+                            "name": "customers",
+                            "qualifiedName": "jaffle_shop.customers",
+                            "customProperties": [
+                                {"key": "StoredAsSubDirectories", "value": "False"},
+                                {
+                                    "key": "CreatedByJob",
+                                    "value": "moj-reg-prod-hmpps-assess-risks-and-needs-prod-glue-job",
+                                },
+                            ],
+                        },
+                        "domain": {
+                            "domain": {
+                                "urn": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
+                                "id": "3dc18e48-c062-4407-84a9-73e23f768023",
+                                "properties": {
+                                    "name": "HMPPS",
+                                    "description": "HMPPS is an executive agency that ...",
+                                },
+                            },
+                            "editableProperties": None,
+                            "tags": None,
+                            "lastIngested": 1705990502353,
+                        },
+                    },
+                }
+            ],
+        }
+    }
+    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+    with pytest.raises(ValueError(f"Unexpected entity type: UNKNOWN")):
+        searcher.search()
+
 
 def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
     datahub_response = {
@@ -260,11 +311,11 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "urn": "malformed",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
                         "ownership": None,
-                        "name": 123,
+                        "name": "pagoda",
                         "properties": {
                             "name": "customers",
                             "qualifiedName": "jaffle_shop.customers",
@@ -296,7 +347,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "malformed",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
                         "ownership": None,
