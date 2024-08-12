@@ -373,7 +373,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "dc_where_to_access_dataset": "",
                     "source_dataset_name": "",
                     "s3_location": "",
-                    "access_requirements": "",
+                    "dc_access_requirements": "",
                     "refresh_period": "",
                     "last_updated": "",
                     "row_count": "",
