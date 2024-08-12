@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "home.apps.HomeConfig",
+    "feedback.apps.FeedbackConfig",
     "django_prometheus",
     "users",
     "waffle",

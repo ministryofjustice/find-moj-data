@@ -18,10 +18,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+app_name = "core"
 
 urlpatterns = [
     path("admin/", view=admin.site.urls),
     path("azure_auth/", include("azure_auth.urls", namespace="azure_auth")),
+    path("feedback/", include("feedback.urls", namespace="feedback")),
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
 ]

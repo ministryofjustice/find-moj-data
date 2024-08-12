@@ -1,0 +1,50 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">{{h1_value}}</h1>
+  </div>
+
+  <div class="govuk-grid-column-two-thirds">
+
+    <form action="{% url 'feedback:feedback' %}" method="post" novalidate>
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h2 class="govuk-fieldset__heading">
+              {{form.satisfaction_rating.label}}
+            </h2>
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            {% for radio in form.satisfaction_rating %}         
+            <div class="govuk-radios__item">
+              {{radio.tag}}
+              <label class="govuk-label govuk-radios__label" for="{{radio.id_for_label}}">
+                {{radio.choice_label}}
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+      <div class="govuk-form-group">
+        <h2 class="govuk-label-wrapper">
+          <label class="govuk-label govuk-label--l" for="{{form.how_can_we_improve.id_for_label}}">
+            {{form.how_can_we_improve.label}}
+          </label>
+        </h2>
+        <div id="more-detail-hint" class="govuk-hint">
+          Do not include personal or financial information, like your National Insurance number or credit card details.
+        </div>
+        <textarea class="govuk-textarea" id="{{form.how_can_we_improve.id_for_label}}" name="{{form.how_can_we_improve.html_name}}" rows="5" aria-describedby="more-detail-hint"></textarea>
+      </div>
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Send feedback
+      </button>
+      {% csrf_token %}
+    </form>
+  </div>
+</div>
+{% endblock content %}
