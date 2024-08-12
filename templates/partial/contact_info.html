@@ -8,8 +8,12 @@
     {% else %}
       <p id="request-access">{{ access_requirements }} </p>
     {% endif %}
+  {% elif slack_channel.dc_slack_channel_url %}
+    <p id="request-access">{% translate "Please use contact channels to request access." %}</p>
+  {% elif data_owner_email %}
+    <p id="request-access">{% translate "Please contact the data owner for access information." %}</p>
   {% else %}
-    <p id="request-access"> {% translate "Processing the data might require permission from IAO or Data owner." %} </p>
+    <p id="request-access"> {% translate "Not provided" %} </p>
   {% endif %}
 </div>
 <!-- placeholder until we have more contact channels than just slack -->
