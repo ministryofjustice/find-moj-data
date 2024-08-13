@@ -106,7 +106,7 @@ class SearchClient:
 
     def _parse_search_results(self, response) -> Tuple[list, list]:
         page_results = []
-        malformed_urns = []
+        malformed_result_urns = []
         for result in response["searchResults"]:
             entity = result["entity"]
             entity_type = entity["type"]
@@ -130,10 +130,10 @@ class SearchClient:
                     raise Exception
             except Exception:
                 logger.warn(f"Parsing for result {entity_urn} failed")
-                malformed_urns.append(entity_urn)
+                malformed_result_urns.append(entity_urn)
 
 
-        return page_results, malformed_urns
+        return page_results, malformed_result_urns
 
     @staticmethod
     def _get_matched_fields(result: dict) -> dict:
