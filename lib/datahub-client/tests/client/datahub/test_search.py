@@ -247,6 +247,153 @@ def test_dataset_result(mock_graph, searcher):
     )
     assert response == expected
 
+def test_bad_entity_type(mock_graph, searcher):
+    datahub_response = {
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 1,
+            "total": 1,
+            "searchResults": [
+                {
+                    "insights": [],
+                    "matchedFields": [],
+                    "entity": {
+                        "type": "UNKNOWN",
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "platform": {"name": "bigquery"},
+                        "container": None,
+                        "ownership": None,
+                        "name": "calm-pagoda-323403.jaffle_shop.customers",
+                    },
+                }
+            ],
+        }
+    }
+    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+    response = searcher.search()
+    expected = expected = SearchResponse(
+        total_results=1,
+        page_results=[],
+        malformed_result_urns=["urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)"],
+        facets=SearchFacets(facets={}),
+    )
+    assert response == expected
+
+
+def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
+    datahub_response = {
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 1,
+            "total": 1,
+            "searchResults": [
+                {
+                    "insights": [],
+                    "matchedFields": [],
+                    "entity": {
+                        "type": "DATASET",
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "platform": {"name": "bigquery"},
+                        "container": None,
+                        "ownership": None,
+                        "name": "pagoda",
+                        "properties": {
+                            "name": "customers",
+                            "qualifiedName": "jaffle_shop.customers",
+                            "customProperties": [
+                                {"key": "StoredAsSubDirectories", "value": "False"},
+                                {
+                                    "key": "CreatedByJob",
+                                    "value": "moj-reg-prod-hmpps-assess-risks-and-needs-prod-glue-job",
+                                },
+                            ],
+                        },
+                        "domain": {
+                            "domain": {
+                                "urn": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
+                                "id": "3dc18e48-c062-4407-84a9-73e23f768023",
+                                "properties": {
+                                    "name": "HMPPS",
+                                    "description": "HMPPS is an executive agency that ...",
+                                },
+                            },
+                            "editableProperties": None,
+                            "tags": None,
+                            "lastIngested": 1705990502353,
+                        },
+                    },
+                },
+                {
+                    "insights": [],
+                    "matchedFields": [],
+                    "entity": {
+                        "type": "DATASET",
+                        "urn": "malformed",  # noqa E501
+                        "platform": {"name": "bigquery"},
+                        "container": None,
+                        "ownership": 1234,
+                        "name": "john",
+                        "properties": {
+                            "name": "customers",
+                            "qualifiedName": "jaffle_shop.customers",
+                            "customProperties": [
+                                {"key": "StoredAsSubDirectories", "value": "False"},
+                                {
+                                    "key": "CreatedByJob",
+                                    "value": "moj-reg-prod-hmpps-assess-risks-and-needs-prod-glue-job",
+                                },
+                            ],
+                        }
+                    },
+                }
+            ],
+        }
+    }
+    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+    response = searcher.search()
+    expected = SearchResponse(
+        total_results=1,
+        page_results=[
+            SearchResult(
+                urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                result_type=ResultType.TABLE,
+                name="customers",
+                display_name="customers",
+                fully_qualified_name="jaffle_shop.customers",
+                description="",
+                matches={},
+                metadata={
+                    "owner": "",
+                    "owner_email": "",
+                    "total_parents": 0,
+                    "domain_name": "HMPPS",
+                    "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
+                    "entity_types": {
+                        "entity_type": "Dataset",
+                        "entity_sub_types": ["Dataset"],
+                    },
+                    "dpia_required": None,
+                    "dpia_location": "",
+                    "dc_where_to_access_dataset": "",
+                    "source_dataset_name": "",
+                    "s3_location": "",
+                    "dc_access_requirements": "",
+                    "refresh_period": "",
+                    "last_updated": "",
+                    "row_count": "",
+                },
+                tags=[],
+                last_modified=None,
+                created=None,
+            )
+        ],
+        malformed_result_urns=["malformed"],
+        facets=SearchFacets(facets={}),
+    )
+    assert response == expected
+
 
 def test_full_page(mock_graph, searcher):
     datahub_response = {

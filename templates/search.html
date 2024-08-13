@@ -47,6 +47,9 @@
   <div class="govuk-grid-row">
     {% include "partial/filter.html" %}
     <div class="govuk-grid-column-two-thirds">
+      {% if malformed_result_urns %}
+        <p class="govuk-error-message">{% translate "Some results were malformed and are not shown" %}</p>
+      {% endif %}
       {% if results %}
         <h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{{total_results_str|intcomma}} results</h2>
       {% else %}
