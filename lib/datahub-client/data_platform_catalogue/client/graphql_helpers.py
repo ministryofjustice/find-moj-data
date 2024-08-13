@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timezone
+from importlib.resources import files
 from typing import Any, Tuple
 
 from data_platform_catalogue.entities import (
@@ -20,6 +21,15 @@ from data_platform_catalogue.entities import (
 )
 
 PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
+
+
+def get_graphql_query(graphql_query_file_name: str) -> str:
+    query_text = (
+        files("data_platform_catalogue.client.graphql")
+        .joinpath(f"{graphql_query_file_name}.graphql")
+        .read_text()
+    )
+    return query_text
 
 
 def parse_owner(entity: dict[str, Any]) -> OwnerRef:

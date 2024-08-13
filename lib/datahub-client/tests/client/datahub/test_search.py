@@ -271,8 +271,14 @@ def test_bad_entity_type(mock_graph, searcher):
     }
     mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-    with pytest.raises(ValueError):
-        searcher.search()
+    response = searcher.search()
+    expected = expected = SearchResponse(
+        total_results=1,
+        page_results=[],
+        malformed_result_urns=["urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)"],
+        facets=SearchFacets(facets={}),
+    )
+    assert response == expected
 
 
 def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):

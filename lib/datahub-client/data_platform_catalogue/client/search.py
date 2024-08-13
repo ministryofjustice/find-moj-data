@@ -1,6 +1,5 @@
 import json
 import logging
-from importlib.resources import files
 from typing import Any, Sequence, Tuple
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
@@ -8,6 +7,7 @@ from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
+    get_graphql_query,
     parse_created_and_modified,
     parse_domain,
     parse_glossary_terms,
@@ -28,7 +28,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from pydantic_core import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -36,20 +35,11 @@ logger = logging.getLogger(__name__)
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
         self.graph = graph
-        self.search_query = self.get_graphql_query("search")
-        self.facets_query = self.get_graphql_query("facets")
-        self.list_domains_query = self.get_graphql_query("listDomains")
-        self.get_glossary_terms_query = self.get_graphql_query("getGlossaryTerms")
-        self.get_tags_query = self.get_graphql_query("getTags")
-
-    @staticmethod
-    def get_graphql_query(graphql_query_file_name: str) -> str:
-        query_text = (
-            files("data_platform_catalogue.client.graphql")
-            .joinpath(f"{graphql_query_file_name}.graphql")
-            .read_text()
-        )
-        return query_text
+        self.search_query = get_graphql_query("search")
+        self.facets_query = get_graphql_query("facets")
+        self.list_domains_query = get_graphql_query("listDomains")
+        self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
+        self.get_tags_query = get_graphql_query("getTags")
 
     def search(
         self,
@@ -115,50 +105,35 @@ class SearchClient:
         )
 
     def _parse_search_results(self, response) -> Tuple[list, list]:
-        self.page_results = []
-        self.malformed_result_urns = []
+        page_results = []
+        malformed_urns = []
         for result in response["searchResults"]:
-            self._parse_result(result)
+            entity = result["entity"]
+            entity_type = entity["type"]
+            entity_urn = entity["urn"]
+            matched_fields = self._get_matched_fields(result=result)
 
-        return self.page_results, self.malformed_result_urns
+            try:
+                if entity_type == "DATASET":
+                    parsed_result = self._parse_dataset(entity, matched_fields, ResultType.TABLE)
+                    page_results.append(parsed_result)
+                elif entity_type == "CHART":
+                    parsed_result = self._parse_dataset(entity, matched_fields, ResultType.CHART)
+                    page_results.append(parsed_result)
+                elif entity_type == "CONTAINER":
+                    parsed_result = self._parse_container(entity, matched_fields, ResultType.DATABASE)
+                    page_results.append(parsed_result)
+                elif entity_type == "DASHBOARD":
+                    parsed_result = self._parse_container(entity, matched_fields, ResultType.DASHBOARD)
+                    page_results.append(parsed_result)
+                else:
+                    raise Exception
+            except Exception:
+                logger.warn(f"Parsing for result {entity_urn} failed")
+                malformed_urns.append(entity_urn)
 
-    def _parse_result(self, result):
-        entity = result["entity"]
-        entity_type = entity["type"]
-        entity_urn = entity["urn"]
-        matched_fields = self._get_matched_fields(result=result)
 
-        if entity_type == "DATASET":
-            try:
-                parsed_result = self._parse_dataset(entity, matched_fields, ResultType.TABLE)
-                self.page_results.append(parsed_result)
-            except Exception:
-                logger.warn(f"Parsing for result {entity_urn} failed")
-                self.malformed_result_urns.append(entity_urn)
-        elif entity_type == "CHART":
-            try:
-                parsed_result = self._parse_dataset(entity, matched_fields, ResultType.CHART)
-                self.page_results.append(parsed_result)
-            except Exception:
-                logger.warn(f"Parsing for result {entity_urn} failed")
-                self.malformed_result_urns.append(entity_urn)
-        elif entity_type == "CONTAINER":
-            try:
-                parsed_result = self._parse_container(entity, matched_fields, ResultType.DATABASE)
-                self.page_results.append(parsed_result)
-            except Exception:
-                logger.warn(f"Parsing for result {entity_urn} failed")
-                self.malformed_result_urns.append(entity_urn)
-        elif entity_type in "DASHBOARD":
-            try:
-                parsed_result = self._parse_container(entity, matched_fields, ResultType.DASHBOARD)
-                self.page_results.append(parsed_result)
-            except Exception:
-                logger.warn(f"Parsing for result {entity_urn} failed")
-                self.malformed_result_urns.append(entity_urn)
-        else:
-            logger.error(f"Unexpected entity type: {entity_type}")
-            raise ValueError(f"Unexpected entity type: {entity_type}")
+        return page_results, malformed_urns
 
     @staticmethod
     def _get_matched_fields(result: dict) -> dict:
