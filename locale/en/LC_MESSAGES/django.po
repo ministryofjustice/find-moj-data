@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 12:26+0100\n"
+"POT-Creation-Date: 2024-08-13 12:31+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -193,7 +193,8 @@ msgstr "Last updated:"
 msgid "Domain:"
 msgstr "Domain:"
 
-#: templates/details_base.html:73 templates/partial/contact_info.html:36
+#: templates/details_base.html:73 templates/partial/contact_info.html:16
+#: templates/partial/contact_info.html:36
 #: templates/partial/search_result.html:41
 msgid "Not provided"
 msgstr "Not provided."
