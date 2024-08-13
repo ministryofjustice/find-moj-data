@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-07 14:56+0100\n"
+"POT-Creation-Date: 2024-08-12 13:45+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +43,7 @@ msgid "Chart"
 msgstr "Chart"
 
 # Page title
-#: home/service/glossary.py:61 templates/base/navigation.html:72
+#: home/service/glossary.py:61
 msgid "Glossary"
 msgstr "Glossary"
 
@@ -53,13 +53,13 @@ msgid "Metadata specification"
 msgstr "Metadata specification"
 
 # Page title
-#: home/service/search.py:170 templates/base/navigation.html:67
+#: home/service/search.py:170 templates/base/navigation.html:66
 #: templates/details_base.html:14
 msgid "Search"
 msgstr "Search"
 
 # Page title
-#: home/views.py:25 templates/base/navigation.html:62
+#: home/views.py:25 templates/base/navigation.html:61
 msgid "Home"
 msgstr "Home"
 
@@ -189,9 +189,14 @@ msgid "Last updated:"
 msgstr "Last updated:"
 
 # Metadata field
-#: templates/details_base.html:73 templates/partial/search_result.html:40
+#: templates/details_base.html:72 templates/partial/search_result.html:40
 msgid "Domain:"
 msgstr "Domain:"
+
+#: templates/details_base.html:73 templates/partial/contact_info.html:36
+#: templates/partial/search_result.html:41
+msgid "Not provided"
+msgstr "Not provided."
 
 # Contact info heading
 #: templates/details_chart.html:8
@@ -362,22 +367,25 @@ msgid "Access requirements"
 msgstr "Request access"
 
 # Request access link
-#: templates/partial/contact_info.html:8
+#: templates/partial/contact_info.html:7
 msgid "Click link for access information (opens in new tab)"
 msgstr "Click link for access information (opens in new tab)"
 
-# Default text for contact info
-#: templates/partial/contact_info.html:13
-msgid "Processing the data might require permission from IAO or Data owner."
-msgstr "Processing the data might require permission from the Data owner."
+#: templates/partial/contact_info.html:12
+msgid "Please use contact channels to request access."
+msgstr "Please use contact channels to request access."
+
+#: templates/partial/contact_info.html:14
+msgid "Please contact the data owner for access information."
+msgstr "Please contact the data owner for access information."
 
 # Heading
-#: templates/partial/contact_info.html:21
+#: templates/partial/contact_info.html:22
 msgid "Contact channels for questions"
 msgstr "Contact channels for questions"
 
 # Heading
-#: templates/partial/contact_info.html:29
+#: templates/partial/contact_info.html:34
 msgid "IAO or Data Owner"
 msgstr "Data owner"
 
@@ -479,7 +487,7 @@ msgid "Database:"
 msgstr "Database:"
 
 # Search result metadata
-#: templates/partial/search_result.html:64
+#: templates/partial/search_result.html:65
 msgid "Matched fields:"
 msgstr "Matched fields:"
 
