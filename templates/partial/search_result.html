@@ -38,7 +38,7 @@
         <ul class="govuk-list govuk-body" id="metadata-property-list">
           <li>
             <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
-            <span>{{result.metadata.domain_name}}</span>
+            <span>{{result.metadata.domain_name | default:_('Not provided')}}</span>
           </li>
           {% if result.result_type.name == "TABLE" %}
             <li>

@@ -68,12 +68,10 @@
                 {{entity.custom_properties.data_summary.refresh_period}}
               </li>
             {% endif %}
-            {% if entity.domain %}
-              <li>
-                <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
-                {{entity.domain.display_name}}
-              </li>
-            {% endif %}
+            <li>
+              <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
+              {{entity.domain.display_name | default:_('Not provided') }}
+            </li>
             {% switch 'display-result-tags' %}
               {% if entity.tags_to_display %}
                 <li>
