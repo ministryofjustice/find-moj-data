@@ -1,0 +1,69 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{h1_value}}</h1>
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{% url 'feedback:feedback' %}" method="post" novalidate>
+
+        {% if form.errors %}
+          <div class="govuk-error-summary" data-module="govuk-error-summary">
+            <div role="alert">
+              <h2 class="govuk-error-summary__title">
+                {% translate "There is a problem" %}
+              </h2>
+              <div class="govuk-error-summary__body">
+                <p class="govuk-body">{% translate 'Make sure you have filled in all the fields.' %}</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="govuk-form-group {% if form.satisfaction_rating.errors %}govuk-form-group-errors{% endif %}">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              <h2 class="govuk-fieldset__heading">
+                {{form.satisfaction_rating.label}}
+              </h2>
+            </legend>
+            {% for error in form.satisfaction_rating.errors %}
+              <p id="passport-issued-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{error}}
+              </p>
+            {% endfor %}
+            <div class="govuk-radios" data-module="govuk-radios">
+              {% for radio in form.satisfaction_rating %}
+                <div class="govuk-radios__item">
+                  {{radio.tag}}
+                  <label class="govuk-label govuk-radios__label" for="{{radio.id_for_label}}">
+                    {{radio.choice_label}}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+        </div>
+        <div class="govuk-form-group">
+          <h2 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--l" for="{{form.how_can_we_improve.id_for_label}}">
+              {{form.how_can_we_improve.label}}
+            </label>
+          </h2>
+          <div id="more-detail-hint" class="govuk-hint">
+            {% translate 'Do not include personal or financial information, like your National Insurance number or credit card details.' %}
+          </div>
+          <textarea class="govuk-textarea" id="{{form.how_can_we_improve.id_for_label}}" name="{{form.how_can_we_improve.html_name}}" rows="5" aria-describedby="more-detail-hint"></textarea>
+        </div>
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Send feedback
+        </button>
+        {% csrf_token %}
+      </form>
+    </div>
+  </div>
+{% endblock content %}

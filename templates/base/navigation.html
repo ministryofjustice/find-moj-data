@@ -29,9 +29,12 @@
     </div>
     <div class="moj-header__content">
 
-      <nav class="moj-header__navigation" aria-label="Account navigation">
+      <nav class="moj-header__navigation" aria-label="Account navigation and feedback">
 
         <ul class="moj-header__navigation-list">
+          <li class="moj-header__navigation-item">
+            <a class="moj-header__navigation-link" href="{% url 'feedback:feedback' %}">{% translate "Feedback" %}</a>
+          </li>
           <li class="moj-header__navigation-item">
             <a class="moj-header__navigation-link" href="{% url 'azure_auth:logout' %}">{% translate "Sign out" %}</a>
           </li>

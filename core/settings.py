@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "home.apps.HomeConfig",
+    "feedback.apps.FeedbackConfig",
     "django_prometheus",
     "users",
     "waffle",
@@ -254,3 +255,5 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
 USE_I18N = True
 LANGUAGE_CODE = "en"
 LOCALE_PATHS = [BASE_DIR / "locale"]
+
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(" ")
