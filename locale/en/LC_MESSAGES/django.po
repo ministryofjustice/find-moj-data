@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 16:34+0100\n"
+"POT-Creation-Date: 2024-08-14 10:18+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,14 +56,18 @@ msgstr ""
 "Do not include personal or financial information, like your National "
 "Insurance number or credit card details."
 
+#: feedback/templates/thanks.html:8 feedback/views.py:37
+msgid "Thank you for your feedback"
+msgstr "Thank you for your feedback"
+
+#: feedback/templates/thanks.html:11
+msgid "Your feedback will help us improve the service."
+msgstr "Your feedback will help us improve the service."
+
 # Page heading
 #: feedback/views.py:27
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
-
-#: feedback/views.py:37
-msgid "Thank you for your feedback"
-msgstr "Thank you for your feedback"
 
 # Entity type displayed with as a tag component
 #: home/service/details.py:65 templates/partial/search_result.html:21
