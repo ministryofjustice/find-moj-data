@@ -72,6 +72,14 @@ query getDatasetDetails($urn: String!) {
             properties {
               name
             }
+            tags {
+              tags {
+                tag{urn}
+              }
+            }
+            subTypes {
+              typeNames
+            }
           }
         }
       }
