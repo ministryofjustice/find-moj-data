@@ -50,7 +50,7 @@ jobs:
         with:
           status: ${{ github.event.workflow_run.conclusion }}
           notification_title: "Deployment Successful"
-          message_format: ":rocket: <https://data-platform-find-moj-data-preprod.apps.live.cloud-platform.service.justice.gov.uk/|New Preproduction Deployment>"
+          message_format: ":rocket: <https://preprod.find-moj-data.service.justice.gov.uk/|New Preproduction Deployment>"
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DATA_CATALOGUE }}
@@ -74,7 +74,7 @@ jobs:
         with:
           status: ${{ github.event.workflow_run.conclusion }}
           notification_title: "Deployment Successful"
-          message_format: ":rocket: <https://data-platform-find-moj-data-prod.apps.live.cloud-platform.service.justice.gov.uk/|New Production Deployment>"
+          message_format: ":rocket: <https://find-moj-data.service.justice.gov.uk/|New Production Deployment>"
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ASK_DATA_CATALOGUE }}
