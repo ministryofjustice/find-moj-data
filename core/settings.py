@@ -256,4 +256,5 @@ USE_I18N = True
 LANGUAGE_CODE = "en"
 LOCALE_PATHS = [BASE_DIR / "locale"]
 
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(" ")
+origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
+CSRF_TRUSTED_ORIGINS = origins_str.split(" ") if origins_str else []

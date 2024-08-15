@@ -82,7 +82,9 @@ class DatabaseDetailsPage(Page):
         return self.selenium.find_element(By.TAG_NAME, "table")
 
     def table_link(self):
-        return self.selenium.find_element(By.LINK_TEXT, "Table details")
+        return self.selenium.find_element(
+            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
+        )
 
     def request_access(self):
         return self.selenium.find_element(By.ID, "request-access")
@@ -253,5 +255,8 @@ def table_details_page(selenium) -> TableDetailsPage:
 
 @pytest.fixture
 def page_titles():
-    pages = ["Home", "Search",]
+    pages = [
+        "Home",
+        "Search",
+    ]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
