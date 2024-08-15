@@ -61,7 +61,7 @@ run:
 	poetry run python manage.py runserver
 
 # Run unit tests
-test: unit integration
+test: unit integration lint
 
 # Run Python unit tests
 unit:
@@ -78,4 +78,7 @@ clean:
 	rm -f $(ENV_FILE)
 	find . -name "*.pyc" -exec rm -f {} \;
 
-.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compilemessages run test unit integration clean
+lint:
+	pre-commit run --all-files
+
+.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compilemessages run test unit integration clean lint
