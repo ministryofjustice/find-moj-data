@@ -3,7 +3,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,

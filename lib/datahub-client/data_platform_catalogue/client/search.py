@@ -2,9 +2,6 @@ import json
 import logging
 from typing import Any, Sequence, Tuple
 
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
-
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
@@ -28,6 +25,8 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -115,23 +114,30 @@ class SearchClient:
 
             try:
                 if entity_type == "DATASET":
-                    parsed_result = self._parse_dataset(entity, matched_fields, ResultType.TABLE)
+                    parsed_result = self._parse_dataset(
+                        entity, matched_fields, ResultType.TABLE
+                    )
                     page_results.append(parsed_result)
                 elif entity_type == "CHART":
-                    parsed_result = self._parse_dataset(entity, matched_fields, ResultType.CHART)
+                    parsed_result = self._parse_dataset(
+                        entity, matched_fields, ResultType.CHART
+                    )
                     page_results.append(parsed_result)
                 elif entity_type == "CONTAINER":
-                    parsed_result = self._parse_container(entity, matched_fields, ResultType.DATABASE)
+                    parsed_result = self._parse_container(
+                        entity, matched_fields, ResultType.DATABASE
+                    )
                     page_results.append(parsed_result)
                 elif entity_type == "DASHBOARD":
-                    parsed_result = self._parse_container(entity, matched_fields, ResultType.DASHBOARD)
+                    parsed_result = self._parse_container(
+                        entity, matched_fields, ResultType.DASHBOARD
+                    )
                     page_results.append(parsed_result)
                 else:
                     raise Exception
             except Exception:
                 logger.warn(f"Parsing for result {entity_urn} failed")
                 malformed_result_urns.append(entity_urn)
-
 
         return page_results, malformed_result_urns
 

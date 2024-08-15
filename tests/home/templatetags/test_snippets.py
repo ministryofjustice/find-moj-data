@@ -13,12 +13,12 @@ from home.templatetags.snippets import truncate_snippet
         (
             "a" * 200 + "\n\n" + "word word word " * 100 + "hello <mark>world</mark>",
             200,
-            "…word word word word word word word word word word word word word word word word word word word word word word word hello <mark>world</mark>",
+            "…word word word word word word word word word word word word word word word word word word word word word word word hello <mark>world</mark>",  # noqa: E501
         ),
         (
-            "A prisoner is released in error if they are wrongly discharged from a prison or court when they should have remained in custody, where the prisoner has not deliberately played a part in the error (i.e. the prisoner had no intent of <mark>escaping</mark>).\n\nExamples include misplaced warrants for imprisonment or remand, recall notices not acted upon, sentence miscalculation or discharging the wrong person on escort.",
+            "A prisoner is released in error if they are wrongly discharged from a prison or court when they should have remained in custody, where the prisoner has not deliberately played a part in the error (i.e. the prisoner had no intent of <mark>escaping</mark>).\n\nExamples include misplaced warrants for imprisonment or remand, recall notices not acted upon, sentence miscalculation or discharging the wrong person on escort.",  # noqa: E501
             300,
-            "A prisoner is released in error if they are wrongly discharged from a prison or court when they should have remained in custody, where the prisoner has not deliberately played a part in the error (i.e. the prisoner had no intent of <mark>escaping</mark>).\n\nExamples include misplaced warrants for imprisonment or…",
+            "A prisoner is released in error if they are wrongly discharged from a prison or court when they should have remained in custody, where the prisoner has not deliberately played a part in the error (i.e. the prisoner had no intent of <mark>escaping</mark>).\n\nExamples include misplaced warrants for imprisonment or…",  # noqa: E501
         ),
     ],
     ids=(

@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
 
 import pytest
-
 from data_platform_catalogue.client.graphql_helpers import (
     _make_user_email_from_urn,
     parse_columns,
