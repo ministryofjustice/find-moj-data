@@ -6,7 +6,7 @@ ENV := local
 all: build
 
 # Setup the application
-build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches compile_messages
+build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches compilemessages
 
 # Install dependencies
 install_deps:
@@ -53,7 +53,7 @@ messages:
 	poetry run python manage.py makemessages --locale=en
 
 # Compile messages
-compile_messages:
+compilemessages:
 	poetry run python manage.py compilemessages
 
 # Run the application
@@ -78,4 +78,4 @@ clean:
 	rm -f $(ENV_FILE)
 	find . -name "*.pyc" -exec rm -f {} \;
 
-.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compile_messages run test unit integration clean
+.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compilemessages run test unit integration clean

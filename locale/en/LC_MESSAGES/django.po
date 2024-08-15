@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 10:18+0100\n"
+"POT-Creation-Date: 2024-08-15 11:07+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,11 +56,11 @@ msgstr ""
 "Do not include personal or financial information, like your National "
 "Insurance number or credit card details."
 
-#: feedback/templates/thanks.html:8 feedback/views.py:37
+#: feedback/templates/thanks.html:9 feedback/views.py:37
 msgid "Thank you for your feedback"
 msgstr "Thank you for your feedback"
 
-#: feedback/templates/thanks.html:11
+#: feedback/templates/thanks.html:12
 msgid "Your feedback will help us improve the service."
 msgstr "Your feedback will help us improve the service."
 
@@ -68,6 +68,11 @@ msgstr "Your feedback will help us improve the service."
 #: feedback/views.py:27
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
+
+# Filter
+#: home/forms/search.py:16
+msgid "All domains"
+msgstr "All subject areas"
 
 # Entity type displayed with as a tag component
 #: home/service/details.py:65 templates/partial/search_result.html:21
@@ -232,7 +237,7 @@ msgstr "Last updated:"
 # Metadata field
 #: templates/details_base.html:72 templates/partial/search_result.html:40
 msgid "Domain:"
-msgstr "Domain:"
+msgstr "Subject area:"
 
 #: templates/details_base.html:73 templates/partial/contact_info.html:16
 #: templates/partial/contact_info.html:36
@@ -369,39 +374,7 @@ msgstr "Search metadata catalogue"
 # Heading
 #: templates/home.html:50
 msgid "Browse by domain"
-msgstr "Browse by domain"
-
-# Summary title
-#: templates/home.html:60
-msgid "What are domains?"
-msgstr "What are domains?"
-
-# Summary details
-#: templates/home.html:64
-msgid ""
-"Data in the catalogue is organised into data 'domains'. These are a grouping "
-"of data by subject area."
-msgstr ""
-"Data in the catalogue is organised into data 'domains'. These are a grouping "
-"of data by subject area."
-
-# Summary details
-#: templates/home.html:65
-msgid ""
-"When data is related to more than one domain, we have assigned it to the one "
-"that appears most relevant."
-msgstr ""
-"When data is related to more than one domain, we have assigned it to the one "
-"that appears most relevant."
-
-# Summary details
-#: templates/home.html:66
-msgid ""
-"Domains may be influenced by the organisational structure but they are "
-"intended to be narrower in scope than an entire agency."
-msgstr ""
-"Domains may be influenced by the organisational structure but they are "
-"intended to be narrower in scope than an entire agency."
+msgstr "Browse by subject area"
 
 # Heading
 #: templates/partial/contact_info.html:4
@@ -471,7 +444,7 @@ msgstr "Filter"
 # Filter
 #: templates/partial/filter.html:20
 msgid "Domain"
-msgstr "Domain"
+msgstr "Subject area"
 
 # Filter
 #: templates/partial/filter.html:26
