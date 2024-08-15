@@ -218,7 +218,7 @@ class TestSearchInteractions:
 
     def verify_unselected_domain(self):
         selected_domain = self.search_page.get_selected_domain().text
-        assert selected_domain == "All domains"
+        assert selected_domain == "All subject areas"
 
     def verify_selected_filters_shown(self, domains):
         actual = {i.text for i in self.search_page.selected_filter_tags()}

@@ -53,19 +53,6 @@
                 <li><a href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}})</a></li>
               {% endfor %}
             </ul>
-
-            <details class="govuk-details">
-              <summary class="govuk-details__summary  govuk-!-margin-top-4">
-                <span class="govuk-details__summary-text">
-                  {% translate "What are domains?" %}
-                </span>
-              </summary>
-              <div class="govuk-details__text">
-                <p>{% translate "Data in the catalogue is organised into data 'domains'. These are a grouping of data by subject area." %}</p>
-                <p>{% translate "When data is related to more than one domain, we have assigned it to the one that appears most relevant." %}</p>
-                <p>{% translate "Domains may be influenced by the organisational structure but they are intended to be narrower in scope than an entire agency." %}</p>
-              </div>
-            </details>
           {% endif %}
         </div>
       </div>
