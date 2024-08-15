@@ -3,6 +3,7 @@ from data_platform_catalogue.search_types import DomainOption
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.translation import gettext as _
+from django.views.decorators.cache import cache_control
 
 from home.forms.search import SearchForm
 from home.service.details import (
@@ -17,6 +18,7 @@ from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 
 
+@cache_control(max_age=300, private=True)
 def home_view(request):
     """
     Displys only domains that have entities tagged for display in the catalog.
@@ -26,6 +28,7 @@ def home_view(request):
     return render(request, "home.html", context)
 
 
+@cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
     if result_type == "table":
         context = dataset_details(urn)
@@ -85,6 +88,7 @@ def dashboard_details(urn):
     return context
 
 
+@cache_control(max_age=60, private=True)
 def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
     request.session["last_search"] = ""
