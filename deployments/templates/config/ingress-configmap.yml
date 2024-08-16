@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: find-moj-data-ingress-nginx-ingress-controller
+  namespace: ${NAMESPACE}
+data:
+  enable-brotli: "true"
+  brotli-level: "6"
+  brotli-types: "application/xml+rss application/atom+xml application/javascript application/x-javascript
+    application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf
+    application/x-web-app-manifest+json application/xhtml+xml application/xml
+    font/opentype font/woff2 image/svg+xml image/x-icon image/png text/css text/plain text/javascript text/x-component text/html"
