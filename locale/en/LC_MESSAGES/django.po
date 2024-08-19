@@ -383,7 +383,7 @@ msgstr "Contact the data owner to request access."
 # Heading
 #: templates/partial/contact_info.html:22
 msgid "Contact channels for questions"
-msgstr "Contact channels for questions"
+msgstr "Ask a question"
 
 # Heading
 #: templates/partial/contact_info.html:28
@@ -593,14 +593,3 @@ msgstr "first name"
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
-
-# Column heading
-#~ msgid "Schema details"
-#~ msgstr "Schema details"
-
-# Heading
-#~ msgid "Table details"
-#~ msgstr "Table details"
-
-#~ msgid "Please use contact channels to request access."
-#~ msgstr "Please use contact channels to request access."
