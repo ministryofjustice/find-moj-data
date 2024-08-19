@@ -1,78 +1,71 @@
-# Find MOJ Data
+# Find MoJ data
 
 [![repo standards badge](https://img.shields.io/endpoint?labelColor=231f20&color=005ea5&style=for-the-badge&label=MoJ%20Compliant&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fendpoint%2Ffind-moj-data&logo=data:image/png;base64,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)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/find-moj-data)
 
-## Quick start
+Find MoJ data is an internal service for finding and sharing data across the Ministry of Justice.
+It is powered by Datahub, an open source data catalogue. This repository contains a custom UI that
+uses the GOV.UK design system, and focuses on data discovery.
 
-Please refer to Prerequisites for dependencies and installation instructions
-
-1. Run `poetry install` to install python dependencies
-1. Run `npm install` to download frontend static dependencies.
-1. Run `poetry run python -m nltk.downloader punkt` to install nltk data
-1. Set the `ENV` var to `local` i.e. `export ENV=local`
-1. Run `op inject --in-file .env.tpl --out-file .env` to generate a compatible `.env` file
-1. Optionally substitute value for `CATALOGUE_TOKEN` var in .env with your own PAT value to be able to retrieve search data.
-1. Run `poetry run python manage.py runserver`
-
-```sh
-poetry install --no-root
-npm install
-poetry run python -m nltk.downloader punkt
-export ENV=local
-op inject --in-file .env.tpl --out-file .env
-poetry run python manage.py runserver
-```
+![Screenshot of the service showing the search page](homepage.png)
 
 # Prerequisites
 
 ## Npm
-  Required for building the front end javascript dependencies
+
+Required for building the front end javascript dependencies
 
 ## Poetry
-  Required for managing python package dependencies.
-  Follow installation instructions here https://python-poetry.org/docs/#installation
+
+Required for managing python package dependencies.
+Follow installation instructions here https://python-poetry.org/docs/#installation
 
 ## 1Password
-  Organisational level tool for storing application secrets and passwords securely.
+
+Organisational level tool for storing application secrets and passwords securely.
 There are a number of 1password utilities available to manage credentials from cli and desktop environments.
 
 1. Install the 1Password desktop app - https://support.1password.com/get-the-apps/
 2. Install the 1Password CLI app - https://developer.1password.com/docs/cli/get-started/
 3. Follow the steps to turn on and test the 1password desktop app integration
 
-## Current Endpoints
+## Chromedriver
 
-/search
+Tests will require chromedriver at a version compatible with your chrome browser (https://googlechromelabs.github.io/chrome-for-testing/)
 
-![Screenshot of the service showing the search page](image.png)
+## Datahub
 
-## Contributing
+[Datahub](https://datahubproject.io/) is the backend for Find MoJ data. These instructions assume you will use the existing development environment hosted in cloud platform.
 
-Run `pre-commit install` from inside the poetry environment to set up pre commit hooks.
+# Quick start
 
-- Linting and formatting handled by `black`, `flake8`, `pre-commit`, and `isort`
-  - `isort` is configured in `pyproject.toml`
-- `detect-secrets` is used to prevent leakage of secrets
-- `sync_with_poetry` ensures the versions of the modules in the pre-commit specification
-  are kept in line with those in the `pyproject.toml` config.
+Please refer to Prerequisites for dependencies and installation instructions
 
-## Testing
+1. Export a local var with the environment name `export ENV=local`
+1. Run `make build` to install dependencies and build the app
+   1. Make any needed customizations required to `.env` file
+1. Run `make test` to run unit tests for the app. This step requires `chromedriver` up-to-date with your google chrome version: https://googlechromelabs.github.io/chrome-for-testing/
+1. Run `make run` to run the app locally on http://localhost:8000
 
-- Python unit tests: `pytest -m 'not slow'`
-- Javascript unit tests: `npm test`
-- Selenium tests: `pytest -m tests/selenium`
-- Search benchmarks (these query the real Datahub backend): `pytest tests/benchmarks`
+```sh
+export ENV=local
+make build
+make test
+make run
+```
 
-Selenium makes use of chromedriver to run a headless browser.
-As either the chrome browser or chromedriver are updated,
-the local version of chromedriver and chrome may drift apart.
-If so, update both to the latest version: update your local chrome
-and run `npm install -g chromedriver chromedriver@latest` to install the latest chromedriver.
+Note: in local development we are using SQLite. Another option is [running the app against RDS](./docs/Running%20the%20app%20against%20RDS.md).
 
-## Frontend styling
+# Reusing this frontend outside the MoJ
 
-If making changes to the scss, to ensure your changes are reflected in local deployments, run:
-`npm run dependencies` to update the css files. If you have `DEBUG=False` you will then need to rerun `poetry run python manage.py collectstatic`.
+If you are considering reusing this frontend, please get in touch with us first.
+
+We recommend you follow these steps:
+
+1. start with the [latest release of Find MoJ data](https://github.com/ministryofjustice/find-moj-data/releases)
+2. replace all references to Find MoJ data in `locale/en/LC_MESSAGES/django.po`
+3. [generate an access token in Datahub](https://datahubproject.io/docs/api/graphql/token-management/)
+4. review `core/settings.py`. Your deployment must set various environment variables for this to work, e.g `CATALOGUE_URL`, the URL to your Datahub instance, and `CATALOGUE_TOKEN`, the access token.
+5. alternatively, you can create your own `settings.py` and [set the `DJANGO_SETTINGS_MODULE` environment variable](https://docs.djangoproject.com/en/5.0/topics/settings/#envvar-DJANGO_SETTINGS_MODULE).
 
 ## Feature Switches
 
@@ -85,3 +78,4 @@ Our switches are created via the cli; the commands can be seen in the Dockerfile
 Current swicthes and default settings:
 
 - `search-sort-radio-buttons` off - switches on/off radio selection buttons for sort order of search results.
+- `display-result-tags` off - switches on/off the display of tags in search and results pages

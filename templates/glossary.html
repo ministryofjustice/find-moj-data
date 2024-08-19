@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
 {% load markdown %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
     <div class="govuk-grid-row">
@@ -9,14 +10,14 @@
         </div>
         <div class="govuk-grid-column-three-quarters">
             <div role="search" class="app-search govuk-form-group govuk-!-margin-bottom-8 js-required">
-                <label for="filter-input" class="govuk-label govuk-visually-hidden-focusable">Filter this page (the content will be updated as you type)</label>
-                <input class="govuk-input" id="filter-input" type="search" placeholder="Filter this page">
+                <label for="filter-input" class="govuk-label govuk-visually-hidden-focusable">{% translate "Filter this page (the content will be updated as you type)" %}</label>
+                <input class="govuk-input" id="filter-input" type="search" placeholder="{% translate "Filter this page" %}">
             </div>
         </div>
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
-            <a href="#glossary-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to glossary content</a>
+            <a href="#glossary-content" class="govuk-skip-link" data-module="govuk-skip-link">{% translate "Skip to glossary content" %}</a>
             <ul class="govuk-list">
                 {% for parent_term in results %}
                     <li class="term-group">

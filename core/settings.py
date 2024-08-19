@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "home.apps.HomeConfig",
+    "feedback.apps.FeedbackConfig",
     "django_prometheus",
     "users",
     "waffle",
@@ -146,10 +147,19 @@ ENV = os.environ.get("ENV")
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "db.sqlite3",
+        "ENGINE": (
+            "django.db.backends.postgresql"
+            if os.environ.get("RDS_INSTANCE_ADDRESS")
+            else "django.db.backends.sqlite3"
+        ),
+        "NAME": os.environ.get("DATABASE_NAME", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("DATABASE_USERNAME", ""),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+        "HOST": os.environ.get("RDS_INSTANCE_ADDRESS", ""),
+        "PORT": "5432",
     }
 }
+
 # Define a service name setting for page titles
 SERVICE_NAME = "Find MOJ data"
 GOV_UK_SUFFIX = "GOV.UK"
@@ -241,3 +251,10 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
     LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
 
     AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
+
+USE_I18N = True
+LANGUAGE_CODE = "en"
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
+CSRF_TRUSTED_ORIGINS = origins_str.split(" ") if origins_str else []

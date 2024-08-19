@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
@@ -9,7 +10,7 @@
         <div class="govuk-grid-column-two-thirds">
           <h1 class="govuk-heading-l">{{h1_value}}</h1>
           <p class="govuk-body">
-            There is a problem with the server.
+            {% translate "There is a problem with the server." %}
           </p>
           {% include "partial/contact_team.html" %}
         </div>

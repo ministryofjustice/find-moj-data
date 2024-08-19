@@ -1,26 +1,34 @@
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
+from data_platform_catalogue.search_types import DomainOption
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
+from django.utils.translation import gettext as _
+from django.views.decorators.cache import cache_control
 
 from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
 from home.service.details import (
     ChartDetailsService,
+    DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
 )
+from home.service.domain_fetcher import DomainFetcher
 from home.service.glossary import GlossaryService
 from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
-from home.service.search_facet_fetcher import SearchFacetFetcher
 
 
+@cache_control(max_age=300, private=True)
 def home_view(request):
-    facets = SearchFacetFetcher().fetch()
-    context = {"domains": DomainModel(facets), "h1_value": "Home"}
+    """
+    Displys only domains that have entities tagged for display in the catalog.
+    """
+    domains: list[DomainOption] = DomainFetcher().fetch()
+    context = {"domains": domains, "h1_value": _("Home")}
     return render(request, "home.html", context)
 
 
+@cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
     if result_type == "table":
         context = dataset_details(urn)
@@ -31,6 +39,9 @@ def details_view(request, result_type, urn):
     if result_type == "chart":
         context = chart_details(urn)
         return render(request, "details_chart.html", context)
+    if result_type == "dashboard":
+        context = dashboard_details(urn)
+        return render(request, "details_dashboard.html", context)
 
 
 def database_details(urn):
@@ -66,6 +77,18 @@ def chart_details(urn):
     return context
 
 
+def dashboard_details(urn):
+    try:
+        service = DashboardDetailsService(urn)
+    except EntityDoesNotExist:
+        raise Http404("Asset does not exist")
+
+    context = service.context
+
+    return context
+
+
+@cache_control(max_age=60, private=True)
 def search_view(request, page: str = "1"):
     new_search = request.GET.get("new", "")
     request.session["last_search"] = ""

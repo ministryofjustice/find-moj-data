@@ -1,19 +1,23 @@
+{% load i18n %}
+
 {% if is_esda %}
 
-<p>This is an MOJ Essential Shared Data Asset (ESDA).</p>
+    <p>This is an MOJ Essential Shared Data Asset (ESDA).</p>
     <details class="govuk-details">
-    <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">
-        What are ESDAs?
-        </span>
-    </summary>
-    <div class="govuk-details__text">
-    An ESDA is:
-    <ul class="govuk-list govuk-list--bullet">
-        <li>data provided by a government department or agency to another government department or agency to support an essential process or purpose which is the responsibility of the receiving organisation; or</li>
-        <li>data acquired by a government department or agency from another government department or agency to support an essential process or purpose, which is the responsibility of the acquiring organisation.</li>
-    </ul>
-    </div>
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                {% translate "What are ESDAs?" %}
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            {% blocktranslate trimmed %}
+                An ESDA is:
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>data provided by a government department or agency to another government department or agency to support an essential process or purpose which is the responsibility of the receiving organisation; or</li>
+                    <li>data acquired by a government department or agency from another government department or agency to support an essential process or purpose, which is the responsibility of the acquiring organisation.</li>
+                </ul>
+            {% endblocktranslate %}
+        </div>
     </details>
 
 {% endif %}

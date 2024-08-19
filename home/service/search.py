@@ -3,6 +3,7 @@ from copy import deepcopy
 from typing import Any
 
 from data_platform_catalogue.search_types import (
+    DomainOption,
     MultiSelectFilter,
     ResultType,
     SearchResponse,
@@ -10,38 +11,20 @@ from data_platform_catalogue.search_types import (
 )
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.utils.translation import gettext as _
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
 from home.models.domain_model import DomainModel
 
 from .base import GenericService
-from .search_facet_fetcher import SearchFacetFetcher
-
-
-def domains_with_their_subdomains(
-    domain: str, subdomain: str, domain_model: DomainModel
-) -> list[str]:
-    """
-    Users can search by domain, and optionally by subdomain.
-    When subdomain is passed, then we can filter on that directly.
-
-    However, when we filter by domain alone, assets tagged to subdomains
-    are not automatically included, so we need to include all possible
-    subdomains in the filter.
-    """
-    if subdomain:
-        return [subdomain]
-
-    subdomains = domain_model.subdomains.get(domain, [])
-    subdomains = [subdomain[0] for subdomain in subdomains]
-    return [domain, *subdomains] if not domain == "" else []
+from .domain_fetcher import DomainFetcher
 
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
-        facets = SearchFacetFetcher().fetch()
-        self.domain_model = DomainModel(facets)
+        domains: list[DomainOption] = DomainFetcher().fetch()
+        self.domain_model = DomainModel(domains)
         self.stemmer = PorterStemmer()
         self.form = form
         if self.form.is_bound:
@@ -79,18 +62,14 @@ class SearchService(GenericService):
         query = form_data.get("query", "").replace("_", " ")
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
-        subdomain = form_data.get("subdomain", "")
         tags = form_data.get("tags", "")
-        domains_and_subdomains = domains_with_their_subdomains(
-            domain, subdomain, self.domain_model
-        )
         where_to_access = self._build_custom_property_filter(
             "dc_where_to_access_dataset=", form_data.get("where_to_access", [])
         )
         entity_types = self._build_entity_types(form_data.get("entity_types", []))
         filter_value = []
-        if domains_and_subdomains:
-            filter_value.append(MultiSelectFilter("domains", domains_and_subdomains))
+        if domain:
+            filter_value.append(MultiSelectFilter("domains", [domain]))
         if where_to_access:
             filter_value.append(MultiSelectFilter("customProperties", where_to_access))
         if tags:
@@ -167,9 +146,8 @@ class SearchService(GenericService):
         self,
     ) -> dict[str, str]:
         domain = self.form.cleaned_data.get("domain", "")
-        subdomain = self.form.cleaned_data.get("subdomain", "")
 
-        label = self.domain_model.get_label(subdomain or domain)
+        label = self.domain_model.get_label(domain)
 
         return {
             label: (
@@ -188,8 +166,9 @@ class SearchService(GenericService):
         context = {
             "form": self.form,
             "results": self.results.page_results,
+            "malformed_result_urns": self.results.malformed_result_urns,
             "highlighted_results": self.highlighted_results.page_results,
-            "h1_value": "Search",
+            "h1_value": _("Search"),
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(  # type: ignore
                 self.page, on_each_side=2, on_ends=1

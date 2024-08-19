@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timezone
+from importlib.resources import files
 from typing import Any, Tuple
 
 from data_platform_catalogue.entities import (
@@ -10,6 +11,7 @@ from data_platform_catalogue.entities import (
     DataSummary,
     DomainRef,
     EntityRef,
+    EntitySummary,
     FurtherInformation,
     GlossaryTermRef,
     OwnerRef,
@@ -19,6 +21,15 @@ from data_platform_catalogue.entities import (
 )
 
 PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
+
+
+def get_graphql_query(graphql_query_file_name: str) -> str:
+    query_text = (
+        files("data_platform_catalogue.client.graphql")
+        .joinpath(f"{graphql_query_file_name}.graphql")
+        .read_text()
+    )
+    return query_text
 
 
 def parse_owner(entity: dict[str, Any]) -> OwnerRef:
@@ -37,7 +48,10 @@ def parse_owner(entity: dict[str, Any]) -> OwnerRef:
         )
         owner_details = OwnerRef(
             display_name=display_name or "",
-            email=properties.get("email", ""),
+            email=properties.get(
+                "email",
+                _make_user_email_from_urn(owners[0].get("urn")),
+            ),
             urn=owners[0].get("urn", ""),
         )
     else:
@@ -149,7 +163,15 @@ def parse_properties(
     access_information = AccessInformation.model_validate(custom_properties_dict)
     usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
     data_summary = DataSummary.model_validate(custom_properties_dict)
+
     further_information = FurtherInformation.model_validate(custom_properties_dict)
+
+    last_updated_timestamp = properties.get("lastRefreshed")
+    if last_updated_timestamp:
+        last_updated_date_str = datetime.fromtimestamp(last_updated_timestamp).strftime(
+            "%d %B %Y"
+        )
+        data_summary.last_updated = last_updated_date_str
 
     custom_properties = CustomEntityProperties(
         access_information=access_information,
@@ -176,7 +198,7 @@ def parse_names(
     The third value is the fully qualified name (e.g. my_database.my_table), which
     can be used to show the entity out of context.
     """
-    top_level_name = entity.get("name")
+    top_level_name = entity.get("name", "")
     name = properties.get("name", top_level_name)
     display_name = properties.get("displayName") or name
     qualified_name = properties.get("qualifiedName") or top_level_name or name
@@ -271,7 +293,8 @@ def parse_relations(
     relationship_type: RelationshipType,
     relations_list: list[dict],
     relation_key="relationships",
-) -> dict[RelationshipType, list[EntityRef]]:
+    entity_type_of_relations: None | str = None,
+) -> dict[RelationshipType, list[EntitySummary]]:
     """
     parse the relationships results returned from a graphql querys
     """
@@ -281,15 +304,60 @@ def parse_relations(
     # There may be more than 10 lineage entities but since we currently only care
     # if lineage exists for a dataset we don't need to capture everything
     related_entities = []
-    for j in relations_list:
-        for i in j.get(relation_key, []):
-            urn = i.get("entity").get("urn")
+    for all_relations in relations_list:
+        for relation in all_relations.get(relation_key, []):
+            urn = relation.get("entity").get("urn")
+            # we sometimes have multiple sub-types loaded or no subtype
+            if entity_type_of_relations is None:
+                entity_type = (
+                    relation.get("entity")
+                    .get("subTypes", {})
+                    .get("typeNames", [relation.get("entity").get("type")])[0]
+                    if relation.get("entity").get("subTypes") is not None
+                    else [relation.get("entity").get("type")][0]
+                )
+            else:
+                entity_type = entity_type_of_relations
+
             display_name = (
-                i.get("entity").get("properties").get("name")
-                if i.get("entity", {}).get("properties") is not None
-                else i.get("entity").get("name")
+                relation.get("entity").get("properties").get("name")
+                if relation.get("entity", {}).get("properties") is not None
+                else relation.get("entity").get("name", "")
             )
-            related_entities.append(EntityRef(urn=urn, display_name=display_name))
+            description = (
+                relation.get("entity").get("properties", {}).get("description", "")
+                if relation.get("entity", {}).get("properties") is not None
+                else ""
+            )
+            tags = parse_tags(relation.get("entity"))
+            related_entities.append(
+                EntitySummary(
+                    entity_ref=EntityRef(urn=urn, display_name=display_name),
+                    description=description,
+                    entity_type=entity_type,
+                    tags=tags,
+                )
+            )
 
     relations_return = {relationship_type: related_entities}
     return relations_return
+
+
+def _make_user_email_from_urn(urn) -> str:
+    """
+    Creates a user email using a user entity urn. This should only be called
+    when an urn exists for a user that has not signed into datahub via sso,
+    so has not been created as an entity and has no associated email address.
+
+    We will look to revist our approach to ownership user creation, see
+    github issue https://github.com/ministryofjustice/find-moj-data/issues/578,
+    but for now this will fix the issue of owners being flagged in datahub but not
+    showing in find-moj-data
+    """
+    username = urn.replace("urn:li:corpuser:", "")
+    email = f"{username}@justice.gov.uk"
+    return email
+
+
+def parse_refresh_period(entity: dict[str, Any]) -> str:
+    pass

@@ -3,16 +3,19 @@
 {% load markdown %}
 {% load humanize %}
 {% load future %}
+{% load waffle_tags %}
+{% load i18n %}
+
 
 {% block breadcrumbs %}
   <div class="govuk-breadcrumbs">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
+        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">{% translate "Search" %}</a>
       </li>
       {% if parent_entity %}
         <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=dataset_parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
+          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
         </li>
       {% endif %}
       <li class="govuk-breadcrumbs__list-item">
@@ -25,61 +28,67 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">{{h1_value}}
-            <strong class="govuk-tag govuk-!-margin-left-2">
-              {{entity_type}}
-            </strong>
-          </h1>
+      <h1 class="govuk-heading-l">{{h1_value}}
+        <strong class="govuk-tag govuk-!-margin-left-2">
+          {{entity_type}}
+        </strong>
+      </h1>
     </div>
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="summary-card">
         <h3 class="govuk-heading-s govuk-!-margin-top-3">
-          Description
+          {% translate "Description" %}
         </h3>
         <div class="govuk-body">
           {% if entity.description %}
             {{entity.description|markdown:3}}
           {% else %}
-            No description available.
+            {% translate "No description available." %}
           {% endif %}
         </div>
         {% block metadata_list %}
           <ul class="govuk-list govuk-body" id="metadata-property-list">
             {% if entity.created %}
               <li>
-                <span class="govuk-!-font-weight-bold">First created:</span>
+                <span class="govuk-!-font-weight-bold">{% translate "First created:" %}</span>
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
-            {% if entity.last_modified %}
+            {% if entity.custom_properties.data_summary.last_updated %}
               <li>
-                <span class="govuk-!-font-weight-bold">Last updated:</span>
-                {{entity.last_modified | date:"jS F Y"}} ({{entity.last_modified|naturaltime}})
+                <span class="govuk-!-font-weight-bold">{% translate "Last updated:" %}</span>
+                {{entity.custom_properties.data_summary.last_updated}}
               </li>
             {% endif %}
-            {% if entity.domain %}
+            {% if entity.custom_properties.data_summary.refresh_period %}
               <li>
-                <span class="govuk-!-font-weight-bold">Domain:</span>
-                {{entity.domain.display_name}}
+                <span class="govuk-!-font-weight-bold">Refresh Period:</span>
+                {{entity.custom_properties.data_summary.refresh_period}}
               </li>
             {% endif %}
-            {% if entity.tags_to_display %}
-              <li>
-                <span class="govuk-!-font-weight-bold">Tags:</span>
-                {% for tag in entity.tags_to_display %}
-                  <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </li>
-            {% endif %}
+            <li>
+              <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
+              {{entity.domain.display_name | default:_('Not provided') }}
+            </li>
+            {% switch 'display-result-tags' %}
+              {% if entity.tags_to_display %}
+                <li>
+                  <span class="govuk-!-font-weight-bold">Tags:</span>
+                  {% for tag in entity.tags_to_display %}
+                    <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag%}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </li>
+              {% endif %}
+            {% endswitch %}
           </ul>
           {% include "partial/esda_info.html" with is_esda=is_esda %}
         {% endblock metadata_list %}
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with data_owner=entity.governance.data_owner.display_name data_owner_email=entity.governance.data_owner.email slack_channel=entity.custom_properties.further_information %}
+      {% include "partial/contact_info.html" with data_owner=entity.governance.data_owner.display_name data_owner_email=entity.governance.data_owner.email slack_channel=entity.custom_properties.further_information access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_url=is_access_requirements_a_url%}
     </div>
   </div>
 

@@ -1,0 +1,593 @@
+# Message file for Find MoJ data (english)
+# This is essentially translating from developer-ese to
+# the final copy.
+msgid ""
+msgstr ""
+"Project-Id-Version: Find MoJ data\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-15 11:07+0100\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Error page title
+#: core/middleware.py:28
+msgid "Catalogue service unavailable"
+msgstr "Catalogue service unavailable"
+
+# 400 page title
+#: core/middleware.py:35
+msgid "Bad request"
+msgstr "Bad request"
+
+# 404 page title
+#: core/middleware.py:42 templates/base/error/page_not_found.html:5
+msgid "Page not found"
+msgstr "Page not found"
+
+# 500 page title
+#: core/middleware.py:49
+msgid "Server error"
+msgstr "Server error"
+
+#: feedback/models.py:16
+msgid "Satisfaction survey"
+msgstr "Satisfaction survey"
+
+#: feedback/models.py:22
+msgid "How can we improve this service?"
+msgstr "How can we improve this service?"
+
+#: feedback/templates/feedback.html:18
+msgid "There is a problem"
+msgstr "There is a problem"
+
+#: feedback/templates/feedback.html:21
+msgid "Make sure you have filled in all the fields."
+msgstr "Make sure you have filled in all the fields."
+
+#: feedback/templates/feedback.html:58
+msgid ""
+"Do not include personal or financial information, like your National "
+"Insurance number or credit card details."
+msgstr ""
+"Do not include personal or financial information, like your National "
+"Insurance number or credit card details."
+
+#: feedback/templates/thanks.html:9 feedback/views.py:37
+msgid "Thank you for your feedback"
+msgstr "Thank you for your feedback"
+
+#: feedback/templates/thanks.html:12
+msgid "Your feedback will help us improve the service."
+msgstr "Your feedback will help us improve the service."
+
+# Page heading
+#: feedback/views.py:27
+msgid "Give feedback on Find MOJ data"
+msgstr "Give feedback on Find MOJ data"
+
+# Filter
+#: home/forms/search.py:16
+msgid "All domains"
+msgstr "All subject areas"
+
+# Entity type displayed with as a tag component
+#: home/service/details.py:65 templates/partial/search_result.html:21
+msgid "Database"
+msgstr "Database"
+
+# Entity type displayed with as a tag component
+#: home/service/details.py:139 templates/partial/search_result.html:25
+msgid "Chart"
+msgstr "Chart"
+
+# Page title
+#: home/service/glossary.py:61
+msgid "Glossary"
+msgstr "Glossary"
+
+# Page title
+#: home/service/metadata_specification.py:28
+msgid "Metadata specification"
+msgstr "Metadata specification"
+
+# Page title
+#: home/service/search.py:171 templates/base/navigation.html:69
+#: templates/details_base.html:14
+msgid "Search"
+msgstr "Search"
+
+# Page title
+#: home/views.py:25 templates/base/navigation.html:64
+msgid "Home"
+msgstr "Home"
+
+# 404 page hint
+#: templates/404.html:13 templates/base/error/page_not_found.html:7
+msgid "If you typed the web address, check it is correct."
+msgstr "If you typed the web address, check it is correct."
+
+# 404 page hint
+#: templates/404.html:16 templates/base/error/page_not_found.html:10
+msgid "If you pasted the web address, check you copied the entire address."
+msgstr "If you pasted the web address, check you copied the entire address."
+
+# Error page message
+#: templates/500.html:13
+msgid "There is a problem with the server."
+msgstr "There is a problem with the server."
+
+# Error page message
+#: templates/500_datahub_unavailable.html:13
+msgid ""
+"The DataHub catalogue is currently unavailable. Please try again in a few "
+"minutes."
+msgstr ""
+"The DataHub catalogue is currently unavailable. Please try again in a few "
+"minutes."
+
+# Skip link
+#: templates/base/base.html:13
+msgid "Skip to main content"
+msgstr "Skip to main content"
+
+# Page heading
+#: templates/base/cookie.html:3 templates/base/cookie.html:7
+msgid "Cookies on Find MOJ data"
+msgstr "Cookies on Find MoJ data"
+
+# Cookie usage
+#: templates/base/cookie.html:9
+msgid ""
+"We use Google Analytics cookies so we can understand how you use the service "
+"and make improvements."
+msgstr ""
+"We use Google Analytics cookies so we can understand how you use the service "
+"and make improvements."
+
+# Footer link
+#: templates/base/footer.html:6
+msgid "Support links"
+msgstr "Support links"
+
+# Footer link
+#: templates/base/footer.html:10
+msgid "Help"
+msgstr "Help"
+
+# Footer link
+#: templates/base/footer.html:15
+msgid "Cookies"
+msgstr "Cookies"
+
+# Footer link
+#: templates/base/footer.html:20
+msgid "Contact"
+msgstr "Contact"
+
+# Footer link
+#: templates/base/footer.html:25
+msgid "Terms and conditions"
+msgstr "Terms and conditions"
+
+# OGL licence
+#: templates/base/footer.html:42
+#, python-format
+msgid ""
+"All content is available under the <a class=\"govuk-footer__link\" "
+"href=\"%(href)s\" rel=\"license\">Open Government Licence v3.0</a>, except "
+"where otherwise stated"
+msgstr ""
+"All content is available under the <a class=\"govuk-footer__link\" "
+"href=\"%(href)s\" rel=\"license\">Open Government Licence v3.0</a>, except "
+"where otherwise stated"
+
+# OGL licence link
+#: templates/base/footer.html:52
+#, python-format
+msgid ""
+"<a class=\"govuk-footer__link govuk-footer__copyright-logo\" "
+"href=\"%(href)s\">© Crown copyright</a>"
+msgstr ""
+"<a class=\"govuk-footer__link govuk-footer__copyright-logo\" "
+"href=\"%(href)s\">© Crown copyright</a>"
+
+#: templates/base/navigation.html:15
+msgid "Ministry of Justice"
+msgstr "Ministry of Justice"
+
+# Service name - note the capitalisation
+#: templates/base/navigation.html:18 templates/home.html:11
+msgid "Find MOJ data"
+msgstr "Find MoJ data"
+
+#: templates/base/navigation.html:36
+msgid "Feedback"
+msgstr "Feedback"
+
+# Header link
+#: templates/base/navigation.html:39
+msgid "Sign out"
+msgstr "Sign out"
+
+# Heading
+#: templates/details_base.html:42 templates/details_dashboard.html:14
+#: templates/details_database.html:14 templates/details_table.html:14
+msgid "Description"
+msgstr "Description"
+
+# Heading
+#: templates/details_base.html:48
+msgid "No description available."
+msgstr "No description available."
+
+# Metadata field
+#: templates/details_base.html:55
+msgid "First created:"
+msgstr "First created:"
+
+# Metadata field
+#: templates/details_base.html:61
+msgid "Last updated:"
+msgstr "Last updated:"
+
+# Metadata field
+#: templates/details_base.html:72 templates/partial/search_result.html:40
+msgid "Domain:"
+msgstr "Subject area:"
+
+#: templates/details_base.html:73 templates/partial/contact_info.html:16
+#: templates/partial/contact_info.html:36
+#: templates/partial/search_result.html:41
+msgid "Not provided"
+msgstr "Not provided."
+
+# Contact info heading
+#: templates/details_chart.html:8
+msgid "Access this data"
+msgstr "Access this data"
+
+# Justice data link
+#: templates/details_chart.html:12
+#, python-format
+msgid "%(display_name)s on Justice Data (opens in new tab)"
+msgstr "%(display_name)s on Justice Data (opens in new tab)"
+
+# Heading
+#: templates/details_dashboard.html:10 templates/details_dashboard.html:37
+msgid "Dashboard content"
+msgstr "Dashboard content"
+
+# User model field
+#: templates/details_dashboard.html:13
+msgid "Chart name"
+msgstr "Chart name"
+
+# Column heading
+#: templates/details_dashboard.html:15 templates/details_dashboard.html:30
+msgid "Chart details"
+msgstr "Chart details"
+
+# Text for databases without any tables
+#: templates/details_dashboard.html:38
+msgid "This dashboard is missing chart information."
+msgstr "This dashboard is missing table information."
+
+# Justice data link
+#: templates/details_dashboard.html:49
+msgid "Justice Data (opens in new tab)"
+msgstr "Justice Data (opens in new tab)"
+
+# Heading
+#: templates/details_database.html:10 templates/details_database.html:37
+msgid "Database content"
+msgstr "Database content"
+
+# Column heading
+#: templates/details_database.html:13
+msgid "Table name"
+msgstr "Table name"
+
+# Column heading
+#: templates/details_database.html:15
+msgid "Schema details"
+msgstr "Schema details"
+
+# Heading
+#: templates/details_database.html:30
+msgid "Table details"
+msgstr "Table details"
+
+# Text for databases without any tables
+#: templates/details_database.html:38
+msgid "This database is missing table information."
+msgstr "This database is missing table information."
+
+# Heading
+#: templates/details_table.html:10 templates/details_table.html:31
+msgid "Table schema"
+msgstr "Table schema"
+
+# User model field
+#: templates/details_table.html:13
+msgid "Column name"
+msgstr "Column name"
+
+# Column heading
+#: templates/details_table.html:15
+msgid "Type"
+msgstr "Type"
+
+# Column heading
+#: templates/details_table.html:16
+msgid "Is Nullable"
+msgstr "Is nullable"
+
+# Text for tables without a schema
+#: templates/details_table.html:32
+msgid "The schema for this table is not available."
+msgstr "The schema for this table is not available."
+
+# Heading
+#: templates/details_table.html:35
+msgid "Lineage"
+msgstr "Lineage"
+
+# Lineage hint
+#: templates/details_table.html:37
+msgid ""
+"If you are interested to find out what data were used to create this table "
+"or if this table is used to create any further tables, you can see that "
+"information via the lineage."
+msgstr ""
+"If you are interested to find out what data were used to create this table "
+"or if this table is used to create any further tables, you can see that "
+"information via the lineage."
+
+# Lineage link
+#: templates/details_table.html:41
+msgid "View lineage in DataHub (opens in new tab)"
+msgstr "View lineage in DataHub (opens in new tab)"
+
+# Search box label on glossary page
+#: templates/glossary.html:13
+msgid "Filter this page (the content will be updated as you type)"
+msgstr "Filter this page (the content will be updated as you type)"
+
+#: templates/glossary.html:14
+msgid "Filter this page"
+msgstr "Filter this page"
+
+# Skip link on glossary
+#: templates/glossary.html:20
+msgid "Skip to glossary content"
+msgstr "Skip to glossary content"
+
+# Search box label on home page
+#: templates/home.html:17
+msgid "Search metadata catalogue"
+msgstr "Search metadata catalogue"
+
+# Heading
+#: templates/home.html:50
+msgid "Browse by domain"
+msgstr "Browse by subject area"
+
+# Heading
+#: templates/partial/contact_info.html:4
+msgid "Access requirements"
+msgstr "Request access"
+
+# Request access link
+#: templates/partial/contact_info.html:7
+msgid "Click link for access information (opens in new tab)"
+msgstr "Click link for access information (opens in new tab)"
+
+#: templates/partial/contact_info.html:12
+msgid "Please use contact channels to request access."
+msgstr "Please use contact channels to request access."
+
+#: templates/partial/contact_info.html:14
+msgid "Please contact the data owner for access information."
+msgstr "Please contact the data owner for access information."
+
+# Heading
+#: templates/partial/contact_info.html:22
+msgid "Contact channels for questions"
+msgstr "Contact channels for questions"
+
+# Heading
+#: templates/partial/contact_info.html:34
+msgid "IAO or Data Owner"
+msgstr "Data owner"
+
+# Contact us link on error pages
+#: templates/partial/contact_team.html:4
+msgid ""
+"If the problems persist, <a href=\"https://moj.enterprise.slack.com/archives/"
+"C06NPM2200N\" class=\"govuk-link\">contact #ask-data-catalogue on slack.</a>"
+msgstr ""
+"If the problems persist, <a href=\"https://moj.enterprise.slack.com/archives/"
+"C06NPM2200N\" class=\"govuk-link\">contact #ask-data-catalogue on slack.</a>"
+
+# Summary title
+#: templates/partial/esda_info.html:9
+msgid "What are ESDAs?"
+msgstr "What are ESDAs?"
+
+#: templates/partial/esda_info.html:13
+msgid ""
+"An ESDA is: <ul class=\"govuk-list govuk-list--bullet\"> <li>data provided "
+"by a government department or agency to another government department or "
+"agency to support an essential process or purpose which is the "
+"responsibility of the receiving organisation; or</li> <li>data acquired by a "
+"government department or agency from another government department or agency "
+"to support an essential process or purpose, which is the responsibility of "
+"the acquiring organisation.</li> </ul>"
+msgstr ""
+"An ESDA is: <ul class=\"govuk-list govuk-list--bullet\"> <li>data provided "
+"by a government department or agency to another government department or "
+"agency to support an essential process or purpose which is the "
+"responsibility of the receiving organisation; or</li> <li>data acquired by a "
+"government department or agency from another government department or agency "
+"to support an essential process or purpose, which is the responsibility of "
+"the acquiring organisation.</li> </ul>"
+
+# Heading
+#: templates/partial/filter.html:8
+msgid "Filter"
+msgstr "Filter"
+
+# Filter
+#: templates/partial/filter.html:20
+msgid "Domain"
+msgstr "Subject area"
+
+# Filter
+#: templates/partial/filter.html:26
+msgid "Subdomain"
+msgstr "Subdomain"
+
+# Filter
+#: templates/partial/filter.html:34
+msgid "Entity Types"
+msgstr "Entity types"
+
+# Result page 0 results text
+#: templates/partial/no_results.html:2
+msgid "No results found"
+msgstr "No results found"
+
+#: templates/partial/no_results.html:5
+msgid ""
+"<p>Try including less words in your search query.</p> <p>If you want to "
+"include results for multiple things, separate words with pipe characters. "
+"For example: <strong>prisons | probation</strong> matches data mentioning "
+"\"prisons\" OR \"probation\".</p>"
+msgstr ""
+"<p>Try including less words in your search query.</p> <p>If you want to "
+"include results for multiple things, separate words with pipe characters. "
+"For example: <strong>prisons | probation</strong> matches data mentioning "
+"\"prisons\" OR \"probation\".</p>"
+
+#: templates/partial/no_results.html:11
+msgid ""
+"<p>If you didn't find what you are looking for, make sure that all words are "
+"spelled correctly.</p>"
+msgstr ""
+"<p>If you didn't find what you are looking for, make sure that all words are "
+"spelled correctly.</p>"
+
+# Pagination - previous
+#: templates/partial/pagination.html:11
+msgid "Previous<span class=\"govuk-visually-hidden\"> page</span>"
+msgstr "Previous<span class=\"govuk-visually-hidden\"> page</span>"
+
+# Pagination - next
+#: templates/partial/pagination.html:35
+msgid "Next<span class=\"govuk-visually-hidden\"> page</span>"
+msgstr "Next<span class=\"govuk-visually-hidden\"> page</span>"
+
+# Entity type
+#: templates/partial/search_result.html:17
+msgid "Table"
+msgstr "Table"
+
+# Search result metadata
+#: templates/partial/search_result.html:45
+msgid "Database:"
+msgstr "Database:"
+
+# Search result metadata
+#: templates/partial/search_result.html:65
+msgid "Matched fields:"
+msgstr "Matched fields:"
+
+# Heading
+#: templates/partial/selected_filters.html:8
+msgid "Selected filters"
+msgstr "Selected filters"
+
+# Button text on filter component
+#: templates/partial/selected_filters.html:16
+msgid "Clear filter"
+msgstr "Clear filer"
+
+# Button text on filter component
+#: templates/partial/selected_filters.html:29
+msgid "Remove this filter"
+msgstr "Remove this filter"
+
+# Sort options (currently unused)
+#: templates/partial/sort.html:5
+msgid "Sort results"
+msgstr "Sort results"
+
+# Heading
+#: templates/search.html:15 templates/search.html:21
+msgid "Search MOJ data"
+msgstr "Search MoJ data"
+
+# Heading
+#: templates/search.html:29
+msgid "Search query tips"
+msgstr "Search query tips"
+
+# Search hints
+#: templates/search.html:34
+#, python-format
+msgid ""
+"<ul class=\"govuk-list govuk-list--bullet\"> <li><p>Use multiple words to "
+"narrow down your search.</p><p>For example: <strong>prisons probation</"
+"strong> matches data mentioning \"prisons\" AND \"probation\".</p></li> "
+"<li><p>Separate words with a pipe to broaden your search.</p><p>For example: "
+"<strong>prisons | probation</strong> matches data mentioning \"prisons\" OR "
+"\"probation\".</p></li> <li><p>Quote phrases to require an exact match.</"
+"p><p>For example: <strong>\"case management\"</strong> matches the exact "
+"phrase \"case management\" but not either word on its own.</p></li> "
+"<li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -"
+"magistrates</strong> excludes any results that mention \"magistrates\".</p></"
+"li> </ul> <p><a href=\"%(more_examples_href)s\">More search query examples</"
+"a></p>"
+msgstr ""
+"            <ul class=\"govuk-list govuk-list--bullet\">              "
+"<li><p>Use multiple words to narrow down your search.</p><p>For example: "
+"<strong>prisons probation</strong> matches data mentioning \"prisons\" AND "
+"\"probation\".</p></li>              <li><p>Separate words with a pipe to "
+"broaden your search.</p><p>For example: <strong>prisons | probation</strong> "
+"matches data mentioning \"prisons\" OR \"probation\".</p></li>              "
+"<li><p>Quote phrases to require an exact match.</p><p>For example: "
+"<strong>\"case management\"</strong> matches the exact phrase \"case "
+"management\" but not either word on its own.</p></li>              "
+"<li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -"
+"magistrates</strong> excludes any results that mention \"magistrates\".</p></"
+"li>            </ul>            <p><a href=\"%(more_examples_href)s\">More "
+"search query examples</a></p>"
+
+# Result malformed
+#: templates/search.html:51
+msgid "Some results were malformed and are not shown"
+msgstr "Some results were malformed and are not shown"
+
+# User model field
+#: users/managers.py:16
+msgid "The Email must be set"
+msgstr "The Email must be set"
+
+# User model field
+#: users/models.py:10
+msgid "email address"
+msgstr "email address"
+
+# User model field
+#: users/models.py:11
+msgid "first name"
+msgstr "first name"
+
+# User model field
+#: users/models.py:12
+msgid "last name"
+msgstr "last name"

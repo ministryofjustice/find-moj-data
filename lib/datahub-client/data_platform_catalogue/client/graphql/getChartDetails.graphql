@@ -5,6 +5,29 @@ query getChartDetails($urn: String!) {
     platform {
       name
     }
+    relationships(input: {types: ["Contains"], direction:INCOMING start: 0, count: 10 }) {
+      total
+      relationships {
+        entity {
+          urn
+          type
+          ... on Dashboard {
+            properties {
+              name
+              description
+            }
+            tags {
+              tags {
+                tag{urn}
+              }
+            }
+            subTypes {
+              typeNames
+            }
+          }
+        }
+      }
+    }
     tags {
       tags {
         tag {
@@ -49,6 +72,7 @@ query getChartDetails($urn: String!) {
     properties {
       name
       description
+      lastRefreshed
       externalUrl
       customProperties {
         key

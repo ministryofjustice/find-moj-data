@@ -15,6 +15,7 @@ class ResultType(Enum):
     GLOSSARY_TERM = auto()
     CHART = auto()
     DATABASE = auto()
+    DASHBOARD = auto()
 
 
 @dataclass
@@ -55,6 +56,18 @@ class FacetOption:
 
 
 @dataclass
+class DomainOption:
+    """
+    A representation of a domain and the number of associated entities
+    represented by total.
+    """
+
+    urn: str
+    name: str
+    total: int
+
+
+@dataclass
 class SearchResult:
     urn: str
     result_type: ResultType
@@ -62,7 +75,7 @@ class SearchResult:
     display_name: str = ""
     fully_qualified_name: str = ""
     description: str = ""
-    matches: dict[str, str] = field(default_factory=dict)
+    matches: dict[str, Any] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
     tags: list[TagRef] = field(default_factory=list)
     glossary_terms: list[GlossaryTermRef] = field(default_factory=list)
@@ -112,4 +125,5 @@ class SearchFacets:
 class SearchResponse:
     total_results: int
     page_results: list[SearchResult]
+    malformed_result_urns: list[str] = field(default_factory=list)
     facets: SearchFacets = field(default_factory=SearchFacets)

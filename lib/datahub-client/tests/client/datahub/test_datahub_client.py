@@ -3,7 +3,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,
@@ -19,6 +18,7 @@ from data_platform_catalogue.entities import (
     DataSummary,
     DomainRef,
     EntityRef,
+    EntitySummary,
     FurtherInformation,
     Governance,
     OwnerRef,
@@ -59,18 +59,23 @@ class TestCatalogueClientWithDatahub:
                 ],
             ),
             domain=DomainRef(urn="LAA", display_name="LAA"),
-            tables=[
-                {
-                    "entity": {
-                        "urn": "urn:li:dataset:fake_table",
-                        "properties": {
-                            "name": "fake_table",
-                            "description": "table description",
-                        },
-                        "editableProperties": None,
-                    }
-                }
-            ],
+            relationships={
+                RelationshipType.CHILD: [
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:dataset:fake_table", display_name="fake_table"
+                        ),
+                        description="table description",
+                        tags=[
+                            TagRef(
+                                display_name="some-tag",
+                                urn="urn:li:tag:dc_display_in_catalogue",
+                            )
+                        ],
+                        entity_type="TABLE",
+                    )
+                ]
+            },
             last_modified=datetime(2020, 5, 17),
             created=datetime(2020, 5, 17),
             tags=[TagRef(urn="test", display_name="test")],
@@ -101,8 +106,18 @@ class TestCatalogueClientWithDatahub:
             description="Dataset",
             relationships={
                 RelationshipType.PARENT: [
-                    EntityRef(
-                        urn="urn:li:container:my_database", display_name="database"
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:container:my_database", display_name="database"
+                        ),
+                        description="db description",
+                        tags=[
+                            TagRef(
+                                display_name="some-tag",
+                                urn="urn:li:tag:dc_display_in_catalogue",
+                            )
+                        ],
+                        entity_type="CONTAINER",
                     )
                 ]
             },
@@ -270,7 +285,21 @@ class TestCatalogueClientWithDatahub:
                             "direction": "OUTGOING",
                             "entity": {
                                 "urn": "urn:li:container:database",
+                                "type": "CONTAINER",
+                                "subTypes": {"typeNames": ["Database"]},
                                 "properties": {"name": "database"},
+                                "tags": {
+                                    "tags": [
+                                        {
+                                            "tag": {
+                                                "urn": "urn:li:tag:dc_display_in_catalogue",
+                                                "properties": {
+                                                    "name": "dc_display_in_catalogue"
+                                                },
+                                            }
+                                        }
+                                    ]
+                                },
                             },
                         }
                     ],
@@ -342,7 +371,19 @@ class TestCatalogueClientWithDatahub:
             description="Dataset",
             relationships={
                 RelationshipType.PARENT: [
-                    EntityRef(urn="urn:li:container:database", display_name="database")
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:container:database", display_name="database"
+                        ),
+                        description="",
+                        tags=[
+                            TagRef(
+                                urn="urn:li:tag:dc_display_in_catalogue",
+                                display_name="dc_display_in_catalogue",
+                            )
+                        ],
+                        entity_type="Database",
+                    )
                 ],
                 RelationshipType.DATA_LINEAGE: [],
             },
@@ -471,7 +512,7 @@ class TestCatalogueClientWithDatahub:
             name="Absconds",
             fully_qualified_name="Absconds",
             description="a test description",
-            relationships={},
+            relationships={RelationshipType.PARENT: []},
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
@@ -513,12 +554,13 @@ class TestCatalogueClientWithDatahub:
                 "parentContainers": {
                     "count": 0,
                 },
-                "entities": {
+                "relationships": {
                     "total": 2,
-                    "searchResults": [
+                    "relationships": [
                         {
                             "entity": {
                                 "name": "DatasetToShow",
+                                "urn": "urn:li:dataset:DatasetToShow",
                                 "properties": {
                                     "name": "DatasetToShow",
                                     "description": "Dataset to show",
@@ -540,6 +582,7 @@ class TestCatalogueClientWithDatahub:
                         {
                             "entity": {
                                 "name": "DatasetToHide",
+                                "urn": "urn:li:dataset:DatasetToHide",
                                 "properties": {
                                     "name": "DatasetToHide",
                                     "description": "Dataset to hide",
@@ -566,28 +609,20 @@ class TestCatalogueClientWithDatahub:
         ) as mock_exists:
             mock_exists.return_value = True
             database = datahub_client.get_database_details(urn)
-            assert database.tables == [
-                {
-                    "entity": {
-                        "name": "DatasetToShow",
-                        "properties": {
-                            "description": "Dataset to show",
-                            "name": "DatasetToShow",
-                        },
-                        "tags": {
-                            "tags": [
-                                {
-                                    "tag": {
-                                        "properties": {
-                                            "name": "dc:display_in_catalogue",
-                                        },
-                                        "urn": "urn:li:tag:dc_display_in_catalogue",
-                                    },
-                                },
-                            ],
-                        },
-                    }
-                }
+            assert database.relationships[RelationshipType.CHILD] == [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:dataset:DatasetToShow", display_name="DatasetToShow"
+                    ),
+                    description="Dataset to show",
+                    entity_type="TABLE",
+                    tags=[
+                        TagRef(
+                            urn="urn:li:tag:dc_display_in_catalogue",
+                            display_name="dc:display_in_catalogue",
+                        )
+                    ],
+                )
             ]
 
     def test_upsert_table_and_database(

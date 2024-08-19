@@ -16,6 +16,7 @@ from data_platform_catalogue.entities import (
     TagRef,
     UsageRestrictions,
 )
+from django.utils.translation import gettext as _
 
 
 class MetadataSpecificationService:
@@ -24,7 +25,7 @@ class MetadataSpecificationService:
 
     def _get_context(self):
         return {
-            "h1_value": "Metadata specification",
+            "h1_value": _("Metadata specification"),
             "entities": {
                 "Table": Table.model_json_schema(),
                 "Database": Database.model_json_schema(),

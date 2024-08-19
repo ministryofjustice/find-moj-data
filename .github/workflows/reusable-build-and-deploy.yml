@@ -44,6 +44,8 @@ jobs:
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
+    outputs:
+      image_path: ${{ steps.image-path.outputs.image_path }}
     steps:
       - uses: actions/checkout@v4
 
@@ -86,6 +88,7 @@ jobs:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
     steps:
+      - uses: actions/checkout@v4
       - name: Prepare Helm deployment
         id: prepare-helm-deployment
         env:
@@ -93,11 +96,12 @@ jobs:
           CATALOGUE_URL: ${{ vars.CATALOGUE_URL }}
           DEBUG: ${{ vars.DEBUG }}
           DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
+          CSRF_TRUSTED_ORIGINS: ${{ vars.CSRF_TRUSTED_ORIGINS }}
           DJANGO_LOG_LEVEL: ${{ vars.DJANGO_LOG_LEVEL }}
           SENTRY_DSN_WORKAROUND: ${{ vars.SENTRY_DSN_WORKAROUND }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
-          IMAGE_PATH: ${{ job.build-and-push.steps.image-path.outputs.image_path }}
+          IMAGE_PATH: ${{ needs.build-and-push.outputs.image_path }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
@@ -107,6 +111,7 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_REDIRECT_URI: ${{ vars.AZURE_REDIRECT_URI }}
           AZURE_AUTHORITY: ${{ vars.AZURE_AUTHORITY }}
+          EXTERNAL_DOMAIN_PREFIX: ${{ vars.EXTERNAL_DOMAIN_PREFIX }}
 
         run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
