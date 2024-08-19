@@ -32,4 +32,3 @@ class TestPrimaryNav:
 
         assert heading_text == "Find MoJ data"
         assert self.selenium.title.split("-")[0].strip() == "Home"
-

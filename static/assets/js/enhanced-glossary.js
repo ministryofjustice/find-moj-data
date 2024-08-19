@@ -30,7 +30,7 @@ const updateResults = () => {
     const terms = Array.from(el.querySelectorAll(".term"));
     const isEmpty =
       terms.length === 0 ||
-      terms.every((term) => term.classList.contains("govuk-!-display-none"));
+    terms.every((term) => term.classList.contains("govuk-!-display-none"));
 
     if (isEmpty) {
       el.classList.add("govuk-!-display-none");
