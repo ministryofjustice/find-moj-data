@@ -93,13 +93,13 @@ class TestDetailsPageContactDetails:
                 "",
                 "#contact_us",
                 "meta.data@justice.gov.uk",
-                "Please use contact channels to request access.",
+                "Contact the data owner to request access.",
             ),
             (
                 "",
                 "",
                 "meta.data@justice.gov.uk",
-                "Please contact the data owner for access information.",
+                "Contact the data owner to request access.",
             ),
             (
                 "",

@@ -392,7 +392,7 @@ msgstr "Please use contact channels to request access."
 
 #: templates/partial/contact_info.html:14
 msgid "Please contact the data owner for access information."
-msgstr "Please contact the data owner for access information."
+msgstr "Contact the data owner to request access."
 
 # Heading
 #: templates/partial/contact_info.html:22
