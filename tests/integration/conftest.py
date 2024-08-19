@@ -14,7 +14,7 @@ from selenium.webdriver.support.select import Select
 TMP_DIR = (Path(__file__).parent / "../../tmp").resolve()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     options = ChromeOptions()
     options.add_argument("headless")
