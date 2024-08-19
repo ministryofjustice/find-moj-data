@@ -351,6 +351,114 @@ def test_parse_properties_with_none_values():
     )
 
 
+def test_parse_columns_with_empty_fields():
+    entity = {
+        "schemaMetadata": {
+            "fields": [],
+            "primaryKeys": [],
+            "foreignKeys": [],
+        }
+    }
+
+    assert parse_columns(entity) == []
+
+
+def test_parse_columns_with_unrecognized_type():
+    entity = {
+        "schemaMetadata": {
+            "fields": [
+                {
+                    "fieldPath": "unknownField",
+                    "label": None,
+                    "nullable": True,
+                    "description": "An unknown field type",
+                    "type": "UNKNOWN_TYPE",
+                    "nativeDataType": "unknown",
+                }
+            ],
+            "primaryKeys": [],
+            "foreignKeys": [],
+        }
+    }
+
+    assert parse_columns(entity) == [
+        Column(
+            name="unknownField",
+            display_name="unknownField",
+            type="unknown",
+            description="An unknown field type",
+            nullable=True,
+            is_primary_key=False,
+            foreign_keys=[],
+        )
+    ]
+
+
+def test_parse_relations_multiple_relationships():
+    relations = {
+        "relationships": {
+            "total": 2,
+            "relationships": [
+                {
+                    "entity": {
+                        "urn": "urn:li:dataProduct:test1",
+                        "type": "DATA_PRODUCT",
+                        "properties": {"name": "test1", "description": "first test entity"},
+                        "tags": {
+                            "tags": [
+                                {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}
+                            ]
+                        },
+                    }
+                },
+                {
+                    "entity": {
+                        "urn": "urn:li:dataProduct:test2",
+                        "type": "DATA_PRODUCT",
+                        "properties": {"name": "test2", "description": "second test entity"},
+                        "tags": {
+                            "tags": [
+                                {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue2"}}
+                            ]
+                        },
+                    }
+                }
+            ],
+        }
+    }
+    result = parse_relations(RelationshipType.PARENT, [relations["relationships"]])
+    assert result == {
+        RelationshipType.PARENT: [
+            EntitySummary(
+                entity_ref=EntityRef(
+                    urn="urn:li:dataProduct:test1", display_name="test1"
+                ),
+                description="first test entity",
+                entity_type="DATA_PRODUCT",
+                tags=[
+                    TagRef(
+                        urn="urn:li:tag:dc_display_in_catalogue",
+                        display_name="dc_display_in_catalogue",
+                    )
+                ],
+            ),
+            EntitySummary(
+                entity_ref=EntityRef(
+                    urn="urn:li:dataProduct:test2", display_name="test2"
+                ),
+                description="second test entity",
+                entity_type="DATA_PRODUCT",
+                tags=[
+                    TagRef(
+                        urn="urn:li:tag:dc_display_in_catalogue2",
+                        display_name="dc_display_in_catalogue2",
+                    )
+                ],
+            ),
+        ]
+    }
+
+
 def test_parse_tags():
     tag = TagRef(display_name="abc", urn="urn:tag:abc")
     result = parse_tags(
