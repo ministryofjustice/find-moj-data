@@ -30,7 +30,7 @@ def get_sort_choices():
 
 
 def get_where_to_access_choices():
-    return [("analytical_platform", "Analytical Platform")]
+    return [("analytical_platform", _("Analytical Platform"))]
 
 
 def get_entity_types():
