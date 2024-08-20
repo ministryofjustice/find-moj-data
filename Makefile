@@ -50,7 +50,7 @@ setup_waffle_switches:
 
 # Run makemessages
 messages:
-	poetry run python manage.py makemessages --locale=en
+	poetry run python manage.py makemessages --locale=en --ignore venv
 
 # Compile messages
 compilemessages:
