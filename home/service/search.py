@@ -217,15 +217,14 @@ class SearchService(GenericService):
 
     def _get_match_reason_display_names(self):
         return {
-            "id": "ID",
-            "urn": "URN",
-            "domains": "Domain",
-            "title": "Title",
-            "name": "Name",
-            "description": "Description",
-            "fieldPaths": "Column name",
-            "fieldDescriptions": "Column description",
-            "sensitivityLevel": "Sensitivity level",
-            "dc_where_to_access_dataset": "Available on",
-            "qualifiedName": "Qualified name",
+            "id": _("ID"),
+            "urn": _("URN"),
+            "domains": _("Domain"),
+            "title": _("Title"),
+            "name": _("Name"),
+            "description": _("Description"),
+            "fieldPaths": _("Column name"),
+            "fieldDescriptions": _("Column description"),
+            "dc_where_to_access_dataset": _("Available on"),
+            "qualifiedName": _("Qualified name"),
         }
