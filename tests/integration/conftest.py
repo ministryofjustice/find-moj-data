@@ -71,7 +71,18 @@ class Page:
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
 
-class DatabaseDetailsPage(Page):
+class DetailsPage(Page):
+    def request_access(self):
+        return self.selenium.find_element(By.ID, "request_access")
+
+    def contact_channels(self):
+        return self.selenium.find_element(By.ID, "contact_channels")
+
+    def data_owner(self):
+        return self.selenium.find_element(By.ID, "data_owner")
+
+
+class DatabaseDetailsPage(DetailsPage):
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
@@ -86,11 +97,8 @@ class DatabaseDetailsPage(Page):
             By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
         )
 
-    def request_access(self):
-        return self.selenium.find_element(By.ID, "request-access")
 
-
-class TableDetailsPage(Page):
+class TableDetailsPage(DetailsPage):
     def column_descriptions(self):
         return [
             c.text

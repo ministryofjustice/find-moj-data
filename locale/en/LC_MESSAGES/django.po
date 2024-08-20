@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-15 11:07+0100\n"
+"POT-Creation-Date: 2024-08-19 10:23+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +101,7 @@ msgid "Search"
 msgstr "Search"
 
 # Page title
-#: home/views.py:25 templates/base/navigation.html:64
+#: home/views.py:27 templates/base/navigation.html:64
 msgid "Home"
 msgstr "Home"
 
@@ -239,8 +239,8 @@ msgstr "Last updated:"
 msgid "Domain:"
 msgstr "Subject area:"
 
-#: templates/details_base.html:73 templates/partial/contact_info.html:16
-#: templates/partial/contact_info.html:36
+#: templates/details_base.html:73 templates/partial/contact_info.html:15
+#: templates/partial/contact_info.html:30
 #: templates/partial/search_result.html:41
 msgid "Not provided"
 msgstr "Not provided."
@@ -282,7 +282,7 @@ msgid "Justice Data (opens in new tab)"
 msgstr "Justice Data (opens in new tab)"
 
 # Heading
-#: templates/details_database.html:10 templates/details_database.html:37
+#: templates/details_database.html:10 templates/details_database.html:35
 msgid "Database content"
 msgstr "Database content"
 
@@ -291,18 +291,8 @@ msgstr "Database content"
 msgid "Table name"
 msgstr "Table name"
 
-# Column heading
-#: templates/details_database.html:15
-msgid "Schema details"
-msgstr "Schema details"
-
-# Heading
-#: templates/details_database.html:30
-msgid "Table details"
-msgstr "Table details"
-
 # Text for databases without any tables
-#: templates/details_database.html:38
+#: templates/details_database.html:36
 msgid "This database is missing table information."
 msgstr "This database is missing table information."
 
@@ -382,27 +372,39 @@ msgid "Access requirements"
 msgstr "Request access"
 
 # Request access link
-#: templates/partial/contact_info.html:7
+#: templates/partial/contact_info.html:8
 msgid "Click link for access information (opens in new tab)"
 msgstr "Click link for access information (opens in new tab)"
 
-#: templates/partial/contact_info.html:12
-msgid "Please use contact channels to request access."
-msgstr "Please use contact channels to request access."
-
-#: templates/partial/contact_info.html:14
+#: templates/partial/contact_info.html:13
 msgid "Please contact the data owner for access information."
-msgstr "Please contact the data owner for access information."
+msgstr "Contact the data owner to request access."
 
 # Heading
 #: templates/partial/contact_info.html:22
 msgid "Contact channels for questions"
-msgstr "Contact channels for questions"
+msgstr "Ask a question"
 
 # Heading
-#: templates/partial/contact_info.html:34
+#: templates/partial/contact_info.html:28
+msgid "Contact the data owner with questions."
+msgstr "Contact the data owner with questions."
+
+# Heading
+#: templates/partial/contact_info.html:36
 msgid "IAO or Data Owner"
 msgstr "Data owner"
+
+# Contact us link on error pages
+#: templates/partial/contact_info.html:41
+msgid ""
+"Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
+"C06NPM2200N\" class=\"govuk-link\">contact the Data Catalogue team</a> about this "
+"data."
+msgstr ""
+"Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
+"C06NPM2200N\" class=\"govuk-link\">contact the Data Catalogue team</a> about this "
+"data."
 
 # Contact us link on error pages
 #: templates/partial/contact_team.html:4

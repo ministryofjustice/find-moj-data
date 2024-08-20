@@ -2,6 +2,7 @@ import pytest
 from data_platform_catalogue.entities import (
     AccessInformation,
     CustomEntityProperties,
+    Database,
     FurtherInformation,
     OwnerRef,
 )
@@ -33,27 +34,36 @@ class TestDetailsPageContactDetails:
         self.live_server_url = live_server.url
         self.details_database_page = details_database_page
 
+    @pytest.fixture
+    def database(self) -> Database:
+        result = generate_database_metadata()
+
+        # Blank out owner
+        result.governance.data_owner.email = ""
+        result.governance.data_owner.display_name = ""
+
+        return result
+
+    def start_on_the_details_page(self):
+        self.selenium.get(
+            f"{self.live_server_url}/details/database/urn:li:container:test"
+        )
+
     @pytest.mark.parametrize(
-        "access_reqs, expected_text, expected_tag",
+        "access_reqs, expected_text",
         [
             (
                 "https://place-to-get-your-access.com",
                 "Click link for access information (opens in new tab)",
-                "a",
             ),
             (
                 "To access these data you need to seek permission from the data owner by email",
                 "To access these data you need to seek permission from the data owner by email",
-                "p",
             ),
         ],
     )
     def test_access_requirements_content(
-        self,
-        mock_catalogue,
-        access_reqs,
-        expected_text,
-        expected_tag,
+        self, database, mock_catalogue, access_reqs, expected_text
     ):
         """
         test that what is displayed in the request action section of contacts is what we expect
@@ -63,22 +73,15 @@ class TestDetailsPageContactDetails:
         shown as given
         3 - where no access_requirements custom property exists default to the standrd line
         """
-        test_database = generate_database_metadata(
-            custom_properties=CustomEntityProperties(
-                access_information=AccessInformation(
-                    dc_access_requirements=access_reqs
-                ),
-            )
+        database.custom_properties.access_information = AccessInformation(
+            dc_access_requirements=access_reqs
         )
-
-        mock_get_database_details_response(mock_catalogue, test_database)
+        mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
-
         request_access_metadata = self.details_database_page.request_access()
 
         assert request_access_metadata.text == expected_text
-        assert request_access_metadata.tag_name == expected_tag
 
     @pytest.mark.parametrize(
         "access_reqs, slack_channel, owner, expected_text",
@@ -93,13 +96,13 @@ class TestDetailsPageContactDetails:
                 "",
                 "#contact_us",
                 "meta.data@justice.gov.uk",
-                "Please use contact channels to request access.",
+                "Contact the data owner to request access.",
             ),
             (
                 "",
                 "",
                 "meta.data@justice.gov.uk",
-                "Please contact the data owner for access information.",
+                "Contact the data owner to request access.",
             ),
             (
                 "",
@@ -110,46 +113,108 @@ class TestDetailsPageContactDetails:
         ],
     )
     def test_access_requirements_fallbacks(
-        self, mock_catalogue, access_reqs, slack_channel, owner, expected_text
+        self,
+        database,
+        mock_catalogue,
+        access_reqs,
+        slack_channel,
+        owner,
+        expected_text,
     ):
-        """
-        If no access requirements are given, users should use the contact info,
-        if provided. If not, then they should contact the data owner.
-        If none of the information is provided, then the catalogue entry is
-        non-functional - we should prevent this happening at ingestion time
-        or before.
-        """
-        test_database = generate_database_metadata(
-            custom_properties=CustomEntityProperties(
-                access_information=AccessInformation(
-                    dc_access_requirements=access_reqs
-                ),
+        if access_reqs:
+            database.custom_properties.access_information = AccessInformation(
+                dc_access_requirements=access_reqs
             )
-        )
-
         if owner:
-            test_database.governance.data_owner = OwnerRef(
+            database.governance.data_owner = OwnerRef(
                 display_name=owner, email=owner, urn="urn:bla"
             )
-        else:
-            test_database.governance.data_owner.display_name = ""
-            test_database.governance.data_owner.email = ""
-
         if slack_channel:
-            test_database.custom_properties.further_information = FurtherInformation(
+            database.custom_properties.further_information = FurtherInformation(
                 dc_slack_channel_name=slack_channel,
                 dc_slack_channel_url="http://bla.com",
             )
 
-        mock_get_database_details_response(mock_catalogue, test_database)
+        mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
-
         request_access_metadata = self.details_database_page.request_access()
 
         assert request_access_metadata.text == expected_text
 
-    def start_on_the_details_page(self):
-        self.selenium.get(
-            f"{self.live_server_url}/details/database/urn:li:container:test"
-        )
+    @pytest.mark.parametrize(
+        "slack_channel, owner, expected_text",
+        [
+            (
+                "#contact-us",
+                "meta.data@justice.gov.uk",
+                "Slack channel: #contact-us (opens in new tab)",
+            ),
+            (
+                "",
+                "meta.data@justice.gov.uk",
+                "Contact the data owner with questions.",
+            ),
+            (
+                "",
+                "",
+                "Not provided.",
+            ),
+        ],
+    )
+    def test_contact_channels_fallbacks(
+        self,
+        database,
+        mock_catalogue,
+        slack_channel,
+        owner,
+        expected_text,
+    ):
+        if owner:
+            database.governance.data_owner = OwnerRef(
+                display_name=owner, email=owner, urn="urn:bla"
+            )
+        if slack_channel:
+            database.custom_properties.further_information = FurtherInformation(
+                dc_slack_channel_name=slack_channel,
+                dc_slack_channel_url="http://bla.com",
+            )
+
+        mock_get_database_details_response(mock_catalogue, database)
+
+        self.start_on_the_details_page()
+        request_access_metadata = self.details_database_page.contact_channels()
+
+        assert request_access_metadata.text == expected_text
+
+    @pytest.mark.parametrize(
+        "owner, expected_text",
+        [
+            (
+                "meta.data@justice.gov.uk",
+                "meta.data@justice.gov.uk",
+            ),
+            (
+                "",
+                "Not provided - contact the Data Catalogue team about this data.",
+            ),
+        ],
+    )
+    def test_data_owner_fallbacks(
+        self,
+        database,
+        mock_catalogue,
+        owner,
+        expected_text,
+    ):
+        if owner:
+            database.governance.data_owner = OwnerRef(
+                display_name=owner, email=owner, urn="urn:bla"
+            )
+
+        mock_get_database_details_response(mock_catalogue, database)
+
+        self.start_on_the_details_page()
+        request_access_metadata = self.details_database_page.data_owner()
+
+        assert request_access_metadata.text == expected_text

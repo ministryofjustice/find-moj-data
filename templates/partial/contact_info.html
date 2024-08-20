@@ -2,37 +2,43 @@
 
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Access requirements" %}</h2>
-  {% if access_requirements %}
-    {% if is_access_url %}
-      <p class="govuk-body"><a id="request-access" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% translate "Click link for access information (opens in new tab)" %}</a></p>
+  <p id="request_access" class="govuk-body">
+    {% if access_requirements %}
+      {% if is_access_url %}
+        <a href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% translate "Click link for access information (opens in new tab)" %}</a>
+      {% else %}
+        {{ access_requirements }}
+      {% endif %}
+    {% elif data_owner_email %}
+      {% translate "Please contact the data owner for access information." %}
     {% else %}
-      <p id="request-access">{{ access_requirements }} </p>
+      {% translate "Not provided" %}
     {% endif %}
-  {% elif slack_channel.dc_slack_channel_url %}
-    <p id="request-access">{% translate "Please use contact channels to request access." %}</p>
-  {% elif data_owner_email %}
-    <p id="request-access">{% translate "Please contact the data owner for access information." %}</p>
-  {% else %}
-    <p id="request-access"> {% translate "Not provided" %} </p>
-  {% endif %}
+  </p>
 </div>
 <!-- placeholder until we have more contact channels than just slack -->
-{% if slack_channel.dc_slack_channel_url %}
-  <div class="govuk-body">
-    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for questions" %}</h2>
-    <p class="govuk-body">
-      {% if slack_channel %}
-        <!-- This should become a list of populated contact channels -->
-        Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
-      {% else %}
-        {% translate 'Not provided'}
-      {% endif %}
-    </p>
-  </div>
-{% endif %}
+
+<div class="govuk-body">
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for questions" %}</h2>
+  <p id="contact_channels" class="govuk-body">
+    {% if slack_channel.dc_slack_channel_url %}
+      <!-- This should become a list of populated contact channels -->
+      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
+    {% elif data_owner_email %}
+      {% translate "Contact the data owner with questions." %}
+    {% else %}
+      {% translate 'Not provided' %}
+    {% endif %}
+  </p>
+</div>
+
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "IAO or Data Owner" %}</h2>
-  <p class="govuk-body">
-    {{ data_owner_email|urlize|default:_('Not provided') }}
+  <p id="data_owner" class="govuk-body">
+    {% if data_owner_email %}
+      {{ data_owner_email|urlize }}
+    {% else %}
+      {% blocktranslate %}Not provided - <a href="https://moj.enterprise.slack.com/archives/C06NPM2200N" class="govuk-link">contact the Data Catalogue team</a> about this data.{% endblocktranslate %}
+    {% endif %}
   </p>
 </div>
