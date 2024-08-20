@@ -7,7 +7,7 @@ from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,
 )
-from data_platform_catalogue.client.exceptions import ReferencedEntityMissing
+from data_platform_catalogue.client.exceptions import ReferencedEntityMissing, EntityDoesNotExist
 from data_platform_catalogue.entities import (
     AccessInformation,
     Chart,
@@ -696,3 +696,33 @@ class TestCatalogueClientWithDatahub:
 
     def test_get_custom_property_key_value_pairs(self, datahub_client, database):
         datahub_client._get_custom_property_key_value_pairs(database.custom_properties)
+
+    def test_get_dataset_invalid_urn(self, datahub_client, base_mock_graph):
+        urn = "invalid_urn"
+        datahub_response = {"dataset": None}
+        base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        with patch(
+                "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
+            mock_exists.return_value = False  # Entity does not exist
+            with pytest.raises(EntityDoesNotExist):
+                datahub_client.get_table_details(urn)
+
+    def test_get_dataset_missing_properties(self, datahub_client, base_mock_graph):
+        urn = "urn:li:dataset:missing_props"
+        datahub_response = {
+            "dataset": {
+                "platform": {"name": "datahub"},
+                "name": "Dataset",
+                "properties": {}
+            }
+        }
+        base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        with patch(
+                "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
+            mock_exists.return_value = True
+            dataset = datahub_client.get_table_details(urn)
+
+        assert dataset.name == "Dataset"
+        assert dataset.description == ""
