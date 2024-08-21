@@ -12,6 +12,7 @@ from data_platform_catalogue.search_types import (
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
@@ -168,7 +169,7 @@ class SearchService(GenericService):
             "results": self.results.page_results,
             "malformed_result_urns": self.results.malformed_result_urns,
             "highlighted_results": self.highlighted_results.page_results,
-            "h1_value": _("Search"),
+            "h1_value": pgettext("Page title", "Search MoJ data"),
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(  # type: ignore
                 self.page, on_each_side=2, on_ends=1

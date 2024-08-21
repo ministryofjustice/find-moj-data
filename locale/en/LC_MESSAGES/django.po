@@ -5,29 +5,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-21 10:00+0100\n"
+"POT-Creation-Date: 2024-08-21 11:20+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# Error page title
 #: core/middleware.py:28
 msgid "Catalogue service unavailable"
 msgstr "Catalogue service unavailable"
 
-# 400 page title
 #: core/middleware.py:35
 msgid "Bad request"
 msgstr "Bad request"
 
-# 404 page title
 #: core/middleware.py:42 templates/base/error/page_not_found.html:5
 msgid "Page not found"
 msgstr "Page not found"
 
-# 500 page title
 #: core/middleware.py:49
 msgid "Server error"
 msgstr "Server error"
@@ -64,12 +60,10 @@ msgstr "Thank you for your feedback"
 msgid "Your feedback will help us improve the service."
 msgstr "Your feedback will help us improve the service."
 
-# Page heading
 #: feedback/views.py:27
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
 
-# Filter
 #: home/forms/search.py:16
 msgid "All domains"
 msgstr "All subject areas"
@@ -78,33 +72,27 @@ msgstr "All subject areas"
 msgid "Analytical Platform"
 msgstr "Analytical Platform"
 
-# Filter
 #: home/forms/search.py:69 home/service/search.py:112
 #: home/service/search.py:222 templates/partial/filter.html:20
 msgid "Domain"
 msgstr "Subject area"
 
-# Entity type displayed with as a tag component
 #: home/service/details.py:65 templates/partial/search_result.html:21
 msgid "Database"
 msgstr "Database"
 
-# Entity type displayed with as a tag component
 #: home/service/details.py:139 templates/partial/search_result.html:25
 msgid "Chart"
 msgstr "Chart"
 
-# Page title
 #: home/service/glossary.py:61
 msgid "Glossary"
 msgstr "Glossary"
 
-# Page title
 #: home/service/metadata_specification.py:28
 msgid "Metadata specification"
 msgstr "Metadata specification"
 
-# Filter
 #: home/service/search.py:121 templates/partial/filter.html:34
 msgid "Entity Types"
 msgstr "Entity types"
@@ -117,17 +105,16 @@ msgstr "Where to access"
 msgid "Tags"
 msgstr "Tags"
 
-# Page title
-#: home/service/search.py:171 templates/base/navigation.html:69
-#: templates/details_base.html:14
-msgid "Search"
-msgstr "Search"
+#: home/service/search.py:172
+msgctxt "Page title"
+msgid "Search MoJ data"
+msgstr "Search MoJ data"
 
-#: home/service/search.py:220
+#: home/service/search.py:221
 msgid "ID"
 msgstr "ID"
 
-#: home/service/search.py:221
+#: home/service/search.py:222
 msgid "URN"
 msgstr "URN"
 
@@ -135,56 +122,48 @@ msgstr "URN"
 msgid "Title"
 msgstr "Title"
 
-#: home/service/search.py:224
+#: home/service/search.py:225
 msgid "Name"
 msgstr "Name"
 
-# Heading
-#: home/service/search.py:225 templates/details_base.html:42
+#: home/service/search.py:226 templates/details_base.html:42
 #: templates/details_dashboard.html:14 templates/details_database.html:14
 #: templates/details_table.html:14
 msgid "Description"
 msgstr "Description"
 
-# User model field
-#: home/service/search.py:226 templates/details_table.html:13
+#: home/service/search.py:227 templates/details_table.html:13
 msgid "Column name"
 msgstr "Column name"
 
-# Heading
-#: home/service/search.py:227
+#: home/service/search.py:228
 msgid "Column description"
 msgstr "Column description"
 
-#: home/service/search.py:228
+#: home/service/search.py:229
 msgid "Available on"
 msgstr "Available on"
 
-#: home/service/search.py:229
+#: home/service/search.py:230
 msgid "Qualified name"
 msgstr "Qualified name"
 
-# Page title
 #: home/views.py:27 templates/base/navigation.html:64
 msgid "Home"
 msgstr "Home"
 
-# 404 page hint
 #: templates/404.html:13 templates/base/error/page_not_found.html:7
 msgid "If you typed the web address, check it is correct."
 msgstr "If you typed the web address, check it is correct."
 
-# 404 page hint
 #: templates/404.html:16 templates/base/error/page_not_found.html:10
 msgid "If you pasted the web address, check you copied the entire address."
 msgstr "If you pasted the web address, check you copied the entire address."
 
-# Error page message
 #: templates/500.html:13
 msgid "There is a problem with the server."
 msgstr "There is a problem with the server."
 
-# Error page message
 #: templates/500_datahub_unavailable.html:13
 msgid ""
 "The DataHub catalogue is currently unavailable. Please try again in a few "
@@ -193,17 +172,14 @@ msgstr ""
 "The DataHub catalogue is currently unavailable. Please try again in a few "
 "minutes."
 
-# Skip link
 #: templates/base/base.html:13
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-# Page heading
 #: templates/base/cookie.html:3 templates/base/cookie.html:7
 msgid "Cookies on Find MOJ data"
 msgstr "Cookies on Find MoJ data"
 
-# Cookie usage
 #: templates/base/cookie.html:9
 msgid ""
 "We use Google Analytics cookies so we can understand how you use the service "
@@ -212,32 +188,26 @@ msgstr ""
 "We use Google Analytics cookies so we can understand how you use the service "
 "and make improvements."
 
-# Footer link
 #: templates/base/footer.html:6
 msgid "Support links"
 msgstr "Support links"
 
-# Footer link
 #: templates/base/footer.html:10
 msgid "Help"
 msgstr "Help"
 
-# Footer link
 #: templates/base/footer.html:15
 msgid "Cookies"
 msgstr "Cookies"
 
-# Footer link
 #: templates/base/footer.html:20
 msgid "Contact"
 msgstr "Contact"
 
-# Footer link
 #: templates/base/footer.html:25
 msgid "Terms and conditions"
 msgstr "Terms and conditions"
 
-# OGL licence
 #: templates/base/footer.html:42
 #, python-format
 msgid ""
@@ -249,7 +219,6 @@ msgstr ""
 "href=\"%(href)s\" rel=\"license\">Open Government Licence v3.0</a>, except "
 "where otherwise stated"
 
-# OGL licence link
 #: templates/base/footer.html:52
 #, python-format
 msgid ""
@@ -263,7 +232,6 @@ msgstr ""
 msgid "Ministry of Justice"
 msgstr "Ministry of Justice"
 
-# Service name - note the capitalisation
 #: templates/base/navigation.html:18 templates/home.html:11
 msgid "Find MOJ data"
 msgstr "Find MoJ data"
@@ -272,27 +240,26 @@ msgstr "Find MoJ data"
 msgid "Feedback"
 msgstr "Feedback"
 
-# Header link
 #: templates/base/navigation.html:39
 msgid "Sign out"
 msgstr "Sign out"
 
-# Heading
+#: templates/base/navigation.html:69 templates/details_base.html:14
+msgid "Search"
+msgstr "Search"
+
 #: templates/details_base.html:48
 msgid "No description available."
 msgstr "No description available."
 
-# Metadata field
 #: templates/details_base.html:55
 msgid "First created:"
 msgstr "First created:"
 
-# Metadata field
 #: templates/details_base.html:61
 msgid "Last updated:"
 msgstr "Last updated:"
 
-# Metadata field
 #: templates/details_base.html:72 templates/partial/search_result.html:40
 msgid "Domain:"
 msgstr "Subject area:"
@@ -303,93 +270,75 @@ msgstr "Subject area:"
 msgid "Not provided"
 msgstr "Not provided."
 
-# Contact info heading
 #: templates/details_chart.html:8
 msgid "Access this data"
 msgstr "Access this data"
 
-# Justice data link
 #: templates/details_chart.html:12
 #, python-format
 msgid "%(display_name)s on Justice Data (opens in new tab)"
 msgstr "%(display_name)s on Justice Data (opens in new tab)"
 
-# Heading
 #: templates/details_dashboard.html:10 templates/details_dashboard.html:37
 msgid "Dashboard content"
 msgstr "Dashboard content"
 
-# User model field
 #: templates/details_dashboard.html:13
 msgid "Chart name"
 msgstr "Chart name"
 
-# Column heading
 #: templates/details_dashboard.html:15 templates/details_dashboard.html:30
 msgid "Chart details"
 msgstr "Chart details"
 
-# Text for databases without any tables
 #: templates/details_dashboard.html:38
 msgid "This dashboard is missing chart information."
 msgstr "This dashboard is missing table information."
 
-# Justice data link
 #: templates/details_dashboard.html:49
 msgid "Justice Data (opens in new tab)"
 msgstr "Justice Data (opens in new tab)"
 
-# Heading
 #: templates/details_database.html:10 templates/details_database.html:35
 msgid "Database content"
 msgstr "Database content"
 
-# Column heading
 #: templates/details_database.html:13
 msgid "Table name"
 msgstr "Table name"
 
-# Text for databases without any tables
 #: templates/details_database.html:36
 msgid "This database is missing table information."
 msgstr "This database is missing table information."
 
-# Heading
 #: templates/details_table.html:10 templates/details_table.html:31
 msgid "Table schema"
 msgstr "Table schema"
 
-# Column heading
 #: templates/details_table.html:15
 msgid "Type"
 msgstr "Type"
 
-# Column heading
 #: templates/details_table.html:16
 msgid "Is Nullable"
 msgstr "Is nullable"
 
-# Text for tables without a schema
 #: templates/details_table.html:32
 msgid "The schema for this table is not available."
 msgstr "The schema for this table is not available."
 
-# Heading
 #: templates/details_table.html:35
 msgid "Lineage"
 msgstr "Lineage"
 
-# Lineage hint
 #: templates/details_table.html:37
 msgid "See where this data came from and how it is used in other tables."
 msgstr "See where this data came from and how it is used in other tables."
 
-# Lineage link
 #: templates/details_table.html:41
 msgid "View lineage in DataHub (opens in new tab)"
 msgstr "View lineage in DataHub (opens in new tab)"
 
-# Search box label on glossary page
 #: templates/glossary.html:13
 msgid "Filter this page (the content will be updated as you type)"
 msgstr "Filter this page (the content will be updated as you type)"
@@ -398,27 +347,22 @@ msgstr "Filter this page (the content will be updated as you type)"
 msgid "Filter this page"
 msgstr "Filter this page"
 
-# Skip link on glossary
 #: templates/glossary.html:20
 msgid "Skip to glossary content"
 msgstr "Skip to glossary content"
 
-# Search box label on home page
 #: templates/home.html:17
 msgid "Search metadata catalogue"
 msgstr "Search metadata catalogue"
 
-# Heading
 #: templates/home.html:50
 msgid "Browse by domain"
 msgstr "Browse by subject area"
 
-# Heading
 #: templates/partial/contact_info.html:4
 msgid "Access requirements"
 msgstr "Request access"
 
-# Request access link
 #: templates/partial/contact_info.html:8
 msgid "Click link for access information (opens in new tab)"
 msgstr "Click link for access information (opens in new tab)"
@@ -427,22 +371,18 @@ msgstr "Click link for access information (opens in new tab)"
 msgid "Please contact the data owner for access information."
 msgstr "Contact the data owner to request access."
 
-# Heading
 #: templates/partial/contact_info.html:22
 msgid "Contact channels for questions"
 msgstr "Ask a question"
 
-# Heading
 #: templates/partial/contact_info.html:28
 msgid "Contact the data owner with questions."
 msgstr "Contact the data owner with questions."
 
-# Heading
 #: templates/partial/contact_info.html:36
 msgid "IAO or Data Owner"
 msgstr "Data owner"
 
-# Contact us link on error pages
 #: templates/partial/contact_info.html:41
 msgid ""
 "Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
@@ -453,7 +393,6 @@ msgstr ""
 "C06NPM2200N\" class=\"govuk-link\">contact the Data Catalogue team</a> about "
 "this data."
 
-# Contact us link on error pages
 #: templates/partial/contact_team.html:4
 msgid ""
 "If the problems persist, <a href=\"https://moj.enterprise.slack.com/archives/"
@@ -462,7 +401,6 @@ msgstr ""
 "If the problems persist, <a href=\"https://moj.enterprise.slack.com/archives/"
 "C06NPM2200N\" class=\"govuk-link\">contact #ask-data-catalogue on slack.</a>"
 
-# Summary title
 #: templates/partial/esda_info.html:9
 msgid "What are ESDAs?"
 msgstr "What are ESDAs?"
@@ -485,17 +423,14 @@ msgstr ""
 "to support an essential process or purpose, which is the responsibility of "
 "the acquiring organisation.</li> </ul>"
 
-# Heading
 #: templates/partial/filter.html:8
 msgid "Filter"
 msgstr "Filter"
 
-# Filter
 #: templates/partial/filter.html:26
 msgid "Subdomain"
 msgstr "Subdomain"
 
-# Result page 0 results text
 #: templates/partial/no_results.html:2
 msgid "No results found"
 msgstr "No results found"
@@ -520,62 +455,50 @@ msgstr ""
 "<p>If you didn't find what you are looking for, make sure that all words are "
 "spelled correctly.</p>"
 
-# Pagination - previous
 #: templates/partial/pagination.html:11
 msgid "Previous<span class=\"govuk-visually-hidden\"> page</span>"
 msgstr "Previous<span class=\"govuk-visually-hidden\"> page</span>"
 
-# Pagination - next
 #: templates/partial/pagination.html:35
 msgid "Next<span class=\"govuk-visually-hidden\"> page</span>"
 msgstr "Next<span class=\"govuk-visually-hidden\"> page</span>"
 
-# Entity type
 #: templates/partial/search_result.html:17
 msgid "Table"
 msgstr "Table"
 
-# Search result metadata
 #: templates/partial/search_result.html:45
 msgid "Database:"
 msgstr "Database:"
 
-# Search result metadata
 #: templates/partial/search_result.html:65
 msgid "Matched fields:"
 msgstr "Matched fields:"
 
-# Heading
 #: templates/partial/selected_filters.html:8
 msgid "Selected filters"
 msgstr "Selected filters"
 
-# Button text on filter component
 #: templates/partial/selected_filters.html:16
 msgid "Clear filter"
 msgstr "Clear filer"
 
-# Button text on filter component
 #: templates/partial/selected_filters.html:29
 msgid "Remove this filter"
 msgstr "Remove this filter"
 
-# Sort options (currently unused)
 #: templates/partial/sort.html:5
 msgid "Sort results"
 msgstr "Sort results"
 
-# Heading
 #: templates/search.html:15 templates/search.html:21
 msgid "Search MOJ data"
 msgstr "Search MoJ data"
 
-# Heading
 #: templates/search.html:29
 msgid "Search query tips"
-msgstr "Search query tips"
+msgstr "Search tips"
 
-# Search hints
 #: templates/search.html:34
 #, python-format
 msgid ""
@@ -604,29 +527,24 @@ msgstr ""
 "<li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -"
 "magistrates</strong> excludes any results that mention \"magistrates\".</p></"
 "li>            </ul>            <p><a href=\"%(more_examples_href)s\">More "
-"search query examples</a></p>"
+"advanced search options</a></p>"
 
-# Result malformed
 #: templates/search.html:51
 msgid "Some results were malformed and are not shown"
 msgstr "Some results were malformed and are not shown"
 
-# User model field
 #: users/managers.py:16
 msgid "The Email must be set"
 msgstr "The Email must be set"
 
-# User model field
 #: users/models.py:10
 msgid "email address"
 msgstr "email address"
 
-# User model field
 #: users/models.py:11
 msgid "first name"
 msgstr "first name"
 
-# User model field
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
