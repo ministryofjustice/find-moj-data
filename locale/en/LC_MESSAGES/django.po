@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-21 10:00+0100\n"
+"POT-Creation-Date: 2024-08-21 11:20+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,12 +64,10 @@ msgstr "Thank you for your feedback"
 msgid "Your feedback will help us improve the service."
 msgstr "Your feedback will help us improve the service."
 
-# Page heading
 #: feedback/views.py:27
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
 
-# Filter
 #: home/forms/search.py:16
 msgid "All domains"
 msgstr "All subject areas"
@@ -78,7 +76,6 @@ msgstr "All subject areas"
 msgid "Analytical Platform"
 msgstr "Analytical Platform"
 
-# Filter
 #: home/forms/search.py:69 home/service/search.py:112
 #: home/service/search.py:222 templates/partial/filter.html:20
 msgid "Domain"
@@ -89,22 +86,18 @@ msgstr "Subject area"
 msgid "Database"
 msgstr "Database"
 
-# Entity type displayed with as a tag component
 #: home/service/details.py:139 templates/partial/search_result.html:25
 msgid "Chart"
 msgstr "Chart"
 
-# Page title
 #: home/service/glossary.py:61
 msgid "Glossary"
 msgstr "Glossary"
 
-# Page title
 #: home/service/metadata_specification.py:28
 msgid "Metadata specification"
 msgstr "Metadata specification"
 
-# Filter
 #: home/service/search.py:121 templates/partial/filter.html:34
 msgid "Entity Types"
 msgstr "Entity types"
@@ -117,17 +110,16 @@ msgstr "Where to access"
 msgid "Tags"
 msgstr "Tags"
 
-# Page title
-#: home/service/search.py:171 templates/base/navigation.html:69
-#: templates/details_base.html:14
-msgid "Search"
-msgstr "Search"
+#: home/service/search.py:172
+msgctxt "Page title"
+msgid "Search MoJ data"
+msgstr "Search MoJ data"
 
-#: home/service/search.py:220
+#: home/service/search.py:221
 msgid "ID"
 msgstr "ID"
 
-#: home/service/search.py:221
+#: home/service/search.py:222
 msgid "URN"
 msgstr "URN"
 
@@ -135,36 +127,35 @@ msgstr "URN"
 msgid "Title"
 msgstr "Title"
 
-#: home/service/search.py:224
+#: home/service/search.py:225
 msgid "Name"
 msgstr "Name"
 
 # Heading
-#: home/service/search.py:225 templates/details_base.html:42
+#: home/service/search.py:226 templates/details_base.html:42
 #: templates/details_dashboard.html:14 templates/details_database.html:14
 #: templates/details_table.html:14
 msgid "Description"
 msgstr "Description"
 
 # User model field
-#: home/service/search.py:226 templates/details_table.html:13
+#: home/service/search.py:227 templates/details_table.html:13
 msgid "Column name"
 msgstr "Column name"
 
 # Heading
-#: home/service/search.py:227
+#: home/service/search.py:228
 msgid "Column description"
 msgstr "Column description"
 
-#: home/service/search.py:228
+#: home/service/search.py:229
 msgid "Available on"
 msgstr "Available on"
 
-#: home/service/search.py:229
+#: home/service/search.py:230
 msgid "Qualified name"
 msgstr "Qualified name"
 
-# Page title
 #: home/views.py:27 templates/base/navigation.html:64
 msgid "Home"
 msgstr "Home"
@@ -198,7 +189,6 @@ msgstr ""
 msgid "Skip to main content"
 msgstr "Skip to main content"
 
-# Page heading
 #: templates/base/cookie.html:3 templates/base/cookie.html:7
 msgid "Cookies on Find MOJ data"
 msgstr "Cookies on Find MoJ data"
@@ -276,6 +266,10 @@ msgstr "Feedback"
 #: templates/base/navigation.html:39
 msgid "Sign out"
 msgstr "Sign out"
+
+#: templates/base/navigation.html:69 templates/details_base.html:14
+msgid "Search"
+msgstr "Search"
 
 # Heading
 #: templates/details_base.html:48
@@ -490,7 +484,6 @@ msgstr ""
 msgid "Filter"
 msgstr "Filter"
 
-# Filter
 #: templates/partial/filter.html:26
 msgid "Subdomain"
 msgstr "Subdomain"
@@ -573,7 +566,7 @@ msgstr "Search MoJ data"
 # Heading
 #: templates/search.html:29
 msgid "Search query tips"
-msgstr "Search query tips"
+msgstr "Search tips"
 
 # Search hints
 #: templates/search.html:34
@@ -604,7 +597,7 @@ msgstr ""
 "<li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -"
 "magistrates</strong> excludes any results that mention \"magistrates\".</p></"
 "li>            </ul>            <p><a href=\"%(more_examples_href)s\">More "
-"search query examples</a></p>"
+"advanced search options</a></p>"
 
 # Result malformed
 #: templates/search.html:51

@@ -265,6 +265,6 @@ def table_details_page(selenium) -> TableDetailsPage:
 def page_titles():
     pages = [
         "Home",
-        "Search",
+        "Search MoJ data",
     ]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
