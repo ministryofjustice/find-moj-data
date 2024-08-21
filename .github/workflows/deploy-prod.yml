@@ -14,10 +14,11 @@ jobs:
     uses: "./.github/workflows/reusable-publish-datahub-client.yml"
 
   deploy-prod:
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+    uses: "./.github/workflows/reusable-deploy.yml"
     needs: code-tests
     with:
       env: "prod"
+      ecr_repository: ${{ vars.PROD_ECR_REPOSITORY }}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}

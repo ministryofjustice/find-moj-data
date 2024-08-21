@@ -1,0 +1,41 @@
+name: Promote docker image
+
+on:
+  workflow_call:
+    inputs:
+      from_repository:
+        description: "repository to promote image from"
+        required: true
+        type: string
+      to_repository:
+        description: "repository to promote image to"
+        required: true
+        type: string
+jobs:
+  promote:
+    name: Promote docker image
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.ECR_REGION }}
+
+      - name: Login to ECR
+        id: login-to-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Pull and push docker image
+        id: pull-and-push-docker-image-to-ecr
+        env:
+          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
+          from_repository: ${{ inputs.from_repository }}
+          to_repository: ${{ inputs.from_repository }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker pull ${REGISTRY}/${from_repository}:${IMAGE_TAG}
+          docker tag ${REGISTRY}/${from_repository}:${IMAGE_TAG} ${REGISTRY}/${to_repository}:${IMAGE_TAG}
+          docker push ${REGISTRY}/${to_repository}:${IMAGE_TAG}

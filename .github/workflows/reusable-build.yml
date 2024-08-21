@@ -1,0 +1,51 @@
+name: Build and push image to ECR
+
+on:
+  workflow_call:
+    inputs:
+      ecr_repository:
+        description: "repository to push image to"
+        required: true
+        type: string
+
+jobs:
+  build-and-push-to-ecr:
+    name: Build and push Docker image to CP namespace ECR
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    outputs:
+      image_path: ${{ steps.image-path.outputs.image_path }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.ECR_REGION }}
+
+      - name: Login to ECR
+        id: login-to-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Output image path
+        id: image-path
+        env:
+          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
+          REPOSITORY: ${{ inputs.ecr_repository }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          echo "image_path=${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        id: build-docker-image
+        env:
+          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
+        run: docker build -t ${IMAGE_PATH} .
+
+      - name: Push Docker image to ECR
+        id: push-docker-image-to-ecr
+        env:
+          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
+        run: docker push ${IMAGE_PATH}

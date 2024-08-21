@@ -7,6 +7,10 @@ on:
         description: "which environment to deploy to"
         required: true
         type: string
+      ecr_repository:
+        description: "repository to pull image from"
+        required: true
+        type: string
     secrets:
       kube_namespace:
         description: "the kubernetes namespace to deploy to"
@@ -37,22 +41,15 @@ on:
         required: true
 
 jobs:
-  build-and-push:
-    name: Build and push Docker image to CP namespace ECR
+  deploy:
+    name: Deploy Helm chart into Cloud Platform
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
-    outputs:
-      image_path: ${{ steps.image-path.outputs.image_path }}
     steps:
       - uses: actions/checkout@v4
-
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
-          aws-region: ${{ vars.ECR_REGION }}
 
       - name: Login to ECR
         id: login-to-ecr
@@ -62,33 +59,11 @@ jobs:
         id: image-path
         env:
           REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "image_path=${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
 
-      - name: Build Docker image
-        id: build-docker-image
-        env:
-          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
-        run: docker build -t ${IMAGE_PATH} .
-
-      - name: Push Docker image to ECR
-        id: push-docker-image-to-ecr
-        env:
-          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
-        run: docker push ${IMAGE_PATH}
-
-  deploy:
-    name: Deploy Helm chart into Cloud Platform
-    needs: build-and-push
-    environment: ${{ inputs.env }}
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read # This is required for actions/checkout
-    steps:
-      - uses: actions/checkout@v4
       - name: Prepare Helm deployment
         id: prepare-helm-deployment
         env:
@@ -101,7 +76,7 @@ jobs:
           SENTRY_DSN_WORKAROUND: ${{ vars.SENTRY_DSN_WORKAROUND }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
-          IMAGE_PATH: ${{ needs.build-and-push.outputs.image_path }}
+          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}

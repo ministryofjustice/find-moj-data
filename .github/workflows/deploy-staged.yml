@@ -8,11 +8,18 @@ jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
 
-  deploy-test:
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+  build:
     needs: code-tests
+    uses: "./.github/workflows/reusable-build.yml"
+    with:
+      ecr_repository: $${{vars.TEST_ECR_REPOSITORY}}
+
+  deploy-test:
+    uses: "./.github/workflows/reusable-deploy.yml"
+    needs: build
     with:
       env: "test"
+      ecr_repository: ${{vars.TEST_ECR_REPOSITORY}}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
@@ -24,11 +31,19 @@ jobs:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
-  deploy-preprod:
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+  promote-test:
     needs: deploy-test
+    uses: "./.github/workflows/reusable-promote.yml"
+    with:
+      from_repository: ${{vars.TEST_ECR_REPOSITORY}}
+      to_repository: ${{vars.PREPROD_ECR_REPOSITORY}}
+
+  deploy-preprod:
+    uses: "./.github/workflows/reusable-deploy.yml"
+    needs: promote-test
     with:
       env: "preprod"
+      ecr_repository: ${{vars.PREPROD_ECR_REPOSITORY}}
     secrets:
       kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
       kube_cert: ${{ secrets.KUBE_CERT }}
@@ -39,3 +54,10 @@ jobs:
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+  promote-preprod:
+    needs: deploy-preprod
+    uses: "./.github/workflows/reusable-promote.yml"
+    with:
+      from_repository: ${{vars.PREPROD_ECR_REPOSITORY}}
+      to_repository: ${{vars.PROD_ECR_REPOSITORY}}
