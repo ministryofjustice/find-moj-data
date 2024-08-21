@@ -66,7 +66,7 @@ class SearchForm(forms.Form):
             attrs={
                 "form": "searchform",
                 "class": "govuk-select",
-                "aria-label": "Domain",
+                "aria-label": _("Domain"),
                 "onchange": "document.getElementById('searchform').submit();",
             }
         ),
