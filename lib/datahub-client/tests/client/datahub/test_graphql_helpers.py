@@ -402,7 +402,10 @@ def test_parse_relations_multiple_relationships():
                     "entity": {
                         "urn": "urn:li:dataProduct:test1",
                         "type": "DATA_PRODUCT",
-                        "properties": {"name": "test1", "description": "first test entity"},
+                        "properties": {
+                            "name": "test1",
+                            "description": "first test entity",
+                        },
                         "tags": {
                             "tags": [
                                 {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}
@@ -414,14 +417,17 @@ def test_parse_relations_multiple_relationships():
                     "entity": {
                         "urn": "urn:li:dataProduct:test2",
                         "type": "DATA_PRODUCT",
-                        "properties": {"name": "test2", "description": "second test entity"},
+                        "properties": {
+                            "name": "test2",
+                            "description": "second test entity",
+                        },
                         "tags": {
                             "tags": [
                                 {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue2"}}
                             ]
                         },
                     }
-                }
+                },
             ],
         }
     }

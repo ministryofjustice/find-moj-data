@@ -109,7 +109,7 @@ class SearchService(GenericService):
             tags = self.form.cleaned_data.get("tags", [])
             remove_filter_hrefs = {}
             if domain:
-                remove_filter_hrefs["domain"] = self._generate_domain_clear_href()
+                remove_filter_hrefs[_("Domain")] = self._generate_domain_clear_href()
             if entity_types:
                 entity_types_clear_href = {}
                 for entity_type in entity_types:
@@ -118,7 +118,7 @@ class SearchService(GenericService):
                             filter_name="entity_types", filter_value=entity_type
                         )
                     )
-                remove_filter_hrefs["Entity Types"] = entity_types_clear_href
+                remove_filter_hrefs[_("Entity Types")] = entity_types_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}
@@ -128,7 +128,7 @@ class SearchService(GenericService):
                             filter_name="where_to_access", filter_value=access
                         )
                     )
-                remove_filter_hrefs["Where To Access"] = where_to_access_clear_href
+                remove_filter_hrefs[_("Where To Access")] = where_to_access_clear_href
 
             if tags:
                 tags_clear_href = {}
@@ -136,7 +136,7 @@ class SearchService(GenericService):
                     tags_clear_href[tag] = self.form.encode_without_filter(
                         filter_name="tags", filter_value=tag
                     )
-                remove_filter_hrefs["Tags"] = tags_clear_href
+                remove_filter_hrefs[_("Tags")] = tags_clear_href
         else:
             remove_filter_hrefs = None
 
