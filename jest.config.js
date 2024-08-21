@@ -11,9 +11,6 @@ const config = {
   // Stop running tests after `n` failures
   // bail: 0,
 
-  // The directory where Jest should store its cached dependency information
-  // cacheDirectory: "/private/var/folders/lh/0dtbp3254mvc5pvhcx4ngnf80000gq/T/jest_dz",
-
   // Automatically clear mock calls, instances, contexts and results before every test
   clearMocks: true,
 

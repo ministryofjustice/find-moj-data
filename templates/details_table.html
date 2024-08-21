@@ -1,18 +1,19 @@
 {% extends "details_base.html" %}
 {% load markdown %}
+{% load i18n %}
 
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       {% if entity.column_details %}
         <table class="govuk-table">
-          <caption class="govuk-table__caption govuk-table__caption--m">Table schema</caption>
+          <caption class="govuk-table__caption govuk-table__caption--m">{% translate "Table schema" %}</caption>
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header">Column name</th>
-              <th scope="col" class="govuk-table__header">Description</th>
-              <th scope="col" class="govuk-table__header">Type</th>
-              <th scope="col" class="govuk-table__header">Is Nullable</th>
+              <th scope="col" class="govuk-table__header">{% translate "Column name" %}</th>
+              <th scope="col" class="govuk-table__header">{% translate "Description" %}</th>
+              <th scope="col" class="govuk-table__header">{% translate "Type" %}</th>
+              <th scope="col" class="govuk-table__header">{% translate "Is Nullable" %}</th>
             </tr>
           </thead>
           <tbody class="govuk-table__body">
@@ -27,17 +28,17 @@
           </tbody>
         </table>
       {% else %}
-        <h2 class="govuk-heading-m">Table schema</h2>
-        <p class="govuk-body">The schema for this table is not available.</p>
+        <h2 class="govuk-heading-m">{% translate "Table schema" %}</h2>
+        <p class="govuk-body">{% translate "The schema for this table is not available." %}</p>
       {% endif %}
       {% if has_lineage %}
-        <h2 class="govuk-heading-m">Lineage</h2>
+        <h2 class="govuk-heading-m">{% translate "Lineage" %}</h2>
         <div class="govuk-body-m" >
-          If you are interested to find out what data were used to create this table or if this table is used to create any further tables, you can see that information via the lineage.
+          {% translate "See where this data came from and how it is used in other tables." %}
         </div class="govuk-body-m">
         <div class="govuk-body">
           <a href="{{lineage_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">
-            View lineage in DataHub (opens in new tab)
+            {% translate "View lineage in DataHub (opens in new tab)" %}
           </a>
         </div>
       {% endif %}

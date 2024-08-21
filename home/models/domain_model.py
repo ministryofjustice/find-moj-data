@@ -1,7 +1,7 @@
 import logging
 from typing import NamedTuple
 
-from data_platform_catalogue.search_types import SearchFacets
+from data_platform_catalogue.search_types import DomainOption
 
 logger = logging.getLogger(__name__)
 
@@ -12,40 +12,14 @@ class Domain(NamedTuple):
 
 
 class DomainModel:
-    """
-    Store information about domains and subdomains
-    """
-
-    def __init__(self, search_facets: SearchFacets):
+    def __init__(self, domains: list[DomainOption]):
         self.labels = {}
 
-        self.top_level_domains = [
-            Domain(option.value, option.label)
-            for option in search_facets.options("domains")
-        ]
-        self.top_level_domains.sort(key=lambda d: d.label)
-
+        self.top_level_domains = [Domain(domain.urn, domain.name) for domain in domains]
         logger.info(f"{self.top_level_domains=}")
-
-        self.subdomains = {}
 
         for urn, label in self.top_level_domains:
             self.labels[urn] = label
-
-    def all_subdomains(self) -> list[Domain]:  # -> list[Any]
-        """
-        A flat list of all subdomains
-        """
-        subdomains = []
-        for domain_choices in self.subdomains.values():
-            subdomains.extend(domain_choices)
-        return subdomains
-
-    def get_parent_urn(self, child_subdomain_urn) -> str | None:
-        for domain, subdomains in self.subdomains.items():
-            for subdomain in subdomains:
-                if child_subdomain_urn == subdomain.urn:
-                    return domain
 
     def get_label(self, urn):
         return self.labels.get(urn, urn)

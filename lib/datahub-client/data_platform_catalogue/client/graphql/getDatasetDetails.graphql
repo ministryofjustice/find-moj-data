@@ -64,9 +64,21 @@ query getDatasetDetails($urn: String!) {
       relationships {
         entity {
           urn
+          type
           ... on Container {
+            subTypes {
+              typeNames
+            }
             properties {
               name
+            }
+            tags {
+              tags {
+                tag{urn}
+              }
+            }
+            subTypes {
+              typeNames
             }
           }
         }

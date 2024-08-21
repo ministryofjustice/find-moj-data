@@ -2,14 +2,12 @@ name: Run tests
 
 on:
   workflow_call:
-    outputs:
-      datahub-client-path:
-        description: "Boolean string indicating if files in the the datahub-client were changed"
-        value: ${{ jobs.datahub-client-path-filter.steps.changes.outputs.datahub-client }}
 
 jobs:
   datahub-client-path-filter:
     runs-on: ubuntu-latest
+    outputs:
+      datahub-client: ${{ steps.changes.outputs.datahub-client }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -22,7 +20,7 @@ jobs:
   datahub-client-tests:
     name: Run datahub client tests
     needs: datahub-client-path-filter
-    if: ${{ needs.datahub-client-path-filter.steps.changes.outputs.datahub-client == 'true' }}
+    if: ${{ needs.datahub-client-path-filter.outputs.datahub-client == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,7 +39,7 @@ jobs:
         run: pipx install poetry
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
           python-version: ${{ matrix.python-version }}
           cache: poetry
@@ -66,7 +64,7 @@ jobs:
         run: pipx install poetry
 
       - name: Set up Python
-        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f
         with:
           python-version: "3.11"
           cache: poetry
@@ -74,6 +72,12 @@ jobs:
 
       - name: Install project
         run: poetry install --no-interaction --no-root
+
+      - name: Install compile messages prereqs
+        run: sudo apt-get install gettext
+
+      - name: Compile messages
+        run: make compilemessages
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -107,10 +111,10 @@ jobs:
         # https://github.com/marketplace/actions/setup-chromedriver
         uses: nanasess/setup-chromedriver@v2.2.2
 
-      - name: Run selenium tests
+      - name: Run integration tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: TESTING=True poetry run pytest tests/selenium --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
+        run: TESTING=True poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
 
   javascript-only-tests:
     name: Javascript tests

@@ -3,30 +3,6 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
-from datahub.configuration.common import ConfigurationError
-from datahub.emitter import mce_builder
-from datahub.emitter.mcp import MetadataChangeProposalWrapper
-from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
-from datahub.ingestion.source.common.subtypes import (
-    DatasetContainerSubTypes,
-    DatasetSubTypes,
-)
-from datahub.metadata import schema_classes
-from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
-from datahub.metadata.schema_classes import (
-    ChangeTypeClass,
-    ContainerClass,
-    ContainerPropertiesClass,
-    DatasetPropertiesClass,
-    DomainPropertiesClass,
-    DomainsClass,
-    OtherSchemaClass,
-    SchemaFieldClass,
-    SchemaFieldDataTypeClass,
-    SchemaMetadataClass,
-    SubTypesClass,
-)
-
 from data_platform_catalogue.client.exceptions import (
     AspectDoesNotExist,
     ConnectivityError,
@@ -49,19 +25,45 @@ from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     Chart,
     CustomEntityProperties,
+    Dashboard,
     Database,
     EntityRef,
+    EntitySummary,
     Governance,
     OwnerRef,
     RelationshipType,
     Table,
 )
 from data_platform_catalogue.search_types import (
+    DomainOption,
     MultiSelectFilter,
     ResultType,
     SearchFacets,
     SearchResponse,
     SortOption,
+)
+from datahub.configuration.common import ConfigurationError
+from datahub.emitter import mce_builder
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
+from datahub.ingestion.source.common.subtypes import (
+    DatasetContainerSubTypes,
+    DatasetSubTypes,
+)
+from datahub.metadata import schema_classes
+from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
+from datahub.metadata.schema_classes import (
+    ChangeTypeClass,
+    ContainerClass,
+    ContainerPropertiesClass,
+    DatasetPropertiesClass,
+    DomainPropertiesClass,
+    DomainsClass,
+    OtherSchemaClass,
+    SchemaFieldClass,
+    SchemaFieldDataTypeClass,
+    SchemaMetadataClass,
+    SubTypesClass,
 )
 
 logger = logging.getLogger(__name__)
@@ -139,6 +141,11 @@ class DataHubCatalogueClient:
         self.chart_query = (
             files("data_platform_catalogue.client.graphql")
             .joinpath("getChartDetails.graphql")
+            .read_text()
+        )
+        self.dashboard_query = (
+            files("data_platform_catalogue.client.graphql")
+            .joinpath("getDashboardDetails.graphql")
             .read_text()
         )
 
@@ -222,6 +229,21 @@ class DataHubCatalogueClient:
             query=query, result_types=result_types, filters=filters
         )
 
+    def list_domains(
+        self,
+        query: str = "*",
+        filters: Sequence[MultiSelectFilter] = [
+            MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
+        ],
+        count: int = 1000,
+    ) -> list[DomainOption]:
+        """
+        Returns a list of DomainOption objects
+        """
+        return self.search_client.list_domains(
+            query=query, filters=filters, count=count
+        )
+
     def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
         """Wraps the client's glossary terms query"""
         return self.search_client.get_glossary_terms(count)
@@ -252,16 +274,22 @@ class DataHubCatalogueClient:
                     response.get("upstream_lineage_relations", {}),
                 ],
             )
+
             parent_relations = parse_relations(
-                RelationshipType.PARENT, [response["parent_container_relations"]]
+                RelationshipType.PARENT,
+                [response.get("parent_container_relations", {})],
             )
+            parent_relations_to_display = self.list_relations_to_display(
+                parent_relations
+            )
+
             return Table(
                 urn=urn,
                 display_name=display_name,
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships={**lineage_relations, **parent_relations},
+                relationships={**lineage_relations, **parent_relations_to_display},
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,
@@ -290,6 +318,11 @@ class DataHubCatalogueClient:
             glossary_terms = parse_glossary_terms(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
+            parent_relations = parse_relations(
+                RelationshipType.PARENT, [response.get("relationships", {})]
+            )
+            relations_to_display = self.list_relations_to_display(parent_relations)
+
             return Chart(
                 urn=urn,
                 external_url=properties.get("externalUrl", ""),
@@ -306,6 +339,7 @@ class DataHubCatalogueClient:
                         )
                     ],
                 ),
+                relationships=relations_to_display,
                 tags=tags,
                 glossary_terms=glossary_terms,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
@@ -328,25 +362,12 @@ class DataHubCatalogueClient:
             created, modified = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
-            # A container can't have multiple parents, but if we did
-            # start to use in that we'd need to change this
-            relations = {}
-            if response["parentContainers"]["count"] > 0:
-                relations = parse_relations(
-                    relationship_type=RelationshipType.PARENT,
-                    relations_list=[response["parentContainers"]],
-                    relation_key="containers",
-                )
-            datasets = []
-            if response["entities"]["total"] > 0:
-                datasets: list = [
-                    entity
-                    for entity in response["entities"]["searchResults"]
-                    if any(
-                        tag.urn == "urn:li:tag:dc_display_in_catalogue"
-                        for tag in parse_tags(entity["entity"])
-                    )
-                ]
+            child_relations = parse_relations(
+                relationship_type=RelationshipType.CHILD,
+                relations_list=[response["relationships"]],
+                entity_type_of_relations="TABLE",
+            )
+            relations_to_display = self.list_relations_to_display(child_relations)
 
             return Database(
                 urn=urn,
@@ -354,8 +375,7 @@ class DataHubCatalogueClient:
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships=relations,
-                tables=datasets,
+                relationships=relations_to_display,
                 domain=domain,
                 governance=Governance(
                     data_owner=owner,
@@ -370,13 +390,56 @@ class DataHubCatalogueClient:
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
+    def get_dashboard_details(self, urn: str) -> Dashboard:
+        if self.check_entity_exists_by_urn(urn):
+            response = self.graph.execute_graphql(self.dashboard_query, {"urn": urn})[
+                "dashboard"
+            ]
+            platform_name = response["platform"]["name"]
+            properties, custom_properties = parse_properties(response)
+            domain = parse_domain(response)
+            owner = parse_owner(response)
+            tags = parse_tags(response)
+            glossary_terms = parse_glossary_terms(response)
+            created, modified = parse_created_and_modified(properties)
+            name, display_name, qualified_name = parse_names(response, properties)
+            children = parse_relations(
+                RelationshipType.CHILD, [response["relationships"]]
+            )
+            relations_to_display = self.list_relations_to_display(children)
+
+            return Dashboard(
+                urn=urn,
+                display_name=display_name,
+                name=name,
+                fully_qualified_name=qualified_name,
+                description=properties.get("description", ""),
+                relationships=relations_to_display,
+                domain=domain,
+                governance=Governance(
+                    data_owner=owner,
+                    data_stewards=[owner],
+                ),
+                external_url=properties.get("externalUrl", ""),
+                tags=tags,
+                glossary_terms=glossary_terms,
+                last_modified=modified,
+                created=created,
+                custom_properties=custom_properties,
+                platform=EntityRef(display_name=platform_name, urn=platform_name),
+            )
+
+        raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")
+
     def upsert_table(self, table: Table) -> str:
         """Define a table. Must belong to a domain."""
         parent_relationships = table.relationships.get(RelationshipType.PARENT, [])
         if not parent_relationships:
             raise ValueError("A parent entity needs to be included in relationships")
 
-        parent_name = table.relationships[RelationshipType.PARENT][0].display_name
+        parent_name = table.relationships[RelationshipType.PARENT][
+            0
+        ].entity_ref.display_name
         fully_qualified_name = generate_fqn(
             parent_name=parent_name, dataset_name=table.name
         )
@@ -450,7 +513,7 @@ class DataHubCatalogueClient:
             self.graph.emit(event)
         # jscpd:ignore-end
 
-        database_urn = table.relationships[RelationshipType.PARENT][0].urn
+        database_urn = table.relationships[RelationshipType.PARENT][0].entity_ref.urn
 
         database_exists = self.check_entity_exists_by_urn(urn=database_urn)
 
@@ -611,6 +674,24 @@ class DataHubCatalogueClient:
             else:
                 custom_properties[key] = value
         return custom_properties
+
+    def list_relations_to_display(
+        self, relations: dict[RelationshipType, list[EntitySummary]]
+    ) -> dict[RelationshipType, list[EntitySummary]]:
+        """
+        returns a dict of relationships tagged to display
+        """
+        relations_to_display = {}
+
+        for key, value in relations.items():
+            relations_to_display[key] = [
+                entity
+                for entity in value
+                if "urn:li:tag:dc_display_in_catalogue"
+                in [tag.urn for tag in entity.tags]
+            ]
+
+        return relations_to_display
 
 
 def generate_fqn(parent_name, dataset_name) -> str:

@@ -1,8 +1,13 @@
+import pytest
 from data_platform_catalogue.entities import (
+    AccessInformation,
     Chart,
     CustomEntityProperties,
+    Dashboard,
+    Database,
     DomainRef,
     EntityRef,
+    EntitySummary,
     FurtherInformation,
     Governance,
     OwnerRef,
@@ -11,10 +16,74 @@ from data_platform_catalogue.entities import (
 
 from home.service.details import (
     ChartDetailsService,
+    DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
+    _parse_parent,
+    is_access_requirements_a_url,
 )
-from tests.conftest import generate_database_metadata, generate_table_metadata
+from tests.conftest import (
+    generate_dashboard_metadata,
+    generate_database_metadata,
+    generate_table_metadata,
+)
+
+
+@pytest.mark.parametrize(
+    "input, expected_output",
+    [
+        (
+            {
+                RelationshipType.PARENT: [
+                    EntitySummary(
+                        entity_ref=EntityRef(urn="urn:li:db", display_name="db"),
+                        description="test",
+                        entity_type="database",
+                        tags=[],
+                    )
+                ]
+            },
+            EntityRef(urn="urn:li:db", display_name="db"),
+        ),
+        ({}, None),
+        (
+            {
+                RelationshipType.DATA_LINEAGE: [
+                    EntitySummary(
+                        entity_ref=EntityRef(urn="urn:li:db", display_name="db"),
+                        description="test",
+                        entity_type="database",
+                        tags=[],
+                    )
+                ]
+            },
+            None,
+        ),
+    ],
+)
+def test_parse_parent(input, expected_output):
+    result = _parse_parent(input)
+    assert result == expected_output
+
+
+@pytest.mark.parametrize(
+    "input, expected_output",
+    [
+        ("122", False),
+        ("https://test.gov.uk", True),
+        ("https://test.gov.uk/data/#readme", True),
+        ("http://test.co.uk", True),
+        ("ftp.example.com/how-to-access.txt", False),
+        ("Just some instructions", False),
+        ("", False),
+        (123, False),
+        (None, False),
+        (["https://test.gov.uk"], False),
+    ],
+)
+def test_is_access_requirements_a_url(input, expected_output):
+    result = is_access_requirements_a_url(input)
+    assert result == expected_output
 
 
 class TestDatasetDetailsService:
@@ -26,7 +95,14 @@ class TestDatasetDetailsService:
     def test_get_context_contains_parent(self, mock_catalogue):
         parent = {
             RelationshipType.PARENT: [
-                EntityRef(urn="urn:li:container:parent", display_name="parent")
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:container:parent", display_name="parent"
+                    ),
+                    description="",
+                    tags=[],
+                    entity_type="DATABASE",
+                )
             ],
         }
         mock_table = generate_table_metadata(relations=parent)
@@ -100,22 +176,11 @@ class TestDatabaseDetailsService:
             == "test"
         )
 
-    def test_parsed_database_entities_in_context(self, example_database):
-        parsed_tables = DatabaseDetailsService(
-            example_database
-        )._parse_database_entities()
+    def test_database_entities_in_context(self, example_database: Database):
         service = DatabaseDetailsService("example_database")
         context = service.context
 
-        assert context["tables"] == parsed_tables
-        expected = [
-            {
-                "urn": "urn:li:dataset:fake_table",
-                "name": "fake_table",
-                "description": "table description",
-                "type": "TABLE",
-            }
-        ]
+        expected = example_database.relationships[RelationshipType.CHILD]
 
         assert context["tables"] == expected
 
@@ -148,7 +213,48 @@ class TestChartDetailsService:
         expected = {
             "entity": chart_metadata,
             "entity_type": "Chart",
+            "parent_entity": None,
+            "parent_type": "dashboard",
             "h1_value": "test",
+            "is_access_requirements_a_url": False,
         }
 
         assert context == expected
+
+
+class TestDashboardDetailsService:
+    def test_get_context_dashboard(self, mock_catalogue, example_dashboard: Dashboard):
+        """
+        Tests that the context contains the dashboard metadata returned by the
+        mock catalogue.
+        """
+        mock_dashboard_name = "example_dashboard"
+
+        service = DashboardDetailsService(mock_dashboard_name)
+        context = service.context
+        assert context["entity"] == example_dashboard
+
+    def test_chart_entities_in_context(self, example_dashboard: Dashboard):
+        service = DashboardDetailsService("example_dashboard")
+        context = service.context
+
+        expected = example_dashboard.relationships[RelationshipType.CHILD]
+
+        assert context["charts"] == expected
+
+    def test_custom_properties_in_context(self, mock_catalogue):
+        custom_properties = CustomEntityProperties(
+            access_information=AccessInformation(
+                dc_access_requirements="This is a test there's nothing to access"
+            )
+        )
+        mock_dashboard_name = "urn:li:dashboard:fake"
+        mock_dashboard_metadata = generate_dashboard_metadata(
+            name=mock_dashboard_name, custom_properties=custom_properties
+        )
+        mock_catalogue.get_dashboard_details.return_value = mock_dashboard_metadata
+
+        service = DashboardDetailsService(mock_dashboard_name)
+        context = service.context
+
+        assert context["entity"].custom_properties == custom_properties

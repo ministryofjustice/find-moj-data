@@ -1,3 +1,4 @@
+{% load i18n %}
 <header class="moj-header" role="banner">
 
   <div class="moj-header__container">
@@ -11,8 +12,10 @@
 
       </svg>
 
+      <a class="moj-header__link moj-header__link--organisation-name" href="#">{% translate "Ministry of Justice" %}</a>
+
       <span class="moj-header__link moj-header__link--service-name">
-        <a href="{% url 'home:home' %}">Find MOJ data</a>
+        <a href="{% url 'home:home' %}">{% translate "Find MOJ data" %}</a>
         {% if ENV == "dev" or ENV is None %}&nbsp;
         <strong class="govuk-tag govuk-tag--yellow">Development</strong>
         {% endif %}
@@ -26,11 +29,14 @@
     </div>
     <div class="moj-header__content">
 
-      <nav class="moj-header__navigation" aria-label="Account navigation">
+      <nav class="moj-header__navigation" aria-label="Account navigation and feedback">
 
         <ul class="moj-header__navigation-list">
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="{% url 'azure_auth:logout' %}">Sign out</a>
+            <a class="moj-header__navigation-link" href="{% url 'feedback:feedback' %}">{% translate "Feedback" %}</a>
+          </li>
+          <li class="moj-header__navigation-item">
+            <a class="moj-header__navigation-link" href="{% url 'azure_auth:logout' %}">{% translate "Sign out" %}</a>
           </li>
         </ul>
 
@@ -53,23 +59,16 @@
         <ul class="moj-primary-navigation__list">
           {% url 'home:home' as home_url %}
           {% url 'home:search' as search_url %}
-          {% url 'home:glossary' as glossary_url %}
           <li class="moj-primary-navigation__item">
             <a class="moj-primary-navigation__link" href="{% url 'home:home' %}" {% if request.path == home_url %}aria-current="page"{% endif %}>
-              Home
+              {% translate "Home" %}
             </a>
           </li>
           <li class="moj-primary-navigation__item">
             <a class="moj-primary-navigation__link" href="{% url 'home:search' %}?new=True" {% if request.path == search_url %}aria-current="page"{% endif %}>
-              Search
+              {% translate "Search" %}
             </a>
           </li>
-          <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="{% url 'home:glossary' %}" {% if request.path == glossary_url %}aria-current="page"{% endif %}>
-              Glossary
-            </a>
-          </li>
-
         </ul>
 
       </nav>

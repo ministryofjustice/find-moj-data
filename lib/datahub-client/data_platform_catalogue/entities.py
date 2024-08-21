@@ -11,6 +11,7 @@ class RelationshipType(Enum):
     PARENT = "PARENT"
     PLATFORM = "PLATFORM"
     DATA_LINEAGE = "DATA_LINEAGE"
+    CHILD = "CHILD"
 
 
 class EntityRef(BaseModel):
@@ -230,6 +231,29 @@ class AccessInformation(BaseModel):
             "s3://alpha-hmpps-reports-data",
         ],
     )
+    dc_access_requirements: str = Field(
+        description="Paragraph explaning whether there are any specific access requirements related these data.",
+        default="",
+        examples=[
+            "Processing of these data requires a DPIA",
+        ],
+    )
+
+
+class EntitySummary(BaseModel):
+    """
+    EntitySummary can be used to hold information for entities that is required to be displayed on
+    details pages
+    """
+
+    entity_ref: EntityRef = Field(
+        description="The entity reference containing name and urn"
+    )
+    description: str = Field(description="A description of the entity")
+    entity_type: str = Field(
+        description="indicates the tpye of entity that is summarised"
+    )
+    tags: list[TagRef] = Field(description="Any tags associated with the entity")
 
 
 class FurtherInformation(BaseModel):
@@ -263,6 +287,18 @@ class DataSummary(BaseModel):
         description="Row count when the metadata was last updated",
         default="",
         examples=["123", 123],
+    )
+
+    refresh_period: str = Field(
+        description="Indicates the frequency that the data are refreshed/updated",
+        default="",
+        examples=["Annually", "Quarterly", "Monthly", "Weekly", "Daily"],
+    )
+
+    last_updated: str = Field(
+        description="Indicates the date when the data were last refreshed/updated",
+        default="",
+        examples=["05 May 2024", "25 December 2023"],
     )
 
 
@@ -320,23 +356,30 @@ class Entity(BaseModel):
             )
         ],
     )
-    relationships: dict[RelationshipType, list[EntityRef]] = Field(
+    relationships: dict[RelationshipType, list[EntitySummary]] = Field(
         default={},
         description=(
             "References to related entities in the metadata graph, such as platform or "
             "parent entities"
         ),
         examples=[
-            [
-                {
-                    RelationshipType.PARENT: [
-                        EntityRef(
-                            urn="urn:li:dataset:(urn:li:dataPlatform:dbt,delius.custody_dates,PROD)",  # noqa: E501
-                            display_name="delius.custody_dates",
-                        )
-                    ]
-                }
-            ]
+            {
+                RelationshipType.PARENT: [
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:database:example", display_name="example"
+                        ),
+                        description="entity for an example",
+                        entity_type="DATABASE",
+                        tags=[
+                            TagRef(
+                                urn="urn:li:tag:dc_display_in_catalogue",
+                                display_name="dc_display_in_catalogue",
+                            )
+                        ],
+                    )
+                ]
+            }
         ],
     )
     domain: DomainRef = Field(
@@ -404,7 +447,7 @@ class Database(Entity):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:my_database"],
     )
-    tables: list = Field(description="list of tables in the database")
+    # tables: list = Field(description="list of tables in the database")
 
 
 class Table(Entity):
@@ -450,6 +493,13 @@ class Chart(Entity):
 
 class Domain(Entity):
     """Datahub domain"""
+
+
+class Dashboard(Entity):
+    external_url: str = Field(
+        description="URL to view the dashboard",
+        examples=["https://data.justice.gov.uk"],
+    )
 
 
 # if __name__ == "__main__":

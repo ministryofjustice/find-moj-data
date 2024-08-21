@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "home.apps.HomeConfig",
+    "feedback.apps.FeedbackConfig",
     "django_prometheus",
     "users",
     "waffle",
@@ -250,3 +251,10 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
     LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
 
     AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
+
+USE_I18N = True
+LANGUAGE_CODE = "en"
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
+CSRF_TRUSTED_ORIGINS = origins_str.split(" ") if origins_str else []

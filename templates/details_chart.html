@@ -1,14 +1,15 @@
 {% extends "details_base.html" %}
+{% load i18n %}
 
 {% block extra_details %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h2 class="govuk-heading-s govuk-!-margin-top-3">
-                URL<span aria-hidden="true"> (link opens in new tab)</span>
+                {% translate "Access this data" %}
             </h2>
             <div class="govuk-body">
                 <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">
-                    {{entity.external_url}} <span class="govuk-visually-hidden">(opens in new tab)</span>
+                    {% blocktranslate with display_name=entity.display_name %}{{ display_name }} on Justice Data (opens in new tab){% endblocktranslate %}
                 </a>
             </div>
         </div>

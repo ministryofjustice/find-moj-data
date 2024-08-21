@@ -12,11 +12,13 @@ from data_platform_catalogue.entities import (
     Column,
     ColumnRef,
     CustomEntityProperties,
+    Dashboard,
     Database,
     DataSummary,
     DomainRef,
     Entity,
     EntityRef,
+    EntitySummary,
     GlossaryTermRef,
     Governance,
     OwnerRef,
@@ -26,6 +28,7 @@ from data_platform_catalogue.entities import (
     UsageRestrictions,
 )
 from data_platform_catalogue.search_types import (
+    DomainOption,
     FacetOption,
     ResultType,
     SearchFacets,
@@ -39,6 +42,7 @@ from faker import Faker
 from home.forms.search import SearchForm
 from home.models.domain_model import DomainModel
 from home.service.details import DatabaseDetailsService
+from home.service.domain_fetcher import DomainFetcher
 from home.service.search import SearchService
 from home.service.search_facet_fetcher import SearchFacetFetcher
 from home.service.search_tag_fetcher import SearchTagFetcher
@@ -218,20 +222,83 @@ def generate_database_metadata(
         name=name,
         fully_qualified_name=f"Foo.{name}",
         description=description,
-        relationships=relations or {RelationshipType.PARENT: []},
+        relationships=relations
+        or {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:dataset:fake_table", display_name="fake_table"
+                    ),
+                    description="table description",
+                    tags=[
+                        TagRef(
+                            display_name="some-tag",
+                            urn="urn:li:tag:dc_display_in_catalogue",
+                        )
+                    ],
+                    entity_type="TABLE",
+                )
+            ]
+        },
         domain=DomainRef(display_name="LAA", urn="LAA"),
-        tables=[
-            {
-                "entity": {
-                    "urn": "urn:li:dataset:fake_table",
-                    "properties": {
-                        "name": "fake_table",
-                        "description": "table description",
-                    },
-                    "editableProperties": None,
-                }
-            }
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
+            ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        glossary_terms=[
+            GlossaryTermRef(
+                display_name="some-term",
+                urn="urn:li:glossaryTerm:Entity",
+                description="some description",
+            )
         ],
+        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        created=None,
+        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
+        custom_properties=custom_properties or CustomEntityProperties(),
+    )
+
+
+def generate_dashboard_metadata(
+    name: str = fake.unique.name(),
+    description: str = fake.unique.paragraph(),
+    relations=None,
+    custom_properties=None,
+) -> Dashboard:
+    """
+    Generate a fake database metadata object
+    """
+    return Dashboard(
+        urn="urn:li:dashboard:fake",
+        display_name=f"Foo.{name}",
+        name=name,
+        fully_qualified_name=f"Foo.{name}",
+        description=description,
+        relationships=relations
+        or {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:chart:fake_chart", display_name="fake_chart"
+                    ),
+                    description="chart description",
+                    tags=[
+                        TagRef(
+                            display_name="some-tag",
+                            urn="urn:li:tag:dc_display_in_catalogue",
+                        )
+                    ],
+                    entity_type="CHART",
+                )
+            ]
+        },
+        external_url="www.a-great-exmaple-dashboard.com",
+        domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
                 display_name="", email="Contact email for the user", urn=""
@@ -260,6 +327,11 @@ def example_database(name="example_database"):
     return generate_database_metadata(name=name)
 
 
+@pytest.fixture(autouse=True)
+def example_dashboard(name="example_dashboard"):
+    return generate_dashboard_metadata(name=name)
+
+
 def generate_page(page_size=20, result_type: ResultType | None = None):
     """
     Generate a fake search page
@@ -277,7 +349,7 @@ def client():
 
 
 @pytest.fixture(autouse=True)
-def mock_catalogue(request, example_database):
+def mock_catalogue(request, example_database, example_dashboard):
     if "datahub" in request.keywords:
         yield None
         return
@@ -288,6 +360,31 @@ def mock_catalogue(request, example_database):
     mock_fn.return_value = mock_catalogue
     mock_search_response(
         mock_catalogue, page_results=generate_page(), total_results=100
+    )
+    mock_list_domains_response(
+        mock_catalogue,
+        domains=[
+            DomainOption(
+                urn="urn:li:domain:prisons",
+                name="Prisons",
+                total=fake.random_int(min=1, max=100),
+            ),
+            DomainOption(
+                urn="urn:li:domain:courts",
+                name="Courts",
+                total=fake.random_int(min=1, max=100),
+            ),
+            DomainOption(
+                urn="urn:li:domain:finance",
+                name="Finance",
+                total=fake.random_int(min=1, max=100),
+            ),
+            DomainOption(
+                urn="urn:li:domain:hq",
+                name="HQ",
+                total=0,
+            ),
+        ],
     )
     mock_search_facets_response(
         mock_catalogue,
@@ -313,6 +410,7 @@ def mock_catalogue(request, example_database):
     mock_get_chart_details_response(mock_catalogue)
     mock_get_table_details_response(mock_catalogue)
     mock_get_database_details_response(mock_catalogue, example_database)
+    mock_get_dashboard_details_response(mock_catalogue, example_dashboard)
     mock_get_tags_response(mock_catalogue)
 
     yield mock_catalogue
@@ -335,6 +433,10 @@ def mock_get_table_details_response(mock_catalogue):
     mock_catalogue.get_table_details.return_value = generate_table_metadata()
 
 
+def mock_get_dashboard_details_response(mock_catalogue, example_dashboard):
+    mock_catalogue.get_dashboard_details.return_value = example_dashboard
+
+
 def mock_get_database_details_response(mock_catalogue, example_database):
     mock_catalogue.get_database_details.return_value = example_database
 
@@ -344,6 +446,10 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
         total_results=total_results, page_results=page_results
     )
     mock_catalogue.search.return_value = search_response
+
+
+def mock_list_domains_response(mock_catalogue, domains):
+    mock_catalogue.list_domains.return_value = domains
 
 
 def mock_search_facets_response(mock_catalogue, domains):
@@ -411,13 +517,21 @@ def search_facets():
 
 
 @pytest.fixture
+def list_domains(filter_zero_entities):
+    return DomainFetcher(filter_zero_entities).fetch()
+
+
+@pytest.fixture
 def search_tags():
     return SearchTagFetcher().fetch()
 
 
 @pytest.fixture
-def valid_domain(search_facets):
-    return DomainModel(search_facets).top_level_domains[0]
+def valid_domain():
+    domains = DomainFetcher().fetch()
+    return DomainModel(
+        domains,
+    ).top_level_domains[0]
 
 
 @pytest.fixture

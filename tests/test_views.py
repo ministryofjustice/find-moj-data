@@ -1,7 +1,12 @@
-from data_platform_catalogue.search_types import SearchResponse
+import pytest
 from django.urls import reverse
 
-import pytest
+
+class TestHomePage:
+    def test_renders_200_with_headers(self, client):
+        response = client.get(reverse("home:home"))
+        assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "max-age=300, private"
 
 
 @pytest.mark.django_db
@@ -10,9 +15,10 @@ class TestSearchView:
     Test the view renders the correct context depending on query parameters and session
     """
 
-    def test_renders_200(self, client):
+    def test_renders_200_with_headers(self, client):
         response = client.get(reverse("home:search"), data={})
         assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "max-age=60, private"
 
     def test_exposes_results(self, client):
         response = client.get(reverse("home:search"), data={})
@@ -40,6 +46,7 @@ class TestTableView:
             reverse("home:details", kwargs={"urn": "fake", "result_type": "table"})
         )
         assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "max-age=300, private"
 
 
 class TestChartView:
@@ -48,6 +55,7 @@ class TestChartView:
             reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"})
         )
         assert response.status_code == 200
+        assert response.headers["Cache-Control"] == "max-age=300, private"
 
 
 class TestGlossaryView:

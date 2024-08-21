@@ -1,11 +1,43 @@
 import os
 from urllib.parse import urlsplit
 
-from data_platform_catalogue.entities import RelationshipType
+from data_platform_catalogue.entities import EntityRef, RelationshipType
 from data_platform_catalogue.search_types import ResultType
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.validators import URLValidator
+from django.utils.translation import gettext as _
 
 from .base import GenericService
+
+
+def _parse_parent(relationships: dict) -> EntityRef | None:
+    """
+    returns the EntityRef of the first parent if one exists
+    """
+    parents = relationships.get(RelationshipType.PARENT)
+    if parents:
+        # Pick the first entity to use as the parent in the breadcrumb.
+        # If the dataset belongs to multiple parents, this may diverge
+        # from the path the user took to get to this page.
+        parent_entity = parents[0].entity_ref
+    else:
+        parent_entity = None
+    return parent_entity
+
+
+def is_access_requirements_a_url(access_requirements) -> bool:
+    """
+    return a bool indicating if the passed access_requirements arg is a url
+    """
+    validator = URLValidator()
+
+    try:
+        validator(access_requirements)
+        is_url = True
+    except ValidationError:
+        is_url = False
+
+    return is_url
 
 
 class DatabaseDetailsService(GenericService):
@@ -22,36 +54,24 @@ class DatabaseDetailsService(GenericService):
             term.display_name == "Essential Shared Data Asset (ESDA)"
             for term in self.database_metadata.glossary_terms
         )
-        self.entities_in_database = self._parse_database_entities()
+        self.entities_in_database = self.database_metadata.relationships[
+            RelationshipType.CHILD
+        ]
         self.context = self._get_context()
-
-    def _parse_database_entities(self):
-        # we might want to implement pagination for database children
-        # details at some point
-        entities_in_database = []
-        for item in self.database_metadata.tables:
-            entity = item["entity"]
-            properties = entity.get("properties", {})
-            entities_in_database.append(
-                {
-                    "urn": entity.get("urn", ""),
-                    "name": properties.get("name", ""),
-                    "description": properties.get("description", ""),
-                    "type": "TABLE",
-                }
-            )
-
-        entities_in_database = sorted(entities_in_database, key=lambda d: d["name"])
-
-        return entities_in_database
 
     def _get_context(self):
         context = {
             "entity": self.database_metadata,
-            "entity_type": "Database",
-            "tables": self.entities_in_database,
+            "entity_type": _("Database"),
+            "tables": sorted(
+                self.entities_in_database,
+                key=lambda d: d.entity_ref.display_name,
+            ),
             "h1_value": self.database_metadata.name,
             "is_esda": self.is_esda,
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.database_metadata.custom_properties.access_information.dc_access_requirements
+            ),
         }
 
         return context
@@ -69,16 +89,8 @@ class DatasetDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         relationships = self.table_metadata.relationships or {}
-        parents = relationships.get(RelationshipType.PARENT)
-        if parents:
-            # Pick the first entity to use as the parent in the breadcrumb.
-            # If the dataset belongs to multiple parents, this may diverge
-            # from the path the user took to get to this page.
-            self.parent_entity = parents[0]
-            self.dataset_parent_type = ResultType.DATABASE.name.lower()
-        else:
-            self.parent_entity = None
-            self.dataset_parent_type = None
+
+        self.parent_entity = _parse_parent(relationships)
 
         self.context = self._get_context()
 
@@ -91,10 +103,13 @@ class DatasetDetailsService(GenericService):
             "entity": self.table_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
-            "dataset_parent_type": self.dataset_parent_type,
+            "parent_type": ResultType.DATABASE.name.lower(),
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.table_metadata.custom_properties.access_information.dc_access_requirements
+            ),
         }
 
     def has_lineage(self) -> bool:
@@ -115,11 +130,40 @@ class ChartDetailsService(GenericService):
     def __init__(self, urn: str):
         self.client = self._get_catalogue_client()
         self.chart_metadata = self.client.get_chart_details(urn)
+        self.parent_entity = _parse_parent(self.chart_metadata.relationships or {})
         self.context = self._get_context()
 
     def _get_context(self):
         return {
             "entity": self.chart_metadata,
-            "entity_type": "Chart",
+            "entity_type": _("Chart"),
+            "parent_entity": self.parent_entity,
+            "parent_type": ResultType.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.chart_metadata.custom_properties.access_information.dc_access_requirements
+            ),
+        }
+
+
+class DashboardDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.client = self._get_catalogue_client()
+        self.dashboard_metadata = self.client.get_dashboard_details(urn)
+        self.children = self.dashboard_metadata.relationships[RelationshipType.CHILD]
+        self.context = self._get_context()
+
+    def _get_context(self):
+
+        return {
+            "entity": self.dashboard_metadata,
+            "entity_type": "Dashboard",
+            "h1_value": self.dashboard_metadata.name,
+            "charts": sorted(
+                self.children,
+                key=lambda d: d.entity_ref.display_name,
+            ),
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.dashboard_metadata.custom_properties.access_information.dc_access_requirements
+            ),
         }

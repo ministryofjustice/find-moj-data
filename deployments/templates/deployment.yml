@@ -46,6 +46,8 @@ spec:
               value: "$AZURE_REDIRECT_URI"
             - name: AZURE_AUTHORITY
               value: "$AZURE_AUTHORITY"
+            - name: CSRF_TRUSTED_ORIGINS
+              value: "${CSRF_TRUSTED_ORIGINS}"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:

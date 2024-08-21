@@ -1,6 +1,9 @@
 {% load markdown %}
 {% load humanize %}
 {% load future %}
+{% load waffle_tags %}
+{% load i18n %}
+
 <div id="search-results">
   {% for result in highlighted_results %}
     <div class="govuk-grid-row">
@@ -11,15 +14,19 @@
           {% endwith %}
           {% if result.result_type.name == "TABLE" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
-              Table
+              {% translate "Table" %}
             </strong>
           {% elif result.result_type.name == "DATABASE" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
-              Database
+              {% translate "Database" %}
             </strong>
           {% elif result.result_type.name == "CHART" %}
             <strong class="govuk-tag govuk-!-margin-left-2">
-              Chart
+              {% translate "Chart" %}
+            </strong>
+          {% elif result.result_type.name == "DASHBOARD" %}
+            <strong class="govuk-tag govuk-!-margin-left-2">
+              Dashboard
             </strong>
           {% endif %}
         </h3>
@@ -30,35 +37,36 @@
         {% endif %}
         <ul class="govuk-list govuk-body" id="metadata-property-list">
           <li>
-            <span class="govuk-!-font-weight-bold">Refresh period:</span>
-            <span>TBC</span>
-          </li>
-          <li>
-            <span class="govuk-!-font-weight-bold">Domain:</span>
-            <span>{{result.metadata.domain_name}}</span>
+            <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
+            <span>{{result.metadata.domain_name | default:_('Not provided')}}</span>
           </li>
           {% if result.result_type.name == "TABLE" %}
             <li>
-              <span class="govuk-!-font-weight-bold">Database:</span>
+              <span class="govuk-!-font-weight-bold">{% translate "Database:" %}</span>
               <span>{{result.parent_entity.display_name}}</span>
             </li>
           {% endif %}
-          <li>
-            <span class="govuk-!-font-weight-bold">Tags:</span>
-            <span>
-              {% if result.tags_to_display %}
-                {% for tag in result.tags_to_display %}
-                  <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              {% endif %}
-            </span>
-          </li>
-          {% if result.matches %}
+          {% switch 'display-result-tags' %}
             <li>
-              <span class="govuk-!-font-weight-bold">Matched fields:</span>
-              <span>{{ result.matches|lookup:readable_match_reasons|join:", " }}</span>
+              <span class="govuk-!-font-weight-bold">Tags:</span>
+              <span>
+                {% if result.tags_to_display %}
+                  {% for tag in result.tags_to_display %}
+                    <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% query_string clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </span>
             </li>
-          {% endif %}
+          {% endswitch %}
+
+          {% with match_reasons=result.matches|lookup:readable_match_reasons|join:", " %}
+            {% if match_reasons %}
+              <li>
+                <span class="govuk-!-font-weight-bold">{% translate "Matched fields:" %}</span>
+                <span>{{ match_reasons }}</span>
+              </li>
+            {% endif %}
+          {% endwith %}
         </ul>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
       </div>

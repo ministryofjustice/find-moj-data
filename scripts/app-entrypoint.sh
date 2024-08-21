@@ -12,5 +12,7 @@ fi
 
 python manage.py migrate
 python manage.py waffle_switch search-sort-radio-buttons off --create # create switch with default setting
+python manage.py waffle_switch display-result-tags off --create # create display tags switch with default off
+
 
 gunicorn --bind 0.0.0.0:8000 core.wsgi:application --workers 2 --threads 4

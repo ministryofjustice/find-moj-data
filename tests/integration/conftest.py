@@ -14,7 +14,7 @@ from selenium.webdriver.support.select import Select
 TMP_DIR = (Path(__file__).parent / "../../tmp").resolve()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     options = ChromeOptions()
     options.add_argument("headless")
@@ -71,7 +71,18 @@ class Page:
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
 
-class DatabaseDetailsPage(Page):
+class DetailsPage(Page):
+    def request_access(self):
+        return self.selenium.find_element(By.ID, "request_access")
+
+    def contact_channels(self):
+        return self.selenium.find_element(By.ID, "contact_channels")
+
+    def data_owner(self):
+        return self.selenium.find_element(By.ID, "data_owner")
+
+
+class DatabaseDetailsPage(DetailsPage):
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
@@ -82,10 +93,12 @@ class DatabaseDetailsPage(Page):
         return self.selenium.find_element(By.TAG_NAME, "table")
 
     def table_link(self):
-        return self.selenium.find_element(By.LINK_TEXT, "Table details")
+        return self.selenium.find_element(
+            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
+        )
 
 
-class TableDetailsPage(Page):
+class TableDetailsPage(DetailsPage):
     def column_descriptions(self):
         return [
             c.text
@@ -97,9 +110,6 @@ class HomePage(Page):
     def search_nav_link(self) -> WebElement:
         return self.selenium.find_element(By.LINK_TEXT, "Search")
 
-    def glossary_nav_link(self) -> WebElement:
-        return self.selenium.find_element(By.LINK_TEXT, "Glossary")
-
     def search_bar(self) -> WebElement:
         return self.selenium.find_element(By.NAME, "query")
 
@@ -108,14 +118,12 @@ class HomePage(Page):
             By.CSS_SELECTOR, "ul#domain-list li a"
         )
         all_domain_names = [d.text for d in all_domains]
-        result = next((d for d in all_domains if domain == d.text), None)
+        result = next(
+            (d for d in all_domains if domain == d.text.split("(")[0].strip()), None
+        )
         if not result:
             raise Exception(f"{domain!r} not found in {all_domain_names!r}")
         return result
-
-
-class GlossaryPage(Page):
-    pass
 
 
 class SearchResultWrapper:
@@ -254,11 +262,9 @@ def table_details_page(selenium) -> TableDetailsPage:
 
 
 @pytest.fixture
-def glossary_page(selenium) -> GlossaryPage:
-    return GlossaryPage(selenium)
-
-
-@pytest.fixture
 def page_titles():
-    pages = ["Home", "Search", "Glossary"]
+    pages = [
+        "Home",
+        "Search",
+    ]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]

@@ -1,17 +1,17 @@
 {% if results %}
-<div class="govuk-form-group">
-    <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Sort results
-        </legend>
-        <div class="govuk-radios govuk-radios--inline govuk-radios--small" data-module="govuk-radios">
-            {% for radio in form.sort %}
-                <div class="govuk-radios__item">
-                    {{radio.tag}}
-                    <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">{{radio.choice_label}}</label>
-                </div>
-            {% endfor %}
-        </div>
-    </fieldset>
-</div>
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                {% translate "Sort results" %}
+            </legend>
+            <div class="govuk-radios govuk-radios--inline govuk-radios--small" data-module="govuk-radios">
+                {% for radio in form.sort %}
+                    <div class="govuk-radios__item">
+                        {{radio.tag}}
+                        <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">{{radio.choice_label}}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+    </div>
 {% endif %}
