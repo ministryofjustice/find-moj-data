@@ -1,7 +1,6 @@
 import pytest
 from data_platform_catalogue.entities import (
     AccessInformation,
-    CustomEntityProperties,
     Database,
     FurtherInformation,
     OwnerRef,

@@ -7,7 +7,10 @@ from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,
 )
-from data_platform_catalogue.client.exceptions import ReferencedEntityMissing, EntityDoesNotExist
+from data_platform_catalogue.client.exceptions import (
+    EntityDoesNotExist,
+    ReferencedEntityMissing,
+)
 from data_platform_catalogue.entities import (
     AccessInformation,
     Chart,
@@ -703,7 +706,8 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-                "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
+            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+        ) as mock_exists:
             mock_exists.return_value = False  # Entity does not exist
             with pytest.raises(EntityDoesNotExist):
                 datahub_client.get_table_details(urn)
@@ -714,13 +718,14 @@ class TestCatalogueClientWithDatahub:
             "dataset": {
                 "platform": {"name": "datahub"},
                 "name": "Dataset",
-                "properties": {}
+                "properties": {},
             }
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-                "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
+            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+        ) as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
 
