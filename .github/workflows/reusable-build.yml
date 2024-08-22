@@ -8,8 +8,8 @@ on:
         required: true
 
 jobs:
-  build-image-artifact:
-    name: Build and export docker image artifact
+  build-and-export:
+    name: Build and export docker image artifact # https://docs.docker.com/build/ci/github-actions/share-image-jobs/
     runs-on: ubuntu-latest
     permissions:
       id-token: write # This is required for requesting the JWT
