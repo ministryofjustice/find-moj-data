@@ -23,7 +23,7 @@ jobs:
     secrets:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
 
-  deploy:
+  deploy-dev:
     needs: build
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
     with:
