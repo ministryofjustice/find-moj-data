@@ -17,10 +17,15 @@ jobs:
     if: ${{ inputs.run-tests }}
     uses: "./.github/workflows/reusable-tests.yml"
 
-  deploy-dev:
-    needs: code-tests
+  build:
     if: ${{ always() && !failure() && !cancelled() }} # don't skip if tests are skipped
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+    uses: "./.github/workflows/reusable-build.yml"
+    secrets:
+      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+
+  deploy:
+    needs: build
+    uses: "./.github/workflows/reusable-push-and-deploy.yml"
     with:
       env: "dev"
     secrets:

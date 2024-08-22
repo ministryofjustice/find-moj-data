@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  workflow_call:
+    secrets:
+      slack_alert_webhook:
+        description: "used to post alerts to slack channel"
+        required: true
+
+env:
+  image_name: fmd-image
+
+jobs:
+  build-image-artifact:
+    name: Build and export docker image artifact
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and export
+        uses: docker/build-push-action@v6
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          tags: fmd-image:${IMAGE_TAG}
+          outputs: type=docker,dest=/tmp/fmd-image.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmd-image
+          path: /tmp/fmd-image.tar
+
+      - name: Slack failure notification
+        if: ${{ failure() && github.ref == 'refs/heads/main' }}
+        uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e # v1.26.0
+        with:
+          payload: |
+            {"blocks":[{"type": "section","text": {"type": "mrkdwn","text": ":no_entry: Failed GitHub Action:"}},{"type": "section","fields":[{"type": "mrkdwn","text": "*Workflow:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }}>"},{"type": "mrkdwn","text": "*Job:*\n${{ github.job }}"},{"type": "mrkdwn","text": "*Repo:*\n${{ github.repository }}"}]}]}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

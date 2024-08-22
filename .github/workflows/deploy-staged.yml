@@ -8,9 +8,15 @@ jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
 
-  deploy-test:
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+  build:
     needs: code-tests
+    uses: "./.github/workflows/reusable-build.yml"
+    secrets:
+      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+
+  deploy-test:
+    uses: "./.github/workflows/reusable-push-and-deploy.yml"
+    needs: build
     with:
       env: "test"
     secrets:
@@ -25,7 +31,7 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
   deploy-preprod:
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+    uses: "./.github/workflows/reusable-push-and-deploy.yml"
     needs: deploy-test
     with:
       env: "preprod"
