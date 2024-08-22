@@ -18,10 +18,12 @@ updates:
         applies-to: version-updates
         patterns:
           - "black"
-          - "flake8"
-          - "pytest*"
           - "faker"
+          - "flake8"
           - "isort"
+          - "pre-commit"
+          - "pytest*"
+          - "selenium"
       django-dependencies:
         applies-to: version-updates
         patterns:
