@@ -13,6 +13,20 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    groups: # see https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
+      dev-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "black"
+          - "flake8"
+          - "pytest*"
+          - "faker"
+          - "isort"
+      django-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "django*"
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
