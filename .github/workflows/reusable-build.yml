@@ -7,9 +7,6 @@ on:
         description: "used to post alerts to slack channel"
         required: true
 
-env:
-  image_name: fmd-image
-
 jobs:
   build-image-artifact:
     name: Build and export docker image artifact
