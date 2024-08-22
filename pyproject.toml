@@ -25,7 +25,7 @@ psycopg-binary = "^3.2.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
-pre-commit = "^3.7.1"
+pre-commit = "^3.8.0"
 selenium = "~=4.23.1"
 flake8 = ">=6.1.0"
 pytest-django = "^4.8.0"
