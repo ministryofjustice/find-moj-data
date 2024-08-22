@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-21 11:20+0100\n"
+"POT-Creation-Date: 2024-08-22 11:59+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,16 +72,16 @@ msgstr "All subject areas"
 msgid "Analytical Platform"
 msgstr "Analytical Platform"
 
-#: home/forms/search.py:69 home/service/search.py:112
-#: home/service/search.py:222 templates/partial/filter.html:20
+#: home/forms/search.py:69 home/service/search.py:113
+#: home/service/search.py:223 templates/partial/filter.html:19
 msgid "Domain"
 msgstr "Subject area"
 
-#: home/service/details.py:65 templates/partial/search_result.html:21
+#: home/service/details.py:65 templates/partial/search_result.html:20
 msgid "Database"
 msgstr "Database"
 
-#: home/service/details.py:139 templates/partial/search_result.html:25
+#: home/service/details.py:139 templates/partial/search_result.html:24
 msgid "Chart"
 msgstr "Chart"
 
@@ -93,15 +93,15 @@ msgstr "Glossary"
 msgid "Metadata specification"
 msgstr "Metadata specification"
 
-#: home/service/search.py:121 templates/partial/filter.html:34
+#: home/service/search.py:122 templates/partial/filter.html:33
 msgid "Entity Types"
 msgstr "Entity types"
 
-#: home/service/search.py:131
+#: home/service/search.py:132
 msgid "Where To Access"
 msgstr "Where to access"
 
-#: home/service/search.py:139
+#: home/service/search.py:140
 msgid "Tags"
 msgstr "Tags"
 
@@ -118,7 +118,7 @@ msgstr "ID"
 msgid "URN"
 msgstr "URN"
 
-#: home/service/search.py:223
+#: home/service/search.py:224
 msgid "Title"
 msgstr "Title"
 
@@ -126,7 +126,7 @@ msgstr "Title"
 msgid "Name"
 msgstr "Name"
 
-#: home/service/search.py:226 templates/details_base.html:42
+#: home/service/search.py:226 templates/details_base.html:41
 #: templates/details_dashboard.html:14 templates/details_database.html:14
 #: templates/details_table.html:14
 msgid "Description"
@@ -244,29 +244,37 @@ msgstr "Feedback"
 msgid "Sign out"
 msgstr "Sign out"
 
-#: templates/base/navigation.html:69 templates/details_base.html:14
+#: templates/base/navigation.html:69 templates/details_base.html:13
 msgid "Search"
 msgstr "Search"
 
-#: templates/details_base.html:48
+#: templates/base/navigation.html:74
+msgid "User guide"
+msgstr "User guide"
+
+#: templates/base/navigation.html:79
+msgid "Contact us"
+msgstr "Contact us"
+
+#: templates/details_base.html:47
 msgid "No description available."
 msgstr "No description available."
 
-#: templates/details_base.html:55
+#: templates/details_base.html:54
 msgid "First created:"
 msgstr "First created:"
 
-#: templates/details_base.html:61
+#: templates/details_base.html:60
 msgid "Last updated:"
 msgstr "Last updated:"
 
-#: templates/details_base.html:72 templates/partial/search_result.html:40
+#: templates/details_base.html:71 templates/partial/search_result.html:39
 msgid "Domain:"
 msgstr "Subject area:"
 
-#: templates/details_base.html:73 templates/partial/contact_info.html:15
+#: templates/details_base.html:72 templates/partial/contact_info.html:15
 #: templates/partial/contact_info.html:30
-#: templates/partial/search_result.html:41
+#: templates/partial/search_result.html:40
 msgid "Not provided"
 msgstr "Not provided."
 
@@ -423,11 +431,11 @@ msgstr ""
 "to support an essential process or purpose, which is the responsibility of "
 "the acquiring organisation.</li> </ul>"
 
-#: templates/partial/filter.html:8
+#: templates/partial/filter.html:7
 msgid "Filter"
 msgstr "Filter"
 
-#: templates/partial/filter.html:26
+#: templates/partial/filter.html:25
 msgid "Subdomain"
 msgstr "Subdomain"
 
@@ -455,35 +463,35 @@ msgstr ""
 "<p>If you didn't find what you are looking for, make sure that all words are "
 "spelled correctly.</p>"
 
-#: templates/partial/pagination.html:11
+#: templates/partial/pagination.html:10
 msgid "Previous<span class=\"govuk-visually-hidden\"> page</span>"
 msgstr "Previous<span class=\"govuk-visually-hidden\"> page</span>"
 
-#: templates/partial/pagination.html:35
+#: templates/partial/pagination.html:34
 msgid "Next<span class=\"govuk-visually-hidden\"> page</span>"
 msgstr "Next<span class=\"govuk-visually-hidden\"> page</span>"
 
-#: templates/partial/search_result.html:17
+#: templates/partial/search_result.html:16
 msgid "Table"
 msgstr "Table"
 
-#: templates/partial/search_result.html:45
+#: templates/partial/search_result.html:44
 msgid "Database:"
 msgstr "Database:"
 
-#: templates/partial/search_result.html:65
+#: templates/partial/search_result.html:64
 msgid "Matched fields:"
 msgstr "Matched fields:"
 
-#: templates/partial/selected_filters.html:8
+#: templates/partial/selected_filters.html:7
 msgid "Selected filters"
 msgstr "Selected filters"
 
-#: templates/partial/selected_filters.html:16
+#: templates/partial/selected_filters.html:15
 msgid "Clear filter"
 msgstr "Clear filer"
 
-#: templates/partial/selected_filters.html:29
+#: templates/partial/selected_filters.html:28
 msgid "Remove this filter"
 msgstr "Remove this filter"
 
