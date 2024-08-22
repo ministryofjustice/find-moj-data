@@ -77,9 +77,8 @@ jobs:
         id: retag-image
         env:
           IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
-          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker tag fmd-image:${IMAGE_TAG} ${image_path}
+          docker tag fmd-image:latest ${image_path}
 
       - name: Push Docker image to ECR
         id: push-docker-image-to-ecr
