@@ -13,9 +13,15 @@ jobs:
     if: ${{ needs.code-tests.outputs.datahub-client-path == 'true' }}
     uses: "./.github/workflows/reusable-publish-datahub-client.yml"
 
-  deploy-prod:
-    uses: "./.github/workflows/reusable-build-and-deploy.yml"
+  build:
     needs: code-tests
+    uses: "./.github/workflows/reusable-build.yml"
+    secrets:
+      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+
+  deploy-prod:
+    uses: "./.github/workflows/reusable-push-and-deploy.yml"
+    needs: build
     with:
       env: "prod"
     secrets:

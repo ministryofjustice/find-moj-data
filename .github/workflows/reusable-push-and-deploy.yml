@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Push and Deploy
 
 on:
   workflow_call:
@@ -37,8 +37,8 @@ on:
         required: true
 
 jobs:
-  build-and-push:
-    name: Build and push Docker image to CP namespace ECR
+  push:
+    name: Push Docker image to CP namespace ECR
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
     permissions:
@@ -67,11 +67,19 @@ jobs:
         run: |
           echo "image_path=${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
 
-      - name: Build Docker image
-        id: build-docker-image
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: fmd-image
+          path: /tmp
+
+      - name: Re-tag docker image
+        id: retag-image
         env:
           IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
-        run: docker build -t ${IMAGE_PATH} .
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker tag fmd-image:${IMAGE_TAG} ${image_path}
 
       - name: Push Docker image to ECR
         id: push-docker-image-to-ecr
@@ -81,7 +89,7 @@ jobs:
 
   deploy:
     name: Deploy Helm chart into Cloud Platform
-    needs: build-and-push
+    needs: push
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
     permissions:
