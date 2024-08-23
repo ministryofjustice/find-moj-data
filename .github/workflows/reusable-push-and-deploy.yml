@@ -37,15 +37,13 @@ on:
         required: true
 
 jobs:
-  push:
-    name: Push Docker image to CP namespace ECR
+  push-and-deploy:
+    name: Push image to CP namespace ECR and apply deployment in CP
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
-    outputs:
-      image_path: ${{ steps.image-path.outputs.image_path }}
     steps:
       - uses: actions/checkout@v4
 
@@ -58,14 +56,17 @@ jobs:
         id: login-to-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Output image path
+      - name: Generate, mask, output image path
         id: image-path
         env:
           REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "image_path=${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "adding masks"
+          IMAGE_PATH="${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}"
+          echo "::add-mask::$IMAGE_PATH"
+          echo "image_path=$IMAGE_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -73,31 +74,26 @@ jobs:
           name: fmd-image
           path: /tmp
 
+      - name: Load image
+        id: load-image
+        run: |
+          docker load --input /tmp/fmd-image.tar
+
       - name: Re-tag docker image
         id: retag-image
         env:
           IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
         run: |
-          docker tag fmd-image:latest ${image_path}
+          docker tag "fmd-image" "${IMAGE_PATH}"
 
       - name: Push Docker image to ECR
         id: push-docker-image-to-ecr
         env:
           IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
-        run: docker push ${IMAGE_PATH}
+        run: docker push "${IMAGE_PATH}"
 
-  deploy:
-    name: Deploy Helm chart into Cloud Platform
-    needs: push
-    environment: ${{ inputs.env }}
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read # This is required for actions/checkout
-    steps:
-      - uses: actions/checkout@v4
-      - name: Prepare Helm deployment
-        id: prepare-helm-deployment
+      - name: Prepare deployment yaml
+        id: prepare-deployment
         env:
           ENV: ${{ inputs.env }}
           CATALOGUE_URL: ${{ vars.CATALOGUE_URL }}
@@ -108,7 +104,7 @@ jobs:
           SENTRY_DSN_WORKAROUND: ${{ vars.SENTRY_DSN_WORKAROUND }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
-          IMAGE_PATH: ${{ needs.build-and-push.outputs.image_path }}
+          IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
@@ -140,8 +136,8 @@ jobs:
           kubectl config set-context ${KUBE_CLUSTER} --cluster=${KUBE_CLUSTER} --user=deploy-user --namespace=${KUBE_NAMESPACE}
           kubectl config use-context ${KUBE_CLUSTER}
 
-      - name: Apply Helm deployment
-        id: apply-helm-deployment
+      - name: Apply deployment
+        id: apply-deployment
         env:
           KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
         run: kubectl -n ${KUBE_NAMESPACE} apply -f deployments/
