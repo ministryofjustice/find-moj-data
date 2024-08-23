@@ -59,12 +59,12 @@ jobs:
       - name: Generate, mask, output image path
         id: image-path
         env:
+          REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "adding masks"
-          echo "::add-mask::${{ steps.login-to-ecr.outputs.registry }}"
-          IMAGE_PATH="${{ steps.login-to-ecr.outputs.registry }}/${REPOSITORY}:${IMAGE_TAG}"
+          IMAGE_PATH="${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}"
           echo "::add-mask::$IMAGE_PATH"
           echo "image_path=$IMAGE_PATH" >> "$GITHUB_OUTPUT"
 
@@ -78,7 +78,6 @@ jobs:
         id: load-image
         run: |
           docker load --input /tmp/fmd-image.tar
-          docker image ls -a
 
       - name: Re-tag docker image
         id: retag-image
