@@ -62,9 +62,10 @@ jobs:
           REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          ::add-mask::${{ steps.login-to-ecr.outputs.registry }}
+          echo "adding masks"
+          echo "::add-mask::${{ steps.login-to-ecr.outputs.registry }}"
           IMAGE_PATH="${{ steps.login-to-ecr.outputs.registry }}/${REPOSITORY}:${IMAGE_TAG}"
-          ::add-mask::$IMAGE_PATH
+          echo "::add-mask::$IMAGE_PATH"
           echo "image_path=$IMAGE_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Download artifact
