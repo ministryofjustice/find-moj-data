@@ -74,12 +74,17 @@ jobs:
           name: fmd-image
           path: /tmp
 
+      - name: Load image
+        id: load-image
+        run: |
+          docker load --input /tmp/fmd-image.tar
+          docker image ls -a
+
       - name: Re-tag docker image
         id: retag-image
         env:
           IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
         run: |
-          echo $(docker ps -a)
           docker tag "fmd-image" "${IMAGE_PATH}"
 
       - name: Push Docker image to ECR
