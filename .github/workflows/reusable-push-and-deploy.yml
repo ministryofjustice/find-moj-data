@@ -44,8 +44,6 @@ jobs:
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
-    outputs:
-      image_path: ${{ steps.image-path.outputs.image_path }}
     steps:
       - uses: actions/checkout@v4
 
@@ -64,9 +62,9 @@ jobs:
           REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "::add-mask::${{ steps.login-to-ecr.outputs.registry }}"
+          ::add-mask::${{ steps.login-to-ecr.outputs.registry }}
           IMAGE_PATH="${{ steps.login-to-ecr.outputs.registry }}/${REPOSITORY}:${IMAGE_TAG}"
-          echo "::add-mask::$IMAGE_PATH"
+          ::add-mask::$IMAGE_PATH
           echo "image_path=$IMAGE_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Download artifact
@@ -80,7 +78,8 @@ jobs:
         env:
           IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}
         run: |
-          docker tag "fmd-image:latest" "${IMAGE_PATH}"
+          echo $(docker ps -a)
+          docker tag "fmd-image" "${IMAGE_PATH}"
 
       - name: Push Docker image to ECR
         id: push-docker-image-to-ecr
