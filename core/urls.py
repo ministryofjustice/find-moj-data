@@ -30,7 +30,7 @@ urlpatterns = [
     path("", include("django_prometheus.urls")),
 ]
 
-if (not settings.TESTING) or (not settings.DEBUG):
+if settings.DEBUG and not settings.TESTING:
     urlpatterns = [
         *urlpatterns,
     ] + debug_toolbar_urls()
