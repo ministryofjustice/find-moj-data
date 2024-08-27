@@ -1,4 +1,4 @@
-name: Staged deploy to Test and Preprod
+name: Staged deploy to Test, Preprod, and Prod
 
 on:
   push:
@@ -45,3 +45,39 @@ jobs:
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+  deploy-prod:
+    uses: "./.github/workflows/reusable-push-and-deploy.yml"
+    needs: deploy-preprod
+    with:
+      env: "prod"
+    secrets:
+      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
+      kube_cert: ${{ secrets.KUBE_CERT }}
+      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
+      kube_token: ${{ secrets.KUBE_TOKEN }}
+      ecr_role_to_assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
+      secret_key: ${{ secrets.SECRET_KEY }}
+      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+      azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+  prepare-release:
+    name: Prepare a draft release (to be published manually)
+    needs: deploy-prod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+
+      - name: Generate a draft release
+        run: gh release create --generate-notes --latest --draft ${{ github.sha }} --title "Release candidate (${{github.sha}})"
+
+  # Unrelated to the above.
+  # This is only used to share library code between find-moj-data and data-catalogue.
+  release-datahub-client:
+    needs:
+      - deploy-prod
+      - code-tests
+    if: ${{ needs.code-tests.outputs.datahub-client-path == 'true' }}
+    uses: "./.github/workflows/reusable-publish-datahub-client.yml"
