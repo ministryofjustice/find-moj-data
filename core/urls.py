@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 app_name = "core"
 
@@ -24,6 +25,9 @@ urlpatterns = [
     path("admin/", view=admin.site.urls),
     path("azure_auth/", include("azure_auth.urls", namespace="azure_auth")),
     path("feedback/", include("feedback.urls", namespace="feedback")),
+    path(
+        "cookies/", TemplateView.as_view(template_name="cookies.html"), name="cookies"
+    ),
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
 ]
