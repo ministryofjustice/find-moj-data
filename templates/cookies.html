@@ -1,0 +1,96 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{% translate 'Cookies' %}</h1>
+      <p class="govuk-body">
+        This site saves small files (known as ‘cookies’) onto your device.
+      </p>
+      <p class="govuk-body">Cookies are used to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>remember when you sign into the site</li>
+        <li>measure how you use the site so it can be updated and improved based on your needs</li>
+      </ul>
+      <p>
+        These cookies are not used to identify you personally.
+      </p>
+      <h2 class="govuk-heading-m">Essential cookies</h2>
+
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">Purpose</th>
+            <th scope="col" class="govuk-table__header">Expires</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">sessionid</th>
+            <td class="govuk-table__cell">Remembers that you are signed in</td>
+            <td class="govuk-table__cell">2 weeks</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">csrftoken</th>
+            <td class="govuk-table__cell">Protects against unauthorised access</td>
+            <td class="govuk-table__cell">1 year</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 class="govuk-heading-m">Analytical cookies</h2>
+      <p class="govuk-body">
+        Analytics cookies collect information about how you use this site. This helps us make sure the site is meeting
+        the needs of users and helps us make improvements.
+      </p>
+      <p class="govuk-body">
+        We use Google Analytics to learn about:
+      </p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>the pages you visit</li>
+        <li>how long you spend on each page</li>
+        <li>how you got to the site</li>
+        <li>what you click on while you are using the site</li>
+      </ul>
+      <p class="govuk-body">We do not collect or store your personal information (for example your name or address) so
+        this information can’t be used to identify who you are. We do not allow third parties to use or share our
+        analytics data.</p>
+
+      <p class="govuk-body">
+        The site may save the following analytics cookies:
+      </p>
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">Purpose</th>
+            <th scope="col" class="govuk-table__header">Expires</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">_ga</th>
+            <td class="govuk-table__cell">Used to distinguish users</td>
+            <td class="govuk-table__cell">2 years</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">_ga_<code>&lt;container-id&gt;</code>
+            </th>
+            <td class="govuk-table__cell">Used to persist session state</td>
+            <td class="govuk-table__cell">2 years</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="govuk-body">You can use a browser addon to <a href="https://tools.google.com/dlpage/gaoptout">opt out
+          of Google Analytics cookies</a> on all websites.</p>
+      <p class="govuk-body">Find out more about <a href="https://www.aboutcookies.org/">how to manage cookies</a>.</p>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
