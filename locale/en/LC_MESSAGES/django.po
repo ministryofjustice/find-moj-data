@@ -25,10 +25,8 @@ msgid "Page not found"
 msgstr "Page not found"
 
 #: core/middleware.py:49
-#, fuzzy
-#| msgid "There is a problem with the server."
 msgid "There is a problem with this service"
-msgstr "There is a problem with the server."
+msgstr "There is a problem with this service"
 
 #: feedback/models.py:16
 msgid "Satisfaction survey"
