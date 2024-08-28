@@ -352,15 +352,8 @@ msgid "Discover data from across the Ministry of Justice"
 msgstr "Discover data from across the Ministry of Justice"
 
 #: templates/home.html:12
-#, fuzzy
-#| msgid ""
-#| "Find MoJ data shows you what data exists and how to access it. <a "
-#| "style=\"color: white;\" href=\"https://user-guide.find-moj-data.service."
-#| "justice.gov.uk/\">Learn more</a>"
-msgid ""
-"Find MoJ data shows you what data exists and how to access it. <a style=\\"
-msgstr ""
-"Find MoJ data shows you what data exists and how to access it. <a "
+msgid "service_description"
+msgstr "Find MoJ data shows you what data exists and how to access it. <a "
 "style=\"color: white;\" href=\"https://user-guide.find-moj-data.service."
 "justice.gov.uk/\">Learn more</a>"
 
