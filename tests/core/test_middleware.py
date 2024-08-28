@@ -51,5 +51,5 @@ def test_middleware_renders_unhandled_exception_response():
     response = middleware.process_exception(request, error)
 
     assert response
-    assert b"Server error" in response.content
+    assert b"There is a problem with this service" in response.content
     assert response.status_code == 500
