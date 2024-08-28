@@ -6,7 +6,7 @@ ENV := local
 all: build
 
 # Setup the application
-build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches compilemessages
+build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches messages
 
 # Install dependencies
 install_deps:
@@ -51,9 +51,6 @@ setup_waffle_switches:
 # Run makemessages
 messages:
 	poetry run python manage.py makemessages --locale=en --ignore venv
-
-# Compile messages
-compilemessages:
 	poetry run python manage.py compilemessages --ignore venv
 
 # Run the application
@@ -81,4 +78,4 @@ clean:
 lint:
 	pre-commit run --all-files
 
-.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compilemessages run test unit integration clean lint
+.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages run test unit integration clean lint
