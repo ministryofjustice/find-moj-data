@@ -31,18 +31,6 @@ def test_middleware_renders_bad_request_response():
     assert response.status_code == 400
 
 
-def test_middleware_renders_page_not_found_response():
-    get_response = MagicMock()
-    request = MagicMock()
-    middleware = CustomErrorMiddleware(get_response)
-    error = Http404()
-    response = middleware.process_exception(request, error)
-
-    assert response
-    assert b"Page not found" in response.content
-    assert response.status_code == 404
-
-
 def test_middleware_renders_unhandled_exception_response():
     get_response = MagicMock()
     request = MagicMock()

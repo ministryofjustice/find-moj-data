@@ -35,13 +35,6 @@ class CustomErrorMiddleware:
                 context={"h1_value": _("Bad request")},
                 status=400,
             )
-        elif isinstance(exception, Http404):
-            return render(
-                request,
-                "404.html",
-                context={"h1_value": _("Page not found")},
-                status=404,
-            )
         elif isinstance(exception, Exception):
             return render(
                 request,

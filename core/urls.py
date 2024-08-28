@@ -27,3 +27,5 @@ urlpatterns = [
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
 ]
+
+handler404 = "core.views.handler404"
