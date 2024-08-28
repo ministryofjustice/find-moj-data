@@ -354,8 +354,8 @@ msgstr "Discover data from across the Ministry of Justice"
 #: templates/home.html:12
 msgid "service_description"
 msgstr "Find MoJ data shows you what data exists and how to access it. <a "
-"style=\"color: white;\" href=\"https://user-guide.find-moj-data.service."
-"justice.gov.uk/\">Learn more about Find MoJ data</a>"
+"style=\"color: white;\"  aria-label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-moj-data.service."
+"justice.gov.uk/\">Learn more</a>"
 
 #: templates/home.html:18
 msgid "Search metadata catalogue"
