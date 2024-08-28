@@ -66,6 +66,8 @@ jobs:
     name: Prepare a draft release (to be published manually)
     needs: deploy-prod
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
