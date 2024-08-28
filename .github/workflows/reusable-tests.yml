@@ -1,6 +1,8 @@
 name: Run tests
 
 on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
   workflow_call:
 
 jobs:
@@ -73,10 +75,10 @@ jobs:
       - name: Install project
         run: poetry install --no-interaction --no-root
 
-      - name: Install compile messages prereqs
+      - name: Install compilemessages prereqs
         run: sudo apt-get install gettext
 
-      - name: Compile messages
+      - name: Make compilemessages
         run: make compilemessages
 
       - name: Setup Node.js

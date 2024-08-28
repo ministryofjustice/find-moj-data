@@ -46,6 +46,6 @@ class CustomErrorMiddleware:
             return render(
                 request,
                 "500.html",
-                context={"h1_value": _("Server error")},
+                context={"h1_value": _("There is a problem with this service")},
                 status=500,
             )

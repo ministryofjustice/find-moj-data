@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:32+0100\n"
+"POT-Creation-Date: 2024-08-28 14:34+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,8 +25,8 @@ msgid "Page not found"
 msgstr "Page not found"
 
 #: core/middleware.py:49
-msgid "Server error"
-msgstr "Server error"
+msgid "There is a problem with this service"
+msgstr "There is a problem with this service"
 
 #: feedback/models.py:16
 msgid "Satisfaction survey"
@@ -353,9 +353,11 @@ msgstr "Discover data from across the Ministry of Justice"
 
 #: templates/home.html:12
 msgid "service_description"
-msgstr "Find MoJ data shows you what data exists and how to access it. <a "
-"style=\"color: white;\"  aria-label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-moj-data.service."
-"justice.gov.uk/\">Learn more</a>"
+msgstr ""
+"Find MoJ data shows you what data exists and how to access it. <a "
+"style=\"color: white;\"  aria-label=\"Learn more about Find MoJ data\" "
+"href=\"https://user-guide.find-moj-data.service.justice.gov.uk/\">Learn "
+"more</a>"
 
 #: templates/home.html:18
 msgid "Search metadata catalogue"
@@ -424,12 +426,26 @@ msgstr ""
 "this data."
 
 #: templates/partial/contact_team.html:4
+#, python-format
 msgid ""
 "If the problems persist, <a href=\"https://moj.enterprise.slack.com/archives/"
-"C06NPM2200N\" class=\"govuk-link\">contact #ask-data-catalogue on slack.</a>"
+"C06NPM2200N\" class=\"govuk-link\">\n"
+"    contact #ask-data-catalogue on slack</a>\n"
+"    or <a href=\"https://teams.microsoft.com/l/"
+"channel/19%%3Abb91d2a728a54472a41629ee6f2908ea%%40thread.tacv2/"
+"Ask%%20Data%%20Catalogue?"
+"groupId=f6c3cb3b-591c-4e47-9997-25b6dc9bf5b6&tenantId=c6874728-71e6-41fe-"
+"a9e1-2e8c36776ad8\"\n"
+"    class=\"govuk-link\"> MS Teams</a>.\n"
+"    "
 msgstr ""
-"If the problems persist, <a href=\"https://moj.enterprise.slack.com/archives/"
-"C06NPM2200N\" class=\"govuk-link\">contact #ask-data-catalogue on slack.</a>"
+"If the problems persist, contact <a href=\"https://moj.enterprise.slack.com/"
+"archives/C06NPM2200N\" class=\"govuk-link\">#ask-data-catalogue on slack</a> "
+"or <a href=\"https://teams.microsoft.com/l/"
+"channel/19%%3Abb91d2a728a54472a41629ee6f2908ea%%40thread.tacv2/"
+"Ask%%20Data%%20Catalogue?"
+"groupId=f6c3cb3b-591c-4e47-9997-25b6dc9bf5b6&tenantId=c6874728-71e6-41fe-"
+"a9e1-2e8c36776ad8\" class=\"govuk-link\">MS Teams</a>."
 
 #: templates/partial/esda_info.html:9
 msgid "What are ESDAs?"
