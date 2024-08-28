@@ -222,7 +222,7 @@ msgstr "Ministry of Justice"
 
 #: templates/base/navigation.html:18
 msgid "Find MOJ data"
-msgstr "Find MOJ data"
+msgstr "Find MoJ data"
 
 #: templates/base/navigation.html:36
 msgid "Feedback"
