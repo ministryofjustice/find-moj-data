@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-22 11:59+0100\n"
+"POT-Creation-Date: 2024-08-28 09:32+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,23 +192,11 @@ msgstr ""
 msgid "Support links"
 msgstr "Support links"
 
-#: templates/base/footer.html:10
-msgid "Help"
-msgstr "Help"
-
-#: templates/base/footer.html:15
+#: templates/base/footer.html:10 templates/cookies.html:10
 msgid "Cookies"
 msgstr "Cookies"
 
-#: templates/base/footer.html:20
-msgid "Contact"
-msgstr "Contact"
-
-#: templates/base/footer.html:25
-msgid "Terms and conditions"
-msgstr "Terms and conditions"
-
-#: templates/base/footer.html:42
+#: templates/base/footer.html:27
 #, python-format
 msgid ""
 "All content is available under the <a class=\"govuk-footer__link\" "
@@ -219,7 +207,7 @@ msgstr ""
 "href=\"%(href)s\" rel=\"license\">Open Government Licence v3.0</a>, except "
 "where otherwise stated"
 
-#: templates/base/footer.html:52
+#: templates/base/footer.html:37
 #, python-format
 msgid ""
 "<a class=\"govuk-footer__link govuk-footer__copyright-logo\" "
@@ -232,7 +220,7 @@ msgstr ""
 msgid "Ministry of Justice"
 msgstr "Ministry of Justice"
 
-#: templates/base/navigation.html:18 templates/home.html:11
+#: templates/base/navigation.html:18
 msgid "Find MOJ data"
 msgstr "Find MoJ data"
 
@@ -359,13 +347,47 @@ msgstr "Filter this page"
 msgid "Skip to glossary content"
 msgstr "Skip to glossary content"
 
-#: templates/home.html:17
-msgid "Search metadata catalogue"
-msgstr "Search metadata catalogue"
+#: templates/home.html:11
+msgid "Discover data from across the Ministry of Justice"
+msgstr "Discover data from across the Ministry of Justice"
 
-#: templates/home.html:50
+#: templates/home.html:12
+msgid "service_description"
+msgstr "Find MoJ data shows you what data exists and how to access it. <a "
+"style=\"color: white;\"  aria-label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-moj-data.service."
+"justice.gov.uk/\">Learn more</a>"
+
+#: templates/home.html:18
+msgid "Search metadata catalogue"
+msgstr "Search for data"
+
+#: templates/home.html:51
 msgid "Browse by domain"
 msgstr "Browse by subject area"
+
+#: templates/home.html:59
+msgid "Help us grow"
+msgstr "Help us grow"
+
+#: templates/home.html:60
+msgid ""
+"Find MoJ data is a new service with a growing catalogue of data. You can "
+"help us improve the service by:"
+msgstr ""
+"Find MoJ data is a new service with a growing catalogue of data. You can "
+"help us improve the service by:"
+
+#: templates/home.html:62
+msgid "adding a new data source"
+msgstr "adding a new data source"
+
+#: templates/home.html:63
+msgid "telling us about data you would like to see"
+msgstr "telling us about data you would like to see"
+
+#: templates/home.html:64
+msgid "giving us feedback"
+msgstr "giving us feedback"
 
 #: templates/partial/contact_info.html:4
 msgid "Access requirements"
