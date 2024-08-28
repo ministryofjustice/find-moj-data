@@ -62,7 +62,7 @@ class TestSearchAndBrowseFromHomepage:
         assert self.selenium.title in self.page_titles
         heading_text = self.home_page.primary_heading().text
 
-        assert heading_text == "Find MoJ data"
+        assert heading_text == "Discover data from across the Ministry of Justice"
         assert self.selenium.title.split("-")[0].strip() == "Home"
 
     def verify_i_am_on_the_search_page(self):
