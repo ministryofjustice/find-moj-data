@@ -75,11 +75,11 @@ jobs:
       - name: Install project
         run: poetry install --no-interaction --no-root
 
-      - name: Install messages prereqs
+      - name: Install compilemessages prereqs
         run: sudo apt-get install gettext
 
-      - name: Make messages
-        run: make messages
+      - name: Make compilemessages
+        run: make compilemessages
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

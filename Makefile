@@ -53,6 +53,9 @@ messages:
 	poetry run python manage.py makemessages --locale=en --ignore venv
 	poetry run python manage.py compilemessages --ignore venv
 
+compilemessages:
+	poetry run python manage.py compilemessages --ignore venv
+
 # Run the application
 run:
 	poetry run python manage.py runserver
