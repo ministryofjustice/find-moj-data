@@ -74,12 +74,3 @@ jobs:
 
       - name: Generate a draft release
         run: gh release create --generate-notes --latest --draft ${{ github.sha }} --title "Release candidate (${{github.sha}})"
-
-  # Unrelated to the above.
-  # This is only used to share library code between find-moj-data and data-catalogue.
-  release-datahub-client:
-    needs:
-      - deploy-prod
-      - code-tests
-    if: ${{ needs.code-tests.outputs.datahub-client-path == 'true' }}
-    uses: "./.github/workflows/reusable-publish-datahub-client.yml"
