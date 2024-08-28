@@ -578,12 +578,3 @@ msgstr "first name"
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
-
-#~ msgid "Help"
-#~ msgstr "Help"
-
-#~ msgid "Contact"
-#~ msgstr "Contact"
-
-#~ msgid "Terms and conditions"
-#~ msgstr "Terms and conditions"
