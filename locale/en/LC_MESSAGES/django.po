@@ -381,6 +381,8 @@ msgid ""
 "Find MoJ data is a new service with a growing catalogue of data. You can "
 "help us improve the service by:"
 msgstr ""
+"Find MoJ data is a new service with a growing catalogue of data. You can "
+"help us improve the service by:"
 
 #: templates/home.html:62
 msgid "adding a new data source"
