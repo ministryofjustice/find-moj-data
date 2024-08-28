@@ -258,3 +258,6 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 
 origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = origins_str.split(" ") if origins_str else []
+if DEBUG:
+    local_origins = ["http://127.0.0.1:8000", "http://localhost:8000"]
+    CSRF_TRUSTED_ORIGINS += local_origins
