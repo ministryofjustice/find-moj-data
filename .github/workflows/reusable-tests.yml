@@ -1,7 +1,10 @@
 name: Run tests
 
 on:
-  workflow_call:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+  push:
+    branches: [main]
 
 jobs:
   datahub-client-path-filter:
