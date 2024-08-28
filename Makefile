@@ -54,7 +54,7 @@ messages:
 
 # Compile messages
 compilemessages:
-	poetry run python manage.py compilemessages
+	poetry run python manage.py compilemessages --ignore venv
 
 # Run the application
 run:
