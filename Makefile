@@ -81,4 +81,4 @@ clean:
 lint:
 	pre-commit run --all-files
 
-.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages run test unit integration clean lint
+.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compilemessages run test unit integration clean lint
