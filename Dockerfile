@@ -1,4 +1,4 @@
-FROM node:22-bullseye as node_builder
+FROM node:22-bullseye AS node_builder
 
 WORKDIR /app
 COPY . .
@@ -6,14 +6,14 @@ COPY . .
 RUN npm install --omit=dev
 
 # The builder image, used to build the virtual environment
-FROM python:3.11-buster as builder
+FROM python:3.11-buster AS builder
 
 WORKDIR /app
 COPY --from=node_builder /app .
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Install poetry via pip
 RUN pip install poetry==1.7.1
@@ -35,7 +35,7 @@ RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 RUN make compilemessages
 
 # The runtime image, used to just run the code provided its virtual environment
-FROM python:3.11-slim-buster as runtime
+FROM python:3.11-slim-buster AS runtime
 
 # Update and Install Netcat
 RUN apt-get update && \
