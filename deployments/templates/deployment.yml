@@ -19,6 +19,10 @@ spec:
       labels:
         app: find-moj-data
     spec:
+      securityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
       containers:
         - name: find-moj-data
           image: ${IMAGE_PATH}
