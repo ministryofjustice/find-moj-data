@@ -25,7 +25,7 @@ ENV POETRY_NO_INTERACTION=1 \
 
 # Update and install dependencies for compiling .po files
 RUN apt-get update && \
-  apt-get install -y make gettext
+  apt-get install --no-install-recommends -y make gettext
 
 COPY pyproject.toml poetry.lock Makefile ./
 COPY lib ./lib
@@ -39,7 +39,7 @@ FROM python:3.11-slim-buster AS runtime
 
 # Update and Install Netcat
 RUN apt-get update && \
-  apt-get install -y netcat
+  apt-get install --no-install-recommends -y netcat
 
 WORKDIR /app
 
