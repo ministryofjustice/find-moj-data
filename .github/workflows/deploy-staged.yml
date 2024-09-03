@@ -46,6 +46,30 @@ jobs:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
+  notify-preprod-success:
+    needs: deploy-preprod
+    runs-on: ubuntu-latest
+    steps:
+      # Notify Slack - data-catalogue
+      - uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: Success
+          notification_title: "Deployment Successful"
+          message_format: ":rocket: <https://preprod.find-moj-data.service.justice.gov.uk/|New Preproduction Deployment>"
+          footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DATA_CATALOGUE }}
+
+      # Notify MS TEAMS - preprod deployment notifications
+      - uses: jdcargile/ms-teams-notification@v1.4
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_PREPROD_DEPLOYMENTS }}
+          notification-summary: "Deployment Successful"
+          notification-color: 17a2b8
+          timezone: Europe/London
+          verbose-logging: true
+
   deploy-prod:
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
     needs: deploy-preprod
