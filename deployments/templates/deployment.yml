@@ -5,7 +5,6 @@ metadata:
   labels:
     app: find-moj-data
 spec:
-  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
