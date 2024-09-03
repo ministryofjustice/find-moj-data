@@ -19,10 +19,6 @@ spec:
       labels:
         app: find-moj-data
     spec:
-      securityContext:
-        readOnlyRootFilesystem: true
-        allowPrivilegeEscalation: false
-        runAsNonRoot: true
       containers:
         - name: find-moj-data
           image: ${IMAGE_PATH}
@@ -97,3 +93,7 @@ spec:
                 secretKeyRef:
                   name: rds-postgresql-instance-output
                   key: rds_instance_address
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
