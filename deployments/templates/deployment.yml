@@ -98,8 +98,8 @@ spec:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
           volumeMounts:
-          - mountPath: /tmp
-            name: tmp
-        volumes:
+            - mountPath: /tmp
+              name: tmp
+      volumes:
         - name: tmp
           emptyDir: {}
