@@ -118,6 +118,7 @@ jobs:
 
         run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
+          cat deployments/templates/hpa.yml | envsubst > deployments/hpa.yml
           cat deployments/templates/ingress.yml | envsubst > deployments/ingress.yml
           cat deployments/templates/service.yml | envsubst > deployments/service.yml
           cat deployments/templates/secrets.yml | envsubst > deployments/secrets.yml
