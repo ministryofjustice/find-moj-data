@@ -73,10 +73,11 @@ jobs:
           cache-dependency-path: ./poetry.lock
 
       - name: Install project
-        run: poetry install --no-interaction --no-root
-
-      - name: Install compilemessages prereqs
-        run: sudo apt-get install gettext
+        run: |
+          make install_python_deps
+          make install_npm_deps
+          poetry install --no-interaction --no-root
+          sudo apt-get install gettext
 
       - name: Make compilemessages
         run: make compilemessages
@@ -88,22 +89,18 @@ jobs:
 
       - name: Get npm cache directory
         id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+        run: make export_npm_cache_dir
 
-      - uses: actions/cache@v4
+      - name: Load cached npm
+        uses: actions/cache@v4
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install npm dependencies
-        id: install_dependencies
-        run: npm install
-
       - name: Collect static files
-        run: poetry run python manage.py collectstatic --no-input
+        run: make collect_static
 
       - name: Run unit tests with coverage
         id: fast-tests
@@ -132,14 +129,12 @@ jobs:
 
       - name: Get npm cache directory
         id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+        run: make export_npm_cache_dir
 
       - name: Load cached npm
         uses: actions/cache@v4
-        id: npm-cache
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
