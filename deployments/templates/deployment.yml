@@ -96,20 +96,20 @@ spec:
             - name: REDIS_PRIMARY_ENDPOINT_ADDRESS
               valueFrom:
                 secretKeyRef:
-                  name: fmd-redis-secret
+                  name: fmd-redis-secrets
                   key: primary_endpoint_address
             - name: REDIS_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: fmd-redis-secret
+                  name: fmd-redis-secrets
                   key: auth_token
             - name: REDIS_MEMBER_CLUSTERS
               valueFrom:
                 secretKeyRef:
-                  name: fmd-redis-secret
+                  name: fmd-redis-secrets
                   key: member_clusters
             - name: REDIS_REPLICATION_GROUP_ID
               valueFrom:
                 secretKeyRef:
-                  name: fmd-redis-secret
-                  key: member_clusters
+                  name: fmd-redis-secrets
+                  key: replication_group_id
