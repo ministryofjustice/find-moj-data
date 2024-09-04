@@ -73,10 +73,10 @@ jobs:
           cache-dependency-path: ./poetry.lock
 
       - name: Install project
-        run: poetry install --no-interaction --no-root
+        run: make gha_install_project
 
-      - name: Install compilemessages prereqs
-        run: sudo apt-get install gettext
+#      - name: Install compilemessages prereqs
+#        run: sudo apt-get install gettext
 
       - name: Make compilemessages
         run: make compilemessages
@@ -98,12 +98,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install npm dependencies
-        id: install_dependencies
-        run: npm install
+      - name: Install project dependencies
+        run: make gha_install_project
 
       - name: Collect static files
-        run: poetry run python manage.py collectstatic --no-input
+        run: make collect_static
 
       - name: Run unit tests with coverage
         id: fast-tests

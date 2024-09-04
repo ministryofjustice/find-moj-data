@@ -8,11 +8,27 @@ all: build
 # Setup the application
 build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches messages
 
+# Install Python dependencies
+install_python_deps:
+	if ! command -v poetry >/dev/null 2>&1; then \
+		echo "Poetry is not installed. Please install it from https://python-poetry.org/docs/#installation"; \
+		exit 1; \
+	fi
+	poetry install
+
+# Install Node.js dependencies
+install_npm_deps:
+	if ! command -v npm >/dev/null 2>&1; then \
+		echo "npm is not installed. Please install it from https://nodejs.org/"; \
+		exit 1; \
+	fi
+	npm install
+
 # Install dependencies
 install_deps:
 	if ! command -v op >/dev/null 2>&1; then \
 		echo "1password CLI is not installed. Please install it from https://1password.com/downloads/"; \
-		exit 1; \
+		exit 0; \
 	fi
 	if ! command -v npm >/dev/null 2>&1; then \
 		echo "npm is not installed. Please install it from https://nodejs.org/"; \
@@ -26,8 +42,8 @@ install_deps:
 		echo "Poetry is not installed. Please install it from https://python-poetry.org/docs/#installation"; \
 		exit 1; \
 	fi
-	poetry install
-	npm install
+	@make install_python_deps
+	@make install_npm_deps
 
 # Generate .env file
 $(ENV_FILE): .env.tpl
@@ -72,11 +88,21 @@ unit:
 integration:
 	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
 
+
+# Install project dependencies for GitHub Actions
+gha_install_project: install_python_deps install_npm_deps
+	poetry install --no-interaction --no-root
+	sudo apt-get install gettext
+
 gha_fast_tests:
 	poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
 gha_slow_tests:
 	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
+
+# Setup and cache Node.js dependencies in GitHub Actions
+gha_setup_node:
+	@make install_npm_deps
 
 # Clean up (optional)
 clean:
