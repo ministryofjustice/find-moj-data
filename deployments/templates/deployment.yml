@@ -98,20 +98,8 @@ spec:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
           volumeMounts:
-            - mountPath: /tmp
-              name: tmp-dir
-            - mountPath: /var/tmp
-              name: var-tmp-dir
-            - mountPath: /usr/tmp
-              name: usr-tmp-dir
-            - mountPath: /app
-              name: app-dir
+          - mountPath: /tmp
+            name: tmp
         volumes:
-          - name: tmp-dir
-            emptyDir: {}
-          - name: var-tmp-dir
-            emptyDir: {}
-          - name: usr-tmp-dir
-            emptyDir: {}
-          - name: app-dir
-            emptyDir: {}
+        - name: tmp
+          emptyDir: {}
