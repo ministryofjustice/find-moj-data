@@ -104,6 +104,13 @@ gha_slow_tests:
 gha_setup_node:
 	@make install_npm_deps
 
+
+# Get npm cache directory and store it in a file
+gha_npm_cache_dir:
+	@echo "Fetching npm cache directory..."
+	@npm config get cache > .npm_cache_dir
+	@echo "NPM cache directory stored in .npm_cache_dir"
+
 # Clean up (optional)
 clean:
 	rm -rf staticfiles

@@ -88,12 +88,12 @@ jobs:
 
       - name: Get npm cache directory
         id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+        run: make gha_npm_cache_dir
 
-      - uses: actions/cache@v4
+      - name: Load cached npm
+        uses: actions/cache@v4
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -131,14 +131,12 @@ jobs:
 
       - name: Get npm cache directory
         id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+        run: make gha_npm_cache_dir
 
       - name: Load cached npm
         uses: actions/cache@v4
-        id: npm-cache
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
