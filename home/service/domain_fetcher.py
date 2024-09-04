@@ -24,12 +24,10 @@ class DomainFetcher(GenericService):
         """
         result = cache.get(self.cache_key)
         if not result:
-            print("not found in cache")
             result = self.client.list_domains()
             result = sorted(result, key=lambda d: d.urn)
             cache.set(self.cache_key, result, timeout=self.cache_timeout_seconds)
-        else:
-            print("found in cache")
+
         if self.filter_zero_entities:
             result = [domain for domain in result if domain.total > 0]
         return result
