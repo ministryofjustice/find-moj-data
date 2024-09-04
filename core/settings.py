@@ -195,12 +195,20 @@ LOGGING = {
     },
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"rediss://:{os.environ.get('REDIS_AUTH_TOKEN')}@{os.environ.get('REDIS_PRIMARY_ENDPOINT_ADDRESS')}/0",  # noqa: E501
-    }
-}
+# Cache Configuration
+cache: dict = {}
+cache["BACKEND"] = "django.core.cache.backends.locmem.LocMemCache"
+
+if os.environ.get("REDIS_AUTH_TOKEN") and os.environ.get(
+    "REDIS_PRIMARY_ENDPOINT_ADDRESS"
+):
+    cache["BACKEND"] = ("django.core.cache.backends.redis.RedisCache",)
+    cache["LOCATION"] = (
+        f"rediss://:{os.environ.get('REDIS_AUTH_TOKEN')}@{os.environ.get('REDIS_PRIMARY_ENDPOINT_ADDRESS')}/0",
+    )  # noqa: E501
+
+CACHES = {"default": cache}
+
 
 ANALYTICS_ID: str = os.environ.get("ANALYTICS_ID", "")
 ENABLE_ANALYTICS: bool = (
