@@ -25,25 +25,15 @@ install_npm_deps:
 	npm install
 
 # Install dependencies
-install_deps:
+install_deps: install_npm_deps install_python_deps
 	if ! command -v op >/dev/null 2>&1; then \
 		echo "1password CLI is not installed. Please install it from https://1password.com/downloads/"; \
-		exit 0; \
-	fi
-	if ! command -v npm >/dev/null 2>&1; then \
-		echo "npm is not installed. Please install it from https://nodejs.org/"; \
 		exit 1; \
 	fi
 	if ! command -v chromedriver >/dev/null 2>&1; then \
 		echo "Chromedriver is not installed. Please install it from https://sites.google.com/a/chromium.org/chromedriver/downloads"; \
 		exit 1; \
 	fi
-	if ! command -v poetry >/dev/null 2>&1; then \
-		echo "Poetry is not installed. Please install it from https://python-poetry.org/docs/#installation"; \
-		exit 1; \
-	fi
-	@make install_python_deps
-	@make install_npm_deps
 
 # Generate .env file
 $(ENV_FILE): .env.tpl
@@ -89,24 +79,8 @@ integration:
 	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
 
 
-# Install project dependencies for GitHub Actions
-gha_install_project: install_python_deps install_npm_deps
-	poetry install --no-interaction --no-root
-	sudo apt-get install gettext
-
-gha_fast_tests:
-	poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
-
-gha_slow_tests:
-	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
-
-# Setup and cache Node.js dependencies in GitHub Actions
-gha_setup_node:
-	@make install_npm_deps
-
-
 # Get npm cache directory and store it in a file
-gha_npm_cache_dir:
+export_npm_cache_dir:
 	@echo "Fetching npm cache directory..."
 	@npm config get cache > .npm_cache_dir
 	@echo "NPM cache directory stored in .npm_cache_dir"

@@ -73,10 +73,11 @@ jobs:
           cache-dependency-path: ./poetry.lock
 
       - name: Install project
-        run: make gha_install_project
-
-#      - name: Install compilemessages prereqs
-#        run: sudo apt-get install gettext
+        run: |
+          make install_python_deps
+          make install_npm_deps
+          poetry install --no-interaction --no-root
+          sudo apt-get install gettext
 
       - name: Make compilemessages
         run: make compilemessages
@@ -88,7 +89,7 @@ jobs:
 
       - name: Get npm cache directory
         id: npm-cache-dir
-        run: make gha_npm_cache_dir
+        run: make export_npm_cache_dir
 
       - name: Load cached npm
         uses: actions/cache@v4
@@ -98,15 +99,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install project dependencies
-        run: make gha_install_project
-
       - name: Collect static files
         run: make collect_static
 
       - name: Run unit tests with coverage
         id: fast-tests
-        run: TESTING=True make gha_fast_tests
+        run: TESTING=True poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
       - name: Set up chromedriver
         # https://github.com/marketplace/actions/setup-chromedriver
@@ -115,7 +113,7 @@ jobs:
       - name: Run integration tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: TESTING=True make gha_slow_tests
+        run: TESTING=True poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
 
   javascript-only-tests:
     name: Javascript tests
@@ -131,7 +129,7 @@ jobs:
 
       - name: Get npm cache directory
         id: npm-cache-dir
-        run: make gha_npm_cache_dir
+        run: make export_npm_cache_dir
 
       - name: Load cached npm
         uses: actions/cache@v4
