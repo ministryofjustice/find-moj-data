@@ -5,7 +5,6 @@ metadata:
   labels:
     app: find-moj-data
 spec:
-  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -22,6 +21,13 @@ spec:
       containers:
         - name: find-moj-data
           image: ${IMAGE_PATH}
+          resources:
+            requests:
+              cpu: 20m
+              memory: 300Mi
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
           ports:
             - name: http
               containerPort: 8000
@@ -113,3 +119,15 @@ spec:
                 secretKeyRef:
                   name: fmd-redis-secrets
                   key: replication_group_id
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
