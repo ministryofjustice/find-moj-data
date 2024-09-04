@@ -116,7 +116,7 @@ jobs:
       - name: Run integration tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: TESTING=True poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
+        run: TESTING=True make gha_slow_tests
 
   javascript-only-tests:
     name: Javascript tests
