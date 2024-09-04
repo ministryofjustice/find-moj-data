@@ -94,6 +94,6 @@ spec:
                   name: rds-postgresql-instance-output
                   key: rds_instance_address
           securityContext:
-            # readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
             runAsNonRoot: true
