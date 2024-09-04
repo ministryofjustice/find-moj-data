@@ -2,12 +2,8 @@ name: Notify Deployment Status
 # based on: https://github.com/integrations/slack/issues/1563#issuecomment-1588009077
 on:
   workflow_run:
-    workflows: [
-      "Deploy to Dev from branch",
-      "Deploy (with tests) to dev",
-      "Deploy to Prod on Published Release",
-      "Staged deploy to Test and Preprod"
-    ]
+    workflows:
+      ["Deploy to Dev from branch", "Staged deploy to Test, Preprod, and Prod"]
     types: [completed]
 
 jobs:
@@ -25,10 +21,10 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
 
-  on-dev-and-test-deploy-success:
+  on-dev-deploy-success:
     name: Dev and Test Deploy Success
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.name == 'Deploy (with tests) to dev' || github.event.workflow_run.name == 'Deploy to Dev from branch')
+    if: github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.name == 'Deploy to Dev from branch')
     steps:
       # Deploy to existing slack alerts channel on success for dev
       - uses: ravsamhq/notify-slack-action@v2
@@ -40,34 +36,10 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DATA_CATALOGUE_DEVS }}
 
-  on-preprod-deploy-success:
-    name: Preprod Deploy Success
-    runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Staged deploy to Test and Preprod'
-    steps:
-      # Notify Slack - data-catalogue
-      - uses: ravsamhq/notify-slack-action@v2
-        with:
-          status: ${{ github.event.workflow_run.conclusion }}
-          notification_title: "Deployment Successful"
-          message_format: ":rocket: <https://preprod.find-moj-data.service.justice.gov.uk/|New Preproduction Deployment>"
-          footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DATA_CATALOGUE }}
-      # Notify MS TEAMS - preprod deployment notifications
-      - uses: jdcargile/ms-teams-notification@v1.4
-        with:
-          github-token: ${{ github.token }} # this will use the runner's token.
-          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_PREPROD_DEPLOYMENTS }}
-          notification-summary: "Deployment Successful"
-          notification-color: 17a2b8
-          timezone: Europe/London
-          verbose-logging: true
-
   on-prod-deploy-success:
     name: Prod Deploy Success
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Deploy to Prod on Published Release'
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Staged deploy to Test, Preprod and Prod'
     steps:
       # Notify Slack - ask-data-catalogue
       - uses: ravsamhq/notify-slack-action@v2
