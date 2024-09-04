@@ -93,3 +93,15 @@ spec:
                 secretKeyRef:
                   name: rds-postgresql-instance-output
                   key: rds_instance_address
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
