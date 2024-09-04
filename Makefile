@@ -72,6 +72,10 @@ unit:
 integration:
 	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
 
+gha_fast_tests:
+	poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
+
+
 # Clean up (optional)
 clean:
 	rm -rf staticfiles

@@ -107,7 +107,7 @@ jobs:
 
       - name: Run unit tests with coverage
         id: fast-tests
-        run: TESTING=True poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
+        run: TESTING=True make gha_fast_tests
 
       - name: Set up chromedriver
         # https://github.com/marketplace/actions/setup-chromedriver
