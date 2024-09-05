@@ -23,9 +23,9 @@ def generate_cache_configuration() -> dict[str, Any]:
             f"rediss://:{os.environ.get('REDIS_AUTH_TOKEN')}@{os.environ.get('REDIS_PRIMARY_ENDPOINT_ADDRESS')}/{REDIS_DB_VALUE}"  # noqa: E501
         )
 
-        domain = ".".join(
+        domain: str = ".".join(
             os.environ.get("REDIS_PRIMARY_ENDPOINT_ADDRESS", "").split(".")[2:]
-        )
+        )  # 'iwfvzo.euw2.cache.amazonaws.com'
 
         hosts: list[str] = os.environ.get(
             "REDIS_MEMBER_CLUSTERS", ""
