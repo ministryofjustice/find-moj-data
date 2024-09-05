@@ -527,7 +527,7 @@ msgstr "Selected filters"
 
 #: templates/partial/selected_filters.html:15
 msgid "Clear filter"
-msgstr "Clear filer"
+msgstr "Clear filter"
 
 #: templates/partial/selected_filters.html:28
 msgid "Remove this filter"
