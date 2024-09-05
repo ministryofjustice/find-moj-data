@@ -6,6 +6,8 @@ from socket import gaierror, gethostbyname, gethostname
 import sentry_sdk
 from dotenv import load_dotenv
 
+from .helpers import generate_cache_configuration
+
 TRUTHY_VALUES = ["True", "true", "T", "1"]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -196,19 +198,7 @@ LOGGING = {
 }
 
 # Cache Configuration
-cache: dict = {}
-cache["BACKEND"] = "django.core.cache.backends.locmem.LocMemCache"
-
-if os.environ.get("REDIS_AUTH_TOKEN") and os.environ.get(
-    "REDIS_PRIMARY_ENDPOINT_ADDRESS"
-):
-    cache["BACKEND"] = ("django.core.cache.backends.redis.RedisCache",)
-    cache["LOCATION"] = (
-        f"rediss://:{os.environ.get('REDIS_AUTH_TOKEN')}@{os.environ.get('REDIS_PRIMARY_ENDPOINT_ADDRESS')}/0",
-    )  # noqa: E501
-
-CACHES = {"default": cache}
-
+CACHES = generate_cache_configuration()
 
 ANALYTICS_ID: str = os.environ.get("ANALYTICS_ID", "")
 ENABLE_ANALYTICS: bool = (
