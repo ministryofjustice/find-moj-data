@@ -3,7 +3,6 @@ import logging
 from data_platform_catalogue.client.exceptions import ConnectivityError
 from django.conf import settings
 from django.core.exceptions import BadRequest
-from django.http import Http404
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 
