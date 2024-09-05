@@ -78,6 +78,8 @@ unit:
 integration:
 	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
 
+end_to_end:
+	poetry run pytest tests/end_to_end --chromedriver-path $$(which chromedriver)
 
 # Get npm cache directory and store it in a file
 export_npm_cache_dir:

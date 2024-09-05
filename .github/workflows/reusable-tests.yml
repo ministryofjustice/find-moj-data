@@ -55,8 +55,8 @@ jobs:
         run: |
           poetry run pytest
 
-  app-unit-tests:
-    name: Django app unit tests
+  python-tests:
+    name: Python tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -114,6 +114,13 @@ jobs:
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
         run: TESTING=True poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
+
+      - name: Run integration tests
+        if: steps.fast-tests.outcome == 'success'
+        run: TESTING=True poetry run pytest tests/end_to_end --chromedriver-path /usr/local/bin/chromedriver
+        env:
+          CATALOGUE_TOKEN: ${{secrets.DEV_CATALOGUE_TOKEN}}
+          CATALOGUE_URL: ${{vars.DEV_CATALOGUE_URL}}
 
   javascript-only-tests:
     name: Javascript tests
