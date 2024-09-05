@@ -23,6 +23,7 @@ from home.service.details import (
     is_access_requirements_a_url,
 )
 from tests.conftest import (
+    generate_chart_metadata,
     generate_dashboard_metadata,
     generate_database_metadata,
     generate_table_metadata,
@@ -220,6 +221,28 @@ class TestChartDetailsService:
         }
 
         assert context == expected
+
+    def test_get_context_contains_parent(self, mock_catalogue):
+        parent = {
+            RelationshipType.PARENT: [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:container:parent", display_name="parent"
+                    ),
+                    description="",
+                    tags=[],
+                    entity_type="DASHBOARD",
+                )
+            ],
+        }
+        mock_chart = generate_chart_metadata(relations=parent)
+        mock_catalogue.get_chart_details.return_value = mock_chart
+
+        service = ChartDetailsService("urn:li:chart:test")
+        context = service.context
+        assert context["parent_entity"] == EntityRef(
+            urn="urn:li:container:parent", display_name="parent"
+        )
 
 
 class TestDashboardDetailsService:
