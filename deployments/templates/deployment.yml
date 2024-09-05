@@ -114,11 +114,6 @@ spec:
                 secretKeyRef:
                   name: fmd-redis-secrets
                   key: member_clusters
-            - name: REDIS_REPLICATION_GROUP_ID
-              valueFrom:
-                secretKeyRef:
-                  name: fmd-redis-secrets
-                  key: replication_group_id
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
