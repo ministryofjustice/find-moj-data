@@ -601,3 +601,22 @@ def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
         "parent_entity": container,
         "table_metadata": table_metadata,
     }
+
+
+@pytest.fixture(scope="function")
+def set_redis_cache_env(monkeypatch):
+    monkeypatch.setenv("REDIS_AUTH_TOKEN", "testredistoken")
+    monkeypatch.setenv(
+        "REDIS_PRIMARY_ENDPOINT_ADDRESS",
+        "master.cp-12345.iwfvzo.euw2.cache.amazonaws.com",
+    )
+    monkeypatch.setenv(
+        "REDIS_MEMBER_CLUSTERS", "cp-f05ff2dca7d81952-001 cp-f05ff2dca7d81952-002"
+    )
+
+
+@pytest.fixture(scope="function")
+def unset_redis_cache_env(monkeypatch):
+    monkeypatch.delenv("REDIS_AUTH_TOKEN", raising=False)
+    monkeypatch.delenv("REDIS_PRIMARY_ENDPOINT_ADDRESS", raising=False)
+    monkeypatch.delenv("REDIS_MEMBER_CLUSTERS", raising=False)
