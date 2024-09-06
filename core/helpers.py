@@ -35,6 +35,7 @@ def generate_cache_configuration() -> dict[str, Any]:
             location.append(
                 f"rediss://:{os.environ.get('REDIS_AUTH_TOKEN')}@{host}.{domain}/{REDIS_DB_VALUE}"  # noqa: E501
             )
+        print(location)
 
         cache["LOCATION"] = location
 
