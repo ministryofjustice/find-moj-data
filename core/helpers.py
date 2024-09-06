@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Any
 
@@ -27,9 +28,9 @@ def generate_cache_configuration() -> dict[str, Any]:
             os.environ.get("REDIS_PRIMARY_ENDPOINT_ADDRESS", "").split(".")[2:]
         )  # 'iwfvzo.euw2.cache.amazonaws.com'
 
-        hosts: list[str] = os.environ.get(
-            "REDIS_MEMBER_CLUSTERS", ""
-        ).split()  # ["cp-f05ff2dca7d81952-001","cp-f05ff2dca7d81952-002"]
+        hosts: list[str] = json.loads(
+            os.environ.get("REDIS_MEMBER_CLUSTERS", "")
+        )  # ["cp-f05ff2dca7d81952-001","cp-f05ff2dca7d81952-002"]
 
         for host in hosts:
             location.append(
