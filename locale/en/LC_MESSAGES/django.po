@@ -5,22 +5,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-05 19:37+0100\n"
+"POT-Creation-Date: 2024-09-06 14:02+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: core/middleware.py:28
+#: core/middleware.py:27
 msgid "Catalogue service unavailable"
 msgstr "Catalogue service unavailable"
 
-#: core/middleware.py:35
+#: core/middleware.py:34
 msgid "Bad request"
 msgstr "Bad request"
 
-#: core/middleware.py:42
+#: core/middleware.py:41
 msgid "There is a problem with this service"
 msgstr "There is a problem with this service"
 
