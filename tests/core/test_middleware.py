@@ -2,7 +2,6 @@ from unittest.mock import MagicMock
 
 from data_platform_catalogue.client.exceptions import ConnectivityError
 from django.core.exceptions import BadRequest
-from django.http import Http404
 
 from core.middleware import CustomErrorMiddleware
 

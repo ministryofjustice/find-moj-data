@@ -99,6 +99,21 @@ spec:
                 secretKeyRef:
                   name: rds-postgresql-instance-output
                   key: rds_instance_address
+            - name: REDIS_PRIMARY_ENDPOINT_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: fmd-redis-secrets
+                  key: primary_endpoint_address
+            - name: REDIS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: fmd-redis-secrets
+                  key: auth_token
+            - name: REDIS_MEMBER_CLUSTERS
+              valueFrom:
+                secretKeyRef:
+                  name: fmd-redis-secrets
+                  key: member_clusters
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
