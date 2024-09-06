@@ -26,10 +26,10 @@ def generate_cache_configuration() -> dict[str, Any]:
 
         domain: str = ".".join(
             os.environ.get("REDIS_PRIMARY_ENDPOINT_ADDRESS", "").split(".")[1:]
-        )  # 'iwfvzo.euw2.cache.amazonaws.com'
+        )  # 'cpf05ff2dca7d81952.iwfvzo.euw2.cache.amazonaws.com'
 
         hosts: list[str] = json.loads(
-            os.environ.get("REDIS_MEMBER_CLUSTERS", "")
+            os.environ.get("REDIS_MEMBER_CLUSTERS", [])
         )  # ["cp-f05ff2dca7d81952-001","cp-f05ff2dca7d81952-002"]
 
         for host in hosts:
