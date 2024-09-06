@@ -10,8 +10,8 @@ metadata:
       SecRuleEngine On
       SecDefaultAction "phase:2,pass,log,tag:github_team=data-catalogue"
       SecDefaultAction "phase:4,pass,log,tag:github_team=data-catalogue"
-      SecRule REQUEST_HEADERS:Host "!@endsWith .service.justice.gov.uk" \
-      "id:1001,phase:1,deny,log,status:403,msg:'Forbidden Host Header'"
+      SecRule REQUEST_HEADERS:Host "!@endsWith .service.justice.gov.uk" "id:1001,phase:1,deny,log,status:403,msg:'Forbidden Host Header"
+
 spec:
   ingressClassName: modsec
   tls:
