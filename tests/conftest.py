@@ -611,7 +611,8 @@ def set_redis_cache_env(monkeypatch):
         "master.cp-12345.iwfvzo.euw2.cache.amazonaws.com",
     )
     monkeypatch.setenv(
-        "REDIS_MEMBER_CLUSTERS", "cp-f05ff2dca7d81952-001 cp-f05ff2dca7d81952-002"
+        "REDIS_MEMBER_CLUSTERS",
+        '["cp-f05ff2dca7d81952-001", "cp-f05ff2dca7d81952-002"]',
     )
 
 
