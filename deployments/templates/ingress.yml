@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: find-moj-data-ingress
+  namespace: ${NAMESPACE}
   annotations:
     external-dns.alpha.kubernetes.io/set-identifier: find-moj-data-ingress-${NAMESPACE}-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
