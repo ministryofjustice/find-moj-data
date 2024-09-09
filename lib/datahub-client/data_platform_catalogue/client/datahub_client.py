@@ -605,7 +605,6 @@ class DataHubCatalogueClient:
                 database.custom_properties
             ),
             description=description,
-            qualifiedName=database.fully_qualified_name,
             name=name,
         )
         metadata_event = MetadataChangeProposalWrapper(
