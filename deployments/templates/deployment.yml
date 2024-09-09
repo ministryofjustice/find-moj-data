@@ -5,7 +5,11 @@ metadata:
   labels:
     app: find-moj-data
 spec:
-  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 50%
   selector:
     matchLabels:
       app: find-moj-data
@@ -17,6 +21,13 @@ spec:
       containers:
         - name: find-moj-data
           image: ${IMAGE_PATH}
+          resources:
+            requests:
+              cpu: 20m
+              memory: 300Mi
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
           ports:
             - name: http
               containerPort: 8000
@@ -88,3 +99,30 @@ spec:
                 secretKeyRef:
                   name: rds-postgresql-instance-output
                   key: rds_instance_address
+            - name: REDIS_PRIMARY_ENDPOINT_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: fmd-redis-secrets
+                  key: primary_endpoint_address
+            - name: REDIS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: fmd-redis-secrets
+                  key: auth_token
+            - name: REDIS_MEMBER_CLUSTERS
+              valueFrom:
+                secretKeyRef:
+                  name: fmd-redis-secrets
+                  key: member_clusters
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

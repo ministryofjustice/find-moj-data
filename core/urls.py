@@ -17,13 +17,11 @@ Including another URLconf
 
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
-from django.contrib import admin
 from django.urls import include, path
 
 app_name = "core"
 
 urlpatterns = [
-    path("admin/", view=admin.site.urls),
     path("azure_auth/", include("azure_auth.urls", namespace="azure_auth")),
     path("feedback/", include("feedback.urls", namespace="feedback")),
     path("", include("home.urls", namespace="home")),
@@ -34,3 +32,5 @@ if settings.DEBUG and not settings.TESTING:
     urlpatterns = [
         *urlpatterns,
     ] + debug_toolbar_urls()
+    
+handler404 = "core.views.handler404"

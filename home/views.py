@@ -1,5 +1,8 @@
+from urllib.parse import urlparse
+
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
 from data_platform_catalogue.search_types import DomainOption
+from django.conf import settings
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.translation import gettext as _
@@ -116,3 +119,22 @@ def metadata_specification_view(request):
     return render(
         request, "metadata_specification.html", metadata_specification.context
     )
+
+
+def cookies_view(request):
+    valid_domains = [
+        urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS
+    ]
+    referer = request.META.get("HTTP_REFERER")
+
+    if referer:
+        referer_domain = urlparse(referer).netloc
+
+        # Validate this referer domain against declared valid domains
+        if referer_domain not in valid_domains:
+            referer = "/"  # Set to home page if invalid
+
+    context = {
+        "previous_page": referer or "/",  # Provide a default fallback if none found
+    }
+    return render(request, "cookies.html", context)

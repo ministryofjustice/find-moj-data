@@ -1,4 +1,4 @@
-name: Staged deploy to Test and Preprod
+name: Staged deploy to Test, Preprod, and Prod
 
 on:
   push:
@@ -45,3 +45,56 @@ jobs:
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+  notify-preprod-success:
+    needs: deploy-preprod
+    runs-on: ubuntu-latest
+    steps:
+      # Notify Slack - data-catalogue
+      - uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: Success
+          notification_title: "Deployment Successful"
+          message_format: ":rocket: <https://preprod.find-moj-data.service.justice.gov.uk/|New Preproduction Deployment>"
+          footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DATA_CATALOGUE }}
+
+      # Notify MS TEAMS - preprod deployment notifications
+      - uses: jdcargile/ms-teams-notification@v1.4
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_PREPROD_DEPLOYMENTS }}
+          notification-summary: "Deployment Successful"
+          notification-color: 17a2b8
+          timezone: Europe/London
+          verbose-logging: true
+
+  deploy-prod:
+    uses: "./.github/workflows/reusable-push-and-deploy.yml"
+    needs: deploy-preprod
+    with:
+      env: "prod"
+    secrets:
+      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
+      kube_cert: ${{ secrets.KUBE_CERT }}
+      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
+      kube_token: ${{ secrets.KUBE_TOKEN }}
+      ecr_role_to_assume: ${{ secrets.PROD_ECR_ROLE_TO_ASSUME }}
+      secret_key: ${{ secrets.SECRET_KEY }}
+      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
+      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+      azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+  prepare-release:
+    name: Prepare a draft release (to be published manually)
+    needs: deploy-prod
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+
+      - name: Generate a draft release
+        run: gh release create --generate-notes --latest --draft ${{ github.sha }} --title "Release candidate (${{github.sha}})"

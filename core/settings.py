@@ -6,6 +6,8 @@ from socket import gaierror, gethostbyname, gethostname
 import sentry_sdk
 from dotenv import load_dotenv
 
+from .helpers import generate_cache_configuration
+
 TRUTHY_VALUES = ["True", "true", "T", "1"]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,7 +33,6 @@ except gaierror:
 
 # Application definition
 INSTALLED_APPS: list[str] = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -199,11 +200,8 @@ LOGGING = {
     },
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-    }
-}
+# Cache Configuration
+CACHES = generate_cache_configuration()
 
 ANALYTICS_ID: str = os.environ.get("ANALYTICS_ID", "")
 ENABLE_ANALYTICS: bool = (
@@ -267,3 +265,10 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 
 origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = origins_str.split(" ") if origins_str else []
+if DEBUG:
+    local_origins = ["http://127.0.0.1:8000", "http://localhost:8000"]
+    CSRF_TRUSTED_ORIGINS += local_origins
+
+CSRF_COOKIE_SECURE = True
+LANGUAGE_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
