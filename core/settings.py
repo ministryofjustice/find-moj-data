@@ -31,6 +31,8 @@ try:
 except gaierror:
     pass
 
+SESSION_COOKIE_AGE = 120  # for testing
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.auth",
