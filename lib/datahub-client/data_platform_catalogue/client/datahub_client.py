@@ -121,7 +121,6 @@ class DataHubCatalogueClient:
         else:
             raise ConnectivityError("api_url is incorrectly formatted")
 
-        print(self.gms_endpoint)
         self.server_config = DatahubClientConfig(
             server=self.gms_endpoint, token=jwt_token
         )
