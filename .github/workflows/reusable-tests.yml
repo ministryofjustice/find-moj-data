@@ -99,8 +99,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Collect static files
-        run: make collect_static
+      - name: Build frontend assets
+        run: make assets
 
       - name: Run unit tests with coverage
         id: fast-tests
