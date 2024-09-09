@@ -1,0 +1,29 @@
+name: Create issue for dependabot pr
+on:
+  pull_request:
+    branches:
+      - dependabot/**
+    types: [opened, reopened]
+
+
+jobs:
+    create_issue:
+        runs-on: ubuntu-latest
+        env:
+            GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        steps:
+          - uses: actions/checkout@v2
+            if: github.event.pull_request.user.login  == 'dependabot[bot]'
+
+          - name: Open issue if Dependabot PR
+            if: github.event.pull_request.user.login  == 'dependabot[bot]'
+            env:
+              pr_title: ${{github.event.pull_request.title}}
+              pr_number: ${{github.event.pull_request.number}}
+              pr_url: ${{github.event.pull_request.url}}
+            run: |
+              project="Data Catalogue"
+              label="dependabot,dependencies"
+              title=":arrow_up: Review dependabot PR: $pr_title"
+              body="Dependabot has opened PR #$pr_number url - $pr_url
+              gh issue create --project "$project" --title "$title" --body "$body" --label "$label"
