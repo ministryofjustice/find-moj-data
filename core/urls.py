@@ -15,6 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from debug_toolbar.toolbar import debug_toolbar_urls
+from django.conf import settings
 from django.urls import include, path
 
 app_name = "core"
@@ -26,4 +28,9 @@ urlpatterns = [
     path("", include("django_prometheus.urls")),
 ]
 
+if settings.DEBUG and not settings.TESTING:
+    urlpatterns = [
+        *urlpatterns,
+    ] + debug_toolbar_urls()
+    
 handler404 = "core.views.handler404"

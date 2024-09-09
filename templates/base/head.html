@@ -1,5 +1,6 @@
 {% load static %}
 {% load page_title %}
+
 <head>
   <meta charset="utf-8">
   <title>{{h1_value|render_title}}</title>
@@ -12,4 +13,5 @@
   <link rel="manifest" href="{% static 'assets/manifest.json' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'assets/css/base.css' %}">
   <meta property="og:image" content="{% static 'assets/images/govuk-opengraph-image.png' %}">
+  <meta name="robots" content="noindex, nofollow" />
 </head>
