@@ -72,6 +72,7 @@ for i in range(len(esda)):
 # datahub exists --urn xxxx
 
 # These commands will recreate the esdas.
+# User files are at https://github.com/ministryofjustice/data-catalogue-metadata/tree/main/esda
 # datahub delete --platform esda --hard --entity-type container
 # datahub put platform --name esda --display_name "ESDA" --logo "https://example.com"
 # datahub user upsert -f scripts/esdas/user.yaml
