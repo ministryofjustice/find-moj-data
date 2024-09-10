@@ -77,6 +77,26 @@
     }
 },
 {
+    "entityType": "container",
+    "entityUrn": "urn:li:container:my_database",
+    "changeType": "UPSERT",
+    "aspectName": "ownership",
+    "aspect": {
+        "json": {
+            "owners": [
+                {
+                    "owner": "2e1fa91a-c607-49e4-9be2-6f072ebe27c7",
+                    "type": "TECHNICAL_OWNER"
+                }
+            ],
+            "lastModified": {
+                "time": 0,
+                "actor": "urn:li:corpuser:unknown"
+            }
+        }
+    }
+},
+{
     "entityType": "dataset",
     "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
     "changeType": "UPSERT",

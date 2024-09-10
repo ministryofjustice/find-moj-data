@@ -23,6 +23,12 @@ class InvalidDomain(CatalogueError):
     """
 
 
+class InvalidUser(CatalogueError):
+    """
+    User does not exist
+    """
+
+
 class MissingDatabaseMetadata(Exception):
     """"""
 

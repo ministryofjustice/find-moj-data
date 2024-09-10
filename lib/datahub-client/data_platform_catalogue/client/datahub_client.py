@@ -8,6 +8,7 @@ from data_platform_catalogue.client.exceptions import (
     ConnectivityError,
     EntityDoesNotExist,
     InvalidDomain,
+    InvalidUser,
     ReferencedEntityMissing,
 )
 from data_platform_catalogue.client.graphql_helpers import (
@@ -60,6 +61,9 @@ from datahub.metadata.schema_classes import (
     DomainPropertiesClass,
     DomainsClass,
     OtherSchemaClass,
+    OwnerClass,
+    OwnershipClass,
+    OwnershipTypeClass,
     SchemaFieldClass,
     SchemaFieldDataTypeClass,
     SchemaMetadataClass,
@@ -596,7 +600,6 @@ class DataHubCatalogueClient:
         )
         self.graph.emit(metadata_event)
         logger.info(f"Database {name} associated with domain {domain}")
-
         database_properties = ContainerPropertiesClass(
             customProperties=self._get_custom_property_key_value_pairs(
                 database.custom_properties
@@ -643,6 +646,22 @@ class DataHubCatalogueClient:
             )
             self.graph.emit(event)
             logger.info(f"Tags updated for Database {name} ")
+
+        # Add or update owner
+        owner_urn = database.governance.data_owner.urn
+        if not self.check_entity_exists_by_urn(owner_urn):
+            raise InvalidUser(
+                f"{owner_urn} does not exist in datahub"  # noqa: E501
+            )
+
+        owner = OwnerClass(owner=owner_urn,
+                           type=OwnershipTypeClass.TECHNICAL_OWNER)
+        ownership_to_add = OwnershipClass(owners=[owner])
+        event: MetadataChangeProposalWrapper = MetadataChangeProposalWrapper(
+            entityUrn=database_urn,
+            aspect=ownership_to_add,
+        )
+        self.graph.emit(event)
 
         return database_urn
 
