@@ -7,12 +7,18 @@
   color: govuk-colour("white");
   background-color: govuk-colour("blue");
 
-  label {
+  label,
+  a:link,
+  a:visited {
     color: govuk-colour("white");
+  }
+
+  a:focus {
+    color: govuk-colour("black");
   }
 }
 
-.app-masthead__title {
+.app-masthead .app-masthead__title {
   color: govuk-colour("white");
   @include govuk-responsive-margin(6, "bottom");
 }

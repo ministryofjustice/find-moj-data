@@ -6,7 +6,7 @@ ENV := local
 all: build
 
 # Setup the application
-build: install_deps set_env $(ENV_FILE) collect_static migrate setup_waffle_switches messages
+build: install_deps set_env $(ENV_FILE) assets migrate setup_waffle_switches messages
 
 # Install Python dependencies
 install_python_deps:
@@ -42,7 +42,8 @@ $(ENV_FILE): .env.tpl
 	@echo "Optionally, set CATALOGUE_TOKEN in ${ENV_FILE}"
 
 # Collect static files
-collect_static:
+assets:
+	npm run dependencies
 	poetry run python manage.py collectstatic --noinput
 
 # Run migrations
@@ -94,4 +95,4 @@ clean:
 lint:
 	pre-commit run --all-files
 
-.PHONY: all build install_deps set_env collect_static migrate setup_waffle_switches messages compilemessages run test unit integration clean lint
+.PHONY: all build install_deps set_env assets migrate setup_waffle_switches messages compilemessages run test unit integration clean lint
