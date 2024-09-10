@@ -7,6 +7,8 @@ on:
 
 jobs:
   create_issue:
+    permissions:
+      repository-projects: write
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -15,10 +17,9 @@ jobs:
 
       - name: Create issue
         env:
-          date: ${{ github.event.repository.updated_at }}
+          project: "Data Catalogue"
+          label: "deployment"
+          title: ":rocket: Deploy to production: ${{ github.event.repository.updated_at }}"
+          body: "Deploy to production: ${{ github.event.repository.updated_at }}"
         run: |
-          project="Data Catalogue"
-          label="deployment"
-          title=":rocket: Deploy to production: $date"
-          body="Deploy to production: $date"
           gh issue create --project "$project" --title "$title" --body "$body" --label "$label"
