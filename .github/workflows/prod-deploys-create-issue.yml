@@ -3,7 +3,6 @@ on:
   schedule:
     # Runs on the 1st and 15th of each month at 9AM
     - cron: "0 9 1,15 * *"
-  pull_request:
 
 jobs:
   create_issue:
