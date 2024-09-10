@@ -15,9 +15,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Create issue
-        env:
-          label: "deployment"
-          title: ":rocket: Deploy to production: ${{ github.event.repository.updated_at }}"
-          body: "Deploy to production: ${{ github.event.repository.updated_at }}"
         run: |
+          label="deployment"
+          title=":rocket: Deploy to production: ${{ github.event.repository.updated_at }}"
+          body="Deploy to production: ${{ github.event.repository.updated_at }}"
           gh issue create --title "$title" --body "$body" --label "$label"
