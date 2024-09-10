@@ -15,7 +15,6 @@ jobs:
       - name: Create issue
         env:
           label: "push to prod"
-          title:
         run: |
           now=$(date +'%Y-%m-%d')
           title=":rocket: Deploy to production: $now"
