@@ -12,10 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set current date as env variable
+        run: |
+          echo "now=$(date +'%Y-%m-%d')" >> GITHUB_ENV
+
       - name: Create issue
         env:
           label: "push to prod"
-          title: ":rocket: Deploy to production: ${{ github.event.repository.updated_at }}"
-          body: "Deploy to production: ${{ github.event.repository.updated_at }}"
         run: |
-          gh issue create --title "$title" --body "$body" --label "$label"
+          title=":rocket: Deploy to production: ${now}"
+          body="Deploy to production: ${now}"
+
+          gh issue create --title "${title}" --body "${body}" --label "${label}"
