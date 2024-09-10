@@ -1,0 +1,22 @@
+name: Create issue for push to prod
+on:
+  #   schedule:
+  #     # Runs every two weeks on Monday at 9:00 AM
+  #     - cron: "0 9 */14 * *"
+  pull_request:
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    steps:
+      - name: Create issue
+        env:
+          date: ${{ github.event.repository.updated_at }}
+        run: |
+          project="Data Catalogue"
+          label="deployment"
+          title=":rocket: Deploy to production: $date"
+          body="Deploy to production: $date"
+          gh issue create --project "$project" --title "$title" --body "$body" --label "$label"
