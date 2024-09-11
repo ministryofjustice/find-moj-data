@@ -18,6 +18,6 @@ jobs:
         run: |
           now=$(date +'%Y-%m-%d')
           title=":rocket: Deploy to production: $now"
-          body="Deploy to production: $now"
+          body="Simply [push the latest](https://github.com/ministryofjustice/find-moj-data/actions/workflows/deploy-staged.yml) working dev version through to prod. This does not include a release"
 
           gh issue create --title "${title}" --body "${body}" --label "${label}"
