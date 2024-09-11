@@ -103,6 +103,9 @@ jobs:
           CSRF_TRUSTED_ORIGINS: ${{ vars.CSRF_TRUSTED_ORIGINS }}
           DJANGO_LOG_LEVEL: ${{ vars.DJANGO_LOG_LEVEL }}
           SENTRY_DSN_WORKAROUND: ${{ vars.SENTRY_DSN_WORKAROUND }}
+          TRACES_SAMPLE_RATE: ${{vars.TRACES_SAMPLE_RATE}}
+          PROFILES_SAMPLE_RATE: ${{vars.PROFILES_SAMPLE_RATE}}
+          ENABLE_TRACING: ${{vars.ENABLE_TRACING}}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           CATALOGUE_TOKEN: ${{ secrets.CATALOGUE_TOKEN }}
           IMAGE_PATH: ${{ steps.image-path.outputs.image_path }}

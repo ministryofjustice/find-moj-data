@@ -212,19 +212,23 @@ TESTING = os.environ.get("TESTING") in TRUTHY_VALUES
 
 # Sentry Configuration
 if not TESTING:
+    ENABLE_TRACING = os.environ.get("ENABLE_TRACING") in TRUTHY_VALUES
+    TRACES_SAMPLE_RATE = float(os.environ.get("TRACES_SAMPLE_RATE", 0.0))
+    PROFILES_SAMPLE_RATE = float(os.environ.get("PROFILES_SAMPLE_RATE", 0.0))
+
     sentry_sdk.init(
         dsn=os.environ.get(
             "SENTRY_DSN_WORKAROUND"
         ),  # Datahub overwrites with this variable unless it is renamed,
         # causing Sentry to tag issues with the incorrect environment
-        enable_tracing=True,
+        enable_tracing=ENABLE_TRACING,
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for performance monitoring.
-        traces_sample_rate=1.0,
+        traces_sample_rate=TRACES_SAMPLE_RATE,
         # Set profiles_sample_rate to 1.0 to profile 100%
         # of sampled transactions.
         # We recommend adjusting this value in production.
-        profiles_sample_rate=1.0,
+        profiles_sample_rate=PROFILES_SAMPLE_RATE,
         environment=ENV or "local",
     )
 
