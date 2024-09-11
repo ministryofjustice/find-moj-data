@@ -61,6 +61,12 @@ spec:
               value: "$AZURE_AUTHORITY"
             - name: CSRF_TRUSTED_ORIGINS
               value: "${CSRF_TRUSTED_ORIGINS}"
+            - name: ENABLE_TRACING
+              value: "${ENABLE_TRACING}"
+            - name: TRACES_SAMPLE_RATE
+              value: "${TRACES_SAMPLE_RATE}"
+            - name: PROFILES_SAMPLE_RATE
+              value: "${PROFILES_SAMPLE_RATE}"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
