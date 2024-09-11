@@ -1,22 +1,19 @@
-from dataclasses import field
 from datetime import datetime, timezone
+from pathlib import Path
 from random import choice
-from typing import Any
+from typing import Any, Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
-    AccessInformation,
     Chart,
     Column,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
     Database,
-    DataSummary,
     DomainRef,
-    Entity,
     EntityRef,
     EntitySummary,
     GlossaryTermRef,
@@ -25,7 +22,6 @@ from data_platform_catalogue.entities import (
     RelationshipType,
     Table,
     TagRef,
-    UsageRestrictions,
 )
 from data_platform_catalogue.search_types import (
     DomainOption,
@@ -38,6 +34,13 @@ from data_platform_catalogue.search_types import (
 from django.conf import settings
 from django.test import Client
 from faker import Faker
+from pytest import CollectReport, StashKey
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 
 from home.forms.search import SearchForm
 from home.models.domain_model import DomainModel
@@ -46,6 +49,8 @@ from home.service.domain_fetcher import DomainFetcher
 from home.service.search import SearchService
 from home.service.search_facet_fetcher import SearchFacetFetcher
 from home.service.search_tag_fetcher import SearchTagFetcher
+
+TMP_DIR = (Path(__file__).parent / "tmp").resolve()
 
 fake = Faker()
 
@@ -70,6 +75,262 @@ def chromedriver_path(request):
 @pytest.fixture
 def axe_version(request):
     return request.config.getoption("--axe-version") or "latest"
+
+
+@pytest.fixture(scope="function")
+def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
+    options = ChromeOptions()
+    options.add_argument("headless")
+    options.add_argument("window-size=1280,720")
+    selenium = WebDriver(options=options)
+    selenium.implicitly_wait(10)
+    yield selenium
+    selenium.quit()
+
+
+phase_report_key = StashKey[dict[str, CollectReport]]()
+
+
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_makereport(item, call):
+    # execute all other hooks to obtain the report object
+    rep = yield
+
+    # store test results for each phase of a call, which can
+    # be "setup", "call", "teardown"
+    item.stash.setdefault(phase_report_key, {})[rep.when] = rep
+
+    return rep
+
+
+@pytest.fixture(autouse=True)
+def screenshotter(request, selenium: RemoteWebDriver):
+    yield
+
+    testname = request.node.name
+    report = request.node.stash[phase_report_key]
+
+    if report["setup"].failed:
+        # Nothing to screenshot
+        pass
+
+    elif ("call" not in report) or report["call"].failed:
+        timestamp = datetime.now().strftime(r"%Y%m%d%H%M%S")
+        TMP_DIR.mkdir(exist_ok=True)
+        path = str(TMP_DIR / f"{timestamp}-{testname}-failed.png")
+        total_height = selenium.execute_script(
+            "return document.body.parentNode.scrollHeight"
+        )
+        selenium.set_window_size(1920, total_height)
+        selenium.save_screenshot(path)
+        print(f"Screenshot saved to {path}")
+
+
+class Page:
+    def __init__(self, selenium):
+        self.selenium = selenium
+
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
+
+class DetailsPage(Page):
+    def request_access(self):
+        return self.selenium.find_element(By.ID, "request_access")
+
+    def contact_channels(self):
+        return self.selenium.find_element(By.ID, "contact_channels")
+
+    def data_owner(self):
+        return self.selenium.find_element(By.ID, "data_owner")
+
+
+class DatabaseDetailsPage(DetailsPage):
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
+    def database_details(self):
+        return self.selenium.find_element(By.ID, "metadata-property-list")
+
+    def database_tables(self):
+        return self.selenium.find_element(By.TAG_NAME, "table")
+
+    def table_link(self):
+        return self.selenium.find_element(
+            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
+        )
+
+
+class TableDetailsPage(DetailsPage):
+    def column_descriptions(self):
+        return [
+            c.text
+            for c in self.selenium.find_elements(By.CSS_SELECTOR, ".column-description")
+        ]
+
+
+class HomePage(Page):
+    def search_nav_link(self) -> WebElement:
+        return self.selenium.find_element(By.LINK_TEXT, "Search")
+
+    def search_bar(self) -> WebElement:
+        return self.selenium.find_element(By.NAME, "query")
+
+    def domain_link(self, domain) -> WebElement:
+        all_domains = self.selenium.find_elements(
+            By.CSS_SELECTOR, "ul#domain-list li a"
+        )
+        all_domain_names = [d.text for d in all_domains]
+        result = next(
+            (d for d in all_domains if domain == d.text.split("(")[0].strip()), None
+        )
+        if not result:
+            raise Exception(f"{domain!r} not found in {all_domain_names!r}")
+        return result
+
+
+class SearchResultWrapper:
+    def __init__(self, element: WebElement):
+        self.element = element
+
+    def __getattr__(self, name):
+        return getattr(self.element, name)
+
+    def link(self):
+        return self.element.find_element(By.CSS_SELECTOR, "h3 a")
+
+
+class SearchPage(Page):
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
+    def result_count(self) -> WebElement:
+        return self.selenium.find_element(By.ID, "result-count")
+
+    def first_search_result(self) -> SearchResultWrapper:
+        return SearchResultWrapper(
+            self.selenium.find_element(By.ID, "search-results").find_element(
+                By.CSS_SELECTOR, ".govuk-grid-row"
+            )
+        )
+
+    def search_bar(self) -> WebElement:
+        return self.selenium.find_element(By.NAME, "query")
+
+    def search_button(self) -> WebElement:
+        return self.selenium.find_element(By.CLASS_NAME, "search-button")
+
+    def checked_domain_checkboxes(self) -> list[WebElement]:
+        return self.selenium.find_elements(
+            By.CSS_SELECTOR, "input:checked[name='domains']"
+        )
+
+    def checked_sort_option(self) -> WebElement:
+        return self.selenium.find_element(By.CSS_SELECTOR, "input:checked[name='sort']")
+
+    def domain_select(self) -> WebElement:
+        return Select(self.selenium.find_element(By.ID, "id_domain"))
+
+    def subdomain_select(self) -> WebElement:
+        return Select(self.selenium.find_element(By.ID, "id_subdomain"))
+
+    def select_domain(self, domain) -> WebElement:
+        select = self.domain_select()
+        return select.select_by_visible_text(domain)
+
+    def select_subdomain(self, domain) -> WebElement:
+        select = self.subdomain_select()
+        print(f"Selecting subdomain {domain}")
+        return select.select_by_visible_text(domain)
+
+    def get_selected_domain(self) -> WebElement:
+        select = self.domain_select()
+        return select.first_selected_option
+
+    def get_selected_subdomain(self) -> WebElement:
+        select = self.subdomain_select()
+        return select.first_selected_option
+
+    def get_all_filter_names(self) -> list:
+        filter_names = [
+            item.text
+            for item in self.selenium.find_elements(
+                By.CLASS_NAME, "govuk-checkboxes__item"
+            )
+        ]
+        return filter_names
+
+    def get_selected_checkbox_filter_names(self) -> list:
+        selected_filters = [
+            item.accessible_name
+            for item in self.selenium.find_elements(By.TAG_NAME, "input")
+            if item.aria_role == "checkbox" and item.is_selected()
+        ]
+        return selected_filters
+
+    def sort_label(self, name) -> WebElement:
+        return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
+
+    def selected_filter_tags(self) -> list[WebElement]:
+        return self.selenium.find_elements(
+            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
+        )
+
+    def selected_filter_tag(self, value) -> WebElement:
+        for result in self.selenium.find_elements(
+            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
+        ):
+            if result.text == value:
+                return result
+
+        raise Exception(f"No selected filter with text {value}")
+
+    def clear_filters(self) -> WebElement:
+        return self.selenium.find_element(By.ID, "clear_filter")
+
+    def current_page(self) -> WebElement:
+        return self.selenium.find_element(
+            By.CLASS_NAME, "govuk-pagination__item--current"
+        )
+
+    def next_page(self) -> WebElement:
+        return self.selenium.find_element(
+            By.CLASS_NAME, "govuk-pagination__next"
+        ).find_element(By.TAG_NAME, "a")
+
+    def previous_page(self) -> WebElement:
+        return self.selenium.find_element(
+            By.CLASS_NAME, "govuk-pagination__prev"
+        ).find_element(By.TAG_NAME, "a")
+
+
+@pytest.fixture
+def home_page(selenium) -> HomePage:
+    return HomePage(selenium)
+
+
+@pytest.fixture
+def search_page(selenium) -> SearchPage:
+    return SearchPage(selenium)
+
+
+@pytest.fixture
+def details_database_page(selenium) -> DatabaseDetailsPage:
+    return DatabaseDetailsPage(selenium)
+
+
+@pytest.fixture
+def table_details_page(selenium) -> TableDetailsPage:
+    return TableDetailsPage(selenium)
+
+
+@pytest.fixture
+def page_titles():
+    pages = [
+        "Home",
+        "Search MoJ data",
+    ]
+    return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
 
 
 def generate_search_result(

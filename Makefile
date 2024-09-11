@@ -70,15 +70,17 @@ run:
 # Run unit tests
 test: unit integration lint
 
-# Run Python unit tests
+# Run Python and Javascript unit tests
 unit:
-	poetry run pytest --cov -m 'not slow'
+	poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
 	npm test
 
 # Run integration tests. Requires chromedriver - version works with chromedriver 127.0.1 use - `npm install -g chromedriver@127.0.1`
 integration:
-	poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
+	TESTING=true poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
 
+end_to_end:
+	TESTING=true poetry run pytest tests/end_to_end --chromedriver-path $$(which chromedriver)
 
 # Get npm cache directory and store it in a file
 export_npm_cache_dir:
