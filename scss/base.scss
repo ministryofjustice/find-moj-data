@@ -5,6 +5,8 @@ $app-images-path: "/static/assets/images";
 // Removes need to put classes on all elements
 $govuk-global-styles: true;
 
+$govuk-new-typography-scale: true;
+
 @import "node_modules/govuk-frontend/dist/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "./components/search";
