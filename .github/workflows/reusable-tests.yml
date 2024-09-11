@@ -113,11 +113,11 @@ jobs:
       - name: Run integration tests
         id: slow-tests
         if: steps.fast-tests.outcome == 'success'
-        run: TESTING=True poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path /usr/local/bin/chromedriver
+        run: make integration
 
-      - name: Run integration tests
+      - name: Run end to end tests
         if: steps.fast-tests.outcome == 'success'
-        run: TESTING=True poetry run pytest tests/end_to_end --chromedriver-path /usr/local/bin/chromedriver
+        run: make end_to_end
         env:
           CATALOGUE_TOKEN: ${{secrets.DEV_CATALOGUE_TOKEN}}
           CATALOGUE_URL: ${{vars.DEV_CATALOGUE_URL}}
