@@ -272,3 +272,5 @@ if DEBUG:
 CSRF_COOKIE_SECURE = True
 LANGUAGE_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
+GIT_REF = os.environ.get("GIT_REF", "unknown")

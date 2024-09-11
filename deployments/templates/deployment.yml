@@ -39,6 +39,8 @@ spec:
               value: "${CATALOGUE_URL}"
             - name: DEBUG
               value: "${DEBUG}"
+            - name: GIT_REF
+              value: "${GIT_REF}"
             - name: DJANGO_ALLOWED_HOSTS
               value: "${DJANGO_ALLOWED_HOSTS}"
             - name: DJANGO_LOG_LEVEL

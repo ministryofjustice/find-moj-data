@@ -86,8 +86,8 @@ jobs:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
-  prepare-release:
-    name: Prepare a draft release (to be published manually)
+  post-deploy:
+    name: "Post-deploy admin"
     needs: deploy-prod
     runs-on: ubuntu-latest
     env:
@@ -96,5 +96,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
-      - name: Generate a draft release
-        run: gh release create --generate-notes --latest --draft ${{ github.sha }} --title "Release candidate (${{github.sha}})"
+      - name: Generate a draft release (to be published manually)
+        run: gh release create --generate-notes --latest --draft ${{ github.sha }} --title "Release candidate"
+
+      - name: Update last-deployed tag
+        run: |
+          git tag -f last-deployed
+          git push --tags
