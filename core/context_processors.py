@@ -11,4 +11,5 @@ def analytics(request) -> dict[str, Any]:
     return {
         "ENABLE_ANALYTICS": settings.ENABLE_ANALYTICS,
         "ANALYTICS_ID": settings.ANALYTICS_ID,
+        "GIT_REF": settings.GIT_REF,
     }

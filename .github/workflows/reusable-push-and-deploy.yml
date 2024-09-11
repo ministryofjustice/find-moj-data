@@ -98,6 +98,7 @@ jobs:
           ENV: ${{ inputs.env }}
           CATALOGUE_URL: ${{ vars.CATALOGUE_URL }}
           DEBUG: ${{ vars.DEBUG }}
+          GIT_REF: ${{ github.sha }}
           DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
           CSRF_TRUSTED_ORIGINS: ${{ vars.CSRF_TRUSTED_ORIGINS }}
           DJANGO_LOG_LEVEL: ${{ vars.DJANGO_LOG_LEVEL }}

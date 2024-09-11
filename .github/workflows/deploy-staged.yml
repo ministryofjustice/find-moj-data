@@ -102,4 +102,4 @@ jobs:
       - name: Update last-deployed tag
         run: |
           git tag -f last-deployed
-          git push --follow-tags
+          git push --tags

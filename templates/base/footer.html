@@ -41,5 +41,8 @@
         {% endblocktranslate %}
       </div>
     </div>
+    <p class="govuk-body govuk-body-s">
+      Find MoJ Data version {{ GIT_REF}}{% if GIT_REF != 'unknown' %} (<a href="https://github.com/ministryofjustice/find-moj-data/tree/{{GIT_REF}}">view source</a>){% endif %}
+    </p>
   </div>
 </footer>
