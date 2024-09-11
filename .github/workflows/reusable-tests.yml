@@ -115,8 +115,10 @@ jobs:
         if: steps.fast-tests.outcome == 'success'
         run: make integration
 
+      # This step should be skipped when triggered by workflow_call, since these tests
+      # rely on an external environment and are somewhat flaky.
       - name: Run end to end tests
-        if: steps.fast-tests.outcome == 'success'
+        if: steps.fast-tests.outcome == 'success' && github.event_name == 'pull_request'
         run: make end_to_end
         env:
           CATALOGUE_TOKEN: ${{secrets.DEV_CATALOGUE_TOKEN}}
