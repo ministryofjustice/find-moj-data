@@ -35,7 +35,7 @@ jobs:
           - "3.10"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # v4.1.4
 
       - name: Install poetry
         run: pipx install poetry
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+        uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc
 
       - name: Install poetry
         run: pipx install poetry
