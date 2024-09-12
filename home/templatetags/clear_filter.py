@@ -22,4 +22,4 @@ def get_keys(dictionary: dict[str, dict]) -> list[str] | list:
 
 @register.filter
 def format_label(label: str) -> str:
-    return label.replace("_", " ").title() if "_" in label else label
+    return label.replace("_", " ").capitalize() if "_" in label else label

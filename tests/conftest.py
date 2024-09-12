@@ -50,8 +50,6 @@ from home.service.search import SearchService
 from home.service.search_facet_fetcher import SearchFacetFetcher
 from home.service.search_tag_fetcher import SearchTagFetcher
 
-TMP_DIR = (Path(__file__).parent / "tmp").resolve()
-
 fake = Faker()
 
 
@@ -86,44 +84,6 @@ def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
     selenium.implicitly_wait(10)
     yield selenium
     selenium.quit()
-
-
-phase_report_key = StashKey[dict[str, CollectReport]]()
-
-
-@pytest.hookimpl(wrapper=True, tryfirst=True)
-def pytest_runtest_makereport(item, call):
-    # execute all other hooks to obtain the report object
-    rep = yield
-
-    # store test results for each phase of a call, which can
-    # be "setup", "call", "teardown"
-    item.stash.setdefault(phase_report_key, {})[rep.when] = rep
-
-    return rep
-
-
-@pytest.fixture(autouse=True)
-def screenshotter(request, selenium: RemoteWebDriver):
-    yield
-
-    testname = request.node.name
-    report = request.node.stash[phase_report_key]
-
-    if report["setup"].failed:
-        # Nothing to screenshot
-        pass
-
-    elif ("call" not in report) or report["call"].failed:
-        timestamp = datetime.now().strftime(r"%Y%m%d%H%M%S")
-        TMP_DIR.mkdir(exist_ok=True)
-        path = str(TMP_DIR / f"{timestamp}-{testname}-failed.png")
-        total_height = selenium.execute_script(
-            "return document.body.parentNode.scrollHeight"
-        )
-        selenium.set_window_size(1920, total_height)
-        selenium.save_screenshot(path)
-        print(f"Screenshot saved to {path}")
 
 
 class Page:
