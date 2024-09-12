@@ -20,7 +20,7 @@
     </div>
     {% for key in remove_filter_hrefs|get_keys %}
         {% if remove_filter_hrefs|get_item:key|length > 0 %}
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">{{key|title}}</h3>
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">{{key|capfirst}}</h3>
             <ul class="moj-filter-tags">
                 <input type="hidden" name="clear_label" value="">
                 {% for label, href in remove_filter_hrefs|get_items:key %}
