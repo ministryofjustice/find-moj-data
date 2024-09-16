@@ -21,7 +21,7 @@ ministryofjustice-data-platform-catalogue = { path = "lib/datahub-client", devel
 django-azure-auth = "2.0.2"
 django-waffle = "^4.1.0"
 psycopg = "^3.2.1"
-psycopg-binary = "^3.2.1"
+psycopg-binary = "^3.2.2"
 django-debug-toolbar = "^4.4.6"
 redis = {extras = ["hiredis"], version = "^5.0.8"}
 
