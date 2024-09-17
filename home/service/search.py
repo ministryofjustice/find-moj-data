@@ -56,18 +56,17 @@ class SearchService(GenericService):
         )
         return chosen_entities if chosen_entities else default_entities
 
-    def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
-        form_data = self.form_data
-
-        query_pattern: str = r"^[\"']\S+[\"']$"
-        query = form_data.get("query", "")
-
+    def _format_query_value(self, query: str) -> str:
+        query_pattern: str = r"^[\"'].+[\"']$"
         # We expect a quoted query to be an exact match therefore when not, we replace
         # underscores with spaces.
         if not re.match(query_pattern, query):
             query = query.replace("_", " ")
-        print("Query ", query)
+        return query
 
+    def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
+        form_data = self.form_data
+        query = self._format_query_value(form_data.get("query", ""))
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         tags = form_data.get("tags", "")
