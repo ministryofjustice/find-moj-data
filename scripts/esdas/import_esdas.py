@@ -1,18 +1,17 @@
-from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
-import os
-import pandas as pd
 import numpy as np
+import pandas as pd
+from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     Database,
     DomainRef,
-    OwnerRef,
-    Governance,
     EntityRef,
+    Governance,
+    OwnerRef,
     TagRef,
 )
 
-CATALOGUE_TOKEN="value"
-CATALOGUE_URL="value"
+CATALOGUE_TOKEN = "value"
+CATALOGUE_URL = "value"
 
 client = DataHubCatalogueClient(jwt_token=CATALOGUE_TOKEN, api_url=CATALOGUE_URL)
 
@@ -45,8 +44,7 @@ for i in range(len(esda)):
         name=esda_d["title"][i],
         fully_qualified_name=esda_d["alternativeTitle"][i],
         description=esda_d["description"][i],
-        domain=DomainRef(display_name=domain_name,
-                         urn=f"urn:li:domain:{domain_name}"),
+        domain=DomainRef(display_name=domain_name, urn=f"urn:li:domain:{domain_name}"),
         governance=Governance(
             data_owner=OwnerRef(
                 display_name=display_name,
@@ -55,8 +53,7 @@ for i in range(len(esda)):
             ),
             data_stewards=[],
         ),
-        platform=EntityRef(display_name="esda",
-                           urn="urn:li:dataPlatform:esda"),
+        platform=EntityRef(display_name="esda", urn="urn:li:dataPlatform:esda"),
         tags=[
             TagRef(
                 urn="urn:li:tag:dc_display_in_catalogue",

@@ -154,3 +154,20 @@ class TestSearchService:
             search_service.results.page_results
             != search_service.highlighted_results.page_results
         )
+
+    @pytest.mark.parametrize(
+        "query, formatted_query",
+        [
+            ("'abc_def'", "'abc_def'"),
+            ('"abc_def"', '"abc_def"'),
+            ("'abc_def_ghi'", "'abc_def_ghi'"),
+            ('"abc_def_ghi"', '"abc_def_ghi"'),
+            ("abc_def", "abc def"),
+            ("abc_def_ghi", "abc def ghi"),
+        ],
+    )
+    def test_query_format(self, query, formatted_query):
+        form = SearchForm(data={"query": query})
+        assert form.is_valid()
+        search_service = SearchService(form=form, page="1")
+        assert search_service._format_query_value(query) == formatted_query

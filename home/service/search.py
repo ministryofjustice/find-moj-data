@@ -56,11 +56,17 @@ class SearchService(GenericService):
         )
         return chosen_entities if chosen_entities else default_entities
 
+    def _format_query_value(self, query: str) -> str:
+        query_pattern: str = r"^[\"'].+[\"']$"
+        # Datahub treats any query with underscores as exact, so if the string is not quoted,
+        # we convert underscores to spaces so that we get partial matches as well.
+        if not re.match(query_pattern, query):
+            query = query.replace("_", " ")
+        return query
+
     def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
         form_data = self.form_data
-
-        # Workaround for https://github.com/datahub-project/datahub/issues/10505
-        query = form_data.get("query", "").replace("_", " ")
+        query = self._format_query_value(form_data.get("query", ""))
         sort = form_data.get("sort", "relevance")
         domain = form_data.get("domain", "")
         tags = form_data.get("tags", "")
