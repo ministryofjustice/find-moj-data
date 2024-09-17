@@ -32,5 +32,5 @@ if settings.DEBUG and not settings.TESTING:
     urlpatterns = [
         *urlpatterns,
     ] + debug_toolbar_urls()
-    
+
 handler404 = "core.views.handler404"

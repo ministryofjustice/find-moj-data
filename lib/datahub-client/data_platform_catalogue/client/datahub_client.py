@@ -650,12 +650,9 @@ class DataHubCatalogueClient:
         # Add or update owner
         owner_urn = database.governance.data_owner.urn
         if not self.check_entity_exists_by_urn(owner_urn):
-            raise InvalidUser(
-                f"{owner_urn} does not exist in datahub"  # noqa: E501
-            )
+            raise InvalidUser(f"{owner_urn} does not exist in datahub")  # noqa: E501
 
-        owner = OwnerClass(owner=owner_urn,
-                           type=OwnershipTypeClass.TECHNICAL_OWNER)
+        owner = OwnerClass(owner=owner_urn, type=OwnershipTypeClass.TECHNICAL_OWNER)
         ownership_to_add = OwnershipClass(owners=[owner])
         event: MetadataChangeProposalWrapper = MetadataChangeProposalWrapper(
             entityUrn=database_urn,
