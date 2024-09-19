@@ -2,14 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: find-moj-data-ingress
+  namespace: ${NAMESPACE}
   annotations:
     external-dns.alpha.kubernetes.io/set-identifier: find-moj-data-ingress-${NAMESPACE}-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
+      SecAuditEngine On
       SecDefaultAction "phase:2,pass,log,tag:github_team=data-catalogue"
       SecDefaultAction "phase:4,pass,log,tag:github_team=data-catalogue"
+      SecRule REQUEST_HEADERS:Host "!@rx ^[a-zA-Z0-9.-]+\.service\.justice\.gov\.uk$" "id:1001,phase:1,deny,log,status:403,msg:\'Forbidden Host Header\'"
 spec:
   ingressClassName: modsec
   tls:
