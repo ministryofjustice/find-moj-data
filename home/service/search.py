@@ -67,7 +67,15 @@ class SearchService(GenericService):
     def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
         form_data = self.form_data
         query = self._format_query_value(form_data.get("query", ""))
-        sort = form_data.get("sort", "relevance")
+
+        # we want to sort results ascending when a user is browsing data via non
+        # keyword searches - otherwise we use the default releveant ordering
+        sort = (
+            form_data.get("sort", "relevance")
+            if query not in ["*", ""]
+            else "ascending"
+        )
+
         domain = form_data.get("domain", "")
         tags = form_data.get("tags", "")
         where_to_access = self._build_custom_property_filter(
@@ -86,9 +94,9 @@ class SearchService(GenericService):
 
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
-            sort_option = SortOption(field="name", ascending=True)
+            sort_option = SortOption(field="_entityName", ascending=True)
         elif sort == "descending":
-            sort_option = SortOption(field="name", ascending=False)
+            sort_option = SortOption(field="_entityName", ascending=False)
         else:
             sort_option = None
 
