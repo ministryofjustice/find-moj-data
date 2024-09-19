@@ -24,6 +24,7 @@ psycopg = "^3.2.2"
 psycopg-binary = "^3.2.2"
 django-debug-toolbar = "^4.4.6"
 redis = {extras = ["hiredis"], version = "^5.0.8"}
+pyflame = "^0.3.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
