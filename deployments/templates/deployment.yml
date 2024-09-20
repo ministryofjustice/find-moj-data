@@ -38,7 +38,9 @@ spec:
             - name: CATALOGUE_URL
               value: "${CATALOGUE_URL}"
             - name: DEBUG
-              value: "${DEBUG}"
+              value: "0"
+            - name: DATAHUB_TELEMETRY_ENABLED
+              value: "0"
             - name: GIT_REF
               value: "${GIT_REF}"
             - name: DJANGO_ALLOWED_HOSTS
