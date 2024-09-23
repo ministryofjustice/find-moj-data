@@ -28,7 +28,7 @@ redis = {extras = ["hiredis"], version = "^5.0.8"}
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
 pre-commit = "^3.8.0"
-selenium = "~=4.24.0"
+selenium = "~=4.25.0"
 flake8 = ">=6.1.0"
 pytest-django = "^4.9.0"
 pytest-cov = "^5.0.0"
