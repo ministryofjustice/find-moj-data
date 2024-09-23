@@ -1,4 +1,4 @@
-# Custom components for Find MOJ Data
+# Custom components for Find MoJ data
 
 ## Search component
 

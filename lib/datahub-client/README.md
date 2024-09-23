@@ -1,6 +1,6 @@
-# Datahub client for Find MOJ Data
+# Datahub client for Find MoJ data
 
-This library is part of the Ministry of Justice "Find MOJ Data" service.
+This library is part of the Ministry of Justice "Find MoJ data" service.
 
 It pushes metadata to (and retrieves metadata from) a Datahub catalogue.
 
