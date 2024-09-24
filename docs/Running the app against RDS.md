@@ -144,7 +144,7 @@ If making changes to the scss, to ensure your changes are reflected in local dep
 
 ## Copy editing
 
-Find MOJ data is only available in english, but we use django's translation system
+Find MoJ data is only available in english, but we use django's translation system
 so that we can review and edit the copy in one place,
 [the message file](./locale/en/LC_MESSAGES/django.po).
 
