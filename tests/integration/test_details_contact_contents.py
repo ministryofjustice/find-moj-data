@@ -53,7 +53,7 @@ class TestDetailsPageContactDetails:
         [
             (
                 "https://place-to-get-your-access.com",
-                "Click link for access information (opens in new tab)",
+                "Select this link for access information (opens in new tab)",
             ),
             (
                 "To access these data you need to seek permission from the data owner by email",
