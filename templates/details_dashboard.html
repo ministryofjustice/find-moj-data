@@ -20,8 +20,8 @@
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell"><a href="{% url 'home:details' result_type=chart_type urn=chart.entity_ref.urn %}" class="govuk-link">{{chart.entity_ref.display_name}}</a></td>
                   <td class="govuk-table__cell">
-                    {% if chart.description|length > 250 %}
-                      {{ chart.description|slice:":250"|add:"..."|markdown:3 }}
+                    {% if chart.description|length > 300 %}
+                      {{ chart.description|slice:":300"|add:"..."|markdown:3 }}
                     {% else %}
                       {{ chart.description|markdown:3 }}
                     {% endif %}
