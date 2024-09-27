@@ -4,7 +4,13 @@
 {% load humanize %}
 {% load waffle_tags %}
 {% load i18n %}
+{% load page_title %}
 
+{% block title %}
+  {% with details_title=h1_value|add:" - "|add:entity_type %}
+    {{details_title|render_title}}
+  {% endwith %}
+{% endblock %}
 
 {% block breadcrumbs %}
   <div class="govuk-breadcrumbs">
