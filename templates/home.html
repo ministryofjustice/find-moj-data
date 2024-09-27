@@ -12,15 +12,11 @@
             <p class="govuk-body-l" style="color: white;"> {% translate "service_description" %} </p>
 
             <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0">
-              <label
-                for="search-input"
-                class="govuk-label govuk-label--m"
-              >{% translate "Search metadata catalogue" %}</label>
               <div
                 class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
               >
-                <input id="search-input" name="query" class="search-input govuk-input" type="search" />
-                <button type="submit">
+                <input id="search-input" name="query" class="search-input govuk-input" type="search" aria-label="search-input"/>
+                <button type="submit" aria-label="search-button">
                   <svg
                     aria-hidden="true"
                     focusable="false"
