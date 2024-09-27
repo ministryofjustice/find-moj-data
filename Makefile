@@ -14,7 +14,7 @@ install_python_deps:
 		echo "Poetry is not installed. Please install it from https://python-poetry.org/docs/#installation"; \
 		exit 1; \
 	fi
-	poetry install
+	poetry install --no-root
 
 # Install Node.js dependencies
 install_npm_deps:
