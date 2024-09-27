@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-24 08:56+0100\n"
+"POT-Creation-Date: 2024-09-26 14:40+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,8 +72,8 @@ msgstr "All subject areas"
 msgid "Analytical Platform"
 msgstr "Analytical Platform"
 
-#: home/forms/search.py:69 home/service/search.py:119
-#: home/service/search.py:229 templates/partial/filter.html:19
+#: home/forms/search.py:69 home/service/search.py:127
+#: home/service/search.py:237 templates/partial/filter.html:19
 msgid "Domain"
 msgstr "Subject area"
 
@@ -93,58 +93,58 @@ msgstr "Glossary"
 msgid "Metadata specification"
 msgstr "Metadata specification"
 
-#: home/service/search.py:128 templates/partial/filter.html:33
+#: home/service/search.py:136 templates/partial/filter.html:33
 msgid "Entity Types"
 msgstr "Entity types"
 
-#: home/service/search.py:138
+#: home/service/search.py:146
 msgid "Where To Access"
 msgstr "Where to access"
 
-#: home/service/search.py:146
+#: home/service/search.py:154
 msgid "Tags"
 msgstr "Tags"
 
-#: home/service/search.py:178
+#: home/service/search.py:186
 msgctxt "Page title"
 msgid "Search MoJ data"
 msgstr "Search MoJ data"
 
-#: home/service/search.py:227
+#: home/service/search.py:235
 msgid "ID"
 msgstr "ID"
 
-#: home/service/search.py:228
+#: home/service/search.py:236
 msgid "URN"
 msgstr "URN"
 
-#: home/service/search.py:230
+#: home/service/search.py:238
 msgid "Title"
 msgstr "Title"
 
-#: home/service/search.py:231
+#: home/service/search.py:239
 msgid "Name"
 msgstr "Name"
 
-#: home/service/search.py:232 templates/details_base.html:41
+#: home/service/search.py:240 templates/details_base.html:41
 #: templates/details_dashboard.html:14 templates/details_database.html:14
 #: templates/details_table.html:14
 msgid "Description"
 msgstr "Description"
 
-#: home/service/search.py:233 templates/details_table.html:13
+#: home/service/search.py:241 templates/details_table.html:13
 msgid "Column name"
 msgstr "Column name"
 
-#: home/service/search.py:234
+#: home/service/search.py:242
 msgid "Column description"
 msgstr "Column description"
 
-#: home/service/search.py:235
+#: home/service/search.py:243
 msgid "Available on"
 msgstr "Available on"
 
-#: home/service/search.py:236
+#: home/service/search.py:244
 msgid "Qualified name"
 msgstr "Qualified name"
 
@@ -275,7 +275,7 @@ msgstr "Access this data"
 msgid "%(display_name)s on Justice Data (opens in new tab)"
 msgstr "%(display_name)s on Justice Data (opens in new tab)"
 
-#: templates/details_dashboard.html:10 templates/details_dashboard.html:37
+#: templates/details_dashboard.html:10 templates/details_dashboard.html:35
 msgid "Dashboard content"
 msgstr "Dashboard content"
 
@@ -283,15 +283,11 @@ msgstr "Dashboard content"
 msgid "Chart name"
 msgstr "Chart name"
 
-#: templates/details_dashboard.html:15 templates/details_dashboard.html:30
-msgid "Chart details"
-msgstr "Chart details"
-
-#: templates/details_dashboard.html:38
+#: templates/details_dashboard.html:36
 msgid "This dashboard is missing chart information."
 msgstr "This dashboard is missing table information."
 
-#: templates/details_dashboard.html:49
+#: templates/details_dashboard.html:47
 msgid "Justice Data (opens in new tab)"
 msgstr "Justice Data (opens in new tab)"
 
@@ -593,3 +589,6 @@ msgstr "first name"
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
+
+#~ msgid "Chart details"
+#~ msgstr "Chart details"
