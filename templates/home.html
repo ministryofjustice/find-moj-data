@@ -51,7 +51,7 @@
             <h2 id="browse-by-domain" class="govuk-heading-l">{% translate "Browse by domain" %}</h2>
             <ul id="domain-list" class="govuk-list govuk-list--bullet">
               {% for domain in domains  %}
-                <li><a href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}})</a></li>
+                <li><a aria-label="Browse data for {{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})" href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})</a></li>
               {% endfor %}
             </ul>
           {% endif %}
