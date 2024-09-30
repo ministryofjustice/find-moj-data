@@ -21,7 +21,7 @@
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">{{column.display_name}}</td>
                 <td class="govuk-table__cell column-description">
-                {% if table.description %}
+                {% if column.description %}
                   {{column.description|default:''|markdown:3|truncatechars_html:300}}</td>
                 {% else %}
                   <p class="govuk-visually-hidden">Description for {{column.display_name}} does not exist</p>
