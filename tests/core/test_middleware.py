@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from data_platform_catalogue.client.exceptions import ConnectivityError
 from django.core.exceptions import BadRequest
+from django.http import Http404
 
 from core.middleware import CustomErrorMiddleware
 
@@ -28,6 +29,18 @@ def test_middleware_renders_bad_request_response():
     assert response
     assert b"Bad request" in response.content
     assert response.status_code == 400
+
+
+def test_middleware_renders_http404_response():
+    get_response = MagicMock()
+    request = MagicMock()
+    middleware = CustomErrorMiddleware(get_response)
+    error = Http404()
+    response = middleware.process_exception(request, error)
+
+    assert response
+    assert b"Asset does not exist" in response.content
+    assert response.status_code == 404
 
 
 def test_middleware_renders_unhandled_exception_response():
