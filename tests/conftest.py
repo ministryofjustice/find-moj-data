@@ -329,6 +329,7 @@ def search_result_from_database(database: Database):
 def generate_table_metadata(
     name: str = fake.unique.name(),
     description: str = fake.unique.paragraph(),
+    column_description: str = "description **with markdown**",
     relations=None,
     custom_properties=None,
 ) -> Table:
@@ -367,7 +368,7 @@ def generate_table_metadata(
                 name="urn",
                 display_name="urn",
                 type="string",
-                description="description **with markdown**",
+                description=column_description,
                 nullable=False,
                 is_primary_key=True,
                 foreign_keys=[
@@ -553,6 +554,11 @@ def example_dashboard(name="example_dashboard"):
     return generate_dashboard_metadata(name=name)
 
 
+@pytest.fixture(autouse=True)
+def example_table(name="example_table"):
+    return generate_table_metadata(name=name)
+
+
 def generate_page(page_size=20, result_type: ResultType | None = None):
     """
     Generate a fake search page
@@ -570,7 +576,7 @@ def client():
 
 
 @pytest.fixture(autouse=True)
-def mock_catalogue(request, example_database, example_dashboard):
+def mock_catalogue(request, example_database, example_dashboard, example_table):
     if "datahub" in request.keywords:
         yield None
         return
@@ -629,7 +635,7 @@ def mock_catalogue(request, example_database, example_dashboard):
     )
     mock_get_glossary_terms_response(mock_catalogue)
     mock_get_chart_details_response(mock_catalogue)
-    mock_get_table_details_response(mock_catalogue)
+    mock_get_table_details_response(mock_catalogue, example_table)
     mock_get_database_details_response(mock_catalogue, example_database)
     mock_get_dashboard_details_response(mock_catalogue, example_dashboard)
     mock_get_tags_response(mock_catalogue)
@@ -650,8 +656,8 @@ def mock_get_chart_details_response(mock_catalogue):
     mock_catalogue.get_chart_details.return_value = generate_chart_metadata()
 
 
-def mock_get_table_details_response(mock_catalogue):
-    mock_catalogue.get_table_details.return_value = generate_table_metadata()
+def mock_get_table_details_response(mock_catalogue, example_table):
+    mock_catalogue.get_table_details.return_value = example_table
 
 
 def mock_get_dashboard_details_response(mock_catalogue, example_dashboard):
