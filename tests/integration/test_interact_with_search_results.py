@@ -3,6 +3,8 @@ from data_platform_catalogue.search_types import ResultType
 
 from tests.conftest import (
     generate_page,
+    generate_table_metadata,
+    mock_get_table_details_response,
     mock_search_response,
     search_result_from_database,
 )
@@ -49,7 +51,26 @@ class TestInteractWithSearchResults:
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("court timeliness")
         self.click_on_the_first_result()
-        self.verify_i_am_on_the_table_details_page()
+        self.verify_i_am_on_the_table_details_page("description with markdown")
+
+    def test_table_search_to_details_accessibility(self, mock_catalogue):
+        """
+        Users with accessibility needs are presented with useful description info in details
+        tables, e.g. for missing details of a column in a table
+        """
+        mock_search_response(
+            mock_catalogue=mock_catalogue,
+            page_results=generate_page(result_type=ResultType.TABLE),
+            total_results=100,
+        )
+        table_no_column_description = generate_table_metadata(column_description="")
+        mock_get_table_details_response(mock_catalogue, table_no_column_description)
+        self.start_on_the_search_page()
+        self.enter_a_query_and_submit("court timeliness")
+        self.click_on_the_first_result()
+        self.verify_i_am_on_the_table_details_page(
+            "A description for urn does not exist"
+        )
 
     def test_database_search_to_table_details(self, mock_catalogue, example_database):
         """
@@ -67,7 +88,7 @@ class TestInteractWithSearchResults:
         self.verify_database_details()
         self.verify_database_tables_listed()
         self.click_on_table()
-        self.verify_i_am_on_the_table_details_page()
+        self.verify_i_am_on_the_table_details_page("description with markdown")
 
     def start_on_the_search_page(self):
         self.selenium.get(f"{self.live_server_url}/search?new=True")
@@ -112,12 +133,10 @@ class TestInteractWithSearchResults:
     def click_on_table(self):
         self.details_database_page.table_link().click()
 
-    def verify_i_am_on_the_table_details_page(self):
+    def verify_i_am_on_the_table_details_page(self, column_description):
         heading_text = self.details_database_page.primary_heading().text.replace(
             " Table", ""
         )
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
-        assert self.table_details_page.column_descriptions() == [
-            "description with markdown"
-        ]
+        assert self.table_details_page.column_descriptions() == [column_description]

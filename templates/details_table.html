@@ -20,7 +20,13 @@
             {% for column in entity.column_details %}
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell">{{column.display_name}}</td>
-                <td class="govuk-table__cell column-description">{{column.description|default:''|markdown:3|truncatechars_html:300}}</td>
+                <td class="govuk-table__cell column-description">
+                {% if column.description %}
+                  {{column.description|default:''|markdown:3|truncatechars_html:300}}</td>
+                {% else %}
+                  <p class="govuk-visually-hidden">A description for {{column.display_name}} does not exist</p>
+                {% endif %}
+                </td>
                 <td class="govuk-table__cell">{{column.type|title}}</td>
                 <td class="govuk-table__cell">{{column.nullable|yesno:"Yes,No,"}}</td>
               </tr>

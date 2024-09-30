@@ -20,7 +20,11 @@
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell"><a href="{% url 'home:details' result_type=chart_type urn=chart.entity_ref.urn %}" class="govuk-link">{{chart.entity_ref.display_name}}</a></td>
                   <td class="govuk-table__cell">
-                      {{ chart.description|markdown:3 }}
+                  {% if chart.description %}
+                    {{ chart.description|markdown:3 }}
+                  {% else %}
+                    <p class="govuk-visually-hidden">A description for {{chart.entity_ref.display_name}} does not exist</p>
+                  {% endif %}
                   </td>
                 </tr>
               {% endwith %}
