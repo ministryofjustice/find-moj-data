@@ -3,6 +3,7 @@ import logging
 from data_platform_catalogue.client.exceptions import ConnectivityError
 from django.conf import settings
 from django.core.exceptions import BadRequest
+from django.http import Http404
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 
@@ -34,6 +35,14 @@ class CustomErrorMiddleware:
                 context={"h1_value": _("Bad request")},
                 status=400,
             )
+        elif isinstance(exception, Http404):
+            return render(
+                request,
+                "404.html",
+                context={"h1_value": _("Asset does not exist")},
+                status=404,
+            )
+
         elif isinstance(exception, Exception):
             return render(
                 request,
