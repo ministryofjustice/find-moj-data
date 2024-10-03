@@ -20,7 +20,7 @@ sentry-sdk = { extras = ["django"], version = "^2.15.0" }
 ministryofjustice-data-platform-catalogue = { path = "lib/datahub-client", develop = true }
 django-azure-auth = "2.0.2"
 django-waffle = "^4.1.0"
-psycopg = "^3.2.2"
+psycopg = "^3.2.3"
 psycopg-binary = "^3.2.2"
 django-debug-toolbar = "^4.4.6"
 redis = {extras = ["hiredis"], version = "^5.1.0"}
