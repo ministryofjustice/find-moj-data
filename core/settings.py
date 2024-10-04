@@ -54,6 +54,7 @@ if os.environ.get("AZURE_AUTH_ENABLED", "true") != "false":
     INSTALLED_APPS.append("azure_auth")
 
 MIDDLEWARE: list[str] = [
+    "django.middleware.gzip.GZipMiddleware",
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
