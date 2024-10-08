@@ -4,7 +4,7 @@
 
 Find MoJ data is an internal service for finding and sharing data across the Ministry of Justice.
 It is powered by Datahub, an open source data catalogue. This repository contains a custom UI that
-uses the GOV.UK design system, and focuses on data discovery.
+uses the GOV.UK design system, and focuses on data discovery. 
 
 ![Screenshot of the service showing the search page](homepage.png)
 
