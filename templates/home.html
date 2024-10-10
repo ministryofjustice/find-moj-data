@@ -15,8 +15,8 @@
               <div
                 class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
               >
-                <input id="search-input" name="query" class="search-input govuk-input" type="search" aria-label="search-input"/>
-                <button type="submit" aria-label="search-button">
+                <input id="search-input" name="query" class="search-input govuk-input" type="search" aria-label="Search input"/>
+                <button type="submit" aria-label="Search button">
                   <svg
                     aria-hidden="true"
                     focusable="false"
@@ -30,37 +30,33 @@
                       fill="currentColor"
                     ></path>
                   </svg>
-                  <span
-                    class="govuk-label govuk-visually-hidden-focusable"
-                  >{% translate "Search"}</span
-                    >
-                  </button>
-                </div>
-              </form>
-            </div>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <div class="govuk-main-wrapper govuk-main-wrapper--l">
-        <div class="govuk-width-container app-width-container">
-          {% if domains %}
-            <h2 id="browse-by-domain" class="govuk-heading-l">{% translate "Browse by domain" %}</h2>
-            <ul id="domain-list" class="govuk-list govuk-list--bullet">
-              {% for domain in domains  %}
-                <li><a aria-label="Browse data for {{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})" href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})</a></li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-          <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-          <h2 class="govuk-heading-l">{% translate "Help us grow" %} </h2>
-          <p class="govuk-body-m">{% translate "Find MoJ data is a new service with a growing catalogue of data. You can help us improve the service by:" %}</p>
-          <ul class="govuk-list govuk-list--bullet">
-            <li><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#adding-to-find-moj-data">{% translate "adding a new data source" %}</a></li>
-            <li><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#contact-us">{% translate "telling us about data you would like to see" %}</a></li>
-            <li><a href="https://find-moj-data.service.justice.gov.uk/feedback/">{% translate "giving us feedback" %}</a></li>
+    </div>
+    <div class="govuk-main-wrapper govuk-main-wrapper--l">
+      <div class="govuk-width-container app-width-container">
+        {% if domains %}
+          <h2 id="browse-by-domain" class="govuk-heading-l">{% translate "Browse by domain" %}</h2>
+          <ul id="domain-list" class="govuk-list govuk-list--bullet">
+            {% for domain in domains  %}
+              <li><a aria-label="Browse data for {{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})" href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})</a></li>
+            {% endfor %}
           </ul>
-        </div>
+        {% endif %}
+        <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+        <h2 class="govuk-heading-l">{% translate "Help us grow" %} </h2>
+        <p class="govuk-body-m">{% translate "Find MoJ data is a new service with a growing catalogue of data. You can help us improve the service by:" %}</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#adding-to-find-moj-data">{% translate "adding a new data source" %}</a></li>
+          <li><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#contact-us">{% translate "telling us about data you would like to see" %}</a></li>
+          <li><a href="https://find-moj-data.service.justice.gov.uk/feedback/">{% translate "giving us feedback" %}</a></li>
+        </ul>
       </div>
-    </main>
+    </div>
+  </main>
 
 {% endblock main %}
