@@ -54,6 +54,7 @@ migrate:
 setup_waffle_switches:
 	poetry run python manage.py waffle_switch search-sort-radio-buttons off --create
 	poetry run python manage.py waffle_switch display-result-tags off --create
+	poetry run python manage.py waffle_switch show_is_nullable_in_table_details_column off --create
 
 # Run makemessages
 messages:

@@ -1,6 +1,7 @@
 {% extends "details_base.html" %}
 {% load markdown %}
 {% load i18n %}
+{% load waffle_tags %}
 
 {% block extra_details %}
   <div class="govuk-grid-row">
@@ -13,7 +14,9 @@
               <th scope="col" class="govuk-table__header">{% translate "Column name" %}</th>
               <th scope="col" class="govuk-table__header">{% translate "Description" %}</th>
               <th scope="col" class="govuk-table__header">{% translate "Type" %}</th>
-              <th scope="col" class="govuk-table__header">{% translate "Is Nullable" %}</th>
+              {% switch 'show_is_nullable_in_table_details_column' %}
+                <th scope="col" class="govuk-table__header">{% translate "Is Nullable" %}</th>
+              {% endswitch %}
             </tr>
           </thead>
           <tbody class="govuk-table__body">
@@ -28,7 +31,9 @@
                 {% endif %}
                 </td>
                 <td class="govuk-table__cell">{{column.type|title}}</td>
-                <td class="govuk-table__cell">{{column.nullable|yesno:"Yes,No,"}}</td>
+                {% switch 'show_is_nullable_in_table_details_column' %}
+                  <td class="govuk-table__cell">{{column.nullable|yesno:"Yes,No,"}}</td>
+                {% endswitch %}
               </tr>
             {% endfor %}
           </tbody>
