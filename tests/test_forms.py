@@ -2,9 +2,6 @@ from home.forms.search import SearchForm
 
 
 class TestSearchForm:
-    def test_query_field_length(self):
-        over_100_characters = "a" * 101
-        assert not SearchForm(data={"query": over_100_characters}).is_valid()
 
     def test_domain_is_from_domain_list_false(self):
         assert not SearchForm(data={"domain": ["fake"]}).is_valid()

@@ -52,7 +52,6 @@ class SearchForm(forms.Form):
     """Django form to represent search page inputs"""
 
     query = forms.CharField(
-        max_length=100,
         strip=False,
         required=False,
         widget=forms.TextInput(
