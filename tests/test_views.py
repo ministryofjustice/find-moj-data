@@ -1,5 +1,6 @@
 import pytest
 from django.urls import reverse
+from waffle.testutils import override_switch
 
 
 class TestHomePage:
@@ -41,10 +42,15 @@ class TestSearchView:
 
 
 class TestTableView:
-    def test_table(self, client):
-        response = client.get(
-            reverse("home:details", kwargs={"urn": "fake", "result_type": "table"})
-        )
+    @pytest.mark.parametrize("switch_bool", [True, False])
+    @pytest.mark.django_db
+    def test_table(self, client, switch_bool):
+        with override_switch(
+            name="show_is_nullable_in_table_details_column", active=switch_bool
+        ):
+            response = client.get(
+                reverse("home:details", kwargs={"urn": "fake", "result_type": "table"})
+            )
         assert response.status_code == 200
         assert response.headers["Cache-Control"] == "max-age=300, private"
 
