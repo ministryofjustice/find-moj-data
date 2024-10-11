@@ -5,7 +5,7 @@
 
 {% block extra_details %}
   <div class="govuk-grid-row">
-    <div class="moj-scrollable-pane">
+    <div class="govuk-grid-column-full">
       {% if entity.column_details %}
         <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--m">{% translate "Table schema" %}</caption>
@@ -22,17 +22,17 @@
           <tbody class="govuk-table__body">
             {% for column in entity.column_details %}
               <tr class="govuk-table__row">
-                <td class="govuk-table__cell">{{column.display_name}}</td>
-                <td class="govuk-table__cell column-description">
+                <td data-label="Column name" class="govuk-table__cell">{{column.display_name}}</td>
+                <td data-label="Description" class="govuk-table__cell column-description">
                 {% if column.description %}
                   {{column.description|default:''|markdown:3|truncatechars_html:300}}</td>
                 {% else %}
                   <p class="govuk-visually-hidden">A description for {{column.display_name}} does not exist</p>
                 {% endif %}
                 </td>
-                <td class="govuk-table__cell">{{column.type|title}}</td>
+                <td data-label="Type" class="govuk-table__cell">{{column.type|title}}</td>
                 {% switch 'show_is_nullable_in_table_details_column' %}
-                  <td class="govuk-table__cell">{{column.nullable|yesno:"Yes,No,"}}</td>
+                  <td data-label="Is Nullable" class="govuk-table__cell">{{column.nullable|yesno:"Yes,No,"}}</td>
                 {% endswitch %}
               </tr>
             {% endfor %}
