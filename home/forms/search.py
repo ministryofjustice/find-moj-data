@@ -51,8 +51,10 @@ def get_tags():
 class SearchForm(forms.Form):
     """Django form to represent search page inputs"""
 
+    domain_translate = _("Domain")
+    select_filter_translate = _("filter-refresh")
+
     query = forms.CharField(
-        max_length=100,
         strip=False,
         required=False,
         widget=forms.TextInput(
@@ -66,7 +68,7 @@ class SearchForm(forms.Form):
             attrs={
                 "form": "searchform",
                 "class": "govuk-select",
-                "aria-label": _("Domain"),
+                "aria-label": f"{domain_translate} - {select_filter_translate}",
                 "onchange": "document.getElementById('searchform').submit();",
             }
         ),
