@@ -33,7 +33,7 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{% translate "Entity Types" %}</legend>
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
               {% for entity_type in form.entity_types %}
-                <div class="govuk-checkboxes__item">
+                <div aria-label="{% translate 'filter-refresh' %}" class="govuk-checkboxes__item">
                   {{ entity_type.tag}}
                   <label class="govuk-label govuk-checkboxes__label" for="{{ entity_type.id_for_label }}">{{entity_type.choice_label}}</label>
                 </div>
