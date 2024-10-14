@@ -15,7 +15,6 @@
  * 10. Adding a display block value due to IE 11 not having full flex support
  */
 .app-table-responsive {
-  margin-bottom: 0;
   width: 100%;
 
   thead {
@@ -26,7 +25,7 @@
 
   .app-table-responsive__body {
     .app-table-responsive__heading {
-      font-weight: govuk-typography-weight-bold();
+      @include govuk-typography-weight-bold();
       padding-right: govuk-spacing(3);
       text-align: left; /* [8] */
 

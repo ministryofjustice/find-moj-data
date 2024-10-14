@@ -6,7 +6,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       {% if charts %}
-        <table class="govuk-table">
+        <table class="govuk-table app-table-responsive">
           <caption class="govuk-table__caption govuk-table__caption--m">{% translate "Dashboard content" %}</caption>
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -14,16 +14,16 @@
               <th scope="col" class="govuk-table__header app-custom-class">{% translate "Description" %}</th>
             </tr>
           </thead>
-          <tbody class="govuk-table__body">
+          <tbody class="govuk-table__body app-table-responsive__body">
             {% for chart in charts %}
               {% with chart_type=chart.entity_type|lower %}
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a href="{% url 'home:details' result_type=chart_type urn=chart.entity_ref.urn %}" class="govuk-link">{{chart.entity_ref.display_name}}</a></td>
-                  <td class="govuk-table__cell">
+                <tr class="govuk-table__row app-table-responsive__row">
+                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Chart name</span><a href="{% url 'home:details' result_type=chart_type urn=chart.entity_ref.urn %}" class="govuk-link">{{chart.entity_ref.display_name}}</a></td>
+                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Description</span>
                   {% if chart.description %}
-                    {{ chart.description|markdown:3 }}
+                  {{ chart.description|markdown:3 }}
                   {% else %}
-                    <p class="govuk-visually-hidden">A description for {{chart.entity_ref.display_name}} does not exist</p>
+                  <p class="govuk-visually-hidden">A description for {{chart.entity_ref.display_name}} does not exist</p>
                   {% endif %}
                   </td>
                 </tr>
