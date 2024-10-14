@@ -1,82 +1,81 @@
-@media screen and (max-width: 600px) {
-  table thead {
-    border: none;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
+/**
+ This component is based on the NHS design system's responsive
+ tables:
+ https://github.com/nhsuk/nhsuk-frontend/blob/e8928ebe19d39fe6137a5ca046217f9ac043b29b/packages/components/tables/_tables.scss
+
+ * 1. Hiding the thead on mobile
+ * 2. Displaying the thead on desktop
+ * 3. Removing default screen reader behaviour
+ * 4. Assigning role of table-row on desktop to give default screen reader behaviour
+ * 5. Using justify content to space out elements in the row on mobile
+ * 6. Assigning a minimum width in case of black cell
+ * 7. Aligning content to the right on mobile
+ * 8. Aligning mobile header to left to split it from the data
+ * 9. Hiding mobile specific header from desktop view
+ * 10. Adding a display block value due to IE 11 not having full flex support
+ */
+.app-table-responsive {
+  margin-bottom: 0;
+  width: 100%;
+
+  thead {
+    @include govuk-media-query($until: desktop) {
+      @include govuk-visually-hidden; /* [1] */
+    }
   }
 
-  table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
-  }
+  .app-table-responsive__body {
+    .app-table-responsive__heading {
+      font-weight: govuk-typography-weight-bold();
+      padding-right: govuk-spacing(3);
+      text-align: left; /* [8] */
 
-  table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
-    text-align: right;
-  }
+      @include govuk-media-query($from: desktop) {
+        display: none; /* [9] */
+      }
+    }
 
-  table td::before {
-    content: attr(data-label);
-    float: left;
+    .app-table-responsive__row {
+      display: block; /* [3] */
+      margin-bottom: govuk-spacing(4);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      @include govuk-media-query($from: desktop) {
+        display: table-row; /* [4] */
+      }
+
+      th {
+        text-align: right;
+        @include govuk-media-query($from: desktop) {
+          text-align: left;
+        }
+      }
+
+      td {
+        display: block; // For browsers that don't support flexbox
+        display: flex;
+        justify-content: space-between; /* [5] */
+        min-width: 1px; /* [6] */
+        @media all and (-ms-high-contrast: none) {
+          /* [10] */
+          display: block;
+        }
+
+        @include govuk-media-query($from: desktop) {
+          display: table-cell;
+        }
+
+        @include govuk-media-query($until: desktop) {
+          padding-right: 0;
+          text-align: right; /* [7] */
+          &:last-child {
+            border-bottom: 3px solid $govuk-border-colour;
+          }
+        }
+      }
+    }
   }
 }
-
-// .govuk-table-responsive {
-//   font-family: "GDS Transport", arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   font-weight: 400;
-//   font-size: 1.1875rem;
-//   line-height: 1.3157894737;
-//   color: #0b0c0c;
-//   width: 100%;
-//   margin-bottom: 20px;
-//   border-spacing: 0;
-//   border-collapse: collapse;
-// }
-
-
-// @media (max-width: 600px) {
-
-//   .govuk-table-responsive {
-//     border-collapse: collapse;
-//     margin:0;
-//     width:100%;
-//   }
-//   // table thead tr {
-//   //   display: none;
-//   // }
-//     table thead {
-//       border-collapse:collapse;
-//       border: none;
-//       clip: rect(0 0 0 0);
-//       height: 1px;
-//       margin: -1px;
-//       overflow: hidden;
-//       padding: 0;
-//       position: absolute;
-//       width:100%;
-//     }
-
-//     table tbody tr {
-//       border-bottom: 3px solid #ddd;
-//       display: block;
-//     }
-
-//     table tbody tr td {
-//       border-bottom: 1px solid #ddd;
-//       display: block;
-//       text-align: right;
-//     }
-
-//     table td::before {
-//       content: attr(data-label) ": ";
-//       float: left;
-//     }
-//   }
