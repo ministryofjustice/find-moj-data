@@ -53,7 +53,6 @@ class SearchForm(forms.Form):
 
     domain_translate = _("Domain")
     select_filter_translate = _("filter-refresh")
-    entity_type_translate = _("Entity Types")
 
     query = forms.CharField(
         strip=False,
@@ -93,7 +92,6 @@ class SearchForm(forms.Form):
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
                 "onchange": "document.getElementById('searchform').submit();",
-                "aria-label": f"{entity_type_translate} - {select_filter_translate}",
             }
         ),
     )
