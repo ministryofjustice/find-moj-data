@@ -53,6 +53,8 @@
             {% translate "No description available." %}
           {% endif %}
         </div>
+        {% block extra_description %}
+        {% endblock extra_description %}
         {% block metadata_list %}
           <ul class="govuk-list govuk-body" id="metadata-property-list">
             {% if entity.created %}
@@ -93,7 +95,7 @@
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with data_owner=entity.governance.data_owner.display_name data_owner_email=entity.governance.data_owner.email slack_channel=entity.custom_properties.further_information access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_url=is_access_requirements_a_url%}
+      {% include "partial/contact_info.html" with data_owner=entity.governance.data_owner.display_name data_owner_email=entity.governance.data_owner.email slack_channel=entity.custom_properties.further_information access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_url=is_access_requirements_a_url platform=entity.platform %}
     </div>
   </div>
 

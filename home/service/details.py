@@ -94,6 +94,8 @@ class DatasetDetailsService(GenericService):
 
         self.context = self._get_context()
 
+        self.template = self._get_template()
+
     def _get_context(self):
         split_datahub_url = urlsplit(
             os.getenv("CATALOGUE_URL", "https://test-catalogue.gov.uk")
@@ -111,6 +113,13 @@ class DatasetDetailsService(GenericService):
                 self.table_metadata.custom_properties.access_information.dc_access_requirements
             ),
         }
+
+    def _get_template(self):
+        return (
+            "details_metric.html"
+            if "Metric" in self.table_metadata.subtypes
+            else "details_table.html"
+        )
 
     def has_lineage(self) -> bool:
         """

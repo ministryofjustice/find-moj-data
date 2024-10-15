@@ -359,5 +359,8 @@ def _make_user_email_from_urn(urn) -> str:
     return email
 
 
-def parse_refresh_period(entity: dict[str, Any]) -> str:
-    pass
+def parse_subtypes(entity: dict[str, Any]) -> list[str]:
+    subtypes = entity.get("subTypes", {})
+    if not subtypes:
+        return []
+    return subtypes.get("typeNames", [])

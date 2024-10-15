@@ -3,6 +3,9 @@ query getDatasetDetails($urn: String!) {
     platform {
       name
     }
+    subTypes {
+      typeNames
+    }
     name # Deprecated - prefer properties.name
     domain {
       domain {
@@ -14,19 +17,17 @@ query getDatasetDetails($urn: String!) {
         }
       }
     }
-    downstream_lineage_relations: lineage (
-      input: {direction: DOWNSTREAM
-      start:0,
-      count:10}
+    downstream_lineage_relations: lineage(
+      input: { direction: DOWNSTREAM, start: 0, count: 10 }
     ) {
       total
-      relationships{
+      relationships {
         type
-        entity{
+        entity {
           urn
           ... on Dataset {
             name
-            properties{
+            properties {
               name
             }
           }
@@ -34,19 +35,17 @@ query getDatasetDetails($urn: String!) {
         }
       }
     }
-    upstream_lineage_relations: lineage (
-      input: {direction: UPSTREAM
-      start:0,
-      count:10}
+    upstream_lineage_relations: lineage(
+      input: { direction: UPSTREAM, start: 0, count: 10 }
     ) {
       total
-      relationships{
+      relationships {
         type
-        entity{
+        entity {
           urn
           ... on Dataset {
             name
-            properties{
+            properties {
               name
             }
           }
@@ -74,7 +73,9 @@ query getDatasetDetails($urn: String!) {
             }
             tags {
               tags {
-                tag{urn}
+                tag {
+                  urn
+                }
               }
             }
             subTypes {
