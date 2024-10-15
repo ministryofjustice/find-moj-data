@@ -3,46 +3,6 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
-from data_platform_catalogue.client.exceptions import (
-    AspectDoesNotExist,
-    ConnectivityError,
-    EntityDoesNotExist,
-    InvalidDomain,
-    InvalidUser,
-    ReferencedEntityMissing,
-)
-from data_platform_catalogue.client.graphql_helpers import (
-    parse_columns,
-    parse_created_and_modified,
-    parse_domain,
-    parse_glossary_terms,
-    parse_names,
-    parse_owner,
-    parse_properties,
-    parse_relations,
-    parse_tags,
-)
-from data_platform_catalogue.client.search import SearchClient
-from data_platform_catalogue.entities import (
-    Chart,
-    CustomEntityProperties,
-    Dashboard,
-    Database,
-    EntityRef,
-    EntitySummary,
-    Governance,
-    OwnerRef,
-    RelationshipType,
-    Table,
-)
-from data_platform_catalogue.search_types import (
-    DomainOption,
-    MultiSelectFilter,
-    ResultType,
-    SearchFacets,
-    SearchResponse,
-    SortOption,
-)
 from datahub.configuration.common import ConfigurationError
 from datahub.emitter import mce_builder
 from datahub.emitter.mcp import MetadataChangeProposalWrapper
@@ -68,6 +28,48 @@ from datahub.metadata.schema_classes import (
     SchemaFieldDataTypeClass,
     SchemaMetadataClass,
     SubTypesClass,
+)
+
+from data_platform_catalogue.client.exceptions import (
+    AspectDoesNotExist,
+    ConnectivityError,
+    EntityDoesNotExist,
+    InvalidDomain,
+    InvalidUser,
+    ReferencedEntityMissing,
+)
+from data_platform_catalogue.client.graphql_helpers import (
+    parse_columns,
+    parse_created_and_modified,
+    parse_domain,
+    parse_glossary_terms,
+    parse_names,
+    parse_owner,
+    parse_properties,
+    parse_relations,
+    parse_subtypes,
+    parse_tags,
+)
+from data_platform_catalogue.client.search import SearchClient
+from data_platform_catalogue.entities import (
+    Chart,
+    CustomEntityProperties,
+    Dashboard,
+    Database,
+    EntityRef,
+    EntitySummary,
+    Governance,
+    OwnerRef,
+    RelationshipType,
+    Table,
+)
+from data_platform_catalogue.search_types import (
+    DomainOption,
+    MultiSelectFilter,
+    ResultType,
+    SearchFacets,
+    SearchResponse,
+    SortOption,
 )
 
 logger = logging.getLogger(__name__)
@@ -286,6 +288,7 @@ class DataHubCatalogueClient:
             parent_relations_to_display = self.list_relations_to_display(
                 parent_relations
             )
+            subtypes = parse_subtypes(response)
 
             return Table(
                 urn=urn,
@@ -299,6 +302,7 @@ class DataHubCatalogueClient:
                     data_owner=owner,
                     data_stewards=[owner],
                 ),
+                subtypes=subtypes,
                 tags=tags,
                 glossary_terms=glossary_terms,
                 last_modified=modified,

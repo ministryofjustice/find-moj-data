@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 
 import pytest
+
 from data_platform_catalogue.client.graphql_helpers import (
     _make_user_email_from_urn,
     parse_columns,
@@ -8,6 +9,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_glossary_terms,
     parse_properties,
     parse_relations,
+    parse_subtypes,
     parse_tags,
 )
 from data_platform_catalogue.entities import (
@@ -531,3 +533,15 @@ def test_parse_glossary_terms():
 def test_make_user_email_from_urn(urn, expected_email):
     email = _make_user_email_from_urn(urn)
     assert email == expected_email
+
+
+def test_parse_subtypes():
+    result = parse_subtypes({"subTypes": {"typeNames": ["abc", "def"]}})
+
+    assert result == ["abc", "def"]
+
+
+def test_parse_missing_subtypes():
+    result = parse_subtypes({"subTypes": None})
+
+    assert result == []

@@ -1,0 +1,9 @@
+{% extends "details_base.html" %}
+
+{% block extra_description %}
+{% if entity.platform.urn == 'performance-hub' %}
+<p>Data quality: the data is checked to be good enough to support the outcomes it is being used for. Data values
+  should be right, but there are other factors that help ensure data meets the needs of its users.</p>
+<p>Please remember that this data is for INTERNAL USE ONLY and not to be shared outside the organisation.</p>
+{% endif %}
+{% endblock extra_description %}
