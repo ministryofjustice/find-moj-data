@@ -52,7 +52,7 @@ class TestInteractWithSearchResults:
         self.enter_a_query_and_submit("court timeliness")
         self.click_on_the_first_result()
         self.verify_i_am_on_the_table_details_page(
-            "Description\ndescription with markdown"
+            "Description:\ndescription with markdown"
         )
 
     def test_table_search_to_details_accessibility(self, mock_catalogue):
@@ -71,7 +71,7 @@ class TestInteractWithSearchResults:
         self.enter_a_query_and_submit("court timeliness")
         self.click_on_the_first_result()
         self.verify_i_am_on_the_table_details_page(
-            "Description\nA description for urn does not exist"
+            "Description:\nA description for urn does not exist"
         )
 
     def test_database_search_to_table_details(self, mock_catalogue, example_database):
@@ -91,7 +91,7 @@ class TestInteractWithSearchResults:
         self.verify_database_tables_listed()
         self.click_on_table()
         self.verify_i_am_on_the_table_details_page(
-            "Description\ndescription with markdown"
+            "Description:\ndescription with markdown"
         )
 
     def start_on_the_search_page(self):
