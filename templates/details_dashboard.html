@@ -22,7 +22,7 @@
                   <td class="govuk-table__cell"><span class="app-table-responsive__heading">Description:</span>
                   {% if chart.description %}
                   <div>
-                    {{ chart.description|truncatewords:25|markdown:3 }}
+                    {{ chart.description|markdown:3|truncatewords_html:25 }}
                   </div>
                   {% else %}
                   <p class="govuk-visually-hidden">A description for {{chart.entity_ref.display_name}} does not exist</p>

@@ -3,22 +3,22 @@
  tables:
  https://github.com/nhsuk/nhsuk-frontend/blob/e8928ebe19d39fe6137a5ca046217f9ac043b29b/packages/components/tables/_tables.scss
 
- * 1. Hiding the thead on mobile
- * 2. Displaying the thead on desktop
+ * 1. Hiding the thead on tablet
+ * 2. Displaying the thead on tablet
  * 3. Removing default screen reader behaviour
- * 4. Assigning role of table-row on desktop to give default screen reader behaviour
- * 5. Using justify content to space out elements in the row on mobile
+ * 4. Assigning role of table-row on tablet to give default screen reader behaviour
+ * 5. Using justify content to space out elements in the row on tablet
  * 6. Assigning a minimum width in case of black cell
- * 7. Aligning content to the right on mobile
- * 8. Aligning mobile header to left to split it from the data
- * 9. Hiding mobile specific header from desktop view
+ * 7. Aligning content to the right on tablet
+ * 8. Aligning tablet header to left to split it from the data
+ * 9. Hiding tablet specific header from tablet view
  * 10. Adding a display block value due to IE 11 not having full flex support
  */
 .app-table-responsive {
   width: 100%;
 
   thead {
-    @include govuk-media-query($until: desktop) {
+    @include govuk-media-query($until: tablet) {
       @include govuk-visually-hidden; /* [1] */
     }
   }
@@ -29,7 +29,7 @@
       padding-right: govuk-spacing(3);
       text-align: left; /* [8] */
 
-      @include govuk-media-query($from: desktop) {
+      @include govuk-media-query($from: tablet) {
         display: none; /* [9] */
       }
     }
@@ -42,13 +42,13 @@
         margin-bottom: 0;
       }
 
-      @include govuk-media-query($from: desktop) {
+      @include govuk-media-query($from: tablet) {
         display: table-row; /* [4] */
       }
 
       th {
         text-align: right;
-        @include govuk-media-query($from: desktop) {
+        @include govuk-media-query($from: tablet) {
           text-align: left;
         }
       }
@@ -63,11 +63,11 @@
           display: block;
         }
 
-        @include govuk-media-query($from: desktop) {
+        @include govuk-media-query($from: tablet) {
           display: table-cell;
         }
 
-        @include govuk-media-query($until: desktop) {
+        @include govuk-media-query($until: tablet) {
           padding-right: 0;
           text-align: right; /* [7] */
           &:last-child {

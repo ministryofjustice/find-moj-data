@@ -23,7 +23,7 @@
                   {% if table.description %}
                     {% if table.description|length > 200 %}
                     <div>
-                      {{ table.description|truncatewords:25|markdown:3 }}
+                      {{ table.description|markdown:3|truncatewords_html:25 }}
                     </div>
                     {% else %}
                     <div>
