@@ -206,7 +206,7 @@ class TestChartDetailsService:
                     )
                 ],
             ),
-            platform=EntityRef(urn="", display_name=""),
+            platform=EntityRef(urn="", display_name="justice-data"),
         )
         mock_catalogue.get_chart_details.return_value = chart_metadata
 
@@ -214,6 +214,7 @@ class TestChartDetailsService:
         expected = {
             "entity": chart_metadata,
             "entity_type": "Chart",
+            "platform_name": "Justice Data",
             "parent_entity": None,
             "parent_type": "dashboard",
             "h1_value": "test",

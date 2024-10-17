@@ -146,6 +146,7 @@ class ChartDetailsService(GenericService):
         return {
             "entity": self.chart_metadata,
             "entity_type": _("Chart"),
+            "platform_name": _(self.chart_metadata.platform.display_name),
             "parent_entity": self.parent_entity,
             "parent_type": ResultType.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
@@ -168,6 +169,7 @@ class DashboardDetailsService(GenericService):
             "entity": self.dashboard_metadata,
             "entity_type": "Dashboard",
             "h1_value": self.dashboard_metadata.name,
+            "platform_name": _(self.dashboard_metadata.platform.display_name),
             "charts": sorted(
                 self.children,
                 key=lambda d: d.entity_ref.display_name,

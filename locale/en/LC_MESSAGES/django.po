@@ -595,8 +595,6 @@ msgstr "first name"
 msgid "last name"
 msgstr "last name"
 
-#~ msgid "Search metadata catalogue"
-#~ msgstr "Search for data"
-
-#~ msgid "Chart details"
-#~ msgstr "Chart details"
+# Workaround for Justice Data platform not having a readable display name
+msgid "justice-data"
+msgstr "Justice Data"
