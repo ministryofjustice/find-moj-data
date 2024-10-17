@@ -26,7 +26,7 @@
                 <td class="govuk-table__cell column-description"><span class="app-table-responsive__heading">Description:</span>
                 {% if column.description %}
                 <div>
-                  {{column.description|default:''|markdown:3|truncatechars_html:300}}
+                  {{column.description|default:''|markdown:3}}
                 </div>
                 {% else %}
                 <p class="govuk-visually-hidden">A description for {{column.display_name}} does not exist</p>
