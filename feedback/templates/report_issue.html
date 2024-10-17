@@ -8,6 +8,12 @@
     <h1 class="govuk-heading-xl">{{h1_value}}</h1>
   </div>
 
+  <div class="govuk-grid-column-full">
+    <p class="govuk-body">
+      <a href="{{entity_url}}" class="govuk-link govuk-link--no-visited-state govuk-heading-l">{{entity_name}}</a>
+    </p>
+  </div>
+
   <div class="govuk-grid-column-two-thirds">
     <form action="{{ request.path }}" method="post" novalidate>
       {% if form.errors %}
@@ -57,11 +63,6 @@
         <div id="more-detail-hint" class="govuk-hint">
           {% translate 'Please provide as much information as possible about the issue.' %}
         </div>
-        {% for error in form.additional_info.errors %}
-          <p id="passport-issued-error" class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> {{error}}
-          </p>
-        {% endfor %}
         {{ form.additional_info }}
       </div>
 

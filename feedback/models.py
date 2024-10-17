@@ -1,6 +1,9 @@
 import uuid
 
 from django.core.validators import EmailValidator, MinLengthValidator
+import uuid
+
+from django.core.validators import EmailValidator, MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext as _
 

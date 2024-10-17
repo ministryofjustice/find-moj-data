@@ -1,4 +1,5 @@
 import logging
+import threading
 
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -8,6 +9,8 @@ from .forms import FeedbackForm, IssueForm
 from .service import send_notifications
 
 log = logging.getLogger(__name__)
+
+mitch = "mitch.dawson@digital.justice.gov.uk"
 
 
 def feedback_form_view(request) -> HttpResponse:
@@ -19,6 +22,7 @@ def feedback_form_view(request) -> HttpResponse:
         else:
             log.error(f"Unexpected invalid feedback form submission: {form.errors}")
     else:
+
         form = FeedbackForm()
 
     return render(
