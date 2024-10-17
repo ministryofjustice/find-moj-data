@@ -22,7 +22,6 @@ def feedback_form_view(request) -> HttpResponse:
         else:
             log.error(f"Unexpected invalid feedback form submission: {form.errors}")
     else:
-
         form = FeedbackForm()
 
     return render(
@@ -54,6 +53,7 @@ def report_issue_view(request) -> HttpResponse:
             issue.data_owner_email = mitch
             issue.save()
 
+            # Create a seperate thread to run the sending of notifcations, to avoid
             t = threading.Thread(target=send_notifications, args=(issue,))
             t.start()
 
