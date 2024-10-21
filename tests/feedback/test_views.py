@@ -55,7 +55,7 @@ class TestReportIssueView:
         )
         assert response.status_code == 200
 
-    def test_valid_form_redirects(self, client, mock_notify_service):
+    def test_valid_form_redirects(self, client):
         response = client.get(
             reverse("feedback:report-issue"),
             data={
