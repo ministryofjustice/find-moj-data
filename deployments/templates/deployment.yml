@@ -81,6 +81,7 @@ spec:
               value: NOTIFY_DATA_CATALOGUE_TEMPLATE_ID
             - name: "${DATA_CATALOGUE_EMAIL}"
               value: DATA_CATALOGUE_EMAIL
+
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
