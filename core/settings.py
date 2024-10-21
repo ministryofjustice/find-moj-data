@@ -86,6 +86,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "core.context_processors.env",
                 "core.context_processors.analytics",
+                "core.context_processors.notify_enabled",
             ],
         },
     },
@@ -287,14 +288,10 @@ GIT_REF = os.environ.get("GIT_REF", "unknown")
 
 # Notifify API Credentials
 NOTIFY_ENABLED = os.environ.get("NOTIFY_ENABLED", "false") in TRUTHY_VALUES
-if NOTIFY_ENABLED and not TESTING:
-    NOTIFY_API_KEY = os.environ.get("NOTIFY_API_KEY")
-    NOTIFY_DATA_OWNER_TEMPLATE_ID = os.environ.get("NOTIFY_DATA_OWNER_TEMPLATE_ID")
-    NOTIFY_SENDER_TEMPLATE_ID = os.environ.get("NOTIFY_SENDER_TEMPLATE_ID")
-    NOTIFY_DATA_CATALOGUE_TEMPLATE_ID = os.environ.get(
-        "NOTIFY_DATA_CATALOGUE_TEMPLATE_ID"
-    )
-
+NOTIFY_API_KEY = os.environ.get("NOTIFY_API_KEY")
+NOTIFY_DATA_OWNER_TEMPLATE_ID = os.environ.get("NOTIFY_DATA_OWNER_TEMPLATE_ID")
+NOTIFY_SENDER_TEMPLATE_ID = os.environ.get("NOTIFY_SENDER_TEMPLATE_ID")
+NOTIFY_DATA_CATALOGUE_TEMPLATE_ID = os.environ.get("NOTIFY_DATA_CATALOGUE_TEMPLATE_ID")
 
 # Data Catalogue Email
 DATA_CATALOGUE_EMAIL = os.environ.get("DATA_CATALOGUE_EMAIL")

@@ -45,7 +45,7 @@
   </p>
 </div>
 
-{% if entity_name %}
+{% if NOTIFY_ENABLED and entity_name %}
   <div class="govuk-body">
     <a type="button" class="govuk-button" href="{% url 'feedback:report-issue' %}?entity_name={{ entity_name }}&data_owner_email={{ data_owner_email }}&entity_url={{ request.build_absolute_uri}}" class="govuk-link">Report an issue</a>
   </div>
