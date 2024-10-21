@@ -1,16 +1,15 @@
 import logging
 import threading
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 
 from .forms import FeedbackForm, ReportIssueForm
-from .service.notify import send_notifications
+from .service import send_notifications
 
 log = logging.getLogger(__name__)
-
-mitch = "mitch.dawson@digital.justice.gov.uk"
 
 
 def feedback_form_view(request) -> HttpResponse:
@@ -50,12 +49,13 @@ def report_issue_view(request) -> HttpResponse:
             issue.entity_name = request.session.get("entity_name")
             issue.entity_url = request.session.get("entity_url")
             issue.data_owner_email = request.session.get("data_owner_email")
-            issue.data_owner_email = mitch
             issue.save()
 
-            # Create a seperate thread to run the sending of notifcations, to avoid
-            t = threading.Thread(target=send_notifications, args=(issue,))
-            t.start()
+            if settings.NOTIFY_ENABLED:
+                # Spawn a thread to process the sending of notifcations and avoid potential delays
+                # returning a response to the user.
+                t = threading.Thread(target=send_notifications, args=(issue,))
+                t.start()
 
             return redirect("feedback:thanks")
 
@@ -75,7 +75,6 @@ def report_issue_view(request) -> HttpResponse:
 
         request.session["entity_name"] = entity_name
         request.session["entity_url"] = entity_url
-        request.session["entity_path"] = _(request.GET.get("entity_path"))
         request.session["data_owner_email"] = _(request.GET.get("data_owner_email", ""))
 
         form = ReportIssueForm()

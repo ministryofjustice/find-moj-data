@@ -49,7 +49,7 @@ class ReportIssue(models.Model):
     additional_info = models.TextField(
         verbose_name=_("Can you provide more detail?"),
         null=False,
-        blank=True,
+        blank=False,
         validators=[MinLengthValidator(10)],
     )
     entity_name = models.CharField(max_length=250)
