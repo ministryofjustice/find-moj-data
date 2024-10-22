@@ -40,6 +40,13 @@ def is_access_requirements_a_url(access_requirements) -> bool:
     return is_url
 
 
+def friendly_platform_name(platform_name):
+    if platform_name == "justice-data":
+        return "Justice Data"
+    else:
+        return platform_name
+
+
 class DatabaseDetailsService(GenericService):
     def __init__(self, urn: str):
         self.urn = urn
@@ -146,7 +153,9 @@ class ChartDetailsService(GenericService):
         return {
             "entity": self.chart_metadata,
             "entity_type": _("Chart"),
-            "platform_name": _(self.chart_metadata.platform.display_name),
+            "platform_name": friendly_platform_name(
+                self.chart_metadata.platform.display_name
+            ),
             "parent_entity": self.parent_entity,
             "parent_type": ResultType.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
@@ -169,7 +178,9 @@ class DashboardDetailsService(GenericService):
             "entity": self.dashboard_metadata,
             "entity_type": "Dashboard",
             "h1_value": self.dashboard_metadata.name,
-            "platform_name": _(self.dashboard_metadata.platform.display_name),
+            "platform_name": friendly_platform_name(
+                self.dashboard_metadata.platform.display_name
+            ),
             "charts": sorted(
                 self.children,
                 key=lambda d: d.entity_ref.display_name,
