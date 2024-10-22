@@ -49,6 +49,8 @@
     {% if ENABLE_ANALYTICS %}
       <script async src="https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_ID }}"></script>
       <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ ANALYTICS_ID }}');</script>
+    {% else %}
+            <script>window.dataLayer = window.dataLayer || []; function gtag(){}</script>
     {% endif %}
   </body>
 </html>
