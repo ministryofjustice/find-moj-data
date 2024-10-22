@@ -11,8 +11,8 @@
             <h1 class="govuk-heading-xl app-masthead__title">{% translate "Discover data from across the Ministry of Justice" %}</h1>
             <p class="govuk-body-l" style="color: white;"> {% translate "service_description" %} </p>
 
-            <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0"
-                  onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
+            <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0" 
+              onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
               <div
                 class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
               >
