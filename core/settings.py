@@ -267,7 +267,7 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
     LOGIN_URL = "/azure_auth/login"
     LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
 
-    AUTHENTICATION_BACKENDS = ("users.helper.MojAzurebackend",)
+    AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
 
 USE_I18N = True
 LANGUAGE_CODE = "en"
