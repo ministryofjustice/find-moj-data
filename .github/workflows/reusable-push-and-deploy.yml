@@ -35,6 +35,9 @@ on:
       azure_client_secret:
         description: "azure client secret"
         required: true
+      notify_api_key:
+        description: "api key for the gds notify service"
+        required: true
 
 jobs:
   push-and-deploy:
@@ -119,6 +122,12 @@ jobs:
           AZURE_REDIRECT_URI: ${{ vars.AZURE_REDIRECT_URI }}
           AZURE_AUTHORITY: ${{ vars.AZURE_AUTHORITY }}
           EXTERNAL_DOMAIN_PREFIX: ${{ vars.EXTERNAL_DOMAIN_PREFIX }}
+          NOTIFY_ENABLED: ${{ vars.NOTIFY_ENABLED }}
+          NOTIFY_API_KEY: ${{ secrets.NOTIFY_API_KEY }}
+          NOTIFY_DATA_OWNER_TEMPLATE_ID: ${{ vars. NOTIFY_DATA_OWNER_TEMPLATE_ID }}
+          NOTIFY_SENDER_TEMPLATE_ID: ${{ vars.NOTIFY_SENDER_TEMPLATE_ID }}
+          NOTIFY_DATA_CATALOGUE_TEMPLATE_ID: ${{ vars.NOTIFY_DATA_CATALOGUE_TEMPLATE_ID }}
+          DATA_CATALOGUE_EMAIL: ${{ vars.DATA_CATALOGUE_EMAIL }}
 
         run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
