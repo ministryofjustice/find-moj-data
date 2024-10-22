@@ -69,19 +69,18 @@ spec:
               value: "${TRACES_SAMPLE_RATE}"
             - name: PROFILES_SAMPLE_RATE
               value: "${PROFILES_SAMPLE_RATE}"
-            - name: "${NOTIFY_ENABLED}"
-              value: NOTIFY_ENABLED
-            - name: "${NOTIFY_API_KEY}"
-              value: NOTIFY_API_KEY
-            - name: "${NOTIFY_DATA_OWNER_TEMPLATE_ID}"
-              value: NOTIFY_DATA_OWNER_TEMPLATE_ID
-            - name: "${NOTIFY_SENDER_TEMPLATE_ID}"
-              value: NOTIFY_SENDER_TEMPLATE_ID
-            - name: "${NOTIFY_DATA_CATALOGUE_TEMPLATE_ID}"
-              value: NOTIFY_DATA_CATALOGUE_TEMPLATE_ID
-            - name: "${DATA_CATALOGUE_EMAIL}"
-              value: DATA_CATALOGUE_EMAIL
-
+            - name: NOTIFY_ENABLED
+              value: "${NOTIFY_ENABLED}"
+            - name: NOTIFY_API_KEY
+              value: "${NOTIFY_API_KEY}"
+            - name: NOTIFY_DATA_OWNER_TEMPLATE_ID
+              value: "${NOTIFY_DATA_OWNER_TEMPLATE_ID}"
+            - name: NOTIFY_SENDER_TEMPLATE_ID
+              value: "${NOTIFY_SENDER_TEMPLATE_ID}"
+            - name: NOTIFY_DATA_CATALOGUE_TEMPLATE_ID
+              value: "${NOTIFY_DATA_CATALOGUE_TEMPLATE_ID}"
+            - name: DATA_CATALOGUE_EMAIL
+              value: "${DATA_CATALOGUE_EMAIL}"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:

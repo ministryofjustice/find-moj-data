@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-22 10:24+0100\n"
+"POT-Creation-Date: 2024-10-22 15:17+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -290,13 +290,11 @@ msgid "Domain:"
 msgstr "Subject area:"
 
 #: templates/details_base.html:80 templates/partial/contact_info.html:15
-#: templates/details_base.html:80 templates/partial/contact_info.html:15
 #: templates/partial/contact_info.html:30
 #: templates/partial/search_result.html:40
 msgid "Not provided"
 msgstr "Not provided."
 
-#: templates/details_chart.html:8 templates/details_dashboard.html:43
 #: templates/details_chart.html:8 templates/details_dashboard.html:43
 msgid "Access this data"
 msgstr "Access this data"
@@ -307,10 +305,8 @@ msgid "\"%(display_name)s\" on %(platform_name)s"
 msgstr ""
 
 #: templates/details_chart.html:11 templates/details_dashboard.html:46
-#, fuzzy
-#| msgid "Justice Data (opens in new tab)"
 msgid "(opens in new tab)"
-msgstr "Justice Data (opens in new tab)"
+msgstr "(opens in new tab)"
 
 #: templates/details_dashboard.html:10 templates/details_dashboard.html:35
 msgid "Dashboard content"
@@ -562,10 +558,8 @@ msgid "Sort results"
 msgstr "Sort results"
 
 #: templates/search.html:15
-#, fuzzy
-#| msgid "Search"
 msgid "Search input"
-msgstr "Search"
+msgstr "Search input"
 
 #: templates/search.html:28
 msgid "Search query tips"
@@ -620,14 +614,3 @@ msgstr "first name"
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
-
-#, python-format
-#~ msgid "%(display_name)s on Justice Data (opens in new tab)"
-#~ msgstr "%(display_name)s on Justice Data (opens in new tab)"
-
-#~ msgid "Search MOJ data"
-#~ msgstr "Search MoJ data"
-
-# Workaround for Justice Data platform not having a readable display name
-#~ msgid "justice-data"
-#~ msgstr "Justice Data"
