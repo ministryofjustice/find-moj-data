@@ -9,8 +9,6 @@ from .service import send_notifications
 
 log = logging.getLogger(__name__)
 
-mitch = "mitch.dawson@digital.justice.gov.uk"
-
 
 def feedback_form_view(request) -> HttpResponse:
     if request.method == "POST":
