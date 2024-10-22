@@ -214,7 +214,7 @@ class TestChartDetailsService:
         expected = {
             "entity": chart_metadata,
             "entity_type": "Chart",
-            "platform_name": "justice-data",
+            "platform_name": "Justice Data",
             "parent_entity": None,
             "parent_type": "dashboard",
             "h1_value": "test",
