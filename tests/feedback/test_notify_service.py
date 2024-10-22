@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pytest
 
 from feedback.models import Issue
@@ -7,7 +5,6 @@ from feedback.service import send
 
 
 @pytest.mark.django_db
-@patch("feedback.service.notifications_client.send_email_notification")
 def test_send_all_notifications(mock_notifications_client):
     data = {
         "reason": "Other",
@@ -21,13 +18,12 @@ def test_send_all_notifications(mock_notifications_client):
     issue = Issue.objects.create(**data)
     assert issue
 
-    send(issue=issue)
+    send(issue=issue, client=mock_notifications_client)
 
-    assert mock_notifications_client.call_count == 3
+    assert mock_notifications_client.send_email_notification.call_count == 3
 
 
 @pytest.mark.django_db
-@patch("feedback.service.notifications_client.send_email_notification")
 def test_send_notifications_no_data_owner_email(mock_notifications_client):
     data = {
         "reason": "Other",
@@ -40,13 +36,12 @@ def test_send_notifications_no_data_owner_email(mock_notifications_client):
     issue = Issue.objects.create(**data)
     assert issue
 
-    send(issue=issue)
+    send(issue=issue, client=mock_notifications_client)
 
-    assert mock_notifications_client.call_count == 2
+    assert mock_notifications_client.send_email_notification.call_count == 2
 
 
 @pytest.mark.django_db
-@patch("feedback.service.notifications_client.send_email_notification")
 def test_send_all_notifications_no_user_email(mock_notifications_client):
     data = {
         "reason": "Other",
@@ -59,13 +54,12 @@ def test_send_all_notifications_no_user_email(mock_notifications_client):
     issue = Issue.objects.create(**data)
     assert issue
 
-    send(issue=issue)
+    send(issue=issue, client=mock_notifications_client)
 
-    assert mock_notifications_client.call_count == 2
+    assert mock_notifications_client.send_email_notification.call_count == 2
 
 
 @pytest.mark.django_db
-@patch("feedback.service.notifications_client.send_email_notification")
 def test_send_all_notifications_no_user_or_data_owner_email(mock_notifications_client):
     data = {
         "reason": "Other",
@@ -77,6 +71,6 @@ def test_send_all_notifications_no_user_or_data_owner_email(mock_notifications_c
     issue = Issue.objects.create(**data)
     assert issue
 
-    send(issue=issue)
+    send(issue=issue, client=mock_notifications_client)
 
-    assert mock_notifications_client.call_count == 1
+    assert mock_notifications_client.send_email_notification.call_count == 1

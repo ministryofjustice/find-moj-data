@@ -8,20 +8,21 @@ from feedback.models import Issue
 
 log = logging.getLogger(__name__)
 
-notifications_client: NotificationsAPIClient = NotificationsAPIClient(
-    settings.NOTIFY_API_KEY
-)
+
+def get_notify_api_client() -> NotificationsAPIClient:
+    return NotificationsAPIClient(settings.NOTIFY_API_KEY)
 
 
 def send_notifications(issue: Issue) -> None:
     if settings.NOTIFY_ENABLED:
+        client = get_notify_api_client()
         # Spawn a thread to process the sending of notifcations and avoid potential delays
         # returning a response to the user.
-        t = threading.Thread(target=send, args=(issue,))
+        t = threading.Thread(target=send, args=(issue, client))
         t.start()
 
 
-def send(issue: Issue) -> None:
+def send(issue: Issue, client: NotificationsAPIClient) -> None:
 
     personalisation = {
         "assetOwner": (
@@ -42,6 +43,7 @@ def send(issue: Issue) -> None:
             template_id=settings.NOTIFY_DATA_OWNER_TEMPLATE_ID,
             email_address=issue.data_owner_email,
             reference=reference,
+            client=client,
         )
 
     # Notify Sender
@@ -51,6 +53,7 @@ def send(issue: Issue) -> None:
             template_id=settings.NOTIFY_SENDER_TEMPLATE_ID,
             email_address=issue.user_email,
             reference=reference,
+            client=client,
         )
 
     # Notify Data Catalog
@@ -59,6 +62,7 @@ def send(issue: Issue) -> None:
         template_id=settings.NOTIFY_DATA_CATALOGUE_TEMPLATE_ID,
         email_address=settings.DATA_CATALOGUE_EMAIL,
         reference=reference,
+        client=client,
     )
 
 
@@ -67,10 +71,11 @@ def notify(
     template_id: str,
     email_address: str,
     reference: str,
+    client: NotificationsAPIClient,
 ) -> None:
 
     try:
-        response = notifications_client.send_email_notification(
+        response = client.send_email_notification(
             email_address=email_address,  # required string
             template_id=template_id,  # required UUID string
             personalisation=personalisation,
