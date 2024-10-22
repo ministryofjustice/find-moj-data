@@ -1,5 +1,4 @@
 import logging
-import threading
 
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
