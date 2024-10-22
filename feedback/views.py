@@ -1,12 +1,10 @@
 import logging
-import threading
 
-from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 
-from .forms import FeedbackForm, ReportIssueForm
+from .forms import FeedbackForm, IssueForm
 from .service import send_notifications
 
 log = logging.getLogger(__name__)
@@ -43,7 +41,7 @@ def thank_you_view(request) -> HttpResponse:
 
 def report_issue_view(request) -> HttpResponse:
     if request.method == "POST":
-        form = ReportIssueForm(request.POST)
+        form = IssueForm(request.POST)
         if form.is_valid():
             issue = form.save(commit=False)
             issue.entity_name = request.session.get("entity_name")
@@ -51,11 +49,8 @@ def report_issue_view(request) -> HttpResponse:
             issue.data_owner_email = request.session.get("data_owner_email")
             issue.save()
 
-            if settings.NOTIFY_ENABLED:
-                # Spawn a thread to process the sending of notifcations and avoid potential delays
-                # returning a response to the user.
-                t = threading.Thread(target=send_notifications, args=(issue,))
-                t.start()
+            # Call the send notifications service
+            send_notifications(issue=issue)
 
             return redirect("feedback:thanks")
 
@@ -65,7 +60,9 @@ def report_issue_view(request) -> HttpResponse:
                 request,
                 "report_issue.html",
                 {
-                    "h1_value": _("Report an issue on Find MOJ data"),
+                    "h1_value": _(
+                        f"Report an issue with {request.session.get('entity_name')}"
+                    ),
                     "form": form,
                 },
             )
@@ -77,13 +74,13 @@ def report_issue_view(request) -> HttpResponse:
         request.session["entity_url"] = entity_url
         request.session["data_owner_email"] = _(request.GET.get("data_owner_email", ""))
 
-        form = ReportIssueForm()
+        form = IssueForm()
 
     return render(
         request,
         "report_issue.html",
         {
-            "h1_value": _("Report an issue on Find MOJ data"),
+            "h1_value": _(f"Report an issue with {entity_name}"),
             "form": form,
             "entity_name": entity_name,
             "entity_url": entity_url,

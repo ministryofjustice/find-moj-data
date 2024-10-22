@@ -26,11 +26,11 @@ class Feedback(models.Model):
     )
 
 
-class ReportIssue(models.Model):
+class Issue(models.Model):
     class IssueChoices(models.TextChoices):
-        BROKEN_LINK = "Broken link"
-        INCORRECT_OWNER = "Incorrect owner"
-        OUTDATED_CONTACT = "Outdated contact"
+        BROKEN_LINK = "Link is broken"
+        INCORRECT_OWNER = "Owner is incorrect"
+        OUTDATED_CONTACT = "Contact is outdated"
         OTHER = "Other"
 
     id = models.UUIDField(
@@ -42,7 +42,7 @@ class ReportIssue(models.Model):
     reason = models.CharField(
         max_length=50,
         choices=IssueChoices.choices,
-        verbose_name=_("Reason"),
+        verbose_name=_("What is wrong with this page?"),
         null=False,
         blank=False,
     )

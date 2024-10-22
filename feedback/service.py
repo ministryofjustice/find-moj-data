@@ -1,9 +1,10 @@
 import logging
+import threading
 
 from django.conf import settings
 from notifications_python_client.notifications import NotificationsAPIClient
 
-from feedback.models import ReportIssue
+from feedback.models import Issue
 
 log = logging.getLogger(__name__)
 
@@ -12,7 +13,15 @@ notifications_client: NotificationsAPIClient = NotificationsAPIClient(
 )
 
 
-def send_notifications(issue: ReportIssue) -> None:
+def send_notifications(issue: Issue) -> None:
+    if settings.NOTIFY_ENABLED:
+        # Spawn a thread to process the sending of notifcations and avoid potential delays
+        # returning a response to the user.
+        t = threading.Thread(target=send, args=(issue,))
+        t.start()
+
+
+def send(issue: Issue) -> None:
 
     personalisation = {
         "assetOwner": (

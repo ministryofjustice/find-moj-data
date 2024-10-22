@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-14 11:45+0100\n"
+"POT-Creation-Date: 2024-10-22 10:24+0100\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,19 +32,27 @@ msgstr "There is a problem with this service"
 msgid "Page not found"
 msgstr "Page not found"
 
-#: feedback/models.py:16
+#: feedback/models.py:19
 msgid "Satisfaction survey"
 msgstr "Satisfaction survey"
 
-#: feedback/models.py:22
+#: feedback/models.py:25
 msgid "How can we improve this service?"
 msgstr "How can we improve this service?"
 
-#: feedback/templates/feedback.html:18
+#: feedback/models.py:45
+msgid "What is wrong with this page?"
+msgstr ""
+
+#: feedback/models.py:50
+msgid "Can you provide more detail?"
+msgstr ""
+
+#: feedback/templates/feedback.html:18 feedback/templates/report_issue.html:23
 msgid "There is a problem"
 msgstr "There is a problem"
 
-#: feedback/templates/feedback.html:21
+#: feedback/templates/feedback.html:21 feedback/templates/report_issue.html:26
 msgid "Make sure you have filled in all the fields."
 msgstr "Make sure you have filled in all the fields."
 
@@ -56,7 +64,11 @@ msgstr ""
 "Do not include personal or financial information, like your National "
 "Insurance number or credit card details."
 
-#: feedback/templates/thanks.html:9 feedback/views.py:37
+#: feedback/templates/report_issue.html:64
+msgid "Please provide as much information as possible about the issue."
+msgstr ""
+
+#: feedback/templates/thanks.html:9 feedback/views.py:38
 msgid "Thank you for your feedback"
 msgstr "Thank you for your feedback"
 
@@ -64,9 +76,18 @@ msgstr "Thank you for your feedback"
 msgid "Your feedback will help us improve the service."
 msgstr "Your feedback will help us improve the service."
 
-#: feedback/views.py:27
+#: feedback/views.py:28
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
+
+#: feedback/views.py:64
+msgid "Report an issue with {request.session.get('entity_name')}"
+msgstr ""
+
+#: feedback/views.py:83
+#, python-brace-format
+msgid "Report an issue with {entity_name}"
+msgstr ""
 
 #: home/forms/search.py:16
 msgid "All domains"
@@ -81,20 +102,15 @@ msgstr "Analytical Platform"
 msgid "Domain"
 msgstr "Subject area"
 
-#: home/forms/search.py:55
+#: home/forms/search.py:55 templates/partial/filter.html:36
 msgid "filter-refresh"
 msgstr "selection will trigger the filter and refresh the search results"
-
-#: home/forms/search.py:56 home/service/search.py:136
-#: templates/partial/filter.html:33
-msgid "Entity Types"
-msgstr "Entity types"
 
 #: home/service/details.py:65 templates/partial/search_result.html:20
 msgid "Database"
 msgstr "Database"
 
-#: home/service/details.py:139 templates/partial/search_result.html:24
+#: home/service/details.py:148 templates/partial/search_result.html:24
 msgid "Chart"
 msgstr "Chart"
 
@@ -105,6 +121,10 @@ msgstr "Glossary"
 #: home/service/metadata_specification.py:28
 msgid "Metadata specification"
 msgstr "Metadata specification"
+
+#: home/service/search.py:136 templates/partial/filter.html:33
+msgid "Entity Types"
+msgstr "Entity types"
 
 #: home/service/search.py:146
 msgid "Where To Access"
@@ -257,32 +277,38 @@ msgstr "Contact us"
 msgid "No description available."
 msgstr "No description available."
 
-#: templates/details_base.html:60
+#: templates/details_base.html:62
 msgid "First created:"
 msgstr "First created:"
 
-#: templates/details_base.html:66
+#: templates/details_base.html:68
 msgid "Last updated:"
 msgstr "Last updated:"
 
-#: templates/details_base.html:77 templates/partial/search_result.html:39
+#: templates/details_base.html:79 templates/partial/search_result.html:39
 msgid "Domain:"
 msgstr "Subject area:"
 
-#: templates/details_base.html:78 templates/partial/contact_info.html:15
+#: templates/details_base.html:80 templates/partial/contact_info.html:15
 #: templates/partial/contact_info.html:30
 #: templates/partial/search_result.html:40
 msgid "Not provided"
 msgstr "Not provided."
 
-#: templates/details_chart.html:8
+#: templates/details_chart.html:8 templates/details_dashboard.html:43
 msgid "Access this data"
 msgstr "Access this data"
 
-#: templates/details_chart.html:12
+#: templates/details_chart.html:11
 #, python-format
-msgid "%(display_name)s on Justice Data (opens in new tab)"
-msgstr "%(display_name)s on Justice Data (opens in new tab)"
+msgid "\"%(display_name)s\" on %(platform_name)s"
+msgstr ""
+
+#: templates/details_chart.html:11 templates/details_dashboard.html:46
+#, fuzzy
+#| msgid "Justice Data (opens in new tab)"
+msgid "(opens in new tab)"
+msgstr "Justice Data (opens in new tab)"
 
 #: templates/details_dashboard.html:10 templates/details_dashboard.html:35
 msgid "Dashboard content"
@@ -295,10 +321,6 @@ msgstr "Chart name"
 #: templates/details_dashboard.html:36
 msgid "This dashboard is missing chart information."
 msgstr "This dashboard is missing table information."
-
-#: templates/details_dashboard.html:47
-msgid "Justice Data (opens in new tab)"
-msgstr "Justice Data (opens in new tab)"
 
 #: templates/details_database.html:10 templates/details_database.html:39
 msgid "Database content"
@@ -363,15 +385,15 @@ msgstr ""
 "label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-moj-"
 "data.service.justice.gov.uk/\">Learn more</a>"
 
-#: templates/home.html:47
+#: templates/home.html:43
 msgid "Browse by domain"
 msgstr "Browse by subject area"
 
-#: templates/home.html:55
+#: templates/home.html:51
 msgid "Help us grow"
 msgstr "Help us grow"
 
-#: templates/home.html:56
+#: templates/home.html:52
 msgid ""
 "Find MoJ data is a new service with a growing catalogue of data. You can "
 "help us improve the service by:"
@@ -379,15 +401,15 @@ msgstr ""
 "Find MoJ data is a new service with a growing catalogue of data. You can "
 "help us improve the service by:"
 
-#: templates/home.html:58
+#: templates/home.html:54
 msgid "adding a new data source"
 msgstr "adding a new data source"
 
-#: templates/home.html:59
+#: templates/home.html:55
 msgid "telling us about data you would like to see"
 msgstr "telling us about data you would like to see"
 
-#: templates/home.html:60
+#: templates/home.html:56
 msgid "giving us feedback"
 msgstr "giving us feedback"
 
@@ -415,7 +437,7 @@ msgstr "Contact the data owner with questions."
 msgid "IAO or Data Owner"
 msgstr "Data owner"
 
-#: templates/partial/contact_info.html:41
+#: templates/partial/contact_info.html:43
 msgid ""
 "Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
 "C06NPM2200N\" class=\"govuk-link\">contact the Data Catalogue team</a> about "
@@ -538,8 +560,10 @@ msgid "Sort results"
 msgstr "Sort results"
 
 #: templates/search.html:15
-msgid "Search MOJ data"
-msgstr "Search MoJ data"
+#, fuzzy
+#| msgid "Search"
+msgid "Search input"
+msgstr "Search"
 
 #: templates/search.html:28
 msgid "Search query tips"
@@ -595,6 +619,13 @@ msgstr "first name"
 msgid "last name"
 msgstr "last name"
 
+#, python-format
+#~ msgid "%(display_name)s on Justice Data (opens in new tab)"
+#~ msgstr "%(display_name)s on Justice Data (opens in new tab)"
+
+#~ msgid "Search MOJ data"
+#~ msgstr "Search MoJ data"
+
 # Workaround for Justice Data platform not having a readable display name
-msgid "justice-data"
-msgstr "Justice Data"
+#~ msgid "justice-data"
+#~ msgstr "Justice Data"

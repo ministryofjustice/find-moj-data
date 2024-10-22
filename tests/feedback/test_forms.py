@@ -1,7 +1,7 @@
 import pytest
 
-from feedback.forms import FeedbackForm, ReportIssueForm
-from feedback.models import Feedback, ReportIssue
+from feedback.forms import FeedbackForm, IssueForm
+from feedback.models import Feedback, Issue
 
 
 def test_invalid_feedback_form():
@@ -27,16 +27,16 @@ def test_feedback_form_saves_to_db():
 
 
 def test_valid_report_issue_form():
-    assert ReportIssueForm(
+    assert IssueForm(
         {
             "reason": "Other",
             "additional_info": "a" * 10,
         }
-    ).is_valid
+    ).is_valid()
 
 
 def test_report_issue_form_invalid_additinal_info_length():
-    form = ReportIssueForm(
+    form = IssueForm(
         {
             "reason": "Other",
             "additional_info": "a" * 9,
@@ -50,7 +50,7 @@ def test_report_issue_form_invalid_additinal_info_length():
 
 
 def test_report_issue_form_invalid_user_email():
-    form = ReportIssueForm(
+    form = IssueForm(
         {"reason": "Other", "additional_info": "a" * 10, "user_email": "invalid_email"}
     )
     assert not form.is_valid()
@@ -59,7 +59,7 @@ def test_report_issue_form_invalid_user_email():
 
 @pytest.mark.django_db
 def test_report_issue_form_saves_to_db():
-    form = ReportIssueForm(
+    form = IssueForm(
         {
             "reason": "Other",
             "additional_info": "a" * 10,
@@ -67,7 +67,7 @@ def test_report_issue_form_saves_to_db():
     )
     form.save()
 
-    saved = ReportIssue.objects.first()
+    saved = Issue.objects.first()
     assert saved
     assert saved.reason == "Other"
     assert saved.additional_info == "a" * 10

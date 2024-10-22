@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea, TextInput
 
-from .models import Feedback, ReportIssue
+from .models import Feedback, Issue
 
 
 def formfield(field, **kwargs):
@@ -25,9 +25,9 @@ class FeedbackForm(forms.ModelForm):
         formfield_callback = formfield
 
 
-class ReportIssueForm(forms.ModelForm):
+class IssueForm(forms.ModelForm):
     class Meta:
-        model = ReportIssue
+        model = Issue
         fields = [
             "reason",
             "additional_info",
