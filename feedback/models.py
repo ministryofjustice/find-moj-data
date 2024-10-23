@@ -1,5 +1,3 @@
-import uuid
-
 from django.core.validators import EmailValidator, MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext as _
@@ -33,9 +31,6 @@ class Issue(models.Model):
         OUTDATED_CONTACT = "Contact is outdated"
         OTHER = "Other"
 
-    id = models.UUIDField(
-        default=uuid.uuid4, unique=True, primary_key=True, editable=False
-    )
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
