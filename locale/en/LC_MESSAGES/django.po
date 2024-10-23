@@ -32,19 +32,27 @@ msgstr "There is a problem with this service"
 msgid "Page not found"
 msgstr "Page not found"
 
-#: feedback/models.py:16
+#: feedback/models.py:19
 msgid "Satisfaction survey"
 msgstr "Satisfaction survey"
 
-#: feedback/models.py:22
+#: feedback/models.py:25
 msgid "How can we improve this service?"
 msgstr "How can we improve this service?"
 
-#: feedback/templates/feedback.html:18
+#: feedback/models.py:45
+msgid "What is wrong with this page?"
+msgstr ""
+
+#: feedback/models.py:50
+msgid "Can you provide more detail?"
+msgstr ""
+
+#: feedback/templates/feedback.html:18 feedback/templates/report_issue.html:23
 msgid "There is a problem"
 msgstr "There is a problem"
 
-#: feedback/templates/feedback.html:21
+#: feedback/templates/feedback.html:21 feedback/templates/report_issue.html:26
 msgid "Make sure you have filled in all the fields."
 msgstr "Make sure you have filled in all the fields."
 
@@ -56,7 +64,11 @@ msgstr ""
 "Do not include personal or financial information, like your National "
 "Insurance number or credit card details."
 
-#: feedback/templates/thanks.html:9 feedback/views.py:37
+#: feedback/templates/report_issue.html:64
+msgid "Please provide as much information as possible about the issue."
+msgstr ""
+
+#: feedback/templates/thanks.html:9 feedback/views.py:38
 msgid "Thank you for your feedback"
 msgstr "Thank you for your feedback"
 
@@ -64,9 +76,18 @@ msgstr "Thank you for your feedback"
 msgid "Your feedback will help us improve the service."
 msgstr "Your feedback will help us improve the service."
 
-#: feedback/views.py:27
+#: feedback/views.py:28
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
+
+#: feedback/views.py:64
+msgid "Report an issue with {request.session.get('entity_name')}"
+msgstr ""
+
+#: feedback/views.py:83
+#, python-brace-format
+msgid "Report an issue with {entity_name}"
+msgstr ""
 
 #: home/forms/search.py:16
 msgid "All domains"

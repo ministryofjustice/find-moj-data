@@ -1,0 +1,84 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">{{h1_value}}</h1>
+  </div>
+
+  <div class="govuk-grid-column-two-thirds">
+    <form action="{{ request.path }}" method="post" novalidate>
+      {% if form.errors %}
+        <div class="govuk-error-summary" data-module="govuk-error-summary">
+          <div role="alert">
+            <h2 class="govuk-error-summary__title">
+              {% translate "There is a problem" %}
+            </h2>
+            <div class="govuk-error-summary__body">
+              <p class="govuk-body">{% translate 'Make sure you have filled in all the fields.' %}</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="govuk-form-group {% if form.reason.errors %}govuk-form-group-errors{% endif %}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h2 class="govuk-fieldset__heading">
+              {{form.reason.label}}
+            </h2>
+          </legend>
+          {% for error in form.reason.errors %}
+            <p id="passport-issued-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{error}}
+            </p>
+          {% endfor %}
+          <div class="govuk-radios" data-module="govuk-radios">
+            {% for radio in form.reason %}
+              <div class="govuk-radios__item">
+                {{radio.tag}}
+                <label class="govuk-label govuk-radios__label" for="{{radio.id_for_label}}">
+                  {{radio.choice_label}}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="govuk-form-group {% if form.additional_info.errors %}govuk-form-group-errors{% endif %}">
+        <h1 class="govuk-label-wrapper">
+          <label class="govuk-label govuk-label--l" for="{{form.additional_info.id_for_label}}">
+            {{form.additional_info.label}}
+          </label>
+        </h1>
+        <div id="more-detail-hint" class="govuk-hint">
+          {% translate 'Please provide as much information as possible about the issue.' %}
+        </div>
+        {{ form.additional_info }}
+      </div>
+
+      <div class="govuk-form-group {% if form.user_email.errors %}govuk-form-group-errors{% endif %}">
+        <label class="govuk-label" for="email">
+          Email address
+        </label>
+        <div id="email-hint" class="govuk-hint">
+          We’ll use this for future follow up.
+        </div>
+        {% for error in form.user_email.errors %}
+          <p id="passport-issued-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{error}}
+          </p>
+        {% endfor %}
+        {{ form.user_email}}
+      </div>
+
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        Submit
+      </button>
+      {% csrf_token %}
+    </form>
+  </div>
+{% endblock content %}

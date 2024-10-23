@@ -3,33 +3,6 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
-from datahub.configuration.common import ConfigurationError
-from datahub.emitter import mce_builder
-from datahub.emitter.mcp import MetadataChangeProposalWrapper
-from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
-from datahub.ingestion.source.common.subtypes import (
-    DatasetContainerSubTypes,
-    DatasetSubTypes,
-)
-from datahub.metadata import schema_classes
-from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
-from datahub.metadata.schema_classes import (
-    ChangeTypeClass,
-    ContainerClass,
-    ContainerPropertiesClass,
-    DatasetPropertiesClass,
-    DomainPropertiesClass,
-    DomainsClass,
-    OtherSchemaClass,
-    OwnerClass,
-    OwnershipClass,
-    OwnershipTypeClass,
-    SchemaFieldClass,
-    SchemaFieldDataTypeClass,
-    SchemaMetadataClass,
-    SubTypesClass,
-)
-
 from data_platform_catalogue.client.exceptions import (
     AspectDoesNotExist,
     ConnectivityError,
@@ -70,6 +43,32 @@ from data_platform_catalogue.search_types import (
     SearchFacets,
     SearchResponse,
     SortOption,
+)
+from datahub.configuration.common import ConfigurationError
+from datahub.emitter import mce_builder
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
+from datahub.ingestion.source.common.subtypes import (
+    DatasetContainerSubTypes,
+    DatasetSubTypes,
+)
+from datahub.metadata import schema_classes
+from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
+from datahub.metadata.schema_classes import (
+    ChangeTypeClass,
+    ContainerClass,
+    ContainerPropertiesClass,
+    DatasetPropertiesClass,
+    DomainPropertiesClass,
+    DomainsClass,
+    OtherSchemaClass,
+    OwnerClass,
+    OwnershipClass,
+    OwnershipTypeClass,
+    SchemaFieldClass,
+    SchemaFieldDataTypeClass,
+    SchemaMetadataClass,
+    SubTypesClass,
 )
 
 logger = logging.getLogger(__name__)
