@@ -61,9 +61,8 @@ def report_issue_view(request) -> HttpResponse:
                 request,
                 "report_issue.html",
                 {
-                    "h1_value": _(
-                        f"Report an issue with {request.session.get('entity_name')}"
-                    ),
+                    "h1_value": _("Report an issue with %s")
+                    % (request.session.get("entity_name")),
                     "form": form,
                 },
             )
@@ -81,7 +80,7 @@ def report_issue_view(request) -> HttpResponse:
         request,
         "report_issue.html",
         {
-            "h1_value": _(f"Report an issue with {entity_name}"),
+            "h1_value": _("Report an issue with %s") % (entity_name),
             "form": form,
             "entity_name": entity_name,
             "entity_url": entity_url,
