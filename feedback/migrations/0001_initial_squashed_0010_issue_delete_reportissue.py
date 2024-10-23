@@ -20,7 +20,6 @@ class Migration(migrations.Migration):
         ("feedback", "0008_alter_reportissue_additional_info_and_more"),
         ("feedback", "0009_alter_reportissue_additional_info_and_more"),
         ("feedback", "0010_issue_delete_reportissue"),
-        ("feedback", "0011_alter_issue_id"),
     ]
 
     dependencies = []
