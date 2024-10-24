@@ -24,6 +24,7 @@ psycopg = "^3.2.3"
 psycopg-binary = "^3.2.3"
 django-debug-toolbar = "^4.4.6"
 redis = {extras = ["hiredis"], version = "^5.1.1"}
+notifications-python-client = "^10.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
@@ -32,7 +33,7 @@ selenium = "~=4.25.0"
 flake8 = ">=6.1.0"
 pytest-django = "^4.9.0"
 pytest-cov = "^5.0.0"
-faker = "^30.3.0"
+faker = "^30.6.0"
 isort = "^5.13.2"
 
 [build-system]

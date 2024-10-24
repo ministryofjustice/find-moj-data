@@ -20,6 +20,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_owner,
     parse_properties,
     parse_relations,
+    parse_subtypes,
     parse_tags,
 )
 from data_platform_catalogue.client.search import SearchClient
@@ -286,6 +287,7 @@ class DataHubCatalogueClient:
             parent_relations_to_display = self.list_relations_to_display(
                 parent_relations
             )
+            subtypes = parse_subtypes(response)
 
             return Table(
                 urn=urn,
@@ -299,6 +301,7 @@ class DataHubCatalogueClient:
                     data_owner=owner,
                     data_stewards=[owner],
                 ),
+                subtypes=subtypes,
                 tags=tags,
                 glossary_terms=glossary_terms,
                 last_modified=modified,

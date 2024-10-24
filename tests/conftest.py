@@ -34,6 +34,7 @@ from data_platform_catalogue.search_types import (
 from django.conf import settings
 from django.test import Client
 from faker import Faker
+from notifications_python_client.notifications import NotificationsAPIClient
 from pytest import CollectReport, StashKey
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -573,6 +574,18 @@ def generate_page(page_size=20, result_type: ResultType | None = None):
 def client():
     client = Client()
     return client
+
+
+@pytest.fixture(autouse=True)
+def mock_notifications_client():
+    patcher = patch("feedback.service.get_notify_api_client")
+    mock_fn = patcher.start()
+    mock_client = MagicMock(spec=NotificationsAPIClient)
+    mock_fn.return_value = mock_client
+
+    yield mock_client
+
+    patcher.stop()
 
 
 @pytest.fixture(autouse=True)

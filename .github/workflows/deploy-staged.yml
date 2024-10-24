@@ -29,6 +29,7 @@ jobs:
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
 
   deploy-preprod:
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
@@ -45,6 +46,7 @@ jobs:
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
 
   notify-preprod-success:
     needs: deploy-preprod
@@ -85,6 +87,7 @@ jobs:
       catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
 
   post-deploy:
     name: "Post-deploy admin"

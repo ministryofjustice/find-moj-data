@@ -34,8 +34,8 @@ def home_view(request):
 @cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
     if result_type == "table":
-        context = dataset_details(urn)
-        return render(request, "details_table.html", context)
+        service = dataset_service(urn)
+        return render(request, service.template, service.context)
     if result_type == "database":
         context = database_details(urn)
         return render(request, "details_database.html", context)
@@ -58,15 +58,13 @@ def database_details(urn):
     return context
 
 
-def dataset_details(urn):
+def dataset_service(urn):
     try:
         service = DatasetDetailsService(urn)
     except EntityDoesNotExist:
         raise Http404("Asset does not exist")
 
-    context = service.context
-
-    return context
+    return service
 
 
 def chart_details(urn):

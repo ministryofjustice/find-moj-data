@@ -457,6 +457,15 @@ class Table(Entity):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:dataset:(urn:li:dataPlatform:redshift,public.table,DEV)"],
     )
+
+    subtypes: list[str] = Field(
+        description=(
+            "List of datahub subtypes. If a subtype is set, we still model the entity "
+            "as a table in Find MoJ data."
+        ),
+        examples=[["Metric"]],
+        default=[],
+    )
     column_details: list[Column] = Field(
         description=(
             "A list of objects which relate to columns in your data, each list item "

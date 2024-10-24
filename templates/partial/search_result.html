@@ -34,7 +34,7 @@
             {{ result.description|truncate_snippet:300|markdown:3 }}
           </div>
         {% endif %}
-        <ul class="govuk-list govuk-body" id="metadata-property-list">
+        <ul class="govuk-list govuk-body">
           <li>
             <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
             <span>{{result.metadata.domain_name | default:_('Not provided')}}</span>
