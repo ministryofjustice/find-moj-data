@@ -13,3 +13,7 @@ def analytics(request) -> dict[str, Any]:
         "ANALYTICS_ID": settings.ANALYTICS_ID,
         "GIT_REF": settings.GIT_REF,
     }
+
+
+def notify_enabled(request) -> dict[str, Any]:
+    return {"NOTIFY_ENABLED": settings.NOTIFY_ENABLED}

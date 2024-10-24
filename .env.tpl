@@ -18,3 +18,13 @@ AZURE_AUTHORITY=op://Data-Catalogue/Find-Moj-Data/${ENV}/Azure-Authority
 
 # Sentry Variables
 SENTRY_DSN__WORKAROUND=op://Data-Catalogue/Find-Moj-Data/${ENV}/Sentry-Dsn
+
+# Notify API Service
+NOTIFY_ENABLED=op://Data-Catalogue/Find-Moj-Data/${ENV}/notify-enabled
+NOTIFY_API_KEY=op://Data-Catalogue/Find-Moj-Data/${ENV}/notify-api-key #pragma: allowlist secret
+NOTIFY_DATA_OWNER_TEMPLATE_ID=op://Data-Catalogue/Find-Moj-Data/${ENV}/notify-data-owner-template-id
+NOTIFY_SENDER_TEMPLATE_ID=op://Data-Catalogue/Find-Moj-Data/${ENV}/notify-sender-template-id
+NOTIFY_DATA_CATALOGUE_TEMPLATE_ID=op://Data-Catalogue/Find-Moj-Data/${ENV}/notify-data-catalogue-template-id
+
+# Data Catalogue Email
+DATA_CATALOGUE_EMAIL=op://Data-Catalogue/Find-Moj-Data/${ENV}/data-catalogue-email

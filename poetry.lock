@@ -802,13 +802,13 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-azure-auth"
-version = "2.0.2"
+version = "2.1.0"
 description = "A simple Django app for user authentication with Azure Active Directory/Entra ID."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "django_azure_auth-2.0.2-py3-none-any.whl", hash = "sha256:06f8ede87c998ebc708d7c634aad771c32e385df727618d9e697a117b58b69f7"},
-    {file = "django_azure_auth-2.0.2.tar.gz", hash = "sha256:38f6be6ebc036cebf7a258d78ad0ee3702f923fda3028cccf0841694a765295f"},
+    {file = "django_azure_auth-2.1.0-py3-none-any.whl", hash = "sha256:c9395c0968e45a1e8bebfd5371a3a010bed236b9a1754e49799e8d4102d1b670"},
+    {file = "django_azure_auth-2.1.0.tar.gz", hash = "sha256:8d9970ece1898b140dc5aea233f105757e9de192f0a4492a1205f501601f1b21"},
 ]
 
 [package.dependencies]
@@ -880,6 +880,16 @@ ssh = ["paramiko (>=2.4.3)"]
 websockets = ["websocket-client (>=1.3.0)"]
 
 [[package]]
+name = "docopt"
+version = "0.6.2"
+description = "Pythonic argument parser, that will make you smile"
+optional = false
+python-versions = "*"
+files = [
+    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
+]
+
+[[package]]
 name = "expandvars"
 version = "0.12.0"
 description = "Expand system variables Unix style"
@@ -895,13 +905,13 @@ tests = ["black", "pytest", "pytest-cov", "tox"]
 
 [[package]]
 name = "faker"
-version = "30.6.0"
+version = "30.8.0"
 description = "Faker is a Python package that generates fake data for you."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "Faker-30.6.0-py3-none-any.whl", hash = "sha256:37b5ab951f7367ea93edb865120e9717a7a649d6a4b223f1e4a47a8a20d9e85f"},
-    {file = "faker-30.6.0.tar.gz", hash = "sha256:be0e548352c1be6f6d9c982003848a0d305868f160bb1fb7f945acffc347e676"},
+    {file = "Faker-30.8.0-py3-none-any.whl", hash = "sha256:4cd0c5ea4bc1e4c902967f6e662f5f5da69f1674d9a94f54e516d27f3c2a6a16"},
+    {file = "faker-30.8.0.tar.gz", hash = "sha256:3608c7fcac2acde0eaa6da28dae97628f18f14d54eaa2a92b96ae006f1621bd7"},
 ]
 
 [package.dependencies]
@@ -1636,6 +1646,21 @@ files = [
 
 [package.dependencies]
 setuptools = "*"
+
+[[package]]
+name = "notifications-python-client"
+version = "10.0.0"
+description = "Python API client for GOV.UK Notify."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "notifications_python_client-10.0.0-py3-none-any.whl", hash = "sha256:0f152a4d23b7f7b827dae6b45ac63568a2bc56044b1aa57b66bc68b137c40e57"},
+]
+
+[package.dependencies]
+docopt = ">=0.3.0"
+PyJWT = ">=1.5.1"
+requests = ">=2.0.0"
 
 [[package]]
 name = "ordered-set"
@@ -2629,13 +2654,13 @@ websocket-client = ">=1.8,<2.0"
 
 [[package]]
 name = "sentry-sdk"
-version = "2.16.0"
+version = "2.17.0"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "sentry_sdk-2.16.0-py2.py3-none-any.whl", hash = "sha256:49139c31ebcd398f4f6396b18910610a0c1602f6e67083240c33019d1f6aa30c"},
-    {file = "sentry_sdk-2.16.0.tar.gz", hash = "sha256:90f733b32e15dfc1999e6b7aca67a38688a567329de4d6e184154a73f96c6892"},
+    {file = "sentry_sdk-2.17.0-py2.py3-none-any.whl", hash = "sha256:625955884b862cc58748920f9e21efdfb8e0d4f98cca4ab0d3918576d5b606ad"},
+    {file = "sentry_sdk-2.17.0.tar.gz", hash = "sha256:dd0a05352b78ffeacced73a94e86f38b32e2eae15fff5f30ca5abb568a72eacf"},
 ]
 
 [package.dependencies]
@@ -3142,4 +3167,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "da9124345566d17ea48c859d7a30826e3271e550ac590d5da5fa68ff280a6bab"
+content-hash = "bf400f765d790f765dec6e1ec62fbe8262d22f3446b722c82128b40a65604768"
