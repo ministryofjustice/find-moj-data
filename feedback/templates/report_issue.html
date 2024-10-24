@@ -57,6 +57,11 @@
         <div id="more-detail-hint" class="govuk-hint">
           {% translate 'Please provide as much information as possible about the issue.' %}
         </div>
+        {% for error in form.additional_info.errors %}
+          <p id="additional-info-issued-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{error}}
+          </p>
+        {% endfor %}
         {{ form.additional_info }}
       </div>
 

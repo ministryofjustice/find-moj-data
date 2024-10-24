@@ -56,7 +56,7 @@ def report_issue_view(request) -> HttpResponse:
             return redirect("feedback:thanks")
 
         else:
-            log.error(f"Unexpected invalid report issue form submission: {form.errors}")
+            log.info(f"Invalid report issue form submission: {form.errors}")
             return render(
                 request,
                 "report_issue.html",
