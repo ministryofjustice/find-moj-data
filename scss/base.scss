@@ -13,6 +13,7 @@ $govuk-new-typography-scale: true;
 @import "./components/masthead";
 @import "./glossary";
 @import "./details";
+@import "./components/table";
 
 .js-required {
   display: none;
