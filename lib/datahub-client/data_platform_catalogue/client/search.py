@@ -2,6 +2,9 @@ import json
 import logging
 from typing import Any, Sequence, Tuple
 
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
@@ -25,8 +28,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +137,7 @@ class SearchClient:
                 else:
                     raise Exception
             except Exception:
-                logger.warn(f"Parsing for result {entity_urn} failed")
+                logger.exception(f"Parsing for result {entity_urn} failed")
                 malformed_result_urns.append(entity_urn)
 
         return page_results, malformed_result_urns

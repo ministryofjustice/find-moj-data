@@ -19,7 +19,9 @@ query getDashboard($urn: String!) {
     editableProperties {
       description
     }
-    relationships(input: {types: ["Contains"], direction:OUTGOING start: 0, count: 500 }) {
+    relationships(
+      input: { types: ["Contains"], direction: OUTGOING, start: 0, count: 500 }
+    ) {
       total
       relationships {
         entity {
@@ -32,7 +34,9 @@ query getDashboard($urn: String!) {
             }
             tags {
               tags {
-                tag{urn}
+                tag {
+                  urn
+                }
               }
             }
           }

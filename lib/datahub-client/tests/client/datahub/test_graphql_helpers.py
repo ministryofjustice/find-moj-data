@@ -1,11 +1,13 @@
 from datetime import datetime, timezone
 
 import pytest
+
 from data_platform_catalogue.client.graphql_helpers import (
     _make_user_email_from_urn,
     parse_columns,
     parse_created_and_modified,
     parse_glossary_terms,
+    parse_owner,
     parse_properties,
     parse_relations,
     parse_subtypes,
@@ -21,6 +23,7 @@ from data_platform_catalogue.entities import (
     EntitySummary,
     FurtherInformation,
     GlossaryTermRef,
+    OwnerRef,
     RelationshipType,
     TagRef,
     UsageRestrictions,
@@ -544,3 +547,67 @@ def test_parse_missing_subtypes():
     result = parse_subtypes({"subTypes": None})
 
     assert result == []
+
+
+def test_parse_owner_of_wrong_type():
+    entity = {
+        "ownership": {
+            "owners": [
+                {
+                    "owner": {"urn": "urn:li:corpuser:joe.bloggs", "properties": None},
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:__system__dataowner",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                        "info": None,
+                    },
+                }
+            ]
+        }
+    }
+
+    owner = parse_owner(entity, ownership_type_urn="urn:li:ownershipType:chiefMouser")
+    assert owner == OwnerRef(display_name="", email="", urn="")
+
+
+def test_parse_owner_without_account():
+    entity = {
+        "ownership": {
+            "owners": [
+                {
+                    "owner": {"urn": "urn:li:corpuser:joe.bloggs", "properties": None},
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:__system__dataowner",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                        "info": None,
+                    },
+                }
+            ]
+        }
+    }
+    owner = parse_owner(entity)
+    assert owner.email == "joe.bloggs@justice.gov.uk"
+
+
+def test_parse_owner_with_account():
+    entity = {
+        "ownership": {
+            "owners": [
+                {
+                    "owner": {
+                        "urn": "urn:li:corpuser:joe.bloggs",
+                        "properties": {
+                            "fullName": "Joe Bloggs",
+                            "email": "joeseph.bloggerson-bloggs@justice.gov.uk",
+                        },
+                    },
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:__system__dataowner",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                        "info": None,
+                    },
+                }
+            ]
+        }
+    }
+    owner = parse_owner(entity)
+    assert owner.email == "joeseph.bloggerson-bloggs@justice.gov.uk"

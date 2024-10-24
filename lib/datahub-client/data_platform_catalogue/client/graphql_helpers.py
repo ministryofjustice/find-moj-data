@@ -32,13 +32,21 @@ def get_graphql_query(graphql_query_file_name: str) -> str:
     return query_text
 
 
-def parse_owner(entity: dict[str, Any]) -> OwnerRef:
+def parse_owner(
+    entity: dict[str, Any],
+    ownership_type_urn: str = "urn:li:ownershipType:__system__dataowner",
+) -> OwnerRef:
     """
     Parse ownership information, if it is set.
     If no owner information exists, return an OwnerRef populated with blank strings
     """
     ownership = entity.get("ownership") or {}
-    owners = [i["owner"] for i in ownership.get("owners", [])]
+    owners = [
+        i["owner"]
+        for i in ownership.get("owners", [])
+        if i["ownershipType"]["urn"] == ownership_type_urn
+    ]
+
     if owners:
         properties = owners[0].get("properties") or {}
         display_name = (
