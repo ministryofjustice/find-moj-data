@@ -8,6 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
+      SecRule REQUEST_URI "@contains .profile" "id:1005,phase:1,t:lowercase,ctl:ruleRemoveById=930130"
       SecDefaultAction "phase:2,pass,log,tag:github_team=data-catalogue"
       SecDefaultAction "phase:4,pass,log,tag:github_team=data-catalogue"
 spec:
