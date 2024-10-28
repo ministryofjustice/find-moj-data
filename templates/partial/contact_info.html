@@ -21,9 +21,13 @@
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for questions" %}</h2>
   <p id="contact_channels" class="govuk-body">
-    {% if slack_channel.dc_slack_channel_url %}
+    {% if further_information.dc_slack_channel_url %}
       <!-- This should become a list of populated contact channels -->
-      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
+      Slack channel: <a href="{{ further_information.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ further_information.dc_slack_channel_name }} (opens in new tab)</a>
+    {% elif further_information.dc_teams_channel_url %}
+      Teams channel: <a href="{{ further_information.dc_teams_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ further_information.dc_teams_channel_name }} (opens in new tab)</a>
+    {% elif further_information.dc_team_email %}
+      Email: {{ further_information.dc_team_email|urlize }}
     {% elif data_owner_email %}
       {% translate "Contact the data owner with questions." %}
     {% else %}
