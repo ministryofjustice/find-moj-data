@@ -276,6 +276,27 @@ class FurtherInformation(BaseModel):
         default="",
         examples=["https://moj.enterprise.slack.com/archives/CXYZ1234E"],
     )
+    dc_teams_channel_name: str = Field(
+        description=(
+            "The name of a Microsoft Teams channel to be used as a contact point for users of "
+            "the catalogue service to ask questions."
+        ),
+        default="",
+        examples=["Data team"],
+    )
+    dc_teams_channel_url: str = Field(
+        description="The URL to the Teams channel",
+        default="",
+        examples=["https://teams.microsoft.com/l/channel/123"],
+    )
+    dc_team_email: str = Field(
+        description=(
+            "A shared email address for a team where they receive questions"
+            " about the data. Unrealted to Microsoft Teams"
+        ),
+        default="",
+        examples=["best-data-team@justice.gov.uk"],
+    )
 
 
 class DataSummary(BaseModel):
