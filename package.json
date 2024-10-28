@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@babel/preset-env": "^7.26.0",
-    "@ministryofjustice/frontend": "^2.2.4",
+    "@ministryofjustice/frontend": "^3.0.0",
     "babel-jest": "^29.7.0",
     "govuk-frontend": "^5.7.1",
     "jest-environment-jsdom": "^29.7.0",
