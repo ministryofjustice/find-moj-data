@@ -3,47 +3,6 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
-from data_platform_catalogue.client.exceptions import (
-    AspectDoesNotExist,
-    ConnectivityError,
-    EntityDoesNotExist,
-    InvalidDomain,
-    InvalidUser,
-    ReferencedEntityMissing,
-)
-from data_platform_catalogue.client.graphql_helpers import (
-    parse_columns,
-    parse_created_and_modified,
-    parse_domain,
-    parse_glossary_terms,
-    parse_names,
-    parse_owner,
-    parse_properties,
-    parse_relations,
-    parse_subtypes,
-    parse_tags,
-)
-from data_platform_catalogue.client.search import SearchClient
-from data_platform_catalogue.entities import (
-    Chart,
-    CustomEntityProperties,
-    Dashboard,
-    Database,
-    EntityRef,
-    EntitySummary,
-    Governance,
-    OwnerRef,
-    RelationshipType,
-    Table,
-)
-from data_platform_catalogue.search_types import (
-    DomainOption,
-    MultiSelectFilter,
-    ResultType,
-    SearchFacets,
-    SearchResponse,
-    SortOption,
-)
 from datahub.configuration.common import ConfigurationError
 from datahub.emitter import mce_builder
 from datahub.emitter.mcp import MetadataChangeProposalWrapper
@@ -69,6 +28,49 @@ from datahub.metadata.schema_classes import (
     SchemaFieldDataTypeClass,
     SchemaMetadataClass,
     SubTypesClass,
+)
+
+from data_platform_catalogue.client.exceptions import (
+    AspectDoesNotExist,
+    ConnectivityError,
+    EntityDoesNotExist,
+    InvalidDomain,
+    InvalidUser,
+    ReferencedEntityMissing,
+)
+from data_platform_catalogue.client.graphql_helpers import (
+    parse_columns,
+    parse_created_and_modified,
+    parse_custodians,
+    parse_domain,
+    parse_glossary_terms,
+    parse_names,
+    parse_owner,
+    parse_properties,
+    parse_relations,
+    parse_stewards,
+    parse_subtypes,
+    parse_tags,
+)
+from data_platform_catalogue.client.search import SearchClient
+from data_platform_catalogue.entities import (
+    Chart,
+    CustomEntityProperties,
+    Dashboard,
+    Database,
+    EntityRef,
+    EntitySummary,
+    Governance,
+    RelationshipType,
+    Table,
+)
+from data_platform_catalogue.search_types import (
+    DomainOption,
+    MultiSelectFilter,
+    ResultType,
+    SearchFacets,
+    SearchResponse,
+    SortOption,
 )
 
 logger = logging.getLogger(__name__)
@@ -267,6 +269,8 @@ class DataHubCatalogueClient:
             columns = parse_columns(response)
             domain = parse_domain(response)
             owner = parse_owner(response)
+            stewards = parse_stewards(response)
+            custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
@@ -298,8 +302,7 @@ class DataHubCatalogueClient:
                 relationships={**lineage_relations, **parent_relations_to_display},
                 domain=domain,
                 governance=Governance(
-                    data_owner=owner,
-                    data_stewards=[owner],
+                    data_owner=owner, data_stewards=stewards, data_custodians=custodians
                 ),
                 subtypes=subtypes,
                 tags=tags,
@@ -321,6 +324,8 @@ class DataHubCatalogueClient:
             properties, custom_properties = parse_properties(response)
             domain = parse_domain(response)
             owner = parse_owner(response)
+            stewards = parse_stewards(response)
+            custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             name, display_name, qualified_name = parse_names(response, properties)
@@ -339,12 +344,7 @@ class DataHubCatalogueClient:
                 fully_qualified_name=qualified_name,
                 domain=domain,
                 governance=Governance(
-                    data_owner=owner,
-                    data_stewards=[
-                        OwnerRef(
-                            display_name="", email="Contact email for the user", urn=""
-                        )
-                    ],
+                    data_owner=owner, data_stewards=stewards, data_custodians=custodians
                 ),
                 relationships=relations_to_display,
                 tags=tags,
@@ -364,6 +364,8 @@ class DataHubCatalogueClient:
             properties, custom_properties = parse_properties(response)
             domain = parse_domain(response)
             owner = parse_owner(response)
+            stewards = parse_stewards(response)
+            custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
@@ -385,8 +387,7 @@ class DataHubCatalogueClient:
                 relationships=relations_to_display,
                 domain=domain,
                 governance=Governance(
-                    data_owner=owner,
-                    data_stewards=[owner],
+                    data_owner=owner, data_custodians=custodians, data_stewards=stewards
                 ),
                 tags=tags,
                 glossary_terms=glossary_terms,
@@ -406,6 +407,8 @@ class DataHubCatalogueClient:
             properties, custom_properties = parse_properties(response)
             domain = parse_domain(response)
             owner = parse_owner(response)
+            stewards = parse_stewards(response)
+            custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
@@ -424,8 +427,7 @@ class DataHubCatalogueClient:
                 relationships=relations_to_display,
                 domain=domain,
                 governance=Governance(
-                    data_owner=owner,
-                    data_stewards=[owner],
+                    data_owner=owner, data_stewards=stewards, data_custodians=custodians
                 ),
                 external_url=properties.get("externalUrl", ""),
                 tags=tags,

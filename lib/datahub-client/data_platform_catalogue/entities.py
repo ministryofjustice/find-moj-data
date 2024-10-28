@@ -120,7 +120,7 @@ class Governance(BaseModel):
     """
 
     data_owner: OwnerRef = Field(
-        description="The senior individual responsible for the data.",
+        description="Senior leader within the business (DD and above) who sponsors and champions data governance work within their data domain.",  # noqa: E501
         examples=[
             OwnerRef(
                 display_name="John Doe",
@@ -130,7 +130,7 @@ class Governance(BaseModel):
         ],
     )
     data_stewards: list[OwnerRef] = Field(
-        description="Experts who manage the data day-to-day.",
+        description="Subject matter expert within a business area (SEO – DD) or the associated data domain, acting as a go-between for business users and digital teams/system owners.",  # noqa: E501
         examples=[
             [
                 OwnerRef(
@@ -140,6 +140,20 @@ class Governance(BaseModel):
                 )
             ]
         ],
+        default_factory=list,
+    )
+    data_custodians: list[OwnerRef] = Field(
+        description="Responsible for the capture, storage, and disposal of data as per the Data owner and Data steward’s requirements, and within the limits of data quality and security limitations.",  # noqa: E501
+        examples=[
+            [
+                OwnerRef(
+                    display_name="Rosanne Columns",
+                    email="rosanne.columns@justice.gov.uk",
+                    urn="urn:li:corpuser:rosanne.columns",
+                )
+            ]
+        ],
+        default_factory=list,
     )
 
 

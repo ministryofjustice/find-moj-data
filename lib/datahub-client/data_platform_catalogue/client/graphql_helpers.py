@@ -22,6 +22,13 @@ from data_platform_catalogue.entities import (
 
 PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
 
+# Note: Data owner is missing as an ownershipType entity in Datahub, but it still seems to be
+# a system type, and if you set up an add_owner meta mapping in the DBT source, this is what
+# gets used by default.
+DATA_OWNER = "urn:li:ownershipType:__system__dataowner"
+DATA_STEWARD = "urn:li:ownershipType:__system__data_steward"
+DATA_CUSTODIAN = "urn:li:ownershipType:data_custodian"
+
 
 def get_graphql_query(graphql_query_file_name: str) -> str:
     query_text = (
@@ -32,12 +39,30 @@ def get_graphql_query(graphql_query_file_name: str) -> str:
     return query_text
 
 
+def _parse_owner(owner: dict):
+    properties = owner.get("properties") or {}
+    display_name = (
+        properties.get("displayName")
+        if properties.get("displayName") is not None
+        else properties.get("fullName", "")
+    )
+    return OwnerRef(
+        display_name=display_name or "",
+        email=properties.get(
+            "email",
+            _make_user_email_from_urn(owner.get("urn")),
+        ),
+        urn=owner.get("urn", ""),
+    )
+
+
 def parse_owner(
     entity: dict[str, Any],
-    ownership_type_urn: str = "urn:li:ownershipType:__system__dataowner",
+    ownership_type_urn: str = DATA_OWNER,
 ) -> OwnerRef:
     """
-    Parse ownership information, if it is set.
+    Parse ownership information, if it is set, and return the first owner of
+    type `ownership_type_urn`.
     If no owner information exists, return an OwnerRef populated with blank strings
     """
     ownership = entity.get("ownership") or {}
@@ -48,24 +73,44 @@ def parse_owner(
     ]
 
     if owners:
-        properties = owners[0].get("properties") or {}
-        display_name = (
-            properties.get("displayName")
-            if properties.get("displayName") is not None
-            else properties.get("fullName", "")
-        )
-        owner_details = OwnerRef(
-            display_name=display_name or "",
-            email=properties.get(
-                "email",
-                _make_user_email_from_urn(owners[0].get("urn")),
-            ),
-            urn=owners[0].get("urn", ""),
-        )
+        return _parse_owner(owners[0])
     else:
-        owner_details = OwnerRef(display_name="", email="", urn="")
+        return OwnerRef(display_name="", email="", urn="")
 
-    return owner_details
+
+def parse_owners(
+    entity: dict[str, Any],
+    ownership_type_urn: str,
+) -> list[OwnerRef]:
+    """
+    Parse ownership information, if it is set, and return a list of owners
+    of type `ownership_type_urn`.
+    If no owner information exists, the list will be empty.
+    """
+    ownership = entity.get("ownership") or {}
+    owners = [
+        i["owner"]
+        for i in ownership.get("owners", [])
+        if i["ownershipType"]["urn"] == ownership_type_urn
+    ]
+
+    return [_parse_owner(owner) for owner in owners]
+
+
+def parse_custodians(entity: dict[str, Any]) -> list[OwnerRef]:
+    """
+    Parse ownership information, if it is set, and return a list of data custodians.
+    If no owners exist with a matching ownership type, the list will be empty.
+    """
+    return parse_owners(entity, DATA_CUSTODIAN)
+
+
+def parse_stewards(entity: dict[str, Any]) -> list[OwnerRef]:
+    """
+    Parse ownership information, if it is set, and return a list of data stewards.
+    If no owners exist with a matching ownership type, the list will be empty.
+    """
+    return parse_owners(entity, DATA_STEWARD)
 
 
 def parse_last_modified(entity: dict[str, Any]) -> datetime | None:

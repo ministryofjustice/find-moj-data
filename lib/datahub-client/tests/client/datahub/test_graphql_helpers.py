@@ -3,11 +3,13 @@ from datetime import datetime, timezone
 import pytest
 
 from data_platform_catalogue.client.graphql_helpers import (
+    DATA_CUSTODIAN,
     _make_user_email_from_urn,
     parse_columns,
     parse_created_and_modified,
     parse_glossary_terms,
     parse_owner,
+    parse_owners,
     parse_properties,
     parse_relations,
     parse_subtypes,
@@ -611,3 +613,45 @@ def test_parse_owner_with_account():
     }
     owner = parse_owner(entity)
     assert owner.email == "joeseph.bloggerson-bloggs@justice.gov.uk"
+
+
+def test_parse_owners():
+    entity = {
+        "ownership": {
+            "owners": [
+                {
+                    "owner": {
+                        "urn": "urn:li:corpuser:word.smith",
+                        "properties": None,
+                    },
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:data_custodian",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                    },
+                },
+                {
+                    "owner": {
+                        "urn": "urn:li:corpuser:mo.numbers",
+                        "properties": None,
+                    },
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:data_custodian",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                    },
+                },
+            ]
+        }
+    }
+    owners = parse_owners(entity, ownership_type_urn=DATA_CUSTODIAN)
+    assert owners == [
+        OwnerRef(
+            urn="urn:li:corpuser:word.smith",
+            email="word.smith@justice.gov.uk",
+            display_name="",
+        ),
+        OwnerRef(
+            urn="urn:li:corpuser:mo.numbers",
+            email="mo.numbers@justice.gov.uk",
+            display_name="",
+        ),
+    ]
