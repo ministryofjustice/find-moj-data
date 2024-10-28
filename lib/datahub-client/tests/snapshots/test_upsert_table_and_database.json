@@ -30,7 +30,10 @@
                 "refresh_period": "",
                 "last_updated": "",
                 "dc_slack_channel_name": "test-channel",
-                "dc_slack_channel_url": "test-url"
+                "dc_slack_channel_url": "test-url",
+                "dc_teams_channel_name": "",
+                "dc_teams_channel_url": "",
+                "dc_team_email": ""
             },
             "name": "my_database",
             "description": "little test db"
@@ -114,7 +117,10 @@
                 "refresh_period": "",
                 "last_updated": "",
                 "dc_slack_channel_name": "test-channel",
-                "dc_slack_channel_url": "test-url"
+                "dc_slack_channel_url": "test-url",
+                "dc_teams_channel_name": "",
+                "dc_teams_channel_url": "",
+                "dc_team_email": ""
             },
             "name": "Dataset",
             "qualifiedName": "database.Dataset",

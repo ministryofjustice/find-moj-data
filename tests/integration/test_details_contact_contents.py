@@ -142,19 +142,39 @@ class TestDetailsPageContactDetails:
         assert request_access_metadata.text == expected_text
 
     @pytest.mark.parametrize(
-        "slack_channel, owner, expected_text",
+        "slack_channel, teams_channel, team_email, owner, expected_text",
         [
             (
                 "#contact-us",
+                "",
+                "",
                 "meta.data@justice.gov.uk",
                 "Slack channel: #contact-us (opens in new tab)",
             ),
             (
                 "",
+                "Contact us on Teams",
+                "",
+                "meta.data@justice.gov.uk",
+                "Teams channel: Contact us on Teams (opens in new tab)",
+            ),
+            (
+                "",
+                "",
+                "some-team-email@justice.gov.uk",
+                "meta.data@justice.gov.uk",
+                "Email: some-team-email@justice.gov.uk",
+            ),
+            (
+                "",
+                "",
+                "",
                 "meta.data@justice.gov.uk",
                 "Contact the data owner with questions.",
             ),
             (
+                "",
+                "",
                 "",
                 "",
                 "Not provided.",
@@ -166,6 +186,8 @@ class TestDetailsPageContactDetails:
         database,
         mock_catalogue,
         slack_channel,
+        teams_channel,
+        team_email,
         owner,
         expected_text,
     ):
@@ -177,6 +199,15 @@ class TestDetailsPageContactDetails:
             database.custom_properties.further_information = FurtherInformation(
                 dc_slack_channel_name=slack_channel,
                 dc_slack_channel_url="http://bla.com",
+            )
+        if teams_channel:
+            database.custom_properties.further_information = FurtherInformation(
+                dc_teams_channel_name=teams_channel,
+                dc_teams_channel_url="http://bla.com",
+            )
+        if team_email:
+            database.custom_properties.further_information = FurtherInformation(
+                dc_team_email=team_email,
             )
 
         mock_get_database_details_response(mock_catalogue, database)
