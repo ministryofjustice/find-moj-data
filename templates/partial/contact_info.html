@@ -22,23 +22,23 @@
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for questions" %}</h2>
   <ul id="contact_channels" class="govuk-list">
     {% if further_information.dc_slack_channel_url %}
-      <li>
+      <li id="contact_channels_slack">
       <a href="{{ further_information.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Slack (opens in new tab)</a>
       </li>
     {% endif %}
     {% if further_information.dc_teams_channel_url %}
-      <li>
+      <li id="contact_channels_ms_teams">
       <a href="{{ further_information.dc_teams_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">MS Teams (opens in new tab)</a>
       </li>
     {% endif %}
     {% if further_information.dc_team_email %}
-      <li>{{ further_information.dc_team_email|urlize }}</li>
+      <li id="contact_channels_team_email" >{{ further_information.dc_team_email|urlize }}</li>
     {% endif %}
-    {% if data_owner_email %}
-      <li>{% translate "Contact the data owner with questions." %}</li>
+    {% if data_owner_email and not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email %}
+      <li id="contact_channels_data_owner">{% translate "Contact the data owner with questions." %}</li>
     {% endif %}
     {% if not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email and not data_owner_email%}
-     <li>Not provided.</li>
+     <li id="contact_channels_not_provided">{% translate "Not provided" %}</li>
     {% endif %}
   </ul>
 </div>

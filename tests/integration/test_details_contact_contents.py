@@ -215,7 +215,17 @@ class TestDetailsPageContactDetails:
         self.start_on_the_details_page()
         request_access_metadata = self.details_database_page.contact_channels()
 
-        assert request_access_metadata.text == expected_text
+        if slack_channel:
+            assert self.details_database_page.contact_channels_slack()
+        if teams_channel:
+            assert self.details_database_page.contact_channels_ms_teams()
+        if teams_email:
+            assert self.details_database_page.contact_channels_team_email()
+
+        if not slack_channel or teams_channel or team_email:
+            assert self.details_database_page.contact_channels_data_owner()
+        if not slack_channel or teams_channel or team_email or owner:
+            assert self.details_database_page.contact_channels_not_provided()
 
     @pytest.mark.parametrize(
         "owner, expected_text",
