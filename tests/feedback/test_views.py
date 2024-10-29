@@ -26,6 +26,10 @@ class TestFeedbackView:
 
 @pytest.mark.django_db
 class TestReportIssueView:
+    @pytest.fixture(autouse=True)
+    def setup_user(self, reporter, client):
+        client.force_login(reporter)
+
     def test_form_renders(self, client):
         response = client.get(
             reverse("feedback:report-issue"),
@@ -69,6 +73,7 @@ class TestReportIssueView:
             data={
                 "reason": "Other",
                 "additional_info": "This is some additional information.",
+                "send_email_to_reporter": "Yes",
             },
         )
         assert response.status_code == 302

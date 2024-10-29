@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-28 12:09+0000\n"
+"POT-Creation-Date: 2024-11-04 09:47+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,19 +32,31 @@ msgstr "There is a problem with this service"
 msgid "Page not found"
 msgstr "Page not found"
 
-#: feedback/models.py:17
+#: feedback/forms.py:58
+msgid "Yes"
+msgstr ""
+
+#: feedback/forms.py:58
+msgid "No"
+msgstr ""
+
+#: feedback/forms.py:61
+msgid "Do you want us to email you a copy of this report?"
+msgstr ""
+
+#: feedback/models.py:18
 msgid "Satisfaction survey"
 msgstr "Satisfaction survey"
 
-#: feedback/models.py:23
+#: feedback/models.py:24
 msgid "How can we improve this service?"
 msgstr "How can we improve this service?"
 
-#: feedback/models.py:40
+#: feedback/models.py:45
 msgid "What is wrong with this page?"
 msgstr ""
 
-#: feedback/models.py:45
+#: feedback/models.py:50
 msgid "Can you provide more detail?"
 msgstr ""
 
@@ -80,7 +92,7 @@ msgstr "Your feedback will help us improve the service."
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
 
-#: feedback/views.py:64 feedback/views.py:83
+#: feedback/views.py:73 feedback/views.py:92
 #, python-format
 msgid "Report an issue with %s"
 msgstr ""
@@ -286,12 +298,12 @@ msgid "Domain:"
 msgstr "Subject area:"
 
 #: templates/details_base.html:80 templates/partial/contact_info.html:17
-#: templates/partial/contact_info.html:34
+#: templates/partial/contact_info.html:46
 #: templates/partial/search_result.html:40
 msgid "Not provided"
 msgstr "Not provided."
 
-#: templates/details_chart.html:8 templates/details_dashboard.html:43
+#: templates/details_chart.html:8 templates/details_dashboard.html:45
 msgid "Access this data"
 msgstr "Access this data"
 
@@ -300,11 +312,11 @@ msgstr "Access this data"
 msgid "\"%(display_name)s\" on %(platform_name)s"
 msgstr ""
 
-#: templates/details_chart.html:11 templates/details_dashboard.html:46
+#: templates/details_chart.html:11 templates/details_dashboard.html:48
 msgid "(opens in new tab)"
 msgstr "(opens in new tab)"
 
-#: templates/details_dashboard.html:10 templates/details_dashboard.html:35
+#: templates/details_dashboard.html:10 templates/details_dashboard.html:37
 msgid "Dashboard content"
 msgstr "Dashboard content"
 
@@ -312,11 +324,11 @@ msgstr "Dashboard content"
 msgid "Chart name"
 msgstr "Chart name"
 
-#: templates/details_dashboard.html:36
+#: templates/details_dashboard.html:38
 msgid "This dashboard is missing chart information."
 msgstr "This dashboard is missing table information."
 
-#: templates/details_database.html:10 templates/details_database.html:39
+#: templates/details_database.html:10 templates/details_database.html:43
 msgid "Database content"
 msgstr "Database content"
 
@@ -324,11 +336,11 @@ msgstr "Database content"
 msgid "Table name"
 msgstr "Table name"
 
-#: templates/details_database.html:40
+#: templates/details_database.html:44
 msgid "This database is missing table information."
 msgstr "This database is missing table information."
 
-#: templates/details_table.html:11 templates/details_table.html:42
+#: templates/details_table.html:11 templates/details_table.html:44
 msgid "Table schema"
 msgstr "Table schema"
 
@@ -340,19 +352,19 @@ msgstr "Type"
 msgid "Is Nullable"
 msgstr "Is nullable"
 
-#: templates/details_table.html:43
+#: templates/details_table.html:45
 msgid "The schema for this table is not available."
 msgstr "The schema for this table is not available."
 
-#: templates/details_table.html:46
+#: templates/details_table.html:48
 msgid "Lineage"
 msgstr "Lineage"
 
-#: templates/details_table.html:48
+#: templates/details_table.html:50
 msgid "See where this data came from and how it is used in other tables."
 msgstr "See where this data came from and how it is used in other tables."
 
-#: templates/details_table.html:52
+#: templates/details_table.html:54
 msgid "View lineage in DataHub (opens in new tab)"
 msgstr "View lineage in DataHub (opens in new tab)"
 
@@ -427,31 +439,27 @@ msgstr "Contact the data owner to request access."
 msgid "Contact channels for questions"
 msgstr "Ask a question"
 
-#: templates/partial/contact_info.html:30
+#: templates/partial/contact_info.html:42
 msgid "Contact the data custodian with questions."
 msgstr ""
 
-#: templates/partial/contact_info.html:32
+#: templates/partial/contact_info.html:44
 msgid "Contact the data owner with questions."
 msgstr "Contact the data owner with questions."
 
-#: templates/partial/contact_info.html:41
+#: templates/partial/contact_info.html:54
 msgid "Data custodian"
 msgstr "Data custodian (technical contact)"
 
-#: templates/partial/contact_info.html:48
+#: templates/partial/contact_info.html:61
 msgid "IAO or Data Owner"
 msgstr "Data owner"
 
-#: templates/partial/contact_info.html:55
 msgid ""
 "Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
-"C06NPM2200N\" class=\"govuk-link\">contact the Data Catalogue team</a> about "
-"this data."
+"C06NPM2200N\" class=\"govuk-link\" rel=\"noreferrer noopener\" "
+"target=\"_blank\">contact the Data Catalogue team</a> about this data."
 msgstr ""
-"Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
-"C06NPM2200N\" class=\"govuk-link\">contact the Data Catalogue team</a> about "
-"this data."
 
 #: templates/partial/contact_team.html:4
 #, python-format

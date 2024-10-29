@@ -13,22 +13,24 @@ def get_notify_api_client() -> NotificationsAPIClient:
     return NotificationsAPIClient(settings.NOTIFY_API_KEY)
 
 
-def send_notifications(issue: Issue) -> None:
+def send_notifications(issue: Issue, send_email_to_reporter: bool) -> None:
     if settings.NOTIFY_ENABLED:
         client = get_notify_api_client()
         # Spawn a thread to process the sending of notifcations and avoid potential delays
         # returning a response to the user.
-        t = threading.Thread(target=send, args=(issue, client))
+        t = threading.Thread(target=send, args=(issue, client, send_email_to_reporter))
         t.start()
 
 
-def send(issue: Issue, client: NotificationsAPIClient) -> None:
+def send(
+    issue: Issue, client: NotificationsAPIClient, send_email_to_reporter: bool
+) -> None:
 
     personalisation = {
         "assetOwner": (
             issue.data_owner_email if issue.data_owner_email else "Data Catalog Team"
         ),
-        "userEmail": issue.user_email,
+        "userEmail": issue.created_by.email if issue.created_by else "",
         "assetName": issue.entity_name,
         "userMessage": issue.additional_info,
         "assetUrl": issue.entity_url,
@@ -47,11 +49,11 @@ def send(issue: Issue, client: NotificationsAPIClient) -> None:
         )
 
     # Notify Sender
-    if issue.user_email:
+    if issue.created_by and send_email_to_reporter:
         notify(
             personalisation=personalisation,
             template_id=settings.NOTIFY_SENDER_TEMPLATE_ID,
-            email_address=issue.user_email,
+            email_address=issue.created_by.email,
             reference=reference,
             client=client,
         )

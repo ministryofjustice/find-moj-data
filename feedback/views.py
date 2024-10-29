@@ -48,10 +48,19 @@ def report_issue_view(request) -> HttpResponse:
             issue.entity_name = request.session.get("entity_name")
             issue.entity_url = request.session.get("entity_url")
             issue.data_owner_email = request.session.get("data_owner_email")
+
+            # in production, there should always be a signed in user,
+            # but this may not be the case in local development/unit tests
+            if not request.user.is_anonymous:
+                issue.created_by = request.user
+
             issue.save()
 
             # Call the send notifications service
-            send_notifications(issue=issue)
+            send_notifications(
+                issue=issue,
+                send_email_to_reporter=form.cleaned_data["send_email_to_reporter"],
+            )
 
             return redirect("feedback:thanks")
 
