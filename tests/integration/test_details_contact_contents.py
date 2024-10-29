@@ -213,7 +213,6 @@ class TestDetailsPageContactDetails:
         mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
-        request_access_metadata = self.details_database_page.contact_channels()
 
         if slack_channel:
             assert self.details_database_page.contact_channels_slack()
