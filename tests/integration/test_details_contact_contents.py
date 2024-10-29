@@ -221,9 +221,9 @@ class TestDetailsPageContactDetails:
         if teams_email:
             assert self.details_database_page.contact_channels_team_email()
 
-        if not slack_channel or teams_channel or team_email:
+        if not slack_channel and not teams_channel and not team_email:
             assert self.details_database_page.contact_channels_data_owner()
-        if not slack_channel or teams_channel or team_email or owner:
+        if not slack_channel and not teams_channel and not team_email and not owner:
             assert self.details_database_page.contact_channels_not_provided()
 
     @pytest.mark.parametrize(
