@@ -215,16 +215,16 @@ class TestDetailsPageContactDetails:
         self.start_on_the_details_page()
 
         if slack_channel:
-            assert self.details_database_page.contact_channels_slack()
+            assert self.selenium.find_element(By.ID, "contact_channels_slack")
         if teams_channel:
-            assert self.details_database_page.contact_channels_ms_teams()
+            assert self.selenium.find_element(By.ID, "contact_channels_ms_teams")
         if teams_email:
-            assert self.details_database_page.contact_channels_team_email()
+            assert self.selenium.find_element(By.ID, "contact_channels_team_email")
 
         if not slack_channel and not teams_channel and not team_email:
-            assert self.details_database_page.contact_channels_data_owner()
+            assert self.selenium.find_element(By.ID, "contact_channels_data_owner")
         if not slack_channel and not teams_channel and not team_email and not owner:
-            assert self.details_database_page.contact_channels_not_provided()
+            assert self.selenium.find_element(By.ID, "contact_channels_not_provided")
 
     @pytest.mark.parametrize(
         "owner, expected_text",
