@@ -99,6 +99,21 @@ class DetailsPage(Page):
     def request_access(self):
         return self.selenium.find_element(By.ID, "request_access")
 
+    def contact_channels_slack(self):
+        return self.selenium.find_element(By.ID, "contact_channels_slack")
+
+    def contact_channels_ms_teams(self):
+        return self.selenium.find_element(By.ID, "contact_channels_ms_teams")
+
+    def contact_channels_team_email(self):
+        return self.selenium.find_element(By.ID, "contact_channels_team_email")
+
+    def contact_channels_data_owner(self):
+        return self.selenium.find_element(By.ID, "contact_channels_data_owner")
+
+    def contact_channels_not_provided(self):
+        return self.selenium.find_element(By.ID, "contact_channels_not_provided")
+
     def data_owner(self):
         return self.selenium.find_element(By.ID, "data_owner")
 
