@@ -32,7 +32,7 @@ pre-commit = "^4.0.1"
 selenium = "~=4.25.0"
 flake8 = ">=6.1.0"
 pytest-django = "^4.9.0"
-pytest-cov = "^5.0.0"
+pytest-cov = "^6.0.0"
 faker = "^30.8.1"
 isort = "^5.13.2"
 
