@@ -5,11 +5,11 @@ import pytest
 from data_platform_catalogue.client.graphql_helpers import (
     DATA_CUSTODIAN,
     _make_user_email_from_urn,
+    _parse_owners_by_type,
     parse_columns,
     parse_created_and_modified,
+    parse_data_owner,
     parse_glossary_terms,
-    parse_owner,
-    parse_owners,
     parse_properties,
     parse_relations,
     parse_subtypes,
@@ -551,26 +551,6 @@ def test_parse_missing_subtypes():
     assert result == []
 
 
-def test_parse_owner_of_wrong_type():
-    entity = {
-        "ownership": {
-            "owners": [
-                {
-                    "owner": {"urn": "urn:li:corpuser:joe.bloggs", "properties": None},
-                    "ownershipType": {
-                        "urn": "urn:li:ownershipType:__system__dataowner",
-                        "type": "CUSTOM_OWNERSHIP_TYPE",
-                        "info": None,
-                    },
-                }
-            ]
-        }
-    }
-
-    owner = parse_owner(entity, ownership_type_urn="urn:li:ownershipType:chiefMouser")
-    assert owner == OwnerRef(display_name="", email="", urn="")
-
-
 def test_parse_owner_without_account():
     entity = {
         "ownership": {
@@ -586,7 +566,7 @@ def test_parse_owner_without_account():
             ]
         }
     }
-    owner = parse_owner(entity)
+    owner = parse_data_owner(entity)
     assert owner.email == "joe.bloggs@justice.gov.uk"
 
 
@@ -611,7 +591,7 @@ def test_parse_owner_with_account():
             ]
         }
     }
-    owner = parse_owner(entity)
+    owner = parse_data_owner(entity)
     assert owner.email == "joeseph.bloggerson-bloggs@justice.gov.uk"
 
 
@@ -642,7 +622,7 @@ def test_parse_owners():
             ]
         }
     }
-    owners = parse_owners(entity, ownership_type_urn=DATA_CUSTODIAN)
+    owners = _parse_owners_by_type(entity, ownership_type_urn=DATA_CUSTODIAN)
     assert owners == [
         OwnerRef(
             urn="urn:li:corpuser:word.smith",

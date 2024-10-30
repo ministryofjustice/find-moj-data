@@ -9,11 +9,11 @@ from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
     parse_created_and_modified,
+    parse_data_owner,
     parse_domain,
     parse_glossary_terms,
     parse_last_modified,
     parse_names,
-    parse_owner,
     parse_properties,
     parse_tags,
 )
@@ -274,7 +274,7 @@ class SearchClient:
         """
         Map a dataset entity to a SearchResult
         """
-        owner = parse_owner(entity)
+        owner = parse_data_owner(entity)
         properties, custom_properties = parse_properties(entity)
         tags = parse_tags(entity)
         terms = parse_glossary_terms(entity)
@@ -425,7 +425,7 @@ class SearchClient:
         last_modified = parse_last_modified(entity)
         properties, custom_properties = parse_properties(entity)
         domain = parse_domain(entity)
-        owner = parse_owner(entity)
+        owner = parse_data_owner(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
 
         metadata = {

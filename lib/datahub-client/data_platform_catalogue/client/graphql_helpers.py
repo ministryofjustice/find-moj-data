@@ -39,7 +39,7 @@ def get_graphql_query(graphql_query_file_name: str) -> str:
     return query_text
 
 
-def _parse_owner(owner: dict):
+def _parse_owner_object(owner: dict):
     properties = owner.get("properties") or {}
     display_name = (
         properties.get("displayName")
@@ -56,9 +56,8 @@ def _parse_owner(owner: dict):
     )
 
 
-def parse_owner(
+def parse_data_owner(
     entity: dict[str, Any],
-    ownership_type_urn: str = DATA_OWNER,
 ) -> OwnerRef:
     """
     Parse ownership information, if it is set, and return the first owner of
@@ -69,16 +68,16 @@ def parse_owner(
     owners = [
         i["owner"]
         for i in ownership.get("owners", [])
-        if i["ownershipType"]["urn"] == ownership_type_urn
+        if i["ownershipType"]["urn"] == DATA_OWNER
     ]
 
     if owners:
-        return _parse_owner(owners[0])
+        return _parse_owner_object(owners[0])
     else:
         return OwnerRef(display_name="", email="", urn="")
 
 
-def parse_owners(
+def _parse_owners_by_type(
     entity: dict[str, Any],
     ownership_type_urn: str,
 ) -> list[OwnerRef]:
@@ -94,7 +93,7 @@ def parse_owners(
         if i["ownershipType"]["urn"] == ownership_type_urn
     ]
 
-    return [_parse_owner(owner) for owner in owners]
+    return [_parse_owner_object(owner) for owner in owners]
 
 
 def parse_custodians(entity: dict[str, Any]) -> list[OwnerRef]:
@@ -102,7 +101,7 @@ def parse_custodians(entity: dict[str, Any]) -> list[OwnerRef]:
     Parse ownership information, if it is set, and return a list of data custodians.
     If no owners exist with a matching ownership type, the list will be empty.
     """
-    return parse_owners(entity, DATA_CUSTODIAN)
+    return _parse_owners_by_type(entity, DATA_CUSTODIAN)
 
 
 def parse_stewards(entity: dict[str, Any]) -> list[OwnerRef]:
@@ -110,7 +109,7 @@ def parse_stewards(entity: dict[str, Any]) -> list[OwnerRef]:
     Parse ownership information, if it is set, and return a list of data stewards.
     If no owners exist with a matching ownership type, the list will be empty.
     """
-    return parse_owners(entity, DATA_STEWARD)
+    return _parse_owners_by_type(entity, DATA_STEWARD)
 
 
 def parse_last_modified(entity: dict[str, Any]) -> datetime | None:

@@ -42,10 +42,10 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_columns,
     parse_created_and_modified,
     parse_custodians,
+    parse_data_owner,
     parse_domain,
     parse_glossary_terms,
     parse_names,
-    parse_owner,
     parse_properties,
     parse_relations,
     parse_stewards,
@@ -268,7 +268,7 @@ class DataHubCatalogueClient:
             properties, custom_properties = parse_properties(response)
             columns = parse_columns(response)
             domain = parse_domain(response)
-            owner = parse_owner(response)
+            owner = parse_data_owner(response)
             stewards = parse_stewards(response)
             custodians = parse_custodians(response)
             tags = parse_tags(response)
@@ -323,7 +323,7 @@ class DataHubCatalogueClient:
             platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
             domain = parse_domain(response)
-            owner = parse_owner(response)
+            owner = parse_data_owner(response)
             stewards = parse_stewards(response)
             custodians = parse_custodians(response)
             tags = parse_tags(response)
@@ -363,7 +363,7 @@ class DataHubCatalogueClient:
             platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
             domain = parse_domain(response)
-            owner = parse_owner(response)
+            owner = parse_data_owner(response)
             stewards = parse_stewards(response)
             custodians = parse_custodians(response)
             tags = parse_tags(response)
@@ -406,7 +406,7 @@ class DataHubCatalogueClient:
             platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
             domain = parse_domain(response)
-            owner = parse_owner(response)
+            owner = parse_data_owner(response)
             stewards = parse_stewards(response)
             custodians = parse_custodians(response)
             tags = parse_tags(response)
