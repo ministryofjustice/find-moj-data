@@ -142,19 +142,39 @@ class TestDetailsPageContactDetails:
         assert request_access_metadata.text == expected_text
 
     @pytest.mark.parametrize(
-        "slack_channel, owner, expected_text",
+        "slack_channel, teams_channel, team_email, owner, expected_text",
         [
             (
                 "#contact-us",
+                "",
+                "",
                 "meta.data@justice.gov.uk",
-                "Slack channel: #contact-us (opens in new tab)",
+                "Slack (opens in new tab)",
             ),
             (
+                "",
+                "Contact us on Teams",
+                "",
+                "meta.data@justice.gov.uk",
+                "MS Teams (opens in new tab)",
+            ),
+            (
+                "",
+                "",
+                "some-team-email@justice.gov.uk",
+                "meta.data@justice.gov.uk",
+                "some-team-email@justice.gov.uk",
+            ),
+            (
+                "",
+                "",
                 "",
                 "meta.data@justice.gov.uk",
                 "Contact the data owner with questions.",
             ),
             (
+                "",
+                "",
                 "",
                 "",
                 "Not provided.",
@@ -166,6 +186,8 @@ class TestDetailsPageContactDetails:
         database,
         mock_catalogue,
         slack_channel,
+        teams_channel,
+        team_email,
         owner,
         expected_text,
     ):
@@ -178,13 +200,31 @@ class TestDetailsPageContactDetails:
                 dc_slack_channel_name=slack_channel,
                 dc_slack_channel_url="http://bla.com",
             )
+        if teams_channel:
+            database.custom_properties.further_information = FurtherInformation(
+                dc_teams_channel_name=teams_channel,
+                dc_teams_channel_url="http://bla.com",
+            )
+        if team_email:
+            database.custom_properties.further_information = FurtherInformation(
+                dc_team_email=team_email,
+            )
 
         mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
-        request_access_metadata = self.details_database_page.contact_channels()
 
-        assert request_access_metadata.text == expected_text
+        if slack_channel:
+            assert self.details_database_page.contact_channels_slack()
+        if teams_channel:
+            assert self.details_database_page.contact_channels_ms_teams()
+        if team_email:
+            assert self.details_database_page.contact_channels_team_email()
+
+        if not slack_channel and not teams_channel and not team_email and owner:
+            assert self.details_database_page.contact_channels_data_owner()
+        if not slack_channel and not teams_channel and not team_email and not owner:
+            assert self.details_database_page.contact_channels_not_provided()
 
     @pytest.mark.parametrize(
         "owner, expected_text",
