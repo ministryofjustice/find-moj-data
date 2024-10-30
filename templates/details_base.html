@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-  <div class="govuk-breadcrumbs">
+  <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
         <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">{% translate "Search" %}</a>
