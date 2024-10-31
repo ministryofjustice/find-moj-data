@@ -114,7 +114,7 @@ class DetailsPage(Page):
     def contact_channels_not_provided(self):
         return self.selenium.find_element(By.ID, "contact_channels_not_provided")
 
-    def data_owner(self):
+    def data_owner_or_custodian(self):
         return self.selenium.find_element(By.ID, "data_owner")
 
 
@@ -482,6 +482,9 @@ def generate_database_metadata(
             ),
             data_stewards=[
                 OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+            data_custodians=[
+                OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
             ],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],

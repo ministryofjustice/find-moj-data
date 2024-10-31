@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
+
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -661,7 +662,10 @@ def test_result_with_owner(mock_graph, searcher):
                                             "fullName": "Shannon Lovett",
                                             "email": "shannon@longtail.com",
                                         },
-                                    }
+                                    },
+                                    "ownershipType": {
+                                        "urn": "urn:li:ownershipType:__system__dataowner"
+                                    },
                                 }
                             ]
                         },
@@ -1126,7 +1130,10 @@ def test_search_for_container(mock_graph, searcher):
                                             "fullName": "Shannon Lovett",
                                             "email": "shannon@longtail.com",
                                         },
-                                    }
+                                    },
+                                    "ownershipType": {
+                                        "urn": "urn:li:ownershipType:__system__dataowner"
+                                    },
                                 }
                             ]
                         },

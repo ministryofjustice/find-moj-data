@@ -9,7 +9,9 @@
       {% else %}
         {{ access_requirements }}
       {% endif %}
-    {% elif data_owner_email %}
+    {% elif governance.data_custodians %}
+      {% translate "Please contact the data custodian for access information." %}
+    {% elif governance.data_owner.email %}
       {% translate "Please contact the data owner for access information." %}
     {% else %}
       {% translate "Not provided" %}
@@ -34,20 +36,32 @@
     {% if further_information.dc_team_email %}
       <li id="contact_channels_team_email" >{{ further_information.dc_team_email|urlize }}</li>
     {% endif %}
-    {% if data_owner_email and not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email %}
+    
+    {% if not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email %}
+      {% if governance.data_custodians %}
+      <li id="contact_channels_data_owner">{% translate "Contact the data custodian with questions." %}</li>
+      {% elif governance.data_owner.email %}
       <li id="contact_channels_data_owner">{% translate "Contact the data owner with questions." %}</li>
-    {% endif %}
-    {% if not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email and not data_owner_email%}
-     <li id="contact_channels_not_provided">{% translate "Not provided" %}</li>
+      {% else %}
+      <li id="contact_channels_not_provided">{% translate "Not provided" %}</li>
+      {% endif %}
     {% endif %}
   </ul>
 </div>
 
+{% if governance.data_custodians and governance.data_custodians.0.email %}
+<div class="govuk-body">
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Data custodian" %}</h2>
+  <p id="data_owner" class="govuk-body">
+      {{ governance.data_custodians.0.email|urlize }}
+  </p>
+</div>
+{% else %}
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "IAO or Data Owner" %}</h2>
   <p id="data_owner" class="govuk-body">
-    {% if data_owner_email %}
-      {{ data_owner_email|urlize }}
+    {% if governance.data_owner.email %}
+      {{ governance.data_owner.email|urlize }}
     {% elif platform.urn == 'performance-hub' %}
       No owner is listed as this data is undergoing a review of ownership.
     {% else %}
@@ -55,6 +69,7 @@
     {% endif %}
   </p>
 </div>
+{% endif %}
 
 {% if NOTIFY_ENABLED and entity_name %}
   <div class="govuk-body">

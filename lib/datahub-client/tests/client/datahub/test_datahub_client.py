@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from data_platform_catalogue.client.datahub_client import (
     DataHubCatalogueClient,
     InvalidDomain,
@@ -393,7 +394,7 @@ class TestCatalogueClientWithDatahub:
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
-                data_stewards=[OwnerRef(display_name="", email="", urn="")],
+                data_stewards=[],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
             last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
@@ -460,7 +461,7 @@ class TestCatalogueClientWithDatahub:
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
-                data_stewards=[OwnerRef(display_name="", email="", urn="")],
+                data_stewards=[],
             ),
             tags=[],
             last_modified=None,
@@ -519,11 +520,7 @@ class TestCatalogueClientWithDatahub:
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
-                data_stewards=[
-                    OwnerRef(
-                        display_name="", email="Contact email for the user", urn=""
-                    )
-                ],
+                data_stewards=[],
             ),
             tags=[],
             last_modified=None,
