@@ -5,7 +5,9 @@ query getChartDetails($urn: String!) {
     platform {
       name
     }
-    relationships(input: {types: ["Contains"], direction:INCOMING start: 0, count: 10 }) {
+    relationships(
+      input: { types: ["Contains"], direction: INCOMING, start: 0, count: 10 }
+    ) {
       total
       relationships {
         entity {
@@ -18,7 +20,9 @@ query getChartDetails($urn: String!) {
             }
             tags {
               tags {
-                tag{urn}
+                tag {
+                  urn
+                }
               }
             }
             subTypes {
@@ -50,24 +54,7 @@ query getChartDetails($urn: String!) {
       }
     }
     ownership {
-      owners {
-        owner {
-          ... on CorpUser {
-            urn
-            properties {
-              fullName
-              email
-            }
-          }
-          ... on CorpGroup {
-            urn
-            properties {
-              displayName
-              email
-            }
-          }
-        }
-      }
+      ...ownershipFields
     }
     properties {
       name
@@ -81,6 +68,34 @@ query getChartDetails($urn: String!) {
       lastModified {
         time
         actor
+      }
+    }
+  }
+}
+
+fragment ownershipFields on Ownership {
+  owners {
+    owner {
+      ... on CorpUser {
+        urn
+        properties {
+          email
+          fullName
+        }
+      }
+      ... on CorpGroup {
+        urn
+        properties {
+          displayName
+          email
+        }
+      }
+    }
+    ownershipType {
+      urn
+      type
+      info {
+        name
       }
     }
   }

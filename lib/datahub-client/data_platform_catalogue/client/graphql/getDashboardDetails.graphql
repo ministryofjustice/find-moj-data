@@ -7,6 +7,9 @@ query getDashboard($urn: String!) {
       urn
       name
     }
+    ownership {
+      ...ownershipFields
+    }
     properties {
       name
       description
@@ -19,7 +22,9 @@ query getDashboard($urn: String!) {
     editableProperties {
       description
     }
-    relationships(input: {types: ["Contains"], direction:OUTGOING start: 0, count: 500 }) {
+    relationships(
+      input: { types: ["Contains"], direction: OUTGOING, start: 0, count: 500 }
+    ) {
       total
       relationships {
         entity {
@@ -32,11 +37,41 @@ query getDashboard($urn: String!) {
             }
             tags {
               tags {
-                tag{urn}
+                tag {
+                  urn
+                }
               }
             }
           }
         }
+      }
+    }
+  }
+}
+
+fragment ownershipFields on Ownership {
+  owners {
+    owner {
+      ... on CorpUser {
+        urn
+        properties {
+          email
+          fullName
+        }
+      }
+      ... on CorpGroup {
+        urn
+        properties {
+          displayName
+          email
+        }
+      }
+    }
+    ownershipType {
+      urn
+      type
+      info {
+        name
       }
     }
   }

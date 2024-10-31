@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-22 15:17+0100\n"
+"POT-Creation-Date: 2024-10-28 12:09+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,27 +32,27 @@ msgstr "There is a problem with this service"
 msgid "Page not found"
 msgstr "Page not found"
 
-#: feedback/models.py:19
+#: feedback/models.py:17
 msgid "Satisfaction survey"
 msgstr "Satisfaction survey"
 
-#: feedback/models.py:25
+#: feedback/models.py:23
 msgid "How can we improve this service?"
 msgstr "How can we improve this service?"
 
-#: feedback/models.py:45
+#: feedback/models.py:40
 msgid "What is wrong with this page?"
 msgstr ""
 
-#: feedback/models.py:50
+#: feedback/models.py:45
 msgid "Can you provide more detail?"
 msgstr ""
 
-#: feedback/templates/feedback.html:18 feedback/templates/report_issue.html:23
+#: feedback/templates/feedback.html:18 feedback/templates/report_issue.html:17
 msgid "There is a problem"
 msgstr "There is a problem"
 
-#: feedback/templates/feedback.html:21 feedback/templates/report_issue.html:26
+#: feedback/templates/feedback.html:21 feedback/templates/report_issue.html:20
 msgid "Make sure you have filled in all the fields."
 msgstr "Make sure you have filled in all the fields."
 
@@ -64,11 +64,11 @@ msgstr ""
 "Do not include personal or financial information, like your National "
 "Insurance number or credit card details."
 
-#: feedback/templates/report_issue.html:64
+#: feedback/templates/report_issue.html:58
 msgid "Please provide as much information as possible about the issue."
 msgstr ""
 
-#: feedback/templates/thanks.html:9 feedback/views.py:38
+#: feedback/templates/thanks.html:9 feedback/views.py:39
 msgid "Thank you for your feedback"
 msgstr "Thank you for your feedback"
 
@@ -76,17 +76,13 @@ msgstr "Thank you for your feedback"
 msgid "Your feedback will help us improve the service."
 msgstr "Your feedback will help us improve the service."
 
-#: feedback/views.py:28
+#: feedback/views.py:29
 msgid "Give feedback on Find MOJ data"
 msgstr "Give feedback on Find MOJ data"
 
-#: feedback/views.py:64
-msgid "Report an issue with {request.session.get('entity_name')}"
-msgstr ""
-
-#: feedback/views.py:83
-#, python-brace-format
-msgid "Report an issue with {entity_name}"
+#: feedback/views.py:64 feedback/views.py:83
+#, python-format
+msgid "Report an issue with %s"
 msgstr ""
 
 #: home/forms/search.py:16
@@ -106,11 +102,11 @@ msgstr "Subject area"
 msgid "filter-refresh"
 msgstr "selection will trigger the filter and refresh the search results"
 
-#: home/service/details.py:65 templates/partial/search_result.html:20
+#: home/service/details.py:72 templates/partial/search_result.html:20
 msgid "Database"
 msgstr "Database"
 
-#: home/service/details.py:148 templates/partial/search_result.html:24
+#: home/service/details.py:155 templates/partial/search_result.html:24
 msgid "Chart"
 msgstr "Chart"
 
@@ -289,8 +285,8 @@ msgstr "Last updated:"
 msgid "Domain:"
 msgstr "Subject area:"
 
-#: templates/details_base.html:80 templates/partial/contact_info.html:15
-#: templates/partial/contact_info.html:30
+#: templates/details_base.html:80 templates/partial/contact_info.html:17
+#: templates/partial/contact_info.html:34
 #: templates/partial/search_result.html:40
 msgid "Not provided"
 msgstr "Not provided."
@@ -383,15 +379,15 @@ msgstr ""
 "label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-moj-"
 "data.service.justice.gov.uk/\">Learn more</a>"
 
-#: templates/home.html:43
+#: templates/home.html:44
 msgid "Browse by domain"
 msgstr "Browse by subject area"
 
-#: templates/home.html:51
+#: templates/home.html:52
 msgid "Help us grow"
 msgstr "Help us grow"
 
-#: templates/home.html:52
+#: templates/home.html:53
 msgid ""
 "Find MoJ data is a new service with a growing catalogue of data. You can "
 "help us improve the service by:"
@@ -399,15 +395,15 @@ msgstr ""
 "Find MoJ data is a new service with a growing catalogue of data. You can "
 "help us improve the service by:"
 
-#: templates/home.html:54
+#: templates/home.html:55
 msgid "adding a new data source"
 msgstr "adding a new data source"
 
-#: templates/home.html:55
+#: templates/home.html:56
 msgid "telling us about data you would like to see"
 msgstr "telling us about data you would like to see"
 
-#: templates/home.html:56
+#: templates/home.html:57
 msgid "giving us feedback"
 msgstr "giving us feedback"
 
@@ -420,22 +416,34 @@ msgid "Click link for access information (opens in new tab)"
 msgstr "Select this link for access information (opens in new tab)"
 
 #: templates/partial/contact_info.html:13
+msgid "Please contact the data custodian for access information."
+msgstr "Contact the data custodian to request access."
+
+#: templates/partial/contact_info.html:15
 msgid "Please contact the data owner for access information."
 msgstr "Contact the data owner to request access."
 
-#: templates/partial/contact_info.html:22
+#: templates/partial/contact_info.html:24
 msgid "Contact channels for questions"
 msgstr "Ask a question"
 
-#: templates/partial/contact_info.html:28
+#: templates/partial/contact_info.html:30
+msgid "Contact the data custodian with questions."
+msgstr ""
+
+#: templates/partial/contact_info.html:32
 msgid "Contact the data owner with questions."
 msgstr "Contact the data owner with questions."
 
-#: templates/partial/contact_info.html:36
+#: templates/partial/contact_info.html:41
+msgid "Data custodian"
+msgstr "Data custodian (technical contact)"
+
+#: templates/partial/contact_info.html:48
 msgid "IAO or Data Owner"
 msgstr "Data owner"
 
-#: templates/partial/contact_info.html:43
+#: templates/partial/contact_info.html:55
 msgid ""
 "Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
 "C06NPM2200N\" class=\"govuk-link\">contact the Data Catalogue team</a> about "
@@ -508,7 +516,7 @@ msgid ""
 "For example: <strong>prisons | probation</strong> matches data mentioning "
 "\"prisons\" OR \"probation\".</p>"
 msgstr ""
-"<p>Try including less words in your search query.</p> <p>If you want to "
+"<p>Try including fewer words in your search query.</p> <p>If you want to "
 "include results for multiple things, separate words with pipe characters. "
 "For example: <strong>prisons | probation</strong> matches data mentioning "
 "\"prisons\" OR \"probation\".</p>"
@@ -557,15 +565,15 @@ msgstr "Remove this filter"
 msgid "Sort results"
 msgstr "Sort results"
 
-#: templates/search.html:15
+#: templates/search.html:16
 msgid "Search input"
 msgstr "Search input"
 
-#: templates/search.html:28
+#: templates/search.html:29
 msgid "Search query tips"
 msgstr "Search tips"
 
-#: templates/search.html:33
+#: templates/search.html:34
 #, python-format
 msgid ""
 "<ul class=\"govuk-list govuk-list--bullet\"> <li><p>Use multiple words to "
@@ -595,7 +603,7 @@ msgstr ""
 "li>            </ul>            <p><a href=\"%(more_examples_href)s\">More "
 "advanced search options</a></p>"
 
-#: templates/search.html:50
+#: templates/search.html:51
 msgid "Some results were malformed and are not shown"
 msgstr "Some results were malformed and are not shown"
 

@@ -1,10 +1,14 @@
 from datetime import datetime, timezone
 
 import pytest
+
 from data_platform_catalogue.client.graphql_helpers import (
+    DATA_CUSTODIAN,
     _make_user_email_from_urn,
+    _parse_owners_by_type,
     parse_columns,
     parse_created_and_modified,
+    parse_data_owner,
     parse_glossary_terms,
     parse_properties,
     parse_relations,
@@ -21,6 +25,7 @@ from data_platform_catalogue.entities import (
     EntitySummary,
     FurtherInformation,
     GlossaryTermRef,
+    OwnerRef,
     RelationshipType,
     TagRef,
     UsageRestrictions,
@@ -544,3 +549,89 @@ def test_parse_missing_subtypes():
     result = parse_subtypes({"subTypes": None})
 
     assert result == []
+
+
+def test_parse_owner_without_account():
+    entity = {
+        "ownership": {
+            "owners": [
+                {
+                    "owner": {"urn": "urn:li:corpuser:joe.bloggs", "properties": None},
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:__system__dataowner",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                        "info": None,
+                    },
+                }
+            ]
+        }
+    }
+    owner = parse_data_owner(entity)
+    assert owner.email == "joe.bloggs@justice.gov.uk"
+
+
+def test_parse_owner_with_account():
+    entity = {
+        "ownership": {
+            "owners": [
+                {
+                    "owner": {
+                        "urn": "urn:li:corpuser:joe.bloggs",
+                        "properties": {
+                            "fullName": "Joe Bloggs",
+                            "email": "joeseph.bloggerson-bloggs@justice.gov.uk",
+                        },
+                    },
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:__system__dataowner",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                        "info": None,
+                    },
+                }
+            ]
+        }
+    }
+    owner = parse_data_owner(entity)
+    assert owner.email == "joeseph.bloggerson-bloggs@justice.gov.uk"
+
+
+def test_parse_owners():
+    entity = {
+        "ownership": {
+            "owners": [
+                {
+                    "owner": {
+                        "urn": "urn:li:corpuser:word.smith",
+                        "properties": None,
+                    },
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:data_custodian",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                    },
+                },
+                {
+                    "owner": {
+                        "urn": "urn:li:corpuser:mo.numbers",
+                        "properties": None,
+                    },
+                    "ownershipType": {
+                        "urn": "urn:li:ownershipType:data_custodian",
+                        "type": "CUSTOM_OWNERSHIP_TYPE",
+                    },
+                },
+            ]
+        }
+    }
+    owners = _parse_owners_by_type(entity, ownership_type_urn=DATA_CUSTODIAN)
+    assert owners == [
+        OwnerRef(
+            urn="urn:li:corpuser:word.smith",
+            email="word.smith@justice.gov.uk",
+            display_name="",
+        ),
+        OwnerRef(
+            urn="urn:li:corpuser:mo.numbers",
+            email="mo.numbers@justice.gov.uk",
+            display_name="",
+        ),
+    ]

@@ -9,7 +9,9 @@
       {% else %}
         {{ access_requirements }}
       {% endif %}
-    {% elif data_owner_email %}
+    {% elif governance.data_custodians %}
+      {% translate "Please contact the data custodian for access information." %}
+    {% elif governance.data_owner.email %}
       {% translate "Please contact the data owner for access information." %}
     {% else %}
       {% translate "Not provided" %}
@@ -20,30 +22,54 @@
 
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for questions" %}</h2>
-  <p id="contact_channels" class="govuk-body">
-    {% if slack_channel.dc_slack_channel_url %}
-      <!-- This should become a list of populated contact channels -->
-      Slack channel: <a href="{{ slack_channel.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ slack_channel.dc_slack_channel_name }} (opens in new tab)</a>
-    {% elif data_owner_email %}
-      {% translate "Contact the data owner with questions." %}
-    {% else %}
-      {% translate 'Not provided' %}
+  <ul id="contact_channels" class="govuk-list">
+    {% if further_information.dc_slack_channel_url %}
+      <li id="contact_channels_slack">
+      <a href="{{ further_information.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Slack (opens in new tab)</a>
+      </li>
     {% endif %}
-  </p>
+    {% if further_information.dc_teams_channel_url %}
+      <li id="contact_channels_ms_teams">
+      <a href="{{ further_information.dc_teams_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">MS Teams (opens in new tab)</a>
+      </li>
+    {% endif %}
+    {% if further_information.dc_team_email %}
+      <li id="contact_channels_team_email" >{{ further_information.dc_team_email|urlize }}</li>
+    {% endif %}
+    
+    {% if not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email %}
+      {% if governance.data_custodians %}
+      <li id="contact_channels_data_owner">{% translate "Contact the data custodian with questions." %}</li>
+      {% elif governance.data_owner.email %}
+      <li id="contact_channels_data_owner">{% translate "Contact the data owner with questions." %}</li>
+      {% else %}
+      <li id="contact_channels_not_provided">{% translate "Not provided" %}</li>
+      {% endif %}
+    {% endif %}
+  </ul>
 </div>
 
+{% if governance.data_custodians and governance.data_custodians.0.email %}
+<div class="govuk-body">
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Data custodian" %}</h2>
+  <p id="data_owner" class="govuk-body">
+      {{ governance.data_custodians.0.email|urlize }}
+  </p>
+</div>
+{% else %}
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "IAO or Data Owner" %}</h2>
   <p id="data_owner" class="govuk-body">
-    {% if data_owner_email %}
-      {{ data_owner_email|urlize }}
+    {% if governance.data_owner.email %}
+      {{ governance.data_owner.email|urlize }}
     {% elif platform.urn == 'performance-hub' %}
       No owner is listed as this data is undergoing a review of ownership.
     {% else %}
-      {% blocktranslate %}Not provided - <a href="https://moj.enterprise.slack.com/archives/C06NPM2200N" class="govuk-link">contact the Data Catalogue team</a> about this data.{% endblocktranslate %}
+      {% blocktranslate %}Not provided - <a href="https://moj.enterprise.slack.com/archives/C06NPM2200N" class="govuk-link" rel="noreferrer noopener" target="_blank">contact the Data Catalogue team</a> about this data.{% endblocktranslate %}
     {% endif %}
   </p>
 </div>
+{% endif %}
 
 {% if NOTIFY_ENABLED and entity_name %}
   <div class="govuk-body">

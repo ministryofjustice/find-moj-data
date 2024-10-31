@@ -2,15 +2,18 @@ import json
 import logging
 from typing import Any, Sequence, Tuple
 
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
     parse_created_and_modified,
+    parse_data_owner,
     parse_domain,
     parse_glossary_terms,
     parse_last_modified,
     parse_names,
-    parse_owner,
     parse_properties,
     parse_tags,
 )
@@ -25,8 +28,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +137,7 @@ class SearchClient:
                 else:
                     raise Exception
             except Exception:
-                logger.warn(f"Parsing for result {entity_urn} failed")
+                logger.exception(f"Parsing for result {entity_urn} failed")
                 malformed_result_urns.append(entity_urn)
 
         return page_results, malformed_result_urns
@@ -273,7 +274,7 @@ class SearchClient:
         """
         Map a dataset entity to a SearchResult
         """
-        owner = parse_owner(entity)
+        owner = parse_data_owner(entity)
         properties, custom_properties = parse_properties(entity)
         tags = parse_tags(entity)
         terms = parse_glossary_terms(entity)
@@ -424,7 +425,7 @@ class SearchClient:
         last_modified = parse_last_modified(entity)
         properties, custom_properties = parse_properties(entity)
         domain = parse_domain(entity)
-        owner = parse_owner(entity)
+        owner = parse_data_owner(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
 
         metadata = {

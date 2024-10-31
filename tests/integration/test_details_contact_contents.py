@@ -56,8 +56,8 @@ class TestDetailsPageContactDetails:
                 "Select this link for access information (opens in new tab)",
             ),
             (
-                "To access these data you need to seek permission from the data owner by email",
-                "To access these data you need to seek permission from the data owner by email",
+                "To access these data you need to seek permission from the data custodian by email",
+                "To access these data you need to seek permission from the data custodian by email",
             ),
         ],
     )
@@ -83,7 +83,7 @@ class TestDetailsPageContactDetails:
         assert request_access_metadata.text == expected_text
 
     @pytest.mark.parametrize(
-        "access_reqs, slack_channel, owner, expected_text",
+        "access_reqs, slack_channel, custodian, expected_text",
         [
             (
                 "Some contact info",
@@ -95,13 +95,13 @@ class TestDetailsPageContactDetails:
                 "",
                 "#contact_us",
                 "meta.data@justice.gov.uk",
-                "Contact the data owner to request access.",
+                "Contact the data custodian to request access.",
             ),
             (
                 "",
                 "",
                 "meta.data@justice.gov.uk",
-                "Contact the data owner to request access.",
+                "Contact the data custodian to request access.",
             ),
             (
                 "",
@@ -117,17 +117,20 @@ class TestDetailsPageContactDetails:
         mock_catalogue,
         access_reqs,
         slack_channel,
-        owner,
+        custodian,
         expected_text,
     ):
         if access_reqs:
             database.custom_properties.access_information = AccessInformation(
                 dc_access_requirements=access_reqs
             )
-        if owner:
-            database.governance.data_owner = OwnerRef(
-                display_name=owner, email=owner, urn="urn:bla"
-            )
+        if custodian:
+            database.governance.data_custodians = [
+                OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")
+            ]
+        else:
+            database.governance.data_custodians = []
+
         if slack_channel:
             database.custom_properties.further_information = FurtherInformation(
                 dc_slack_channel_name=slack_channel,
@@ -142,19 +145,39 @@ class TestDetailsPageContactDetails:
         assert request_access_metadata.text == expected_text
 
     @pytest.mark.parametrize(
-        "slack_channel, owner, expected_text",
+        "slack_channel, teams_channel, team_email, custodian, expected_text",
         [
             (
                 "#contact-us",
+                "",
+                "",
                 "meta.data@justice.gov.uk",
-                "Slack channel: #contact-us (opens in new tab)",
+                "Slack (opens in new tab)",
             ),
             (
                 "",
+                "Contact us on Teams",
+                "",
                 "meta.data@justice.gov.uk",
-                "Contact the data owner with questions.",
+                "MS Teams (opens in new tab)",
             ),
             (
+                "",
+                "",
+                "some-team-email@justice.gov.uk",
+                "meta.data@justice.gov.uk",
+                "some-team-email@justice.gov.uk",
+            ),
+            (
+                "",
+                "",
+                "",
+                "meta.data@justice.gov.uk",
+                "Contact the data custodian with questions.",
+            ),
+            (
+                "",
+                "",
                 "",
                 "",
                 "Not provided.",
@@ -166,28 +189,51 @@ class TestDetailsPageContactDetails:
         database,
         mock_catalogue,
         slack_channel,
-        owner,
+        teams_channel,
+        team_email,
+        custodian,
         expected_text,
     ):
-        if owner:
-            database.governance.data_owner = OwnerRef(
-                display_name=owner, email=owner, urn="urn:bla"
-            )
+        if custodian:
+            database.governance.data_custodians = [
+                OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")
+            ]
+        else:
+            database.governance.data_custodians = []
+
         if slack_channel:
             database.custom_properties.further_information = FurtherInformation(
                 dc_slack_channel_name=slack_channel,
                 dc_slack_channel_url="http://bla.com",
             )
+        if teams_channel:
+            database.custom_properties.further_information = FurtherInformation(
+                dc_teams_channel_name=teams_channel,
+                dc_teams_channel_url="http://bla.com",
+            )
+        if team_email:
+            database.custom_properties.further_information = FurtherInformation(
+                dc_team_email=team_email,
+            )
 
         mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
-        request_access_metadata = self.details_database_page.contact_channels()
 
-        assert request_access_metadata.text == expected_text
+        if slack_channel:
+            assert self.details_database_page.contact_channels_slack()
+        if teams_channel:
+            assert self.details_database_page.contact_channels_ms_teams()
+        if team_email:
+            assert self.details_database_page.contact_channels_team_email()
+
+        if not slack_channel and not teams_channel and not team_email and custodian:
+            assert self.details_database_page.contact_channels_data_owner()
+        if not slack_channel and not teams_channel and not team_email and not custodian:
+            assert self.details_database_page.contact_channels_not_provided()
 
     @pytest.mark.parametrize(
-        "owner, expected_text",
+        "custodian, expected_text",
         [
             (
                 "meta.data@justice.gov.uk",
@@ -203,17 +249,19 @@ class TestDetailsPageContactDetails:
         self,
         database,
         mock_catalogue,
-        owner,
+        custodian,
         expected_text,
     ):
-        if owner:
-            database.governance.data_owner = OwnerRef(
-                display_name=owner, email=owner, urn="urn:bla"
-            )
+        if custodian:
+            database.governance.data_custodians = [
+                OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")
+            ]
+        else:
+            database.governance.data_custodians = []
 
         mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
-        request_access_metadata = self.details_database_page.data_owner()
+        request_access_metadata = self.details_database_page.data_owner_or_custodian()
 
         assert request_access_metadata.text == expected_text

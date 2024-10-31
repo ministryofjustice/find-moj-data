@@ -61,24 +61,7 @@ query Search(
             name
           }
           ownership {
-            owners {
-              owner {
-                ... on CorpUser {
-                  urn
-                  properties {
-                    fullName
-                    email
-                  }
-                }
-                ... on CorpGroup {
-                  urn
-                  properties {
-                    displayName
-                    email
-                  }
-                }
-              }
-            }
+            ...ownershipFields
           }
           tags {
             tags {
@@ -130,24 +113,7 @@ query Search(
             typeNames
           }
           ownership {
-            owners {
-              owner {
-                ... on CorpUser {
-                  urn
-                  properties {
-                    fullName
-                    email
-                  }
-                }
-                ... on CorpGroup {
-                  urn
-                  properties {
-                    displayName
-                    email
-                  }
-                }
-              }
-            }
+            ...ownershipFields
           }
           properties {
             name
@@ -207,24 +173,7 @@ query Search(
             typeNames
           }
           ownership {
-            owners {
-              owner {
-                ... on CorpUser {
-                  urn
-                  properties {
-                    fullName
-                    email
-                  }
-                }
-                ... on CorpGroup {
-                  urn
-                  properties {
-                    displayName
-                    email
-                  }
-                }
-              }
-            }
+            ...ownershipFields
           }
           name
           properties {
@@ -285,24 +234,7 @@ query Search(
             typeNames
           }
           ownership {
-            owners {
-              owner {
-                ... on CorpUser {
-                  urn
-                  properties {
-                    fullName
-                    email
-                  }
-                }
-                ... on CorpGroup {
-                  urn
-                  properties {
-                    displayName
-                    email
-                  }
-                }
-              }
-            }
+            ...ownershipFields
           }
           properties {
             name
@@ -345,6 +277,34 @@ query Search(
             }
           }
         }
+      }
+    }
+  }
+}
+
+fragment ownershipFields on Ownership {
+  owners {
+    owner {
+      ... on CorpUser {
+        urn
+        properties {
+          email
+          fullName
+        }
+      }
+      ... on CorpGroup {
+        urn
+        properties {
+          displayName
+          email
+        }
+      }
+    }
+    ownershipType {
+      urn
+      type
+      info {
+        name
       }
     }
   }

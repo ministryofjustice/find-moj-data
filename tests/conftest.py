@@ -99,10 +99,22 @@ class DetailsPage(Page):
     def request_access(self):
         return self.selenium.find_element(By.ID, "request_access")
 
-    def contact_channels(self):
-        return self.selenium.find_element(By.ID, "contact_channels")
+    def contact_channels_slack(self):
+        return self.selenium.find_element(By.ID, "contact_channels_slack")
 
-    def data_owner(self):
+    def contact_channels_ms_teams(self):
+        return self.selenium.find_element(By.ID, "contact_channels_ms_teams")
+
+    def contact_channels_team_email(self):
+        return self.selenium.find_element(By.ID, "contact_channels_team_email")
+
+    def contact_channels_data_owner(self):
+        return self.selenium.find_element(By.ID, "contact_channels_data_owner")
+
+    def contact_channels_not_provided(self):
+        return self.selenium.find_element(By.ID, "contact_channels_not_provided")
+
+    def data_owner_or_custodian(self):
         return self.selenium.find_element(By.ID, "data_owner")
 
 
@@ -470,6 +482,9 @@ def generate_database_metadata(
             ),
             data_stewards=[
                 OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+            data_custodians=[
+                OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
             ],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],

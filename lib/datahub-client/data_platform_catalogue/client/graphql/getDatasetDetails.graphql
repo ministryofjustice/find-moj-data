@@ -86,24 +86,7 @@ query getDatasetDetails($urn: String!) {
       }
     }
     ownership {
-      owners {
-        owner {
-          ... on CorpUser {
-            urn
-            properties {
-              fullName
-              email
-            }
-          }
-          ... on CorpGroup {
-            urn
-            properties {
-              displayName
-              email
-            }
-          }
-        }
-      }
+      ...ownershipFields
     }
     name
     properties {
@@ -170,6 +153,34 @@ query getDatasetDetails($urn: String!) {
         sourceFields {
           fieldPath
         }
+      }
+    }
+  }
+}
+
+fragment ownershipFields on Ownership {
+  owners {
+    owner {
+      ... on CorpUser {
+        urn
+        properties {
+          email
+          fullName
+        }
+      }
+      ... on CorpGroup {
+        urn
+        properties {
+          displayName
+          email
+        }
+      }
+    }
+    ownershipType {
+      urn
+      type
+      info {
+        name
       }
     }
   }

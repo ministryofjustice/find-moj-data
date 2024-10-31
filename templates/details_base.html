@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-  <div class="govuk-breadcrumbs">
+  <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
         <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">{% translate "Search" %}</a>
@@ -95,7 +95,7 @@
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with entity_name=entity.name data_owner=entity.governance.data_owner.display_name data_owner_email=entity.governance.data_owner.email slack_channel=entity.custom_properties.further_information access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_url=is_access_requirements_a_url platform=entity.platform %}
+      {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_url=is_access_requirements_a_url platform=entity.platform %}
     </div>
   </div>
 
