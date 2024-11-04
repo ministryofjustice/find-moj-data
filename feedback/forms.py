@@ -58,5 +58,5 @@ class IssueForm(forms.ModelForm):
         choices=(("Yes", _("Yes")), ("No", _("No"))),
         coerce=lambda x: x == "Yes",
         required=True,
-        label=_("Do you want us to email you a copy of this report?"),
+        label=_("Would you like us to email you a copy of this report?"),
     )

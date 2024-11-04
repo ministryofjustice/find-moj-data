@@ -41,7 +41,7 @@ msgid "No"
 msgstr ""
 
 #: feedback/forms.py:61
-msgid "Do you want us to email you a copy of this report?"
+msgid "Would you like us to email you a copy of this report?"
 msgstr ""
 
 #: feedback/models.py:18
