@@ -1,4 +1,5 @@
-from django.core.validators import EmailValidator, MinLengthValidator
+from django.conf import settings
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -34,6 +35,10 @@ class Issue(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=True
+    )
+
     reason = models.CharField(
         max_length=50,
         choices=IssueChoices.choices,
@@ -50,6 +55,3 @@ class Issue(models.Model):
     entity_name = models.CharField(max_length=250)
     entity_url = models.CharField(max_length=250)
     data_owner_email = models.CharField(max_length=250)
-    user_email = models.CharField(
-        max_length=250, validators=[EmailValidator()], null=False, blank=True
-    )

@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea, TextInput
+from django.utils.translation import gettext as _
 
 from .models import Feedback, Issue
 
@@ -28,11 +29,7 @@ class FeedbackForm(forms.ModelForm):
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Issue
-        fields = [
-            "reason",
-            "additional_info",
-            "user_email",
-        ]
+        fields = ["reason", "additional_info"]
         widgets = {
             "reason": RadioSelect(attrs={"class": "govuk-radios__input"}),
             "additional_info": Textarea(
@@ -53,3 +50,13 @@ class IssueForm(forms.ModelForm):
             ),
         }
         formfield_callback = formfield
+
+    send_email_to_reporter = forms.TypedChoiceField(
+        widget=RadioSelect(
+            attrs={"class": "govuk-radios__input", "required": "True"},
+        ),
+        choices=(("Yes", _("Yes")), ("No", _("No"))),
+        coerce=lambda x: x == "Yes",
+        required=True,
+        label=_("Would you like us to email you a copy of this report?"),
+    )

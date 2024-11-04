@@ -31,16 +31,14 @@ def test_valid_report_issue_form():
         {
             "reason": "Other",
             "additional_info": "a" * 10,
+            "send_email_to_reporter": "No",
         }
     ).is_valid()
 
 
 def test_report_issue_form_invalid_additinal_info_length():
     form = IssueForm(
-        {
-            "reason": "Other",
-            "additional_info": "a" * 9,
-        }
+        {"reason": "Other", "additional_info": "a" * 9, "send_email_to_reporter": "Yes"}
     )
     assert not form.is_valid()
     assert (
@@ -49,23 +47,19 @@ def test_report_issue_form_invalid_additinal_info_length():
     )
 
 
-def test_report_issue_form_invalid_user_email():
-    form = IssueForm(
-        {"reason": "Other", "additional_info": "a" * 10, "user_email": "invalid_email"}
-    )
-    assert not form.is_valid()
-    assert "Enter a valid email address." == form.errors["user_email"][0]
-
-
 @pytest.mark.django_db
-def test_report_issue_form_saves_to_db():
+def test_report_issue_form_saves_to_db(reporter):
     form = IssueForm(
         {
             "reason": "Other",
             "additional_info": "a" * 10,
+            "send_email_to_reporter": "Yes",
         }
     )
-    form.save()
+
+    issue = form.save(commit=False)
+    issue.created_by = reporter
+    issue.save()
 
     saved = Issue.objects.first()
     assert saved
