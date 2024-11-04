@@ -9,10 +9,8 @@
       {% else %}
         {{ access_requirements }}
       {% endif %}
-    {% elif governance.data_custodians %}
+    {% elif governance.data_custodians or governance.data_owner.email %}
       {% translate "Please contact the data custodian for access information." %}
-    {% elif governance.data_owner.email %}
-      {% translate "Please contact the data owner for access information." %}
     {% else %}
       {% translate "Not provided" %}
     {% endif %}
@@ -36,12 +34,10 @@
     {% if further_information.dc_team_email %}
       <li id="contact_channels_team_email" >{{ further_information.dc_team_email|urlize }}</li>
     {% endif %}
-    
+
     {% if not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email %}
-      {% if governance.data_custodians %}
+      {% if governance.data_custodians or governance.data_owner.email %}
       <li id="contact_channels_data_owner">{% translate "Contact the data custodian with questions." %}</li>
-      {% elif governance.data_owner.email %}
-      <li id="contact_channels_data_owner">{% translate "Contact the data owner with questions." %}</li>
       {% else %}
       <li id="contact_channels_not_provided">{% translate "Not provided" %}</li>
       {% endif %}
@@ -58,7 +54,7 @@
 </div>
 {% else %}
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "IAO or Data Owner" %}</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Data custodian" %}</h2>
   <p id="data_owner" class="govuk-body">
     {% if governance.data_owner.email %}
       {{ governance.data_owner.email|urlize }}
