@@ -33,60 +33,26 @@ def home_view(request):
 
 @cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
-    if result_type == "table":
-        service = dataset_service(urn)
-        return render(request, service.template, service.context)
-    if result_type == "database":
-        context = database_details(urn)
-        return render(request, "details_database.html", context)
-    if result_type == "chart":
-        context = chart_details(urn)
-        return render(request, "details_chart.html", context)
-    if result_type == "dashboard":
-        context = dashboard_details(urn)
-        return render(request, "details_dashboard.html", context)
-
-
-def database_details(urn):
     try:
-        service = DatabaseDetailsService(urn)
+        if result_type == "table":
+            service = DatasetDetailsService(urn)
+            template = service.template
+        elif result_type == "database":
+            service = DatabaseDetailsService(urn)
+            template = "details_database.html"
+        elif result_type == "chart":
+            service = ChartDetailsService(urn)
+            template = "details_chart.html"
+        elif result_type == "dashboard":
+            service = DashboardDetailsService(urn)
+            template = "details_dashboard.html"
+        else:
+            raise Http404("Invalid result type")
+
+        return render(request, template, service.context)
+
     except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    context = service.context
-
-    return context
-
-
-def dataset_service(urn):
-    try:
-        service = DatasetDetailsService(urn)
-    except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    return service
-
-
-def chart_details(urn):
-    try:
-        service = ChartDetailsService(urn)
-    except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    context = service.context
-
-    return context
-
-
-def dashboard_details(urn):
-    try:
-        service = DashboardDetailsService(urn)
-    except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    context = service.context
-
-    return context
+        raise Http404(f"{result_type} '{urn}' does not exist")
 
 
 @cache_control(max_age=60, private=True)
