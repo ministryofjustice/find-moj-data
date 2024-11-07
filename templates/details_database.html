@@ -39,6 +39,11 @@
             {% endfor %}
           </tbody>
         </table>
+        <form action="{% url 'home:details_csv' result_type='database' urn=entity.urn %}">
+          <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+            {% translate 'Download table descriptions (CSV format)' %}
+          </button>
+        </form>
       {% else %}
         <h2 class="govuk-heading-m">{% translate "Database content" %}</h2>
         <p class="govuk-body">{% translate "This database is missing table information." %}</p>

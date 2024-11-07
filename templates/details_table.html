@@ -40,6 +40,12 @@
             {% endfor %}
           </tbody>
         </table>
+
+        <form action="{% url 'home:details_csv' result_type='table' urn=entity.urn %}">
+          <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+            {% translate 'Download table schema (CSV format)' %}
+          </button>
+        </form>
       {% else %}
         <h2 class="govuk-heading-m">{% translate "Table schema" %}</h2>
         <p class="govuk-body">{% translate "The schema for this table is not available." %}</p>

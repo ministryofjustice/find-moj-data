@@ -1,9 +1,10 @@
+import csv
 from urllib.parse import urlparse
 
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
 from data_platform_catalogue.search_types import DomainOption
 from django.conf import settings
-from django.http import Http404, HttpResponseBadRequest
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_control
@@ -14,6 +15,11 @@ from home.service.details import (
     DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
+)
+from home.service.details_csv import (
+    DashboardDetailsCsvFormatter,
+    DatabaseDetailsCsvFormatter,
+    DatasetDetailsCsvFormatter,
 )
 from home.service.domain_fetcher import DomainFetcher
 from home.service.glossary import GlossaryService
@@ -53,6 +59,36 @@ def details_view(request, result_type, urn):
 
     except EntityDoesNotExist:
         raise Http404(f"{result_type} '{urn}' does not exist")
+
+
+@cache_control(max_age=300, private=True)
+def details_view_csv(request, result_type, urn) -> HttpResponse:
+    if result_type == "table":
+        service = DatasetDetailsService(urn)
+        csv_formatter = DatasetDetailsCsvFormatter(service)
+    elif result_type == "database":
+        service = DatabaseDetailsService(urn)
+        csv_formatter = DatabaseDetailsCsvFormatter(service)
+    elif result_type == "dashboard":
+        service = DashboardDetailsService(urn)
+        csv_formatter = DashboardDetailsCsvFormatter(service)
+    else:
+        raise Http404("CSV not available")
+
+    # In case there are any quotes in the filename, remove them in order to
+    # not to break the header.
+    unsavoury_characters = str.maketrans({'"': ""})
+    filename = urn.translate(unsavoury_characters) + ".csv"
+
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+    writer = csv.writer(response)
+    writer.writerow(csv_formatter.headers())
+    writer.writerows(csv_formatter.data())
+
+    return response
 
 
 @cache_control(max_age=60, private=True)

@@ -33,6 +33,11 @@
             {% endfor %}
           </tbody>
         </table>
+        <form action="{% url 'home:details_csv' result_type='dashboard' urn=entity.urn %}">
+          <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+            {% translate 'Download chart descriptions (CSV format)' %}
+          </button>
+        </form>
       {% else %}
         <h2 class="govuk-heading-m">{% translate "Dashboard content" %}</h2>
         <p class="govuk-body">{% translate "This dashboard is missing chart information." %}</p>
