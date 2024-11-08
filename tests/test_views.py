@@ -68,8 +68,8 @@ class TestTableView:
             response.headers["Content-Disposition"] == 'attachment; filename="fake.csv"'
         )
         assert response.content == (
-            b"name,display_name,type,nullable,description\r\n"
-            + b"urn,urn,string,False,description **with markdown**\r\n"
+            b"name,display_name,type,description\r\n"
+            + b"urn,urn,string,description **with markdown**\r\n"
         )
 
 

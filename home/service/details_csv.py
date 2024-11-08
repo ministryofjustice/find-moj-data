@@ -15,7 +15,6 @@ class DatasetDetailsCsvFormatter:
                 column.name,
                 column.display_name,
                 column.type,
-                column.nullable,
                 column.description,
             )
             for column in self.details_service.table_metadata.column_details
@@ -26,7 +25,6 @@ class DatasetDetailsCsvFormatter:
             "name",
             "display_name",
             "type",
-            "nullable",
             "description",
         ]
 
