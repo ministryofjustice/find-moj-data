@@ -14,7 +14,6 @@ class DatasetDetailsCsvFormatter:
             (
                 column.name,
                 column.display_name,
-                column.is_primary_key,
                 column.type,
                 column.nullable,
                 column.description,
@@ -26,7 +25,6 @@ class DatasetDetailsCsvFormatter:
         return [
             "name",
             "display_name",
-            "is_primary_key",
             "type",
             "nullable",
             "description",

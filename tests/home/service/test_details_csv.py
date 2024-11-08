@@ -41,7 +41,6 @@ def test_dataset_details_csv_formatter(example_table):
     assert csv_formatter.headers() == [
         "name",
         "display_name",
-        "is_primary_key",
         "type",
         "nullable",
         "description",
@@ -50,7 +49,6 @@ def test_dataset_details_csv_formatter(example_table):
         (
             "foo",
             "Foo",
-            True,
             "string",
             False,
             "an example",
@@ -58,7 +56,6 @@ def test_dataset_details_csv_formatter(example_table):
         (
             "bar",
             "Bar",
-            False,
             "integer",
             True,
             "another example",
