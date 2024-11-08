@@ -265,7 +265,7 @@ class EntitySummary(BaseModel):
     )
     description: str = Field(description="A description of the entity")
     entity_type: str = Field(
-        description="indicates the tpye of entity that is summarised"
+        description="indicates the type of entity that is summarised"
     )
     tags: list[TagRef] = Field(description="Any tags associated with the entity")
 

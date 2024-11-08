@@ -14,6 +14,11 @@ urlpatterns = [
         name="metadata_specification",
     ),
     path(
+        "details/<str:result_type>/<str:urn>.csv",
+        views.details_view_csv,
+        name="details_csv",
+    ),
+    path(
         "details/<str:result_type>/<str:urn>",
         views.details_view,
         name="details",

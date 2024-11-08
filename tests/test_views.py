@@ -51,8 +51,64 @@ class TestTableView:
             response = client.get(
                 reverse("home:details", kwargs={"urn": "fake", "result_type": "table"})
             )
+
         assert response.status_code == 200
         assert response.headers["Cache-Control"] == "max-age=300, private"
+
+    @pytest.mark.django_db
+    def test_csv_output(self, client):
+        response = client.get(
+            reverse(
+                "home:details_csv",
+                kwargs={"urn": "fake", "result_type": "table"},
+            )
+        )
+        assert response.status_code == 200
+        assert (
+            response.headers["Content-Disposition"] == 'attachment; filename="fake.csv"'
+        )
+        assert response.content == (
+            b"name,display_name,type,description\r\n"
+            + b"urn,urn,string,description **with markdown**\r\n"
+        )
+
+
+class TestDatabaseView:
+    @pytest.mark.django_db
+    def test_csv_output(self, client):
+        response = client.get(
+            reverse(
+                "home:details_csv",
+                kwargs={"urn": "fake", "result_type": "database"},
+            )
+        )
+        assert response.status_code == 200
+        assert (
+            response.headers["Content-Disposition"] == 'attachment; filename="fake.csv"'
+        )
+        assert response.content == (
+            b"urn,display_name,description\r\n"
+            + b"urn:li:dataset:fake_table,fake_table,table description\r\n"
+        )
+
+
+class TestDashboardView:
+    @pytest.mark.django_db
+    def test_csv_output(self, client):
+        response = client.get(
+            reverse(
+                "home:details_csv",
+                kwargs={"urn": "fake", "result_type": "dashboard"},
+            )
+        )
+        assert response.status_code == 200
+        assert (
+            response.headers["Content-Disposition"] == 'attachment; filename="fake.csv"'
+        )
+        assert response.content == (
+            b"urn,display_name,description\r\n"
+            + b"urn:li:chart:fake_chart,fake_chart,chart description\r\n"
+        )
 
 
 class TestChartView:

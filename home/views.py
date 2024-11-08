@@ -1,9 +1,10 @@
+import csv
 from urllib.parse import urlparse
 
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
 from data_platform_catalogue.search_types import DomainOption
 from django.conf import settings
-from django.http import Http404, HttpResponseBadRequest
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_control
@@ -14,6 +15,11 @@ from home.service.details import (
     DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
+)
+from home.service.details_csv import (
+    DashboardDetailsCsvFormatter,
+    DatabaseDetailsCsvFormatter,
+    DatasetDetailsCsvFormatter,
 )
 from home.service.domain_fetcher import DomainFetcher
 from home.service.glossary import GlossaryService
@@ -33,60 +39,56 @@ def home_view(request):
 
 @cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
+    try:
+        if result_type == "table":
+            service = DatasetDetailsService(urn)
+            template = service.template
+        elif result_type == "database":
+            service = DatabaseDetailsService(urn)
+            template = "details_database.html"
+        elif result_type == "chart":
+            service = ChartDetailsService(urn)
+            template = "details_chart.html"
+        elif result_type == "dashboard":
+            service = DashboardDetailsService(urn)
+            template = "details_dashboard.html"
+        else:
+            raise Http404("Invalid result type")
+
+        return render(request, template, service.context)
+
+    except EntityDoesNotExist:
+        raise Http404(f"{result_type} '{urn}' does not exist")
+
+
+@cache_control(max_age=300, private=True)
+def details_view_csv(request, result_type, urn) -> HttpResponse:
     if result_type == "table":
-        service = dataset_service(urn)
-        return render(request, service.template, service.context)
-    if result_type == "database":
-        context = database_details(urn)
-        return render(request, "details_database.html", context)
-    if result_type == "chart":
-        context = chart_details(urn)
-        return render(request, "details_chart.html", context)
-    if result_type == "dashboard":
-        context = dashboard_details(urn)
-        return render(request, "details_dashboard.html", context)
-
-
-def database_details(urn):
-    try:
-        service = DatabaseDetailsService(urn)
-    except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    context = service.context
-
-    return context
-
-
-def dataset_service(urn):
-    try:
         service = DatasetDetailsService(urn)
-    except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    return service
-
-
-def chart_details(urn):
-    try:
-        service = ChartDetailsService(urn)
-    except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
-
-    context = service.context
-
-    return context
-
-
-def dashboard_details(urn):
-    try:
+        csv_formatter = DatasetDetailsCsvFormatter(service)
+    elif result_type == "database":
+        service = DatabaseDetailsService(urn)
+        csv_formatter = DatabaseDetailsCsvFormatter(service)
+    elif result_type == "dashboard":
         service = DashboardDetailsService(urn)
-    except EntityDoesNotExist:
-        raise Http404("Asset does not exist")
+        csv_formatter = DashboardDetailsCsvFormatter(service)
+    else:
+        raise Http404("CSV not available")
 
-    context = service.context
+    # In case there are any quotes in the filename, remove them in order to
+    # not to break the header.
+    unsavoury_characters = str.maketrans({'"': ""})
+    filename = urn.translate(unsavoury_characters) + ".csv"
 
-    return context
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+    writer = csv.writer(response)
+    writer.writerow(csv_formatter.headers())
+    writer.writerows(csv_formatter.data())
+
+    return response
 
 
 @cache_control(max_age=60, private=True)
