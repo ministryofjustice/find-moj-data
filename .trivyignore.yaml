@@ -1,0 +1,4 @@
+# vulnerabilities:
+#   - id: CVE-2023-XXXXX
+#     statement: Bla bla bla
+#     expired_at: 2023-09-01
