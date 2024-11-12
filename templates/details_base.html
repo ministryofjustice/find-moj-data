@@ -75,6 +75,30 @@
                 {{entity.custom_properties.data_summary.refresh_period}}
               </li>
             {% endif %}
+            {% if entity.custom_properties.audience %}
+              <li>
+                <span class="govuk-!-font-weight-bold">Audience:</span>
+                {{entity.custom_properties.audience}}
+              </li>
+            {% endif %}
+            {% if entity.custom_properties.provider %}
+              <li>
+                <span class="govuk-!-font-weight-bold">Metadata provider:</span>
+                {{entity.custom_properties.provider}}
+              </li>
+            {% endif %}
+            {% if entity.last_updated %}
+              <li>
+                <span class="govuk-!-font-weight-bold">Data last updated:</span>
+                {{entity.last_updated|date:"d M Y"}}
+              </li>
+            {% endif %}
+            {% if entity.last_modified %}
+              <li>
+                <span class="govuk-!-font-weight-bold">Metadata last updated:</span>
+                {{entity.last_modified|date:"d M Y"}}
+              </li>
+            {% endif %}
             <li>
               <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
               {{entity.domain.display_name | default:_('Not provided') }}

@@ -313,6 +313,18 @@ class FurtherInformation(BaseModel):
     )
 
 
+# class Audience(Enum):
+#     INTERNAL = "Internal"
+#     PUBLISHED = "Published"
+
+
+# class Provider(Enum):
+#     CADET = "Create A Derived Table"
+#     JUSTICE_DATA = "Justice Data"
+#     GLUE = "AWS Glue"
+#     GOV_DATA = "Gov Data"
+
+
 class DataSummary(BaseModel):
     """
     Summarised information derived from the actual data.
@@ -323,17 +335,10 @@ class DataSummary(BaseModel):
         default="",
         examples=["123", 123],
     )
-
     refresh_period: str = Field(
         description="Indicates the frequency that the data are refreshed/updated",
         default="",
         examples=["Annually", "Quarterly", "Monthly", "Weekly", "Daily"],
-    )
-
-    last_updated: str = Field(
-        description="Indicates the date when the data were last refreshed/updated",
-        default="",
-        examples=["05 May 2024", "25 December 2023"],
     )
 
 
@@ -354,6 +359,14 @@ class CustomEntityProperties(BaseModel):
     further_information: FurtherInformation = Field(
         description="Routes to further information about the data",
         default_factory=FurtherInformation,
+    )
+    audience: str = Field(
+        description="If the data is published or not",
+        default="",
+    )
+    provider: str = Field(
+        decription="Source of this metadata",
+        default=""
     )
 
 
@@ -519,6 +532,11 @@ class Table(Entity):
                 ),
             ]
         ],
+    )
+    last_updated: Optional[datetime] = Field(
+        description="Indicates the time when the data were last refreshed (eg pipeline run with dbt).",
+        default=None,
+        examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
 
 

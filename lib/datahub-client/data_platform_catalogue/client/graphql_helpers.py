@@ -119,7 +119,7 @@ def parse_last_modified(entity: dict[str, Any]) -> datetime | None:
     timestamp = entity.get("lastIngested")
     if timestamp is None:
         return None
-    return datetime.fromtimestamp(timestamp / 1000, timezone.utc)
+    return timestamp
 
 
 def parse_created_and_modified(
@@ -132,12 +132,19 @@ def parse_created_and_modified(
     if modified == 0:
         modified = None
 
-    if created is not None:
-        created = datetime.fromtimestamp(created / 1000, timezone.utc)
-    if modified is not None:
-        modified = datetime.fromtimestamp(modified / 1000, timezone.utc)
-
     return created, modified
+
+
+def parse_updated(
+    response: dict[str, Any]
+) -> datetime | None:
+    list_of_runs: list = response.get("runs", {}).get("runs", [])
+    if not list_of_runs:
+        updated = None
+    if list_of_runs:
+        updated = list_of_runs[0].get("created", {}).get("time", {})
+
+    return updated
 
 
 def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
@@ -215,21 +222,26 @@ def parse_properties(
     access_information = AccessInformation.model_validate(custom_properties_dict)
     usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
     data_summary = DataSummary.model_validate(custom_properties_dict)
+    tags = parse_tags(entity)
+    expected_refresh_periods = ["daily", "weekly", "monthly"]
+    refresh_period_tags = [
+        tag_ref.display_name
+        for tag_ref in tags
+        if tag_ref.display_name in expected_refresh_periods
+    ]
+    data_summary.refresh_period = " ".join(refresh_period_tags).capitalize()
+    audience = custom_properties_dict.get("Audience", "")
+    provider = custom_properties_dict.get("Provider", "")
 
     further_information = FurtherInformation.model_validate(custom_properties_dict)
-
-    last_updated_timestamp = properties.get("lastRefreshed")
-    if last_updated_timestamp:
-        last_updated_date_str = datetime.fromtimestamp(last_updated_timestamp).strftime(
-            "%d %B %Y"
-        )
-        data_summary.last_updated = last_updated_date_str
 
     custom_properties = CustomEntityProperties(
         access_information=access_information,
         usage_restrictions=usage_restrictions,
         data_summary=data_summary,
         further_information=further_information,
+        audience=audience,
+        provider=provider,
     )
 
     return properties, custom_properties
