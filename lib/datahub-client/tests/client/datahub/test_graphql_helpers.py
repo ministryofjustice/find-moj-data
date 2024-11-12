@@ -238,8 +238,8 @@ def test_parse_relations_blank():
         (
             1710426920000,
             {"time": 1710426921000, "actor": "Shakira"},
-            datetime(2024, 3, 14, 14, 35, 20, tzinfo=timezone.utc),
-            datetime(2024, 3, 14, 14, 35, 21, tzinfo=timezone.utc),
+            1710426920000,
+            1710426921000,
         ),
         (
             0,

@@ -80,8 +80,8 @@ class TestCatalogueClientWithDatahub:
                     )
                 ]
             },
-            last_modified=datetime(2020, 5, 17),
-            created=datetime(2020, 5, 17),
+            last_modified=1710426920000,
+            created=1710426920000,
             tags=[TagRef(urn="test", display_name="test")],
             platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
             custom_properties=CustomEntityProperties(
@@ -137,7 +137,7 @@ class TestCatalogueClientWithDatahub:
                 ],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+            last_modified=1710426920000,
             created=None,
             column_details=[
                 Column(
@@ -205,7 +205,7 @@ class TestCatalogueClientWithDatahub:
                 ],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+            last_modified=1710426920000,
             created=None,
             column_details=[
                 Column(
@@ -331,6 +331,8 @@ class TestCatalogueClientWithDatahub:
                 },
                 "lastIngested": 1709619407814,
                 "domain": None,
+                "audience": "Internal",
+                "provider": "LAA",
                 "schemaMetadata": {
                     "fields": [
                         {
@@ -397,7 +399,9 @@ class TestCatalogueClientWithDatahub:
                 data_stewards=[],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+            last_modified=1709619407814,
+            audience="Internal",
+            provider="LAA",
             created=None,
             platform=EntityRef(urn="datahub", display_name="datahub"),
             column_details=[
