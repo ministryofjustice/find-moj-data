@@ -313,18 +313,6 @@ class FurtherInformation(BaseModel):
     )
 
 
-# class Audience(Enum):
-#     INTERNAL = "Internal"
-#     PUBLISHED = "Published"
-
-
-# class Provider(Enum):
-#     CADET = "Create A Derived Table"
-#     JUSTICE_DATA = "Justice Data"
-#     GLUE = "AWS Glue"
-#     GOV_DATA = "Gov Data"
-
-
 class DataSummary(BaseModel):
     """
     Summarised information derived from the actual data.
