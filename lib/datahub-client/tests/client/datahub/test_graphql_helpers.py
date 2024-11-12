@@ -14,6 +14,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_relations,
     parse_subtypes,
     parse_tags,
+    parse_updated,
 )
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -635,3 +636,18 @@ def test_parse_owners():
             display_name="",
         ),
     ]
+
+
+def test_parse_updated():
+    expected_timestamp = 12345678
+    example_with_updated = {
+        "runs": {
+            "runs": [
+                {"created": {"time": expected_timestamp}}
+            ]
+        }
+    }
+    example_no_updated = {}
+
+    assert parse_updated(example_with_updated) == expected_timestamp
+    assert parse_updated(example_no_updated) is None
