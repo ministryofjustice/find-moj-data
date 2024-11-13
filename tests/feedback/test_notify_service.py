@@ -11,7 +11,7 @@ def test_send_all_notifications(mock_notifications_client, reporter):
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
         "entity_url": "http://localhost/my_entity",
-        "data_owner_email": "entity_owner@justice.gov.uk",
+        "data_custodian_email": "entity_owner@justice.gov.uk",
         "created_by": reporter,
     }
 
@@ -24,7 +24,7 @@ def test_send_all_notifications(mock_notifications_client, reporter):
 
 
 @pytest.mark.django_db
-def test_send_notifications_no_data_owner_email(mock_notifications_client, reporter):
+def test_send_notifications_no_data_custodian_email(mock_notifications_client, reporter):
     data = {
         "reason": "Other",
         "additional_info": "This is some additional information.",
@@ -48,7 +48,7 @@ def test_send_all_notifications_no_reporter(mock_notifications_client):
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
         "entity_url": "http://localhost/my_entity",
-        "data_owner_email": "entity_owner@justice.gov.uk",
+        "data_custodian_email": "entity_owner@justice.gov.uk",
     }
 
     issue = Issue.objects.create(**data)
@@ -59,7 +59,7 @@ def test_send_all_notifications_no_reporter(mock_notifications_client):
 
 
 @pytest.mark.django_db
-def test_send_all_notifications_no_reporter_no_data_owner_email(
+def test_send_all_notifications_no_reporter_no_data_custodian_email(
     mock_notifications_client, reporter
 ):
     data = {

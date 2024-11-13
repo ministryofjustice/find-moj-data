@@ -47,7 +47,7 @@ def report_issue_view(request) -> HttpResponse:
             issue = form.save(commit=False)
             issue.entity_name = request.session.get("entity_name")
             issue.entity_url = request.session.get("entity_url")
-            issue.data_owner_email = request.session.get("data_owner_email")
+            issue.data_custodian_email = request.session.get("data_custodian_email")
 
             # in production, there should always be a signed in user,
             # but this may not be the case in local development/unit tests
@@ -81,7 +81,7 @@ def report_issue_view(request) -> HttpResponse:
 
         request.session["entity_name"] = entity_name
         request.session["entity_url"] = entity_url
-        request.session["data_owner_email"] = _(request.GET.get("data_owner_email", ""))
+        request.session["data_custodian_email"] = _(request.GET.get("data_custodian_email", ""))
 
         form = IssueForm()
 
