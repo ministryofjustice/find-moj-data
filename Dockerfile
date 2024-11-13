@@ -45,6 +45,9 @@ RUN make compilemessages
 # The runtime image, used to just run the code provided its virtual environment
 FROM ${ecr_path}${python_version}-${alpine_version} AS runtime
 
+# Workaround for CVE-2024-6345 upgrade the installed version of setuptools to the latest version
+RUN pip install -U setuptools
+
 # Install dependencies for the runtime image
 RUN apk add --no-cache bash make netcat-openbsd
 
