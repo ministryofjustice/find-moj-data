@@ -54,4 +54,4 @@ class Issue(models.Model):
     )
     entity_name = models.CharField(max_length=250)
     entity_url = models.CharField(max_length=250)
-    data_owner_email = models.CharField(max_length=250)
+    data_custodian_email = models.CharField(max_length=250)

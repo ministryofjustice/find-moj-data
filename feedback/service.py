@@ -28,7 +28,7 @@ def send(
 
     personalisation = {
         "assetOwner": (
-            issue.data_owner_email if issue.data_owner_email else "Data Catalog Team"
+            issue.data_custodian_email if issue.data_custodian_email else "Data Catalog Team"
         ),
         "userEmail": issue.created_by.email if issue.created_by else "",
         "assetName": issue.entity_name,
@@ -39,11 +39,11 @@ def send(
     reference = str(issue.id)
 
     # Notify Data Owner
-    if issue.data_owner_email:
+    if issue.data_custodian_email:
         notify(
             personalisation=personalisation,
             template_id=settings.NOTIFY_DATA_OWNER_TEMPLATE_ID,
-            email_address=issue.data_owner_email,
+            email_address=issue.data_custodian_email,
             reference=reference,
             client=client,
         )
