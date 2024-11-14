@@ -14,6 +14,11 @@ class RelationshipType(Enum):
     CHILD = "CHILD"
 
 
+class Audience(Enum):
+    INTERNAL = "Internal"
+    PUBLISHED = "Published"
+
+
 class EntityRef(BaseModel):
     """
     A reference to another entity in the metadata graph.
@@ -348,13 +353,9 @@ class CustomEntityProperties(BaseModel):
         description="Routes to further information about the data",
         default_factory=FurtherInformation,
     )
-    audience: str = Field(
+    audience: Audience = Field(
         description="If the data is published or not",
-        default="",
-    )
-    provider: str = Field(
-        decription="Source of this metadata",
-        default=""
+        default=Audience.INTERNAL,
     )
 
 

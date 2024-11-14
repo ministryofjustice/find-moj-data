@@ -33,8 +33,7 @@
                 "dc_teams_channel_name": "",
                 "dc_teams_channel_url": "",
                 "dc_team_email": "",
-                "audience": "",
-                "provider": ""
+                "audience": "Internal"
             },
             "name": "my_database",
             "description": "little test db"
@@ -121,8 +120,7 @@
                 "dc_teams_channel_name": "",
                 "dc_teams_channel_url": "",
                 "dc_team_email": "",
-                "audience": "",
-                "provider": ""
+                "audience": "Internal"
             },
             "name": "Dataset",
             "qualifiedName": "database.Dataset",

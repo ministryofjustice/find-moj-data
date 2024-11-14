@@ -1,9 +1,11 @@
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime
 from importlib.resources import files
+import logging
 from typing import Any, Tuple
 
 from data_platform_catalogue.entities import (
+    Audience,
     AccessInformation,
     Column,
     ColumnRef,
@@ -19,6 +21,8 @@ from data_platform_catalogue.entities import (
     TagRef,
     UsageRestrictions,
 )
+
+logger = logging.getLogger(__name__)
 
 PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
 
@@ -173,6 +177,28 @@ def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
     return tags
 
 
+def get_refresh_period_from_cadet_tags(
+    tags: list[TagRef],
+    refresh_schedules: list[str] = ["daily", "weekly", "monthly"]
+) -> str:
+    # Check if any of the tags are refresh period tags eg "daily_opg"
+    refresh_period_tags = [
+        schedule
+        for tag_ref in tags
+        for schedule in refresh_schedules
+        if schedule in tag_ref.display_name
+    ]
+    if len(refresh_period_tags) > 1:
+        logger.warn(f"More than one refresh period tag found: {tags=}")
+
+    if refresh_period_tags:
+        refresh_schedule = refresh_period_tags[0]
+        return refresh_schedule
+
+    if not refresh_period_tags:
+        return ""
+
+
 def parse_glossary_terms(entity: dict[str, Any]) -> list[GlossaryTermRef]:
     """
     Parse glossary_term information into a list of TagRef for displaying
@@ -223,15 +249,8 @@ def parse_properties(
     usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
     data_summary = DataSummary.model_validate(custom_properties_dict)
     tags = parse_tags(entity)
-    expected_refresh_periods = ["daily", "weekly", "monthly"]
-    refresh_period_tags = [
-        tag_ref.display_name
-        for tag_ref in tags
-        if tag_ref.display_name in expected_refresh_periods
-    ]
-    data_summary.refresh_period = " ".join(refresh_period_tags).capitalize()
-    audience = custom_properties_dict.get("Audience", "")
-    provider = custom_properties_dict.get("Provider", "")
+    data_summary.refresh_period = get_refresh_period_from_cadet_tags(tags)
+    audience = custom_properties_dict.get("audience", "Internal")
 
     further_information = FurtherInformation.model_validate(custom_properties_dict)
 
@@ -240,8 +259,7 @@ def parse_properties(
         usage_restrictions=usage_restrictions,
         data_summary=data_summary,
         further_information=further_information,
-        audience=audience,
-        provider=provider,
+        audience=audience
     )
 
     return properties, custom_properties

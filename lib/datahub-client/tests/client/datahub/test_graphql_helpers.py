@@ -1,11 +1,13 @@
 from datetime import datetime, timezone
 
 import pytest
+import pytest
 
 from data_platform_catalogue.client.graphql_helpers import (
     DATA_CUSTODIAN,
     _make_user_email_from_urn,
     _parse_owners_by_type,
+    get_refresh_period_from_cadet_tags,
     parse_columns,
     parse_created_and_modified,
     parse_data_owner,
@@ -651,3 +653,16 @@ def test_parse_updated():
 
     assert parse_updated(example_with_updated) == expected_timestamp
     assert parse_updated(example_no_updated) is None
+
+
+@pytest.mark.parametrize(
+    "tags, expected_refresh_period",
+    [
+        ([TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")], "daily"),
+        ([TagRef(display_name="monthly", urn="urn:li:tag:monthly")], "monthly"),
+        ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], ""),
+    ],
+)
+def test_get_refresh_period_from_cadet_tags(tags, expected_refresh_period):
+    refresh_period = get_refresh_period_from_cadet_tags(tags)
+    assert refresh_period == expected_refresh_period

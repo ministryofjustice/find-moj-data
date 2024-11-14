@@ -5,6 +5,7 @@ import pytest
 
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
+    Audience,
     AccessInformation,
     DataSummary,
     EntityRef,
@@ -1178,10 +1179,9 @@ def test_search_for_container(mock_graph, searcher):
                     "name": "test_db",
                 },
                 metadata={
-                    "audience": "",
+                    "audience": Audience.INTERNAL,
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
-                    "provider": "",
                     "domain_name": "testdom",
                     "domain_id": "urn:li:domain:testdom",
                     "entity_types": {
