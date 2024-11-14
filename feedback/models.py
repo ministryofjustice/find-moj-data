@@ -28,7 +28,7 @@ class Feedback(models.Model):
 class Issue(models.Model):
     class IssueChoices(models.TextChoices):
         BROKEN_LINK = "Link is broken"
-        INCORRECT_OWNER = "Owner is incorrect"
+        INCORRECT_CUSTODIAN = "Data custodian is incorrect"
         OUTDATED_CONTACT = "Contact is outdated"
         OTHER = "Other"
 
