@@ -1,11 +1,13 @@
 from datetime import datetime, timezone
 
 import pytest
+import pytest
 
 from data_platform_catalogue.client.graphql_helpers import (
     DATA_CUSTODIAN,
     _make_user_email_from_urn,
     _parse_owners_by_type,
+    get_refresh_period_from_cadet_tags,
     parse_columns,
     parse_created_and_modified,
     parse_data_owner,
@@ -14,8 +16,10 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_relations,
     parse_subtypes,
     parse_tags,
+    parse_updated,
 )
 from data_platform_catalogue.entities import (
+    Audience,
     AccessInformation,
     Column,
     ColumnRef,
@@ -237,8 +241,8 @@ def test_parse_relations_blank():
         (
             1710426920000,
             {"time": 1710426921000, "actor": "Shakira"},
-            datetime(2024, 3, 14, 14, 35, 20, tzinfo=timezone.utc),
-            datetime(2024, 3, 14, 14, 35, 21, tzinfo=timezone.utc),
+            1710426920000,
+            1710426921000,
         ),
         (
             0,
@@ -282,6 +286,7 @@ def test_parse_properties():
                 {"key": "s3_location", "value": "s3://databucket/"},
                 {"key": "row_count", "value": 100},
                 {"key": "Not_IN", "value": "dddd"},
+                {"key": "audience", "value": "Internal"},
             ],
             "name": "test",
             "description": "test description",
@@ -310,6 +315,7 @@ def test_parse_properties():
         further_information=FurtherInformation(
             dc_slack_channel_name="test-channel", dc_slack_channel_url="test-url"
         ),
+        audience=Audience.INTERNAL,
     )
 
 
@@ -325,6 +331,7 @@ def test_parse_properties_with_none_values():
                 {"key": "s3_location", "value": "s3://databucket/"},
                 {"key": "row_count", "value": 100},
                 {"key": "Not_IN", "value": "dddd"},
+                {"key": "audience", "value": "Internal"},
             ],
             "name": "test",
             "description": None,
@@ -353,6 +360,7 @@ def test_parse_properties_with_none_values():
         ),
         data_summary=DataSummary(row_count=100),
         further_information=FurtherInformation(),
+        audience=Audience.INTERNAL,
     )
 
 
@@ -635,3 +643,31 @@ def test_parse_owners():
             display_name="",
         ),
     ]
+
+
+def test_parse_updated():
+    expected_timestamp = 12345678
+    example_with_updated = {
+        "runs": {
+            "runs": [
+                {"created": {"time": expected_timestamp}}
+            ]
+        }
+    }
+    example_no_updated = {}
+
+    assert parse_updated(example_with_updated) == expected_timestamp
+    assert parse_updated(example_no_updated) is None
+
+
+@pytest.mark.parametrize(
+    "tags, expected_refresh_period",
+    [
+        ([TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")], "Daily"),
+        ([TagRef(display_name="monthly", urn="urn:li:tag:monthly")], "Monthly"),
+        ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], ""),
+    ],
+)
+def test_get_refresh_period_from_cadet_tags(tags, expected_refresh_period):
+    refresh_period = get_refresh_period_from_cadet_tags(tags)
+    assert refresh_period == expected_refresh_period

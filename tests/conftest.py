@@ -374,7 +374,7 @@ def generate_table_metadata(
                 description="some description",
             )
         ],
-        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        last_modified=1710426920000,
         created=None,
         column_details=[
             Column(
@@ -435,7 +435,7 @@ def generate_chart_metadata(
                 description="some description",
             )
         ],
-        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        last_modified=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
         custom_properties=custom_properties or CustomEntityProperties(),
@@ -495,7 +495,7 @@ def generate_database_metadata(
                 description="some description",
             )
         ],
-        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        last_modified=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
         custom_properties=custom_properties or CustomEntityProperties(),
@@ -553,7 +553,7 @@ def generate_dashboard_metadata(
                 description="some description",
             )
         ],
-        last_modified=datetime(2024, 3, 5, 6, 16, 47, 814000, tzinfo=timezone.utc),
+        last_modified=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
         custom_properties=custom_properties or CustomEntityProperties(),

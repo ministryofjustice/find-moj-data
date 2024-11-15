@@ -45,12 +45,14 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_data_owner,
     parse_domain,
     parse_glossary_terms,
+    parse_last_modified,
     parse_names,
     parse_properties,
     parse_relations,
     parse_stewards,
     parse_subtypes,
     parse_tags,
+    parse_updated,
 )
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
@@ -274,6 +276,8 @@ class DataHubCatalogueClient:
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
+            modified = parse_last_modified(response)
+            updated = parse_updated(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             lineage_relations = parse_relations(
@@ -308,6 +312,7 @@ class DataHubCatalogueClient:
                 tags=tags,
                 glossary_terms=glossary_terms,
                 last_modified=modified,
+                last_updated=updated,
                 created=created,
                 column_details=columns,
                 custom_properties=custom_properties,
@@ -369,6 +374,7 @@ class DataHubCatalogueClient:
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
+            modified = parse_last_modified(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             child_relations = parse_relations(
@@ -412,6 +418,7 @@ class DataHubCatalogueClient:
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
+            modified = parse_last_modified(response)
             name, display_name, qualified_name = parse_names(response, properties)
             children = parse_relations(
                 RelationshipType.CHILD, [response["relationships"]]
