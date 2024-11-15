@@ -14,6 +14,11 @@ class RelationshipType(Enum):
     CHILD = "CHILD"
 
 
+class Audience(Enum):
+    INTERNAL = "Internal"
+    PUBLISHED = "Published"
+
+
 class EntityRef(BaseModel):
     """
     A reference to another entity in the metadata graph.
@@ -323,17 +328,10 @@ class DataSummary(BaseModel):
         default="",
         examples=["123", 123],
     )
-
     refresh_period: str = Field(
         description="Indicates the frequency that the data are refreshed/updated",
         default="",
         examples=["Annually", "Quarterly", "Monthly", "Weekly", "Daily"],
-    )
-
-    last_updated: str = Field(
-        description="Indicates the date when the data were last refreshed/updated",
-        default="",
-        examples=["05 May 2024", "25 December 2023"],
     )
 
 
@@ -355,6 +353,13 @@ class CustomEntityProperties(BaseModel):
         description="Routes to further information about the data",
         default_factory=FurtherInformation,
     )
+    audience: Audience = Field(
+        description="If the data is published or not",
+        default="Internal",
+    )
+
+    class Config:
+        use_enum_values = True
 
 
 class Entity(BaseModel):
@@ -519,6 +524,11 @@ class Table(Entity):
                 ),
             ]
         ],
+    )
+    last_updated: Optional[datetime] = Field(
+        description="Indicates the time when the data were last refreshed (eg pipeline run with dbt).",
+        default=None,
+        examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
 
 

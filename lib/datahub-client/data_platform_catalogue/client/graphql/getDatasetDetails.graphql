@@ -155,6 +155,15 @@ query getDatasetDetails($urn: String!) {
         }
       }
     }
+    runs: runs(start: 0, count: 1, direction: OUTGOING) {
+      runs {
+        ... on DataProcessInstance {
+          created {
+            time
+          }
+        }
+      }
+    }
   }
 }
 
