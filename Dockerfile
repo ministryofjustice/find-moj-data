@@ -49,26 +49,41 @@ RUN pip install -U setuptools
 # Install dependencies for the runtime image
 RUN apk add --no-cache bash make netcat-openbsd gettext
 
+# Use a non-root user
+ENV CONTAINER_USER=appuser \
+  CONTAINER_GROUP=appuser \
+  CONTAINER_UID=31337 \
+  CONTAINER_GID=31337
+
+RUN addgroup --gid ${CONTAINER_GID} --system ${CONTAINER_GROUP} \
+  && adduser --uid ${CONTAINER_UID} --system ${CONTAINER_USER} --ingroup ${CONTAINER_GROUP}
+
+USER ${CONTAINER_UID}
+
 WORKDIR /app
 
 ENV VIRTUAL_ENV=/app/.venv \
   PATH="/app/.venv/bin:$PATH"
 
-# copy project and dependencies
-COPY . .
-COPY --from=node_builder /app/static ./static
-COPY --from=python_builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-RUN chmod +x ./scripts/app-entrypoint.sh
+# copy entrypoints
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} scripts/app-entrypoint.sh ./scripts/app-entrypoint.sh
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
 
+# copy compiled assets
+COPY --from=node_builder --chown=${CONTAINER_USER}:${CONTAINER_GROUP} /app/static ./static
+COPY --from=python_builder --chown=${CONTAINER_USER}:${CONTAINER_GROUP} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
+
+# Copy application code
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} core ./core
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} users ./users
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} feedback ./feedback
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} home ./home
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} templates ./templates
+
+# Run django commands
 RUN python manage.py collectstatic --noinput
 RUN python manage.py compilemessages
-
-# Use a non-root user
-RUN addgroup --gid 31337 --system appuser \
-  && adduser --uid 31337 --system appuser --ingroup appuser
-RUN chown --recursive appuser:appuser /app
-
-USER 31337
 
 EXPOSE 8000
 
