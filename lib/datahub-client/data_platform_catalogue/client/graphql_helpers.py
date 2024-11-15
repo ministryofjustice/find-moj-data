@@ -192,7 +192,7 @@ def get_refresh_period_from_cadet_tags(
         logger.warn(f"More than one refresh period tag found: {tags=}")
 
     if refresh_period_tags:
-        refresh_schedule = refresh_period_tags[0]
+        refresh_schedule = refresh_period_tags[0].capitalize()
         return refresh_schedule
 
     if not refresh_period_tags:
