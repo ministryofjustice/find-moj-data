@@ -182,20 +182,20 @@ def get_refresh_period_from_cadet_tags(
     refresh_schedules: list[str] = ["daily", "weekly", "monthly"]
 ) -> str:
     # Check if any of the tags are refresh period tags eg "daily_opg"
-    refresh_period_tags = [
+    relevant_refresh_schedules = [
         schedule
         for tag_ref in tags
         for schedule in refresh_schedules
         if schedule in tag_ref.display_name
     ]
-    if len(refresh_period_tags) > 1:
+    if len(relevant_refresh_schedules) > 1:
         logger.warn(f"More than one refresh period tag found: {tags=}")
 
-    if refresh_period_tags:
-        refresh_schedule = refresh_period_tags[0].capitalize()
+    if relevant_refresh_schedules:
+        refresh_schedule = relevant_refresh_schedules[0].capitalize()
         return refresh_schedule
 
-    if not refresh_period_tags:
+    if not relevant_refresh_schedules:
         return ""
 
 
