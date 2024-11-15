@@ -3,25 +3,29 @@ ARG alpine_version=alpine3.20
 ARG python_version=python:3.11
 ARG node_version=node:23
 
-# The node builder image, used to build the virtual environment
+#### NODE.JS BUILD
+
 FROM ${ecr_path}${node_version}-${alpine_version} AS node_builder
 
 # Install dependencies for npm install command
 RUN apk add --no-cache bash
 
 WORKDIR /app
-COPY . .
-
+COPY package.json package-lock.json ./
+COPY scripts/import-static.sh ./scripts/import-static.sh
+COPY static/assets/js ./static/assets/js
+COPY scss ./scss
 RUN npm install --omit=dev
 
-# The builder image, used to build the virtual environment
+#### PYTHON BUILD
+
 FROM ${ecr_path}${python_version}-${alpine_version} AS python_builder
 
 # Install dependencies for compiling .po files
 RUN apk add --no-cache bash make gettext gcc musl-dev libffi-dev
 
 WORKDIR /app
-COPY --from=node_builder /app .
+COPY . .
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -42,7 +46,8 @@ COPY locale ./
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 RUN make compilemessages
 
-# The runtime image, used to just run the code provided its virtual environment
+#### FINAL RUNTIME IMAGE
+
 FROM ${ecr_path}${python_version}-${alpine_version} AS runtime
 
 # Workaround for CVE-2024-6345 upgrade the installed version of setuptools to the latest version
@@ -58,7 +63,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 # copy project and dependencies
 COPY . .
-COPY --from=python_builder /app/static ./static
+COPY --from=node_builder /app/static ./static
 COPY --from=python_builder /app/locale ./locale
 COPY --from=python_builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
