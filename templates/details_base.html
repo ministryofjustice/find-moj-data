@@ -5,6 +5,7 @@
 {% load waffle_tags %}
 {% load i18n %}
 {% load page_title %}
+{% load format_timesince %}
 
 {% block title %}
   {% with details_title=h1_value|add:" - "|add:entity_type %}
@@ -87,12 +88,6 @@
                 {{entity.last_updated|date:"d M Y"}}
               </li>
             {% endif %} -->
-            {% if entity.last_modified %}
-              <li>
-                <span class="govuk-!-font-weight-bold">Metadata last updated:</span>
-                {{entity.last_modified|date:"d M Y"}}
-              </li>
-            {% endif %}
             <li>
               <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
               {{entity.domain.display_name | default:_('Not provided') }}
@@ -110,6 +105,9 @@
           </ul>
           {% include "partial/esda_info.html" with is_esda=is_esda %}
         {% endblock metadata_list %}
+        <div class="govuk-body-s" style="text-align: right;">
+          Updated {{entity.last_modified|timesince|format_timesince}} ago
+        </div>
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
