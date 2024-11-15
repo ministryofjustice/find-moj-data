@@ -30,6 +30,7 @@ jobs:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
+      limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
 
   deploy-preprod:
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
@@ -47,6 +48,7 @@ jobs:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
+      limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
 
   notify-preprod-success:
     needs: deploy-preprod
@@ -88,6 +90,7 @@ jobs:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
+      limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
 
   post-deploy:
     name: "Post-deploy admin"
