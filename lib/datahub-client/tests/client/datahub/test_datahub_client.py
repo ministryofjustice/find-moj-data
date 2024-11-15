@@ -13,6 +13,7 @@ from data_platform_catalogue.client.exceptions import (
     ReferencedEntityMissing,
 )
 from data_platform_catalogue.entities import (
+    Audience,
     AccessInformation,
     Chart,
     Column,
@@ -331,7 +332,6 @@ class TestCatalogueClientWithDatahub:
                 },
                 "lastIngested": 1709619407814,
                 "domain": None,
-                "audience": "Internal",
                 "provider": "LAA",
                 "schemaMetadata": {
                     "fields": [
@@ -376,6 +376,7 @@ class TestCatalogueClientWithDatahub:
             fully_qualified_name="Foo.Dataset",
             description="Dataset",
             relationships={
+                RelationshipType.DATA_LINEAGE: [],
                 RelationshipType.PARENT: [
                     EntitySummary(
                         entity_ref=EntityRef(
@@ -391,7 +392,6 @@ class TestCatalogueClientWithDatahub:
                         entity_type="Database",
                     )
                 ],
-                RelationshipType.DATA_LINEAGE: [],
             },
             domain=DomainRef(display_name="", urn=""),
             governance=Governance(
@@ -400,7 +400,6 @@ class TestCatalogueClientWithDatahub:
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
             last_modified=1709619407814,
-            audience="Internal",
             provider="LAA",
             created=None,
             platform=EntityRef(urn="datahub", display_name="datahub"),
@@ -483,6 +482,7 @@ class TestCatalogueClientWithDatahub:
                 ),
                 data_summary=DataSummary(),
                 further_information=FurtherInformation(),
+                audience=Audience.INTERNAL,
             ),
             column_details=[],
         )
@@ -542,6 +542,7 @@ class TestCatalogueClientWithDatahub:
                 ),
                 data_summary=DataSummary(),
                 further_information=FurtherInformation(),
+                audience=Audience.INTERNAL,
             ),
             external_url="https://data.justice.gov.uk/prisons/public-protection/absconds",
         )

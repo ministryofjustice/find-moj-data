@@ -19,6 +19,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_updated,
 )
 from data_platform_catalogue.entities import (
+    Audience,
     AccessInformation,
     Column,
     ColumnRef,
@@ -285,6 +286,7 @@ def test_parse_properties():
                 {"key": "s3_location", "value": "s3://databucket/"},
                 {"key": "row_count", "value": 100},
                 {"key": "Not_IN", "value": "dddd"},
+                {"key": "audience", "value": "Internal"},
             ],
             "name": "test",
             "description": "test description",
@@ -313,6 +315,7 @@ def test_parse_properties():
         further_information=FurtherInformation(
             dc_slack_channel_name="test-channel", dc_slack_channel_url="test-url"
         ),
+        audience=Audience.INTERNAL,
     )
 
 
@@ -328,6 +331,7 @@ def test_parse_properties_with_none_values():
                 {"key": "s3_location", "value": "s3://databucket/"},
                 {"key": "row_count", "value": 100},
                 {"key": "Not_IN", "value": "dddd"},
+                {"key": "audience", "value": "Internal"},
             ],
             "name": "test",
             "description": None,
@@ -356,6 +360,7 @@ def test_parse_properties_with_none_values():
         ),
         data_summary=DataSummary(row_count=100),
         further_information=FurtherInformation(),
+        audience=Audience.INTERNAL,
     )
 
 

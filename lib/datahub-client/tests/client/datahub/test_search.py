@@ -1179,7 +1179,7 @@ def test_search_for_container(mock_graph, searcher):
                     "name": "test_db",
                 },
                 metadata={
-                    "audience": Audience.INTERNAL,
+                    "audience": "Internal",
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
                     "domain_name": "testdom",

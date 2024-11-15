@@ -355,8 +355,11 @@ class CustomEntityProperties(BaseModel):
     )
     audience: Audience = Field(
         description="If the data is published or not",
-        default=Audience.INTERNAL,
+        default="Internal",
     )
+
+    class Config:
+        use_enum_values = True
 
 
 class Entity(BaseModel):
