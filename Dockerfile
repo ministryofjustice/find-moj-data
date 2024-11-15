@@ -25,7 +25,7 @@ WORKDIR /app
 
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
-# set environment variables
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV POETRY_NO_INTERACTION=1 \
@@ -59,17 +59,16 @@ RUN addgroup --gid ${CONTAINER_GID} --system ${CONTAINER_GROUP} \
   && adduser --uid ${CONTAINER_UID} --system ${CONTAINER_USER} --ingroup ${CONTAINER_GROUP}
 
 USER ${CONTAINER_UID}
-
 WORKDIR /app
 
 ENV VIRTUAL_ENV=/app/.venv \
   PATH="/app/.venv/bin:$PATH"
 
-# copy entrypoints
+# Copy entrypoints
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} scripts/app-entrypoint.sh ./scripts/app-entrypoint.sh
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
 
-# copy compiled assets
+# Copy compiled assets
 COPY --from=node_builder --chown=${CONTAINER_USER}:${CONTAINER_GROUP} /app/static ./static
 COPY --from=python_builder --chown=${CONTAINER_USER}:${CONTAINER_GROUP} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
