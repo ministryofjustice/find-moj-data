@@ -6,11 +6,12 @@ ARG node_version=node:23
 #### NODE.JS BUILD
 
 FROM ${ecr_path}${node_version}-${alpine_version} AS node_builder
+WORKDIR /app
 
 # Install dependencies for npm install command
 RUN apk add --no-cache bash
 
-WORKDIR /app
+# Compile static assets
 COPY package.json package-lock.json ./
 COPY scripts/import-static.sh ./scripts/import-static.sh
 COPY static/assets/js ./static/assets/js
@@ -20,31 +21,23 @@ RUN npm install --omit=dev
 #### PYTHON BUILD
 
 FROM ${ecr_path}${python_version}-${alpine_version} AS python_builder
-
-# Install dependencies for compiling .po files
-RUN apk add --no-cache bash make gettext gcc musl-dev libffi-dev
-
 WORKDIR /app
-COPY . .
+
+RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-
-# Install poetry via pip
-RUN pip install poetry==1.8.4
-
 ENV POETRY_NO_INTERACTION=1 \
   POETRY_VIRTUALENVS_IN_PROJECT=1 \
   POETRY_VIRTUALENVS_CREATE=1 \
   POETRY_CACHE_DIR=/tmp/poetry_cache
 
-COPY pyproject.toml poetry.lock Makefile ./
+# Install python dependencies to a virtualenv
+COPY pyproject.toml poetry.lock ./
 COPY lib ./lib
-COPY locale ./
-
+RUN pip install poetry==1.8.4
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
-RUN make compilemessages
 
 #### FINAL RUNTIME IMAGE
 
@@ -54,7 +47,7 @@ FROM ${ecr_path}${python_version}-${alpine_version} AS runtime
 RUN pip install -U setuptools
 
 # Install dependencies for the runtime image
-RUN apk add --no-cache bash make netcat-openbsd
+RUN apk add --no-cache bash make netcat-openbsd gettext
 
 WORKDIR /app
 
@@ -64,12 +57,11 @@ ENV VIRTUAL_ENV=/app/.venv \
 # copy project and dependencies
 COPY . .
 COPY --from=node_builder /app/static ./static
-COPY --from=python_builder /app/locale ./locale
 COPY --from=python_builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-
 RUN chmod +x ./scripts/app-entrypoint.sh
 
 RUN python manage.py collectstatic --noinput
+RUN python manage.py compilemessages
 
 # Use a non-root user
 RUN addgroup --gid 31337 --system appuser \
