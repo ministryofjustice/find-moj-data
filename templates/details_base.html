@@ -43,7 +43,7 @@
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <div class="summary-card">
+      <div class="app-summary-card">
         <h2 class="govuk-heading-s govuk-!-margin-top-3">
           {% translate "Description" %}
         </h2>
@@ -105,9 +105,11 @@
           </ul>
           {% include "partial/esda_info.html" with is_esda=is_esda %}
         {% endblock metadata_list %}
-        <div class="govuk-body-s" style="text-align: right;">
-          Updated {{entity.last_modified|timesince|format_timesince}} ago
-        </div>
+        {% if entity.last_updated %}
+          <div class="govuk-body-s app-summary-card__footer">
+            Updated {{entity.last_modified|timesince|format_timesince}} ago
+          </div>
+        {% endif %}
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
