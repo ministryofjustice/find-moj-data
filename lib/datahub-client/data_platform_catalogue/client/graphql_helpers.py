@@ -252,8 +252,6 @@ def parse_properties(
     cadet_refresh_period = get_refresh_period_from_cadet_tags(tags)
     if cadet_refresh_period:
         data_summary.refresh_period = cadet_refresh_period
-    if not cadet_refresh_period:
-        data_summary.refresh_period = custom_properties_dict.get("refresh_period", "")
     audience = custom_properties_dict.get("audience", "Internal")
 
     further_information = FurtherInformation.model_validate(custom_properties_dict)
