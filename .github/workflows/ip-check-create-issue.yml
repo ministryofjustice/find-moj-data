@@ -1,0 +1,23 @@
+name: Create issue to check for updates to the MOJ IP address list
+on:
+  schedule:
+    # Every 6 months
+    - cron: "0 0 1 5,11 *"
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create issue
+        env:
+          label: "housekeeping"
+        run: |
+          now=$(date +'%Y-%m-%d')
+          title="Check for updates to the MOJ IP Address list"
+          body="Internal IPs are exempted from rate limiting. See https://github.com/ministryofjustice/moj-ip-addresses"
+
+          gh issue create --title "${title}" --body "${body}" --label "${label}"
