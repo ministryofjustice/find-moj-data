@@ -1,6 +1,10 @@
-.summary-card {
+.app-summary-card {
     background-color: govuk-colour("light-grey");
     padding: govuk-spacing(3) govuk-spacing(4);
     margin-bottom: govuk-spacing(6);
     overflow-wrap: break-word;
+}
+
+.app-summary-card .app-summary-card__footer  {
+    text-align: right;
 }
