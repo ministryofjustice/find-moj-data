@@ -67,6 +67,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 # Copy entrypoints
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} scripts/app-entrypoint.sh ./scripts/app-entrypoint.sh
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
+RUN chmod +x ./scripts/app-entrypoint.sh
 
 # Copy compiled assets
 COPY --from=node_builder --chown=${CONTAINER_USER}:${CONTAINER_GROUP} /app/static ./static
@@ -79,6 +80,7 @@ COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} users ./users
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} feedback ./feedback
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} home ./home
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} templates ./templates
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} lib ./lib
 
 # Run django commands
 RUN python manage.py collectstatic --noinput
