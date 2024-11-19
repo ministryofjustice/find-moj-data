@@ -667,6 +667,13 @@ def test_parse_updated():
         ([TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")], "Daily"),
         ([TagRef(display_name="monthly", urn="urn:li:tag:monthly")], "Monthly"),
         ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], ""),
+        (
+            [
+                TagRef(display_name="daily", urn="urn:li:tag:dc_cadet"),
+                TagRef(display_name="monthly", urn="urn:li:tag:dc_cadet")
+            ],
+            "Daily, Monthly"
+        ),
     ],
 )
 def test_get_refresh_period_from_cadet_tags(tags, expected_refresh_period):
