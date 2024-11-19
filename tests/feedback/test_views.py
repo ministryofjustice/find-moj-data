@@ -36,7 +36,7 @@ class TestReportIssueView:
             data={
                 "entity_name": "my_entity",
                 "entity_url": "http://localhost/my_entity",
-                "data_owner_email": "data.owner@justice.gov.uk",
+                "data_custodian_email": "data.owner@justice.gov.uk",
             },
         )
         assert response.status_code == 200
