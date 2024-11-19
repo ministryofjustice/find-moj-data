@@ -287,6 +287,7 @@ def test_parse_properties():
                 {"key": "row_count", "value": 100},
                 {"key": "Not_IN", "value": "dddd"},
                 {"key": "audience", "value": "Internal"},
+                {"key": "refresh_period", "value": "Weekly"},
             ],
             "name": "test",
             "description": "test description",
@@ -311,7 +312,7 @@ def test_parse_properties():
             source_dataset_name="",
             s3_location="s3://databucket/",
         ),
-        data_summary=DataSummary(row_count=100),
+        data_summary=DataSummary(row_count=100, refresh_period="Weekly"),
         further_information=FurtherInformation(
             dc_slack_channel_name="test-channel", dc_slack_channel_url="test-url"
         ),
@@ -666,6 +667,13 @@ def test_parse_updated():
         ([TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")], "Daily"),
         ([TagRef(display_name="monthly", urn="urn:li:tag:monthly")], "Monthly"),
         ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], ""),
+        (
+            [
+                TagRef(display_name="daily", urn="urn:li:tag:dc_cadet"),
+                TagRef(display_name="monthly", urn="urn:li:tag:dc_cadet")
+            ],
+            "Daily, monthly"
+        ),
     ],
 )
 def test_get_refresh_period_from_cadet_tags(tags, expected_refresh_period):

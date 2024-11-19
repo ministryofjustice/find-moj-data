@@ -192,7 +192,7 @@ def get_refresh_period_from_cadet_tags(
         logger.warn(f"More than one refresh period tag found: {tags=}")
 
     if relevant_refresh_schedules:
-        refresh_schedule = relevant_refresh_schedules[0].capitalize()
+        refresh_schedule = ", ".join(relevant_refresh_schedules).capitalize()
         return refresh_schedule
 
     if not relevant_refresh_schedules:
@@ -249,7 +249,9 @@ def parse_properties(
     usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
     data_summary = DataSummary.model_validate(custom_properties_dict)
     tags = parse_tags(entity)
-    data_summary.refresh_period = get_refresh_period_from_cadet_tags(tags)
+    cadet_refresh_period = get_refresh_period_from_cadet_tags(tags)
+    if cadet_refresh_period:
+        data_summary.refresh_period = cadet_refresh_period
     audience = custom_properties_dict.get("audience", "Internal")
 
     further_information = FurtherInformation.model_validate(custom_properties_dict)
