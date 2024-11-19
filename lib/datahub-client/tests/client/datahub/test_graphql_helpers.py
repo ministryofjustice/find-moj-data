@@ -672,7 +672,7 @@ def test_parse_updated():
                 TagRef(display_name="daily", urn="urn:li:tag:dc_cadet"),
                 TagRef(display_name="monthly", urn="urn:li:tag:dc_cadet")
             ],
-            "Daily, Monthly"
+            "Daily, monthly"
         ),
     ],
 )
