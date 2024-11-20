@@ -57,7 +57,7 @@ jobs:
       # Notify Slack - data-catalogue
       - uses: ravsamhq/notify-slack-action@v2
         with:
-          status: Success
+          status: success
           notification_title: "Deployment Successful"
           message_format: ":rocket: <https://preprod.find-moj-data.service.justice.gov.uk/|New Preproduction Deployment>"
           footer: "Linked Repo <${{github.server_url}}/${{github.repository}}|${{github.repository}}> | <${{github.server_url}}/${{github.repository}}/actions/runs/${{github.event.workflow_run.id}}|View>"
