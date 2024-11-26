@@ -1,3 +1,4 @@
+from collections import namedtuple
 import json
 import logging
 from typing import Any, Sequence, Tuple
@@ -28,6 +29,11 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
+
+DASHBOARD = "DASHBOARD"
+CONTAINER = "CONTAINER"
+CHART = "CHART"
+DATASET = "DATASET"
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +113,16 @@ class SearchClient:
     def _parse_search_results(self, response) -> Tuple[list, list]:
         page_results = []
         malformed_result_urns = []
+
+        EntityMapping = namedtuple('EntityMapping', ['result_type', 'parsing_function'])
+
+        entity_types_map = {
+            DATASET: EntityMapping(ResultType.TABLE, self._parse_dataset),
+            CHART: EntityMapping(ResultType.CHART, self._parse_dataset),
+            CONTAINER: EntityMapping(ResultType.DATABASE, self._parse_container),
+            DASHBOARD: EntityMapping(ResultType.DASHBOARD, self._parse_container)
+        }
+
         for result in response["searchResults"]:
             entity = result["entity"]
             entity_type = entity["type"]
@@ -114,28 +130,11 @@ class SearchClient:
             matched_fields = self._get_matched_fields(result=result)
 
             try:
-                if entity_type == "DATASET":
-                    parsed_result = self._parse_dataset(
-                        entity, matched_fields, ResultType.TABLE
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "CHART":
-                    parsed_result = self._parse_dataset(
-                        entity, matched_fields, ResultType.CHART
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "CONTAINER":
-                    parsed_result = self._parse_container(
-                        entity, matched_fields, ResultType.DATABASE
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "DASHBOARD":
-                    parsed_result = self._parse_container(
-                        entity, matched_fields, ResultType.DASHBOARD
-                    )
-                    page_results.append(parsed_result)
-                else:
-                    raise Exception
+                parsed_result = entity_types_map[entity_type].parsing_function(entity, matched_fields, entity_types_map[entity_type].result_type)
+                page_results.append(parsed_result)
+            except KeyError as k_e:
+                logger.exception(f"Parsing for result {entity_urn} failed, unkown entity type: {k_e}")
+                malformed_result_urns.append(entity_urn)
             except Exception:
                 logger.exception(f"Parsing for result {entity_urn} failed")
                 malformed_result_urns.append(entity_urn)
