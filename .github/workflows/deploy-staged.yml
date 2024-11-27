@@ -53,6 +53,8 @@ jobs:
   notify-preprod-success:
     needs: deploy-preprod
     runs-on: ubuntu-latest
+    if: |
+      (needs.deploy-preprod.result == 'success')
     steps:
       # Notify Slack - data-catalogue
       - uses: ravsamhq/notify-slack-action@v2
