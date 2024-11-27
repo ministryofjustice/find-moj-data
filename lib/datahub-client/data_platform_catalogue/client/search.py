@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Any, Sequence, Tuple
+from typing import Any, Sequence, Tuple, Dict
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
@@ -17,6 +17,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_tags,
 )
 from data_platform_catalogue.entities import EntityRef
+from collections import namedtuple
 from data_platform_catalogue.search_types import (
     DomainOption,
     FacetOption,
@@ -29,6 +30,16 @@ from data_platform_catalogue.search_types import (
 )
 
 logger = logging.getLogger(__name__)
+
+RESULT_TYPE_TO_DATAHUB_ENTITY_MAPPING = {
+    ResultType.TABLE: "DATASET",
+    ResultType.GLOSSARY_TERM: "GLOSSARY_TERM",
+    ResultType.CHART: "CHART",
+    ResultType.DATABASE: "CONTAINER",
+    ResultType.DASHBOARD: "DASHBOARD",
+    ResultType.PUBLICATION_COLLECTION: "CONTAINER",
+    ResultType.PUBLICATION_DATASET: "DATASET"
+}
 
 
 class SearchClient:
@@ -93,7 +104,6 @@ class SearchClient:
 
         logger.debug(json.dumps(response, indent=2))
 
-        # Should these 2 variables be bound or unbound?
         page_results, malformed_result_urns = self._parse_search_results(response)
 
         return SearchResponse(
@@ -110,29 +120,25 @@ class SearchClient:
             entity = result["entity"]
             entity_type = entity["type"]
             entity_urn = entity["urn"]
+            entity_subtypes = self._parse_types_and_sub_types(entity, entity_type).get("entity_sub_types")
             matched_fields = self._get_matched_fields(result=result)
 
             try:
-                if entity_type == "DATASET":
-                    parsed_result = self._parse_dataset(
-                        entity, matched_fields, ResultType.TABLE
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "CHART":
-                    parsed_result = self._parse_dataset(
-                        entity, matched_fields, ResultType.CHART
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "CONTAINER":
-                    parsed_result = self._parse_container(
-                        entity, matched_fields, ResultType.DATABASE
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "DASHBOARD":
-                    parsed_result = self._parse_container(
-                        entity, matched_fields, ResultType.DASHBOARD
-                    )
-                    page_results.append(parsed_result)
+                EntityTypeMapping = namedtuple("EntityTypeMapping", ["entity_type", "entity_subtype", "result_type", "parse_function"])
+
+                entity_type_mapping = [
+                    EntityTypeMapping(entity_type="DATASET", entity_subtype="Publication dataset", result_type=ResultType.PUBLICATION_DATASET, parse_function=self._parse_dataset),
+                    EntityTypeMapping(entity_type="DATASET", entity_subtype=None, result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                    EntityTypeMapping(entity_type="CHART", entity_subtype=None, result_type=ResultType.CHART, parse_function=self._parse_dataset),
+                    EntityTypeMapping(entity_type="CONTAINER", entity_subtype="Publication collection", result_type=ResultType.PUBLICATION_COLLECTION, parse_function=self._parse_container),
+                    EntityTypeMapping(entity_type="CONTAINER", entity_subtype=None, result_type=ResultType.DATABASE, parse_function=self._parse_container),
+                    EntityTypeMapping(entity_type="DASHBOARD", entity_subtype=None, result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
+                ]
+                for mapping in entity_type_mapping:
+                    if mapping.entity_type == entity_type and (mapping.entity_subtype is None or mapping.entity_subtype in entity_subtypes):
+                        parsed_result = mapping.parse_function(entity, matched_fields, mapping.result_type)
+                        page_results.append(parsed_result)
+                        break
                 else:
                     raise Exception
             except Exception:
@@ -227,23 +233,17 @@ class SearchClient:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
         return page_results
 
-    def _map_result_types(self, result_types: Sequence[ResultType]):
+    def _map_result_types(
+        self,
+        result_types: Sequence[ResultType],
+        mapping: Dict[ResultType, str] = RESULT_TYPE_TO_DATAHUB_ENTITY_MAPPING
+    ) -> list[str]:
         """
         Map result types to Datahub EntityTypes
         """
-        types = []
-        if ResultType.TABLE in result_types:
-            types.append("DATASET")
-        if ResultType.GLOSSARY_TERM in result_types:
-            types.append("GLOSSARY_TERM")
-        if ResultType.CHART in result_types:
-            types.append("CHART")
-        if ResultType.DATABASE in result_types:
-            types.append("CONTAINER")
-        if ResultType.DASHBOARD in result_types:
-            types.append("DASHBOARD")
+        relevant_types = list(set(mapping[result_type] for result_type in result_types))
 
-        return types
+        return relevant_types
 
     def _map_filters(self, filters: Sequence[MultiSelectFilter]):
         result = [

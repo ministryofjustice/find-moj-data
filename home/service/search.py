@@ -6,6 +6,7 @@ from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
     ResultType,
+    RESULT_TYPES_TO_FILTER,
     SearchResponse,
     SortOption,
 )
@@ -47,14 +48,33 @@ class SearchService(GenericService):
 
     def _build_entity_types(self, entity_types: list[str]) -> tuple[ResultType, ...]:
         default_entities = tuple(
-            entity for entity in ResultType if entity.name != "GLOSSARY_TERM"
+            entity
+            for entity in ResultType
+            if entity.name != "GLOSSARY_TERM"
+            and entity not in RESULT_TYPES_TO_FILTER
         )
         chosen_entities = (
-            tuple(ResultType[entity] for entity in entity_types)
+            tuple(
+                ResultType[entity]
+                for entity in entity_types
+                if ResultType[entity] not in RESULT_TYPES_TO_FILTER
+            )
             if entity_types
             else None
         )
+
         return chosen_entities if chosen_entities else default_entities
+
+    def _build_entity_subtypes_filter(self, entity_types: list[str]) -> MultiSelectFilter | None:
+        # The filter needs a non-capitalised string rather than the enum value
+        subtype_strings = [
+            ResultType[entity_type].value
+            for entity_type in entity_types
+            if ResultType[entity_type] in RESULT_TYPES_TO_FILTER
+        ]
+        entity_subtypes_filter = MultiSelectFilter("typeNames", subtype_strings) if subtype_strings else None
+
+        return entity_subtypes_filter
 
     def _format_query_value(self, query: str) -> str:
         query_pattern: str = r"^[\"'].+[\"']$"
@@ -68,8 +88,8 @@ class SearchService(GenericService):
         form_data = self.form_data
         query = self._format_query_value(form_data.get("query", ""))
 
-        # we want to sort results ascending when a user is browsing data via non
-        # keyword searches - otherwise we use the default releveant ordering
+        # we want to sort results ascending when a user is browsing data via
+        # non-keyword searches - otherwise we use the default relevant ordering
         sort = (
             form_data.get("sort", "relevance")
             if query not in ["*", ""]
@@ -82,6 +102,8 @@ class SearchService(GenericService):
             "dc_where_to_access_dataset=", form_data.get("where_to_access", [])
         )
         entity_types = self._build_entity_types(form_data.get("entity_types", []))
+        entity_subtypes_filter = self._build_entity_subtypes_filter(form_data.get("entity_types", []))
+
         filter_value = []
         if domain:
             filter_value.append(MultiSelectFilter("domains", [domain]))
@@ -91,6 +113,8 @@ class SearchService(GenericService):
             filter_value.append(
                 MultiSelectFilter("tags", [f"urn:li:tag:{tag}" for tag in tags])
             )
+        if entity_subtypes_filter:
+            filter_value.append(entity_subtypes_filter)
 
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
@@ -199,7 +223,7 @@ class SearchService(GenericService):
 
         return context
 
-    def _highlight_results(self):
+    def _highlight_results(self) -> SearchResponse:
         "Take a SearchResponse and add bold markdown where the query appears"
         query = self.form.cleaned_data.get("query", "") if self.form.is_valid() else ""
         highlighted_results = deepcopy(self.results)

@@ -2,20 +2,28 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum, auto
+from enum import Enum, StrEnum, auto
 from typing import Any
 
 from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef
 
 
-class ResultType(Enum):
+class ResultType(StrEnum):
     """Result type."""
 
-    TABLE = auto()
-    GLOSSARY_TERM = auto()
-    CHART = auto()
-    DATABASE = auto()
-    DASHBOARD = auto()
+    TABLE = "Table"
+    GLOSSARY_TERM = "Glossary term"
+    CHART = "Chart"
+    DATABASE = "Database"
+    DASHBOARD = "Dashboard"
+    PUBLICATION_DATASET = "Publication dataset"
+    PUBLICATION_COLLECTION = "Publication collection"
+
+
+RESULT_TYPES_TO_FILTER = [
+    ResultType.PUBLICATION_DATASET,
+    ResultType.PUBLICATION_COLLECTION
+]
 
 
 @dataclass
