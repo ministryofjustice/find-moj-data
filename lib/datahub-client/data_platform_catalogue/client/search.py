@@ -31,15 +31,6 @@ from data_platform_catalogue.search_types import (
 
 logger = logging.getLogger(__name__)
 
-RESULT_TYPE_TO_DATAHUB_ENTITY_MAPPING = {
-    ResultType.TABLE: "DATASET",
-    ResultType.GLOSSARY_TERM: "GLOSSARY_TERM",
-    ResultType.CHART: "CHART",
-    ResultType.DATABASE: "CONTAINER",
-    ResultType.DASHBOARD: "DASHBOARD",
-    ResultType.PUBLICATION_COLLECTION: "CONTAINER",
-    ResultType.PUBLICATION_DATASET: "DATASET"
-}
 
 EntityTypeMapping = namedtuple("EntityTypeMapping", ["result_type", "parse_function"])
 
@@ -53,20 +44,23 @@ class SearchClient:
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
         self.entity_subtype_mappings = {
-            "DATASET": {
+            ResultType.TABLE.datahub_entity_type: {
                 "Publication dataset": EntityTypeMapping(result_type=ResultType.PUBLICATION_DATASET, parse_function=self._parse_dataset),
                 "Metric": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
                 "Table": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                "Model": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                "Seed": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                "Source": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
             },
-            "CHART": {
+            ResultType.CHART.datahub_entity_type: {
                 "CHART": EntityTypeMapping(result_type=ResultType.CHART, parse_function=self._parse_dataset)
             },
-            "CONTAINER": {
+            ResultType.DATABASE.datahub_entity_type: {
+                "Database": EntityTypeMapping(result_type=ResultType.DATABASE, parse_function=self._parse_dataset),
                 "Publication collection": EntityTypeMapping(result_type=ResultType.PUBLICATION_COLLECTION, parse_function=self._parse_container),
-                None: EntityTypeMapping(result_type=ResultType.DATABASE, parse_function=self._parse_container)
             },
-            "DASHBOARD": {
-                None: EntityTypeMapping(result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
+            ResultType.DASHBOARD.datahub_entity_type: {
+                "DASHBOARD": EntityTypeMapping(result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
             }
         }
 
@@ -245,12 +239,11 @@ class SearchClient:
     def _map_result_types(
         self,
         result_types: Sequence[ResultType],
-        mapping: Dict[ResultType, str] = RESULT_TYPE_TO_DATAHUB_ENTITY_MAPPING
     ) -> list[str]:
         """
         Map result types to Datahub EntityTypes
         """
-        relevant_types = list(set(mapping[result_type] for result_type in result_types))
+        relevant_types = list(set(result_type.datahub_entity_type for result_type in result_types))
 
         return relevant_types
 

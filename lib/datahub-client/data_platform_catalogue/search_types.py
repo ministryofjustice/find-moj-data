@@ -8,16 +8,23 @@ from typing import Any
 from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef
 
 
-class ResultType(StrEnum):
+class ResultType(Enum):
     """Result type."""
 
-    TABLE = "Table"
-    GLOSSARY_TERM = "Glossary term"
-    CHART = "Chart"
-    DATABASE = "Database"
-    DASHBOARD = "Dashboard"
-    PUBLICATION_DATASET = "Publication dataset"
-    PUBLICATION_COLLECTION = "Publication collection"
+    TABLE = ("Table", "DATASET")
+    GLOSSARY_TERM = ("Glossary term", "GLOSSARY_TERM")
+    CHART = ("Chart", "CHART")
+    DATABASE = ("Database", "CONTAINER")
+    DASHBOARD = ("Dashboard", "DASHBOARD")
+    PUBLICATION_DATASET = ("Publication dataset", "CONTAINER")
+    PUBLICATION_COLLECTION = ("Publication collection", "DATASET")
+
+    def __new__(cls, value, datahub_entity_type):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj.datahub_entity_type = datahub_entity_type
+        return obj
+
 
 
 RESULT_TYPES_TO_FILTER = [
