@@ -11,18 +11,19 @@ from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef
 class ResultType(Enum):
     """Result type."""
 
-    TABLE = ("Table", "DATASET")
-    GLOSSARY_TERM = ("Glossary term", "GLOSSARY_TERM")
-    CHART = ("Chart", "CHART")
-    DATABASE = ("Database", "CONTAINER")
-    DASHBOARD = ("Dashboard", "DASHBOARD")
-    PUBLICATION_DATASET = ("Publication dataset", "DATASET")
-    PUBLICATION_COLLECTION = ("Publication collection", "CONTAINER")
+    TABLE = ("Table", "DATASET", "table")
+    GLOSSARY_TERM = ("Glossary term", "GLOSSARY_TERM", "glossary_term")
+    CHART = ("Chart", "CHART", "chart")
+    DATABASE = ("Database", "CONTAINER", "database")
+    DASHBOARD = ("Dashboard", "DASHBOARD", "dashboard")
+    PUBLICATION_DATASET = ("Publication dataset", "DATASET", "publication_dataset")
+    PUBLICATION_COLLECTION = ("Publication collection", "CONTAINER", "publication_collection")
 
-    def __new__(cls, value, datahub_entity_type):
+    def __new__(cls, value, datahub_entity_type, url_formatted):
         obj = object.__new__(cls)
         obj._value_ = value
         obj.datahub_entity_type = datahub_entity_type
+        obj.url_formatted = url_formatted
         return obj
 
 

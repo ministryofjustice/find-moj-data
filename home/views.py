@@ -1,8 +1,9 @@
 import csv
+import logging
 from urllib.parse import urlparse
 
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
-from data_platform_catalogue.search_types import DomainOption
+from data_platform_catalogue.search_types import DomainOption, ResultType
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -15,6 +16,8 @@ from home.service.details import (
     DashboardDetailsService,
     DatabaseDetailsService,
     DatasetDetailsService,
+    PublicationCollectionDetailsService,
+    PublicationDatasetDetailsService,
 )
 from home.service.details_csv import (
     DashboardDetailsCsvFormatter,
@@ -26,6 +29,14 @@ from home.service.glossary import GlossaryService
 from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 
+type_details_map = {
+    ResultType.TABLE.url_formatted: DatasetDetailsService,
+    ResultType.DATABASE.url_formatted: DatabaseDetailsService,
+    ResultType.CHART.url_formatted: ChartDetailsService,
+    ResultType.DASHBOARD.url_formatted: DashboardDetailsService,
+    ResultType.PUBLICATION_COLLECTION.url_formatted: PublicationCollectionDetailsService,
+    ResultType.PUBLICATION_DATASET.url_formatted: PublicationDatasetDetailsService
+}
 
 @cache_control(max_age=300, private=True)
 def home_view(request):
@@ -39,26 +50,16 @@ def home_view(request):
 
 @cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
+
     try:
-        if result_type == "table":
-            service = DatasetDetailsService(urn)
-            template = service.template
-        elif result_type == "database":
-            service = DatabaseDetailsService(urn)
-            template = "details_database.html"
-        elif result_type == "chart":
-            service = ChartDetailsService(urn)
-            template = "details_chart.html"
-        elif result_type == "dashboard":
-            service = DashboardDetailsService(urn)
-            template = "details_dashboard.html"
-        else:
-            raise Http404("Invalid result type")
-
-        return render(request, template, service.context)
-
+        service = type_details_map[result_type](urn)
+    except KeyError as missing_result_type:
+        logging.exception(f"Missing service_details_map for {missing_result_type}")
+        raise Http404("Invalid result type")
     except EntityDoesNotExist:
         raise Http404(f"{result_type} '{urn}' does not exist")
+
+    return render(request, service.template, service.context)
 
 
 @cache_control(max_age=300, private=True)

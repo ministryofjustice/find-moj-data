@@ -66,6 +66,7 @@ from data_platform_catalogue.entities import (
     Governance,
     RelationshipType,
     Table,
+    PublicationCollection,
 )
 from data_platform_catalogue.search_types import (
     DomainOption,
@@ -410,6 +411,51 @@ class DataHubCatalogueClient:
                 metadata_last_ingested=last_ingested,
                 created=created,
                 data_last_modified=modified,
+                custom_properties=custom_properties,
+                platform=EntityRef(display_name=platform_name, urn=platform_name),
+            )
+        raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
+
+    def get_publication_collection_details(self, urn: str) -> PublicationCollection:
+        if self.check_entity_exists_by_urn(urn):
+            response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
+                "container"
+            ]
+            platform_name = response["platform"]["name"]
+            properties, custom_properties = parse_properties(response)
+            domain = parse_domain(response)
+            owner = parse_data_owner(response)
+            stewards = parse_stewards(response)
+            custodians = parse_custodians(response)
+            tags = parse_tags(response)
+            glossary_terms = parse_glossary_terms(response)
+            created, modified = parse_created_and_modified(properties)
+            modified = parse_last_modified(response)
+            name, display_name, qualified_name = parse_names(response, properties)
+
+            child_relations = parse_relations(
+                relationship_type=RelationshipType.CHILD,
+                relations_list=[response["relationships"]],
+                entity_type_of_relations=ResultType.PUBLICATION_DATASET.url_formatted,
+            )
+            relations_to_display = self.list_relations_to_display(child_relations)
+
+            return PublicationCollection(
+                urn=urn,
+                external_url=properties.get("externalUrl", ""),
+                display_name=display_name,
+                name=name,
+                fully_qualified_name=qualified_name,
+                description=properties.get("description", ""),
+                relationships=relations_to_display,
+                domain=domain,
+                governance=Governance(
+                    data_owner=owner, data_custodians=custodians, data_stewards=stewards
+                ),
+                tags=tags,
+                glossary_terms=glossary_terms,
+                last_modified=modified,
+                created=created,
                 custom_properties=custom_properties,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
             )

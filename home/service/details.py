@@ -66,6 +66,7 @@ class DatabaseDetailsService(GenericService):
             RelationshipType.CHILD
         ]
         self.context = self._get_context()
+        self.template = "details_database.html"
 
     def _get_context(self):
         context = {
@@ -151,6 +152,7 @@ class ChartDetailsService(GenericService):
         self.chart_metadata = self.client.get_chart_details(urn)
         self.parent_entity = _parse_parent(self.chart_metadata.relationships or {})
         self.context = self._get_context()
+        self.template = "details_chart.html"
 
     def _get_context(self):
         return {
@@ -175,6 +177,7 @@ class DashboardDetailsService(GenericService):
         self.dashboard_metadata = self.client.get_dashboard_details(urn)
         self.children = self.dashboard_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()
+        self.template = "details_dashboard.html"
 
     def _get_context(self):
 
@@ -194,3 +197,42 @@ class DashboardDetailsService(GenericService):
             ),
             "PlatformUrns": PlatformUrns,
         }
+
+
+class PublicationCollectionDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.urn = urn
+        self.client = self._get_catalogue_client()
+
+        self.publication_collection_metadata = self.client.get_publication_collection_details(self.urn)
+
+        if not self.publication_collection_metadata:
+            raise ObjectDoesNotExist(urn)
+
+        self.entities_in_container = self.publication_collection_metadata.relationships[
+            RelationshipType.CHILD
+        ]
+        self.context = self._get_context()
+        self.template = "details_publication_collection.html"
+
+    def _get_context(self):
+        context = {
+            "entity": self.publication_collection_metadata,
+            "entity_type": _("PublicationCollection"),
+            "platform_name": friendly_platform_name(
+                self.publication_collection_metadata.platform.display_name
+            ),
+            "publications": sorted(
+                self.entities_in_container,
+                key=lambda d: d.entity_ref.display_name,
+            ),
+            "h1_value": self.publication_collection_metadata.name,
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.publication_collection_metadata.custom_properties.access_information.dc_access_requirements
+            ),
+        }
+
+        return context
+
+class PublicationDatasetDetailsService(GenericService):
+    pass

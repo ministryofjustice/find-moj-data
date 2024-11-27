@@ -3,9 +3,12 @@
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Access requirements" %}</h2>
   <p id="request_access" class="govuk-body">
+
     {% if access_requirements %}
       {% if is_access_url %}
         <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% translate "Click link for access information (opens in new tab)" %}</a>
+      {% elif entity.external_url %}
+        <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% blocktranslate with display_name=entity.display_name platform_name=platform_name %}"{{ display_name }}" on {{platform_name}}{% endblocktranslate %}</a> {% translate '(opens in new tab)' %}
       {% else %}
         {{ access_requirements }}
       {% endif %}
