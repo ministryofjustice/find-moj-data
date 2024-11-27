@@ -234,5 +234,32 @@ class PublicationCollectionDetailsService(GenericService):
 
         return context
 
+
 class PublicationDatasetDetailsService(GenericService):
-    pass
+    def __init__(self, urn: str):
+        self.urn = urn
+        self.client = self._get_catalogue_client()
+
+        self.publication_dataset_metadata = self.client.get_publication_dataset_details(self.urn)
+
+        if not self.publication_dataset_metadata:
+            raise ObjectDoesNotExist(urn)
+
+        relationships = self.publication_dataset_metadata.relationships or {}
+        self.parent_entity = _parse_parent(relationships)
+        self.context = self._get_context()
+        self.template = "details_publication_dataset.html"
+
+    def _get_context(self):
+
+        return {
+            "entity": self.publication_dataset_metadata,
+            "entity_type": "Table",
+            "parent_entity": self.parent_entity,
+            "parent_type": ResultType.DATABASE.name.lower(),
+            "h1_value": self.publication_dataset_metadata.name,
+            # noqa: E501
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.publication_dataset_metadata.custom_properties.access_information.dc_access_requirements
+            ),
+        }

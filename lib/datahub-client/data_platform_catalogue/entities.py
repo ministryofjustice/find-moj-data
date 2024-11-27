@@ -505,6 +505,19 @@ class PublicationCollection(Entity):
         examples=["https://data.justice.gov.uk/prisons/criminal-jsutice/publications"],
     )
 
+
+class PublicationDataset(Entity):
+    """For source system publication collections"""
+    urn: str | None = Field(
+        description="Unique identifier for the entity. Relates to Datahub's urn",
+        examples=["urn:li:dataset:(urn:li:dataPlatform:gov.uk,statistics2011,DEV)"],
+    )
+    external_url: str = Field(
+        description="URL to view the collection",
+        examples=["https://data.justice.gov.uk/prisons/criminal-jsutice/publications"],
+    )
+
+
 class Table(Entity):
     """A table in a database or a tabular dataset. DataHub calls them datasets."""
 
