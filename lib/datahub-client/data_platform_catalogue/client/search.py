@@ -41,6 +41,8 @@ RESULT_TYPE_TO_DATAHUB_ENTITY_MAPPING = {
     ResultType.PUBLICATION_DATASET: "DATASET"
 }
 
+EntityTypeMapping = namedtuple("EntityTypeMapping", ["result_type", "parse_function"])
+
 
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
@@ -50,6 +52,23 @@ class SearchClient:
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
+        self.entity_subtype_mappings = {
+            "DATASET": {
+                "Publication dataset": EntityTypeMapping(result_type=ResultType.PUBLICATION_DATASET, parse_function=self._parse_dataset),
+                "Metric": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                "Table": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+            },
+            "CHART": {
+                "CHART": EntityTypeMapping(result_type=ResultType.CHART, parse_function=self._parse_dataset)
+            },
+            "CONTAINER": {
+                "Publication collection": EntityTypeMapping(result_type=ResultType.PUBLICATION_COLLECTION, parse_function=self._parse_container),
+                None: EntityTypeMapping(result_type=ResultType.DATABASE, parse_function=self._parse_container)
+            },
+            "DASHBOARD": {
+                None: EntityTypeMapping(result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
+            }
+        }
 
     def search(
         self,
@@ -124,23 +143,13 @@ class SearchClient:
             matched_fields = self._get_matched_fields(result=result)
 
             try:
-                EntityTypeMapping = namedtuple("EntityTypeMapping", ["entity_type", "entity_subtype", "result_type", "parse_function"])
-
-                entity_type_mapping = [
-                    EntityTypeMapping(entity_type="DATASET", entity_subtype="Publication dataset", result_type=ResultType.PUBLICATION_DATASET, parse_function=self._parse_dataset),
-                    EntityTypeMapping(entity_type="DATASET", entity_subtype=None, result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                    EntityTypeMapping(entity_type="CHART", entity_subtype=None, result_type=ResultType.CHART, parse_function=self._parse_dataset),
-                    EntityTypeMapping(entity_type="CONTAINER", entity_subtype="Publication collection", result_type=ResultType.PUBLICATION_COLLECTION, parse_function=self._parse_container),
-                    EntityTypeMapping(entity_type="CONTAINER", entity_subtype=None, result_type=ResultType.DATABASE, parse_function=self._parse_container),
-                    EntityTypeMapping(entity_type="DASHBOARD", entity_subtype=None, result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
-                ]
-                for mapping in entity_type_mapping:
-                    if mapping.entity_type == entity_type and (mapping.entity_subtype is None or mapping.entity_subtype in entity_subtypes):
-                        parsed_result = mapping.parse_function(entity, matched_fields, mapping.result_type)
-                        page_results.append(parsed_result)
-                        break
-                else:
-                    raise Exception
+                # Assuming that the first subtype is the most specific one
+                entity_subtype_mapping = self.entity_subtype_mappings[entity_type][entity_subtypes[0]]
+                parsed_result = entity_subtype_mapping.parse_function(entity, matched_fields, entity_subtype_mapping.result_type)
+                page_results.append(parsed_result)
+            except KeyError as k_e:
+                logger.exception(f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}")
+                malformed_result_urns.append(entity_urn)
             except Exception:
                 logger.exception(f"Parsing for result {entity_urn} failed")
                 malformed_result_urns.append(entity_urn)
