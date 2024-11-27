@@ -142,6 +142,8 @@ spec:
             runAsNonRoot: true
             seccompProfile:
               type: RuntimeDefault
+            capabilities:
+              drop: ["ALL"]
           volumeMounts:
             - mountPath: /tmp
               name: tmp
