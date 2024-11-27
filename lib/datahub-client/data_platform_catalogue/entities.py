@@ -445,13 +445,18 @@ class Entity(BaseModel):
             ]
         ],
     )
-    last_modified: Optional[datetime] = Field(
+    metadata_last_ingested: Optional[datetime] = Field(
         description="When the metadata was last updated in the catalogue",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
     created: Optional[datetime] = Field(
         description="When the data entity was first created",
+        default=None,
+        examples=[datetime(2011, 10, 2, 3, 0, 0)],
+    )
+    data_last_modified: Optional[datetime] = Field(
+        description="When the data entity was last modified in the source system",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
@@ -525,7 +530,7 @@ class Table(Entity):
             ]
         ],
     )
-    last_updated: Optional[datetime] = Field(
+    last_datajob_run_date: Optional[datetime] = Field(
         description="Indicates the time when the data were last refreshed (eg pipeline run with dbt).",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],

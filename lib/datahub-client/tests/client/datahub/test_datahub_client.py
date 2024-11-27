@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -13,8 +12,8 @@ from data_platform_catalogue.client.exceptions import (
     ReferencedEntityMissing,
 )
 from data_platform_catalogue.entities import (
-    Audience,
     AccessInformation,
+    Audience,
     Chart,
     Column,
     ColumnRef,
@@ -81,7 +80,7 @@ class TestCatalogueClientWithDatahub:
                     )
                 ]
             },
-            last_modified=1710426920000,
+            metadata_last_ingested=1710426920000,
             created=1710426920000,
             tags=[TagRef(urn="test", display_name="test")],
             platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
@@ -138,7 +137,7 @@ class TestCatalogueClientWithDatahub:
                 ],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=1710426920000,
+            metadata_last_ingested=1710426920000,
             created=None,
             column_details=[
                 Column(
@@ -206,7 +205,7 @@ class TestCatalogueClientWithDatahub:
                 ],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=1710426920000,
+            metadata_last_ingested=1710426920000,
             created=None,
             column_details=[
                 Column(
@@ -399,7 +398,8 @@ class TestCatalogueClientWithDatahub:
                 data_stewards=[],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-            last_modified=1709619407814,
+            metadata_last_ingested=1709619407814,
+            data_last_modified=1709619407814,
             provider="LAA",
             created=None,
             platform=EntityRef(urn="datahub", display_name="datahub"),
@@ -467,7 +467,7 @@ class TestCatalogueClientWithDatahub:
                 data_stewards=[],
             ),
             tags=[],
-            last_modified=None,
+            metadata_last_ingested=None,
             created=None,
             platform=EntityRef(urn="datahub", display_name="datahub"),
             custom_properties=CustomEntityProperties(
@@ -527,7 +527,7 @@ class TestCatalogueClientWithDatahub:
                 data_stewards=[],
             ),
             tags=[],
-            last_modified=None,
+            metadata_last_ingested=None,
             created=None,
             platform=EntityRef(urn="justice-data", display_name="justice-data"),
             custom_properties=CustomEntityProperties(

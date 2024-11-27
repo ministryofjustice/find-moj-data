@@ -42,6 +42,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_columns,
     parse_custodians,
     parse_data_created,
+    parse_data_last_modified,
     parse_data_owner,
     parse_domain,
     parse_glossary_terms,
@@ -276,8 +277,9 @@ class DataHubCatalogueClient:
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created = parse_data_created(properties)
-            modified = parse_metadata_last_ingested(response)
-            updated = parse_last_datajob_run_date(response)
+            modified = parse_data_last_modified(properties)
+            last_ingested = parse_metadata_last_ingested(response)
+            last_run_date = parse_last_datajob_run_date(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             lineage_relations = parse_relations(
@@ -311,9 +313,10 @@ class DataHubCatalogueClient:
                 subtypes=subtypes,
                 tags=tags,
                 glossary_terms=glossary_terms,
-                last_modified=modified,
-                last_updated=updated,
+                metadata_last_ingested=last_ingested,
+                last_datajob_run_date=last_run_date,
                 created=created,
+                data_last_modified=modified,
                 column_details=columns,
                 custom_properties=custom_properties,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
@@ -333,6 +336,8 @@ class DataHubCatalogueClient:
             custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
+            created = parse_data_created(properties)
+            modified = parse_data_last_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
             parent_relations = parse_relations(
@@ -354,6 +359,8 @@ class DataHubCatalogueClient:
                 relationships=relations_to_display,
                 tags=tags,
                 glossary_terms=glossary_terms,
+                created=created,
+                data_last_modified=modified,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
                 custom_properties=custom_properties,
             )
@@ -374,7 +381,8 @@ class DataHubCatalogueClient:
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created = parse_data_created(properties)
-            modified = parse_metadata_last_ingested(response)
+            modified = parse_data_last_modified(properties)
+            last_ingested = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             child_relations = parse_relations(
@@ -397,8 +405,9 @@ class DataHubCatalogueClient:
                 ),
                 tags=tags,
                 glossary_terms=glossary_terms,
-                last_modified=modified,
+                metadata_last_ingested=last_ingested,
                 created=created,
+                data_last_modified=modified,
                 custom_properties=custom_properties,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
             )
@@ -418,7 +427,8 @@ class DataHubCatalogueClient:
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created = parse_data_created(properties)
-            modified = parse_metadata_last_ingested(response)
+            modified = parse_data_last_modified(properties)
+            last_ingested = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
             children = parse_relations(
                 RelationshipType.CHILD, [response["relationships"]]
@@ -439,8 +449,9 @@ class DataHubCatalogueClient:
                 external_url=properties.get("externalUrl", ""),
                 tags=tags,
                 glossary_terms=glossary_terms,
-                last_modified=modified,
+                metadata_last_ingested=last_ingested,
                 created=created,
+                data_last_modified=modified,
                 custom_properties=custom_properties,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
             )

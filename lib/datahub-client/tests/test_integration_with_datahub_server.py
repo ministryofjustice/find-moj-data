@@ -12,6 +12,7 @@ import time
 from datetime import datetime, timezone
 
 import pytest
+
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -107,7 +108,7 @@ def test_domain_facets_are_returned():
                 }
             }
         ],
-        last_modified=datetime(2020, 5, 17),
+        metadata_last_ingested=datetime(2020, 5, 17),
         created=datetime(2020, 5, 17),
         tags=[TagRef(urn="test", display_name="test")],
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
@@ -156,7 +157,7 @@ def test_filter_by_urn():
         ),
         domain=DomainRef(urn="LAA", display_name="LAA"),
         tables=[],
-        last_modified=datetime(2020, 5, 17),
+        metadata_last_ingested=datetime(2020, 5, 17),
         created=datetime(2020, 5, 17),
         tags=[TagRef(urn="test", display_name="test")],
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
