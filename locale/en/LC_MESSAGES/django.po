@@ -165,6 +165,7 @@ msgstr "Name"
 
 #: home/service/search.py:240 templates/details_base.html:48
 #: templates/details_dashboard.html:14 templates/details_database.html:14
+#: templates/details_publication_collection.html:14
 #: templates/details_table.html:15
 msgid "Description"
 msgstr "Description"
@@ -337,6 +338,7 @@ msgid "Database content"
 msgstr "Database content"
 
 #: templates/details_database.html:13
+#: templates/details_publication_collection.html:13
 msgid "Table name"
 msgstr "Table name"
 
@@ -399,9 +401,10 @@ msgstr "Discover data from across the Ministry of Justice"
 #: templates/home.html:12
 msgid "service_description"
 msgstr ""
-"Find MoJ data shows you what data exists and how to access it. <a aria-"
-"label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-moj-"
-"data.service.justice.gov.uk/\">Learn more</a>"
+"Find MoJ data shows you what data exists and how to access it. This catalogue service contains "
+"metadata - data which describes the data - not the data itself. <a "
+"aria-label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-"
+"moj-data.service.justice.gov.uk/\">Learn more</a>"
 
 #: templates/home.html:44
 msgid "Browse by domain"
@@ -632,3 +635,12 @@ msgstr "first name"
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
+
+#~ msgid "Please contact the data owner for access information."
+#~ msgstr "Contact the data owner to request access."
+
+#~ msgid "Contact the data owner with questions."
+#~ msgstr "Contact the data owner with questions."
+
+#~ msgid "IAO or Data Owner"
+#~ msgstr "Data owner"
