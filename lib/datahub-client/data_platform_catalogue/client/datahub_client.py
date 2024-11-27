@@ -40,19 +40,19 @@ from data_platform_catalogue.client.exceptions import (
 )
 from data_platform_catalogue.client.graphql_helpers import (
     parse_columns,
-    parse_created_and_modified,
     parse_custodians,
+    parse_data_created,
     parse_data_owner,
     parse_domain,
     parse_glossary_terms,
-    parse_last_modified,
+    parse_last_datajob_run_date,
+    parse_metadata_last_ingested,
     parse_names,
     parse_properties,
     parse_relations,
     parse_stewards,
     parse_subtypes,
     parse_tags,
-    parse_updated,
 )
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
@@ -275,9 +275,9 @@ class DataHubCatalogueClient:
             custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
-            created, modified = parse_created_and_modified(properties)
-            modified = parse_last_modified(response)
-            updated = parse_updated(response)
+            created = parse_data_created(properties)
+            modified = parse_metadata_last_ingested(response)
+            updated = parse_last_datajob_run_date(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             lineage_relations = parse_relations(
@@ -373,8 +373,8 @@ class DataHubCatalogueClient:
             custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
-            created, modified = parse_created_and_modified(properties)
-            modified = parse_last_modified(response)
+            created = parse_data_created(properties)
+            modified = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             child_relations = parse_relations(
@@ -417,8 +417,8 @@ class DataHubCatalogueClient:
             custodians = parse_custodians(response)
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
-            created, modified = parse_created_and_modified(properties)
-            modified = parse_last_modified(response)
+            created = parse_data_created(properties)
+            modified = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
             children = parse_relations(
                 RelationshipType.CHILD, [response["relationships"]]
