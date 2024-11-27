@@ -1,9 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: find-moj-data-ingress
+  name: find-moj-data-ingress-${ENV}
   annotations:
-    external-dns.alpha.kubernetes.io/set-identifier: find-moj-data-ingress-${NAMESPACE}-green
+    external-dns.alpha.kubernetes.io/set-identifier: find-moj-data-ingress-${ENV}-${NAMESPACE}-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
     nginx.ingress.kubernetes.io/limit-whitelist: ${LIMIT_WHITELIST}
     nginx.ingress.kubernetes.io/limit-rps: "200"
