@@ -19,6 +19,7 @@ from data_platform_catalogue.client.graphql_helpers import (
 from data_platform_catalogue.entities import EntityRef
 from collections import namedtuple
 from data_platform_catalogue.search_types import (
+    DatahubSubtype,
     DomainOption,
     FacetOption,
     MultiSelectFilter,
@@ -45,22 +46,22 @@ class SearchClient:
         self.get_tags_query = get_graphql_query("getTags")
         self.entity_subtype_mappings = {
             ResultType.TABLE.datahub_entity_type: {
-                "Publication dataset": EntityTypeMapping(result_type=ResultType.PUBLICATION_DATASET, parse_function=self._parse_dataset),
-                "Metric": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                "Table": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                "Model": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                "Seed": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                "Source": EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.PUBLICATION_DATASET.value: EntityTypeMapping(result_type=ResultType.PUBLICATION_DATASET, parse_function=self._parse_dataset),
+                DatahubSubtype.METRIC.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.TABLE.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.MODEL.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.SEED.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.SOURCE.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
             },
             ResultType.CHART.datahub_entity_type: {
-                "CHART": EntityTypeMapping(result_type=ResultType.CHART, parse_function=self._parse_dataset)
+                ResultType.CHART.datahub_entity_type: EntityTypeMapping(result_type=ResultType.CHART, parse_function=self._parse_dataset)
             },
             ResultType.DATABASE.datahub_entity_type: {
-                "Database": EntityTypeMapping(result_type=ResultType.DATABASE, parse_function=self._parse_dataset),
-                "Publication collection": EntityTypeMapping(result_type=ResultType.PUBLICATION_COLLECTION, parse_function=self._parse_container),
+                DatahubSubtype.DATABASE.value: EntityTypeMapping(result_type=ResultType.DATABASE, parse_function=self._parse_dataset),
+                DatahubSubtype.PUBLICATION_COLLECTION.value: EntityTypeMapping(result_type=ResultType.PUBLICATION_COLLECTION, parse_function=self._parse_container),
             },
             ResultType.DASHBOARD.datahub_entity_type: {
-                "DASHBOARD": EntityTypeMapping(result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
+                ResultType.DASHBOARD.datahub_entity_type: EntityTypeMapping(result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
             }
         }
 

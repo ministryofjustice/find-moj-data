@@ -16,8 +16,8 @@ class ResultType(Enum):
     CHART = ("Chart", "CHART")
     DATABASE = ("Database", "CONTAINER")
     DASHBOARD = ("Dashboard", "DASHBOARD")
-    PUBLICATION_DATASET = ("Publication dataset", "CONTAINER")
-    PUBLICATION_COLLECTION = ("Publication collection", "DATASET")
+    PUBLICATION_DATASET = ("Publication dataset", "DATASET")
+    PUBLICATION_COLLECTION = ("Publication collection", "CONTAINER")
 
     def __new__(cls, value, datahub_entity_type):
         obj = object.__new__(cls)
@@ -25,6 +25,16 @@ class ResultType(Enum):
         obj.datahub_entity_type = datahub_entity_type
         return obj
 
+
+class DatahubSubtype(Enum):
+    PUBLICATION_DATASET = "Publication dataset"
+    PUBLICATION_COLLECTION = "Publication collection"
+    METRIC = "Metric"
+    TABLE = "Table"
+    MODEL = "Model"
+    SEED = "Seed"
+    SOURCE = "Source"
+    DATABASE = "Database"
 
 
 RESULT_TYPES_TO_FILTER = [
