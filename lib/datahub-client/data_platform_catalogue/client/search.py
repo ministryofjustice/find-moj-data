@@ -8,11 +8,11 @@ from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
-    parse_created_and_modified,
+    parse_data_last_modified,
     parse_data_owner,
     parse_domain,
     parse_glossary_terms,
-    parse_last_modified,
+    parse_metadata_last_ingested,
     parse_names,
     parse_properties,
     parse_tags,
@@ -278,7 +278,7 @@ class SearchClient:
         properties, custom_properties = parse_properties(entity)
         tags = parse_tags(entity)
         terms = parse_glossary_terms(entity)
-        last_modified = parse_last_modified(entity)
+        last_ingested = parse_metadata_last_ingested(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
         container = entity.get("container")
         if container:
@@ -301,7 +301,7 @@ class SearchClient:
         metadata.update(custom_properties.access_information.model_dump())
         metadata.update(custom_properties.data_summary.model_dump())
 
-        _, modified = parse_created_and_modified(properties)
+        modified = parse_data_last_modified(properties)
 
         return SearchResult(
             urn=entity["urn"],
@@ -319,7 +319,7 @@ class SearchClient:
             metadata=metadata,
             tags=tags,
             glossary_terms=terms,
-            last_modified=modified or last_modified,
+            last_modified=modified or last_ingested,
         )
 
     def _parse_facets(self, facets: list[dict[str, Any]]) -> SearchFacets:
@@ -422,7 +422,7 @@ class SearchClient:
         """
         tags = parse_tags(entity)
         terms = parse_glossary_terms(entity)
-        last_modified = parse_last_modified(entity)
+        last_ingested = parse_metadata_last_ingested(entity)
         properties, custom_properties = parse_properties(entity)
         domain = parse_domain(entity)
         owner = parse_data_owner(entity)
@@ -449,7 +449,7 @@ class SearchClient:
             metadata=metadata,
             tags=tags,
             glossary_terms=terms,
-            last_modified=last_modified,
+            last_modified=last_ingested,
         )
 
     def _parse_types_and_sub_types(self, entity: dict, entity_type: str) -> dict:

@@ -5,6 +5,25 @@ from typing import Any, Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
+from django.conf import settings
+from django.test import Client
+from faker import Faker
+from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
+from home.service.details import DatabaseDetailsService
+from home.service.domain_fetcher import DomainFetcher
+from home.service.search import SearchService
+from home.service.search_facet_fetcher import SearchFacetFetcher
+from home.service.search_tag_fetcher import SearchTagFetcher
+from notifications_python_client.notifications import NotificationsAPIClient
+from pytest import CollectReport, StashKey
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
+
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     Chart,
@@ -31,25 +50,6 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
-from django.conf import settings
-from django.test import Client
-from faker import Faker
-from notifications_python_client.notifications import NotificationsAPIClient
-from pytest import CollectReport, StashKey
-from selenium.webdriver import ChromeOptions
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.select import Select
-
-from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
-from home.service.details import DatabaseDetailsService
-from home.service.domain_fetcher import DomainFetcher
-from home.service.search import SearchService
-from home.service.search_facet_fetcher import SearchFacetFetcher
-from home.service.search_tag_fetcher import SearchTagFetcher
 
 fake = Faker()
 
@@ -374,7 +374,7 @@ def generate_table_metadata(
                 description="some description",
             )
         ],
-        last_modified=1710426920000,
+        metadata_last_ingested=1710426920000,
         created=None,
         column_details=[
             Column(
@@ -435,7 +435,7 @@ def generate_chart_metadata(
                 description="some description",
             )
         ],
-        last_modified=1710426920000,
+        metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
         custom_properties=custom_properties or CustomEntityProperties(),
@@ -495,7 +495,7 @@ def generate_database_metadata(
                 description="some description",
             )
         ],
-        last_modified=1710426920000,
+        metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
         custom_properties=custom_properties or CustomEntityProperties(),
@@ -553,7 +553,7 @@ def generate_dashboard_metadata(
                 description="some description",
             )
         ],
-        last_modified=1710426920000,
+        metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
         custom_properties=custom_properties or CustomEntityProperties(),

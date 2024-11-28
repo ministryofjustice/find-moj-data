@@ -82,10 +82,10 @@
                 {{entity.custom_properties.audience}}
               </li>
             {% endif %}
-            <!-- {% if entity.last_updated %}
+            <!-- {% if entity.last_datajob_run_date %}
               <li>
                 <span class="govuk-!-font-weight-bold">Data last updated:</span>
-                {{entity.last_updated|date:"d M Y"}}
+                {{entity.last_datajob_run_date|date:"d M Y"}}
               </li>
             {% endif %} -->
             <li>
@@ -105,9 +105,9 @@
           </ul>
           {% include "partial/esda_info.html" with is_esda=is_esda %}
         {% endblock metadata_list %}
-        {% if entity.last_updated %}
+        {% if entity.metadata_last_ingested %}
           <div class="govuk-body-s app-summary-card__footer">
-            Updated {{entity.last_modified|timesince|format_timesince}} ago
+            Updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
           </div>
         {% endif %}
       </div>
