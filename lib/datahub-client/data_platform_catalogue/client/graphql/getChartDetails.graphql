@@ -70,6 +70,7 @@ query getChartDetails($urn: String!) {
         actor
       }
     }
+    lastIngested
   }
 }
 
