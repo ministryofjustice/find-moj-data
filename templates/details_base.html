@@ -64,7 +64,7 @@
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
-            {% if entity.data_last_modified %}
+            {% if entity.data_last_modified and entity.platform.urn != PlatformUrns.CADET %}
               <li>
                 <span class="govuk-!-font-weight-bold">{% translate "Last updated:" %}</span>
                 {{entity.data_last_modified | date:"jS F Y"}}
