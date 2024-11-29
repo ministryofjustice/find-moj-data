@@ -58,7 +58,7 @@
   <p id="data_owner" class="govuk-body">
     {% if governance.data_owner.email %}
       {{ governance.data_owner.email|urlize }}
-    {% elif platform.urn == 'performance-hub' %}
+    {% elif platform.urn == PlatformUrns.PERFORMANCE_HUB %}
       No owner is listed as this data is undergoing a review of ownership.
     {% else %}
       {% blocktranslate %}Not provided - <a href="https://moj.enterprise.slack.com/archives/C06NPM2200N" class="govuk-link" rel="noreferrer noopener" target="_blank">contact the Data Catalogue team</a> about this data.{% endblocktranslate %}

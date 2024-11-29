@@ -338,6 +338,7 @@ class DataHubCatalogueClient:
             glossary_terms = parse_glossary_terms(response)
             created = parse_data_created(properties)
             modified = parse_data_last_modified(properties)
+            last_ingested = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             parent_relations = parse_relations(
@@ -361,6 +362,7 @@ class DataHubCatalogueClient:
                 glossary_terms=glossary_terms,
                 created=created,
                 data_last_modified=modified,
+                metadata_last_ingested=last_ingested,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
                 custom_properties=custom_properties,
             )

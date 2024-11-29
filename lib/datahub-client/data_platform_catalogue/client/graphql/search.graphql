@@ -215,7 +215,6 @@ query Search(
               }
             }
           }
-          lastIngested
           domain {
             domain {
               urn

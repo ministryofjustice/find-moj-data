@@ -64,10 +64,10 @@
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
-            {% if entity.custom_properties.data_summary.last_updated %}
+            {% if entity.data_last_modified and entity.platform.urn != PlatformUrns.CADET %}
               <li>
                 <span class="govuk-!-font-weight-bold">{% translate "Last updated:" %}</span>
-                {{entity.custom_properties.data_summary.last_updated}}
+                {{entity.data_last_modified | date:"jS F Y"}}
               </li>
             {% endif %}
             {% if entity.custom_properties.data_summary.refresh_period %}
@@ -107,7 +107,7 @@
         {% endblock metadata_list %}
         {% if entity.metadata_last_ingested %}
           <div class="govuk-body-s app-summary-card__footer">
-            Updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
+            Entry last updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
           </div>
         {% endif %}
       </div>

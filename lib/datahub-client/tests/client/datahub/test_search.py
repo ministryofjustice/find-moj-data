@@ -1,11 +1,9 @@
-from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
 
 from data_platform_catalogue.client.search import SearchClient
 from data_platform_catalogue.entities import (
-    Audience,
     AccessInformation,
     DataSummary,
     EntityRef,
@@ -481,7 +479,7 @@ def test_full_page(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
-                last_modified=1705990502353,
+                last_modified=None,
                 created=None,
             ),
             SearchResult(
@@ -965,7 +963,7 @@ def test_get_glossary_terms(mock_graph, searcher):
     mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
     response = searcher.get_glossary_terms(count=2)
-    print(response)
+
     assert response == SearchResponse(
         total_results=2,
         page_results=[

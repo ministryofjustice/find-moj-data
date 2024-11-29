@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
 from django.utils.translation import gettext as _
 
+from ..urns import PlatformUrns
 from .base import GenericService
 
 
@@ -79,6 +80,7 @@ class DatabaseDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.database_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
 
         return context
@@ -119,6 +121,7 @@ class DatasetDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.table_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
 
     def _get_template(self):
@@ -162,6 +165,7 @@ class ChartDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.chart_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
 
 
@@ -188,4 +192,5 @@ class DashboardDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.dashboard_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
