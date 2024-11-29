@@ -63,20 +63,18 @@ def details_view(request, result_type, urn):
 
     return render(request, service.template, service.context)
 
-
 @cache_control(max_age=300, private=True)
 def details_view_csv(request, result_type, urn) -> HttpResponse:
-    if result_type == "table":
-        service = DatasetDetailsService(urn)
-        csv_formatter = DatasetDetailsCsvFormatter(service)
-    elif result_type == "database":
-        service = DatabaseDetailsService(urn)
-        csv_formatter = DatabaseDetailsCsvFormatter(service)
-    elif result_type == "dashboard":
-        service = DashboardDetailsService(urn)
-        csv_formatter = DashboardDetailsCsvFormatter(service)
-    else:
-        raise Http404("CSV not available")
+    match result_type:
+        case EntityTypeMapping.TABLE.url_formatted:
+            csv_formatter = DatasetDetailsCsvFormatter(DatasetDetailsService(urn))
+        case EntityTypeMapping.DATABASE.url_formatted:
+            csv_formatter = DatabaseDetailsCsvFormatter(DatabaseDetailsService(urn))
+        case EntityTypeMapping.DASHBOARD.url_formatted:
+            csv_formatter = DashboardDetailsCsvFormatter(DashboardDetailsService(urn))
+        case _:
+            logging.error("Invalid result type for csv details view %s", result_type)
+            raise Http404()
 
     # In case there are any quotes in the filename, remove them in order to
     # not to break the header.
