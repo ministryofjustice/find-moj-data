@@ -1,8 +1,7 @@
 import os
 from urllib.parse import urlsplit
 
-from data_platform_catalogue.entities import EntityRef, RelationshipType
-from data_platform_catalogue.search_types import ResultType
+from data_platform_catalogue.entities import EntityRef, RelationshipType, EntityTypeMapping
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
 from django.utils.translation import gettext as _
@@ -115,7 +114,7 @@ class DatasetDetailsService(GenericService):
             "entity": self.table_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
-            "parent_type": ResultType.DATABASE.name.lower(),
+            "parent_type": EntityTypeMapping.DATABASE.name.lower(),
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
@@ -162,7 +161,7 @@ class ChartDetailsService(GenericService):
                 self.chart_metadata.platform.display_name
             ),
             "parent_entity": self.parent_entity,
-            "parent_type": ResultType.DASHBOARD.name.lower(),
+            "parent_type": EntityTypeMapping.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.chart_metadata.custom_properties.access_information.dc_access_requirements
@@ -256,7 +255,7 @@ class PublicationDatasetDetailsService(GenericService):
             "entity": self.publication_dataset_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
-            "parent_type": ResultType.DATABASE.name.lower(),
+            "parent_type": EntityTypeMapping.DATABASE.name.lower(),
             "h1_value": self.publication_dataset_metadata.name,
             # noqa: E501
             "is_access_requirements_a_url": is_access_requirements_a_url(

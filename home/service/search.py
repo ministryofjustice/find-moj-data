@@ -2,11 +2,10 @@ import re
 from copy import deepcopy
 from typing import Any
 
+from data_platform_catalogue.entities import EntityTypeMapping
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
-    ResultType,
-    RESULT_TYPES_TO_FILTER,
     SearchResponse,
     SortOption,
 )
@@ -16,6 +15,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import pgettext
 from nltk.stem import PorterStemmer
 
+from data_platform_catalogue.entities import RESULT_TYPES_TO_FILTER
 from home.forms.search import SearchForm
 from home.models.domain_model import DomainModel
 
@@ -46,18 +46,18 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(self, entity_types: list[str]) -> tuple[ResultType, ...]:
+    def _build_entity_types(self, entity_types: list[str]) -> tuple[EntityTypeMapping, ...]:
         default_entities = tuple(
             entity
-            for entity in ResultType
+            for entity in EntityTypeMapping
             if entity.name != "GLOSSARY_TERM"
             and entity not in RESULT_TYPES_TO_FILTER
         )
         chosen_entities = (
             tuple(
-                ResultType[entity]
+                EntityTypeMapping[entity]
                 for entity in entity_types
-                if ResultType[entity] not in RESULT_TYPES_TO_FILTER
+                if EntityTypeMapping[entity] not in RESULT_TYPES_TO_FILTER
             )
             if entity_types
             else None
@@ -68,9 +68,9 @@ class SearchService(GenericService):
     def _build_entity_subtypes_filter(self, entity_types: list[str]) -> MultiSelectFilter | None:
         # The filter needs a non-capitalised string rather than the enum value
         subtype_strings = [
-            ResultType[entity_type].value
+            EntityTypeMapping[entity_type].value
             for entity_type in entity_types
-            if ResultType[entity_type] in RESULT_TYPES_TO_FILTER
+            if EntityTypeMapping[entity_type] in RESULT_TYPES_TO_FILTER
         ]
         entity_subtypes_filter = MultiSelectFilter("typeNames", subtype_strings) if subtype_strings else None
 

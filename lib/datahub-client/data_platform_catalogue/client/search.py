@@ -18,12 +18,12 @@ from data_platform_catalogue.client.graphql_helpers import (
 )
 from data_platform_catalogue.entities import EntityRef
 from collections import namedtuple
+from data_platform_catalogue.entities import EntityTypeMapping
 from data_platform_catalogue.search_types import (
     DatahubSubtype,
     DomainOption,
     FacetOption,
     MultiSelectFilter,
-    ResultType,
     SearchFacets,
     SearchResponse,
     SearchResult,
@@ -33,7 +33,7 @@ from data_platform_catalogue.search_types import (
 logger = logging.getLogger(__name__)
 
 
-EntityTypeMapping = namedtuple("EntityTypeMapping", ["result_type", "parse_function"])
+EntityTypeParsingFuncMap = namedtuple("EntityTypeMapping", ["result_type", "parse_function"])
 
 
 class SearchClient:
@@ -45,23 +45,23 @@ class SearchClient:
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
         self.entity_subtype_mappings = {
-            ResultType.TABLE.datahub_entity_type: {
-                DatahubSubtype.PUBLICATION_DATASET.value: EntityTypeMapping(result_type=ResultType.PUBLICATION_DATASET, parse_function=self._parse_dataset),
-                DatahubSubtype.METRIC.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.TABLE.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.MODEL.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.SEED.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.SOURCE.value: EntityTypeMapping(result_type=ResultType.TABLE, parse_function=self._parse_dataset),
+            EntityTypeMapping.TABLE.datahub_entity_type: {
+                DatahubSubtype.PUBLICATION_DATASET.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.PUBLICATION_DATASET, parse_function=self._parse_dataset),
+                DatahubSubtype.METRIC.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.TABLE.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.MODEL.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.SEED.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.TABLE, parse_function=self._parse_dataset),
+                DatahubSubtype.SOURCE.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.TABLE, parse_function=self._parse_dataset),
             },
-            ResultType.CHART.datahub_entity_type: {
-                ResultType.CHART.datahub_entity_type: EntityTypeMapping(result_type=ResultType.CHART, parse_function=self._parse_dataset)
+            EntityTypeMapping.CHART.datahub_entity_type: {
+                EntityTypeMapping.CHART.datahub_entity_type: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.CHART, parse_function=self._parse_dataset)
             },
-            ResultType.DATABASE.datahub_entity_type: {
-                DatahubSubtype.DATABASE.value: EntityTypeMapping(result_type=ResultType.DATABASE, parse_function=self._parse_dataset),
-                DatahubSubtype.PUBLICATION_COLLECTION.value: EntityTypeMapping(result_type=ResultType.PUBLICATION_COLLECTION, parse_function=self._parse_container),
+            EntityTypeMapping.DATABASE.datahub_entity_type: {
+                DatahubSubtype.DATABASE.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.DATABASE, parse_function=self._parse_dataset),
+                DatahubSubtype.PUBLICATION_COLLECTION.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.PUBLICATION_COLLECTION, parse_function=self._parse_container),
             },
-            ResultType.DASHBOARD.datahub_entity_type: {
-                ResultType.DASHBOARD.datahub_entity_type: EntityTypeMapping(result_type=ResultType.DASHBOARD, parse_function=self._parse_container)
+            EntityTypeMapping.DASHBOARD.datahub_entity_type: {
+                EntityTypeMapping.DASHBOARD.datahub_entity_type: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.DASHBOARD, parse_function=self._parse_container)
             }
         }
 
@@ -70,17 +70,20 @@ class SearchClient:
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[ResultType] = (
-            ResultType.TABLE,
-            ResultType.CHART,
-            ResultType.DATABASE,
+        result_types: Sequence[EntityTypeMapping] = (
+            EntityTypeMapping.TABLE,
+            EntityTypeMapping.CHART,
+            EntityTypeMapping.DATABASE,
         ),
-        filters: Sequence[MultiSelectFilter] = [],
+        filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
     ) -> SearchResponse:
         """
         Wraps the catalogue's search function.
         """
+
+        if filters is None:
+            filters = []
 
         start = 0 if page is None else int(page) * count
 
@@ -169,7 +172,7 @@ class SearchClient:
     def search_facets(
         self,
         query: str = "*",
-        result_types: Sequence[ResultType] = (ResultType.TABLE,),
+        result_types: Sequence[EntityTypeMapping] = (EntityTypeMapping.TABLE,),
         filters: Sequence[MultiSelectFilter] = (),
     ) -> SearchFacets:
         """
@@ -231,7 +234,7 @@ class SearchClient:
             matched_fields: dict = {}
             if entity_type == "DATASET":
                 page_results.append(
-                    self._parse_dataset(entity, matched_fields, ResultType.TABLE)
+                    self._parse_dataset(entity, matched_fields, EntityTypeMapping.TABLE)
                 )
             else:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
@@ -239,7 +242,7 @@ class SearchClient:
 
     def _map_result_types(
         self,
-        result_types: Sequence[ResultType],
+        result_types: Sequence[EntityTypeMapping],
     ) -> list[str]:
         """
         Map result types to Datahub EntityTypes
@@ -271,7 +274,7 @@ class SearchClient:
         return list_domain_options
 
     def _parse_dataset(
-        self, entity: dict[str, Any], matches, result_type: ResultType
+        self, entity: dict[str, Any], matches, result_type: EntityTypeMapping
     ) -> SearchResult:
         """
         Map a dataset entity to a SearchResult
@@ -353,7 +356,7 @@ class SearchClient:
 
         return SearchResult(
             urn=entity["urn"],
-            result_type=ResultType.GLOSSARY_TERM,
+            result_type=EntityTypeMapping.GLOSSARY_TERM,
             matches={},
             name=name,
             display_name=display_name,
@@ -416,7 +419,7 @@ class SearchClient:
         return tags_list
 
     def _parse_container(
-        self, entity: dict[str, Any], matches, subtype: ResultType
+        self, entity: dict[str, Any], matches, subtype: EntityTypeMapping
     ) -> SearchResult:
         """
         Map a Container entity to a SearchResult

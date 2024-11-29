@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
@@ -12,6 +13,31 @@ class RelationshipType(Enum):
     PLATFORM = "PLATFORM"
     DATA_LINEAGE = "DATA_LINEAGE"
     CHILD = "CHILD"
+
+
+class EntityTypeMapping(Enum):
+    """Result type."""
+
+    TABLE = ("Table", "DATASET", "table")
+    GLOSSARY_TERM = ("Glossary term", "GLOSSARY_TERM", "glossary_term")
+    CHART = ("Chart", "CHART", "chart")
+    DATABASE = ("Database", "CONTAINER", "database")
+    DASHBOARD = ("Dashboard", "DASHBOARD", "dashboard")
+    PUBLICATION_DATASET = ("Publication dataset", "DATASET", "publication_dataset")
+    PUBLICATION_COLLECTION = ("Publication collection", "CONTAINER", "publication_collection")
+
+    def __new__(cls, value, datahub_entity_type, url_formatted):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj.datahub_entity_type = datahub_entity_type
+        obj.url_formatted = url_formatted
+        return obj
+
+
+RESULT_TYPES_TO_FILTER = [
+    EntityTypeMapping.PUBLICATION_DATASET,
+    EntityTypeMapping.PUBLICATION_COLLECTION
+]
 
 
 class Audience(Enum):

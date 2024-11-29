@@ -2,29 +2,10 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum, StrEnum, auto
+from enum import Enum
 from typing import Any
 
-from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef
-
-
-class ResultType(Enum):
-    """Result type."""
-
-    TABLE = ("Table", "DATASET", "table")
-    GLOSSARY_TERM = ("Glossary term", "GLOSSARY_TERM", "glossary_term")
-    CHART = ("Chart", "CHART", "chart")
-    DATABASE = ("Database", "CONTAINER", "database")
-    DASHBOARD = ("Dashboard", "DASHBOARD", "dashboard")
-    PUBLICATION_DATASET = ("Publication dataset", "DATASET", "publication_dataset")
-    PUBLICATION_COLLECTION = ("Publication collection", "CONTAINER", "publication_collection")
-
-    def __new__(cls, value, datahub_entity_type, url_formatted):
-        obj = object.__new__(cls)
-        obj._value_ = value
-        obj.datahub_entity_type = datahub_entity_type
-        obj.url_formatted = url_formatted
-        return obj
+from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef, EntityTypeMapping
 
 
 class DatahubSubtype(Enum):
@@ -36,12 +17,6 @@ class DatahubSubtype(Enum):
     SEED = "Seed"
     SOURCE = "Source"
     DATABASE = "Database"
-
-
-RESULT_TYPES_TO_FILTER = [
-    ResultType.PUBLICATION_DATASET,
-    ResultType.PUBLICATION_COLLECTION
-]
 
 
 @dataclass
@@ -96,7 +71,7 @@ class DomainOption:
 @dataclass
 class SearchResult:
     urn: str
-    result_type: ResultType
+    result_type: EntityTypeMapping
     name: str
     display_name: str = ""
     fully_qualified_name: str = ""

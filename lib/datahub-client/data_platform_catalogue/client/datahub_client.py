@@ -63,6 +63,7 @@ from data_platform_catalogue.entities import (
     Database,
     EntityRef,
     EntitySummary,
+    EntityTypeMapping,
     Governance,
     RelationshipType,
     Table,
@@ -71,7 +72,6 @@ from data_platform_catalogue.entities import (
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
-    ResultType,
     SearchFacets,
     SearchResponse,
     SortOption,
@@ -203,17 +203,19 @@ class DataHubCatalogueClient:
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[ResultType] = (
-            ResultType.TABLE,
-            ResultType.CHART,
-            ResultType.DATABASE,
+        result_types: Sequence[EntityTypeMapping] = (
+            EntityTypeMapping.TABLE,
+            EntityTypeMapping.CHART,
+            EntityTypeMapping.DATABASE,
         ),
-        filters: Sequence[MultiSelectFilter] = [],
+        filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
     ) -> SearchResponse:
         """
         Wraps the catalogue's search function.
         """
+        if filters is None:
+            filters = []
         return self.search_client.search(
             query=query,
             count=count,
@@ -226,10 +228,10 @@ class DataHubCatalogueClient:
     def search_facets(
         self,
         query: str = "*",
-        result_types: Sequence[ResultType] = (
-            ResultType.TABLE,
-            ResultType.CHART,
-            ResultType.DATABASE,
+        result_types: Sequence[EntityTypeMapping] = (
+            EntityTypeMapping.TABLE,
+            EntityTypeMapping.CHART,
+            EntityTypeMapping.DATABASE,
         ),
         filters: Sequence[MultiSelectFilter] = (),
     ) -> SearchFacets:
@@ -243,14 +245,18 @@ class DataHubCatalogueClient:
     def list_domains(
         self,
         query: str = "*",
-        filters: Sequence[MultiSelectFilter] = [
-            MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
-        ],
+        filters: Sequence[MultiSelectFilter]|None = None,
         count: int = 1000,
     ) -> list[DomainOption]:
         """
         Returns a list of DomainOption objects
         """
+
+        if filters is None:
+            filters = [
+                MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
+            ]
+
         return self.search_client.list_domains(
             query=query, filters=filters, count=count
         )
@@ -278,9 +284,6 @@ class DataHubCatalogueClient:
             tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
             created = parse_data_created(properties)
-            modified = parse_data_last_modified(properties)
-            last_ingested = parse_metadata_last_ingested(response)
-            last_run_date = parse_last_datajob_run_date(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             lineage_relations = parse_relations(
@@ -314,10 +317,10 @@ class DataHubCatalogueClient:
                 subtypes=subtypes,
                 tags=tags,
                 glossary_terms=glossary_terms,
-                metadata_last_ingested=last_ingested,
-                last_datajob_run_date=last_run_date,
+                metadata_last_ingested=parse_metadata_last_ingested(response),
+                last_datajob_run_date=parse_last_datajob_run_date(response),
                 created=created,
-                data_last_modified=modified,
+                data_last_modified=parse_data_last_modified(properties),
                 column_details=columns,
                 custom_properties=custom_properties,
                 platform=EntityRef(display_name=platform_name, urn=platform_name),
@@ -329,23 +332,11 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.chart_query, {"urn": urn})[
                 "chart"
             ]
-            platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
-            domain = parse_domain(response)
-            owner = parse_data_owner(response)
-            stewards = parse_stewards(response)
-            custodians = parse_custodians(response)
-            tags = parse_tags(response)
-            glossary_terms = parse_glossary_terms(response)
-            created = parse_data_created(properties)
-            modified = parse_data_last_modified(properties)
-            last_ingested = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
-
             parent_relations = parse_relations(
                 RelationshipType.PARENT, [response.get("relationships", {})]
             )
-            relations_to_display = self.list_relations_to_display(parent_relations)
 
             return Chart(
                 urn=urn,
@@ -354,17 +345,17 @@ class DataHubCatalogueClient:
                 name=name,
                 display_name=display_name,
                 fully_qualified_name=qualified_name,
-                domain=domain,
+                domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=owner, data_stewards=stewards, data_custodians=custodians
+                    data_owner=parse_data_owner(response), data_stewards=parse_stewards(response), data_custodians=parse_custodians(response)
                 ),
-                relationships=relations_to_display,
-                tags=tags,
-                glossary_terms=glossary_terms,
-                created=created,
-                data_last_modified=modified,
-                metadata_last_ingested=last_ingested,
-                platform=EntityRef(display_name=platform_name, urn=platform_name),
+                relationships=self.list_relations_to_display(parent_relations),
+                tags=parse_tags(response),
+                glossary_terms=parse_glossary_terms(response),
+                created=parse_data_created(properties),
+                data_last_modified=parse_data_last_modified(properties),
+                metadata_last_ingested=parse_metadata_last_ingested(response),
+                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
                 custom_properties=custom_properties,
             )
 
@@ -375,17 +366,8 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
                 "container"
             ]
-            platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
-            domain = parse_domain(response)
-            owner = parse_data_owner(response)
-            stewards = parse_stewards(response)
-            custodians = parse_custodians(response)
-            tags = parse_tags(response)
             glossary_terms = parse_glossary_terms(response)
-            created = parse_data_created(properties)
-            modified = parse_data_last_modified(properties)
-            last_ingested = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             child_relations = parse_relations(
@@ -402,17 +384,17 @@ class DataHubCatalogueClient:
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
                 relationships=relations_to_display,
-                domain=domain,
+                domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=owner, data_custodians=custodians, data_stewards=stewards
+                    data_owner=parse_data_owner(response), data_custodians=parse_custodians(response), data_stewards=parse_stewards(response)
                 ),
-                tags=tags,
+                tags=parse_tags(response),
                 glossary_terms=glossary_terms,
-                metadata_last_ingested=last_ingested,
-                created=created,
-                data_last_modified=modified,
+                metadata_last_ingested=parse_metadata_last_ingested(response),
+                created=parse_data_created(properties),
+                data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=platform_name, urn=platform_name),
+                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
@@ -421,22 +403,14 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
                 "container"
             ]
-            platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
-            domain = parse_domain(response)
-            owner = parse_data_owner(response)
-            stewards = parse_stewards(response)
-            custodians = parse_custodians(response)
-            tags = parse_tags(response)
-            glossary_terms = parse_glossary_terms(response)
-            created, modified = parse_created_and_modified(properties)
-            modified = parse_last_modified(response)
+            created, _ = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
             child_relations = parse_relations(
                 relationship_type=RelationshipType.CHILD,
                 relations_list=[response["relationships"]],
-                entity_type_of_relations=ResultType.PUBLICATION_DATASET.url_formatted,
+                entity_type_of_relations=EntityTypeMapping.PUBLICATION_DATASET.url_formatted,
             )
             relations_to_display = self.list_relations_to_display(child_relations)
 
@@ -448,16 +422,16 @@ class DataHubCatalogueClient:
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
                 relationships=relations_to_display,
-                domain=domain,
+                domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=owner, data_custodians=custodians, data_stewards=stewards
+                    data_owner=parse_data_owner(response), data_custodians=parse_custodians(response), data_stewards=parse_stewards(response)
                 ),
-                tags=tags,
-                glossary_terms=glossary_terms,
-                last_modified=modified,
+                tags=parse_tags(response),
+                glossary_terms=parse_glossary_terms(response),
+                last_modified=parse_last_modified(response),
                 created=created,
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=platform_name, urn=platform_name),
+                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
@@ -466,16 +440,8 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})[
                 "dataset"
             ]
-            platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
-            domain = parse_domain(response)
-            owner = parse_data_owner(response)
-            stewards = parse_stewards(response)
-            custodians = parse_custodians(response)
-            tags = parse_tags(response)
-            glossary_terms = parse_glossary_terms(response)
             created, modified = parse_created_and_modified(properties)
-            modified = parse_last_modified(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             parent_relations = parse_relations(
@@ -494,16 +460,16 @@ class DataHubCatalogueClient:
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
                 relationships={**parent_relations_to_display},
-                domain=domain,
+                domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=owner, data_custodians=custodians, data_stewards=stewards
+                    data_owner=parse_data_owner(response), data_custodians=parse_custodians(response), data_stewards=parse_stewards(response)
                 ),
-                tags=tags,
-                glossary_terms=glossary_terms,
-                last_modified=modified,
+                tags=parse_tags(response),
+                glossary_terms=parse_glossary_terms(response),
+                last_modified=parse_last_modified(response),
                 created=created,
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=platform_name, urn=platform_name),
+                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
@@ -512,22 +478,8 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.dashboard_query, {"urn": urn})[
                 "dashboard"
             ]
-            platform_name = response["platform"]["name"]
             properties, custom_properties = parse_properties(response)
-            domain = parse_domain(response)
-            owner = parse_data_owner(response)
-            stewards = parse_stewards(response)
-            custodians = parse_custodians(response)
-            tags = parse_tags(response)
-            glossary_terms = parse_glossary_terms(response)
-            created = parse_data_created(properties)
-            modified = parse_data_last_modified(properties)
-            last_ingested = parse_metadata_last_ingested(response)
             name, display_name, qualified_name = parse_names(response, properties)
-            children = parse_relations(
-                RelationshipType.CHILD, [response["relationships"]]
-            )
-            relations_to_display = self.list_relations_to_display(children)
 
             return Dashboard(
                 urn=urn,
@@ -535,19 +487,23 @@ class DataHubCatalogueClient:
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships=relations_to_display,
-                domain=domain,
+                relationships=self.list_relations_to_display(parse_relations(
+                    RelationshipType.CHILD, [response["relationships"]]
+                )),
+                domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=owner, data_stewards=stewards, data_custodians=custodians
+                    data_owner=parse_data_owner(response),
+                    data_stewards=parse_stewards(response),
+                    data_custodians=parse_custodians(response)
                 ),
                 external_url=properties.get("externalUrl", ""),
-                tags=tags,
-                glossary_terms=glossary_terms,
-                metadata_last_ingested=last_ingested,
-                created=created,
-                data_last_modified=modified,
+                tags=parse_tags(response),
+                glossary_terms=parse_glossary_terms(response),
+                metadata_last_ingested=parse_metadata_last_ingested(response),
+                created=parse_data_created(properties),
+                data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=platform_name, urn=platform_name),
+                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
             )
 
         raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")

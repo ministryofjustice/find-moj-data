@@ -3,13 +3,14 @@ import logging
 from urllib.parse import urlparse
 
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
-from data_platform_catalogue.search_types import DomainOption, ResultType
+from data_platform_catalogue.search_types import DomainOption
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_control
 
+from data_platform_catalogue.entities import EntityTypeMapping
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,
@@ -30,13 +31,14 @@ from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 
 type_details_map = {
-    ResultType.TABLE.url_formatted: DatasetDetailsService,
-    ResultType.DATABASE.url_formatted: DatabaseDetailsService,
-    ResultType.CHART.url_formatted: ChartDetailsService,
-    ResultType.DASHBOARD.url_formatted: DashboardDetailsService,
-    ResultType.PUBLICATION_COLLECTION.url_formatted: PublicationCollectionDetailsService,
-    ResultType.PUBLICATION_DATASET.url_formatted: PublicationDatasetDetailsService
+    EntityTypeMapping.TABLE.url_formatted: DatasetDetailsService,
+    EntityTypeMapping.DATABASE.url_formatted: DatabaseDetailsService,
+    EntityTypeMapping.CHART.url_formatted: ChartDetailsService,
+    EntityTypeMapping.DASHBOARD.url_formatted: DashboardDetailsService,
+    EntityTypeMapping.PUBLICATION_COLLECTION.url_formatted: PublicationCollectionDetailsService,
+    EntityTypeMapping.PUBLICATION_DATASET.url_formatted: PublicationDatasetDetailsService
 }
+
 
 @cache_control(max_age=300, private=True)
 def home_view(request):
