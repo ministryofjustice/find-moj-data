@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-04 09:47+0000\n"
+"POT-Creation-Date: 2024-11-29 11:43+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,11 +114,11 @@ msgstr "Subject area"
 msgid "filter-refresh"
 msgstr "selection will trigger the filter and refresh the search results"
 
-#: home/service/details.py:72 templates/partial/search_result.html:20
+#: home/service/details.py:73 templates/partial/search_result.html:20
 msgid "Database"
 msgstr "Database"
 
-#: home/service/details.py:155 templates/partial/search_result.html:24
+#: home/service/details.py:158 templates/partial/search_result.html:24
 msgid "Chart"
 msgstr "Chart"
 
@@ -163,7 +163,7 @@ msgstr "Title"
 msgid "Name"
 msgstr "Name"
 
-#: home/service/search.py:240 templates/details_base.html:47
+#: home/service/search.py:240 templates/details_base.html:48
 #: templates/details_dashboard.html:14 templates/details_database.html:14
 #: templates/details_table.html:15
 msgid "Description"
@@ -185,7 +185,7 @@ msgstr "Available on"
 msgid "Qualified name"
 msgstr "Qualified name"
 
-#: home/views.py:30 templates/base/navigation.html:64
+#: home/views.py:36 templates/base/navigation.html:64
 msgid "Home"
 msgstr "Home"
 
@@ -269,7 +269,7 @@ msgstr "Feedback"
 msgid "Sign out"
 msgstr "Sign out"
 
-#: templates/base/navigation.html:69 templates/details_base.html:19
+#: templates/base/navigation.html:69 templates/details_base.html:20
 msgid "Search"
 msgstr "Search"
 
@@ -281,29 +281,29 @@ msgstr "User guide"
 msgid "Contact us"
 msgstr "Contact us"
 
-#: templates/details_base.html:53
+#: templates/details_base.html:54
 msgid "No description available."
 msgstr "No description available."
 
-#: templates/details_base.html:62
+#: templates/details_base.html:63
 msgid "First created:"
-msgstr "First created:"
+msgstr "Data first created:"
 
-#: templates/details_base.html:68
+#: templates/details_base.html:69
 msgid "Last updated:"
-msgstr "Last updated:"
+msgstr "Data last updated:"
 
-#: templates/details_base.html:79 templates/partial/search_result.html:39
+#: templates/details_base.html:92 templates/partial/search_result.html:39
 msgid "Domain:"
 msgstr "Subject area:"
 
-#: templates/details_base.html:80 templates/partial/contact_info.html:17
-#: templates/partial/contact_info.html:46
+#: templates/details_base.html:93 templates/partial/contact_info.html:15
+#: templates/partial/contact_info.html:42
 #: templates/partial/search_result.html:40
 msgid "Not provided"
 msgstr "Not provided."
 
-#: templates/details_chart.html:8 templates/details_dashboard.html:45
+#: templates/details_chart.html:8 templates/details_dashboard.html:50
 msgid "Access this data"
 msgstr "Access this data"
 
@@ -312,11 +312,11 @@ msgstr "Access this data"
 msgid "\"%(display_name)s\" on %(platform_name)s"
 msgstr ""
 
-#: templates/details_chart.html:11 templates/details_dashboard.html:48
+#: templates/details_chart.html:11 templates/details_dashboard.html:53
 msgid "(opens in new tab)"
 msgstr "(opens in new tab)"
 
-#: templates/details_dashboard.html:10 templates/details_dashboard.html:37
+#: templates/details_dashboard.html:10 templates/details_dashboard.html:42
 msgid "Dashboard content"
 msgstr "Dashboard content"
 
@@ -325,10 +325,14 @@ msgid "Chart name"
 msgstr "Chart name"
 
 #: templates/details_dashboard.html:38
+msgid "Download chart descriptions (CSV format)"
+msgstr ""
+
+#: templates/details_dashboard.html:43
 msgid "This dashboard is missing chart information."
 msgstr "This dashboard is missing table information."
 
-#: templates/details_database.html:10 templates/details_database.html:43
+#: templates/details_database.html:10 templates/details_database.html:48
 msgid "Database content"
 msgstr "Database content"
 
@@ -337,10 +341,14 @@ msgid "Table name"
 msgstr "Table name"
 
 #: templates/details_database.html:44
+msgid "Download table descriptions (CSV format)"
+msgstr ""
+
+#: templates/details_database.html:49
 msgid "This database is missing table information."
 msgstr "This database is missing table information."
 
-#: templates/details_table.html:11 templates/details_table.html:44
+#: templates/details_table.html:11 templates/details_table.html:50
 msgid "Table schema"
 msgstr "Table schema"
 
@@ -352,19 +360,23 @@ msgstr "Type"
 msgid "Is Nullable"
 msgstr "Is nullable"
 
-#: templates/details_table.html:45
+#: templates/details_table.html:46
+msgid "Download table schema (CSV format)"
+msgstr ""
+
+#: templates/details_table.html:51
 msgid "The schema for this table is not available."
 msgstr "The schema for this table is not available."
 
-#: templates/details_table.html:48
+#: templates/details_table.html:54
 msgid "Lineage"
 msgstr "Lineage"
 
-#: templates/details_table.html:50
+#: templates/details_table.html:56
 msgid "See where this data came from and how it is used in other tables."
 msgstr "See where this data came from and how it is used in other tables."
 
-#: templates/details_table.html:54
+#: templates/details_table.html:60
 msgid "View lineage in DataHub (opens in new tab)"
 msgstr "View lineage in DataHub (opens in new tab)"
 
@@ -431,30 +443,20 @@ msgstr "Select this link for access information (opens in new tab)"
 msgid "Please contact the data custodian for access information."
 msgstr "Contact the data custodian to request access."
 
-#: templates/partial/contact_info.html:15
-msgid "Please contact the data owner for access information."
-msgstr "Contact the data owner to request access."
-
-#: templates/partial/contact_info.html:24
+#: templates/partial/contact_info.html:22
 msgid "Contact channels for questions"
 msgstr "Ask a question"
 
-#: templates/partial/contact_info.html:42
+#: templates/partial/contact_info.html:40
 msgid "Contact the data custodian with questions."
 msgstr ""
 
-#: templates/partial/contact_info.html:44
-msgid "Contact the data owner with questions."
-msgstr "Contact the data owner with questions."
-
-#: templates/partial/contact_info.html:54
+#: templates/partial/contact_info.html:50
+#: templates/partial/contact_info.html:57
 msgid "Data custodian"
 msgstr "Data custodian (technical contact)"
 
-#: templates/partial/contact_info.html:61
-msgid "IAO or Data Owner"
-msgstr "Data owner"
-
+#: templates/partial/contact_info.html:64
 msgid ""
 "Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
 "C06NPM2200N\" class=\"govuk-link\" rel=\"noreferrer noopener\" "

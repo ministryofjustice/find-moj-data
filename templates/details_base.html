@@ -107,7 +107,7 @@
         {% endblock metadata_list %}
         {% if entity.metadata_last_ingested %}
           <div class="govuk-body-s app-summary-card__footer">
-            Updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
+            Entry last updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
           </div>
         {% endif %}
       </div>
