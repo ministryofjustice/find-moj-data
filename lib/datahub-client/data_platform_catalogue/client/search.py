@@ -57,7 +57,7 @@ class SearchClient:
                 EntityTypeMapping.CHART.datahub_entity_type: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.CHART, parse_function=self._parse_dataset)
             },
             EntityTypeMapping.DATABASE.datahub_entity_type: {
-                DatahubSubtype.DATABASE.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.DATABASE, parse_function=self._parse_dataset),
+                DatahubSubtype.DATABASE.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.DATABASE, parse_function=self._parse_container),
                 DatahubSubtype.PUBLICATION_COLLECTION.value: EntityTypeParsingFuncMap(result_type=EntityTypeMapping.PUBLICATION_COLLECTION, parse_function=self._parse_container),
             },
             EntityTypeMapping.DASHBOARD.datahub_entity_type: {

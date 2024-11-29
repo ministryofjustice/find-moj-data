@@ -77,6 +77,11 @@ def test_one_search_result(mock_graph, searcher):
                 {
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Table"
+                            ]
+                        },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": {
@@ -135,7 +140,7 @@ def test_one_search_result(mock_graph, searcher):
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -169,6 +174,11 @@ def test_dataset_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Table"
+                            ]
+                        },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -225,7 +235,7 @@ def test_dataset_result(mock_graph, searcher):
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -294,6 +304,11 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -330,6 +345,11 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "urn": "malformed",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -373,7 +393,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -407,6 +427,11 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "ownership": None,
@@ -435,6 +460,11 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers3,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers3",
                         "properties": {
@@ -467,7 +497,7 @@ def test_full_page(mock_graph, searcher):
                     "domain_id": "",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -498,7 +528,7 @@ def test_full_page(mock_graph, searcher):
                     "domain_id": "",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -529,7 +559,7 @@ def test_full_page(mock_graph, searcher):
                     "domain_id": "",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -573,6 +603,11 @@ def test_query_match(mock_graph, searcher):
                     ],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
@@ -610,7 +645,7 @@ def test_query_match(mock_graph, searcher):
                     "domain_id": "",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -641,6 +676,11 @@ def test_result_with_owner(mock_graph, searcher):
                 {
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "ownership": {
@@ -690,7 +730,7 @@ def test_result_with_owner(mock_graph, searcher):
                     "domain_id": "",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -930,6 +970,11 @@ def test_get_glossary_terms(mock_graph, searcher):
                 {
                     "entity": {
                         "urn": "urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "properties": {
                             "name": "IAO",
                             "description": "Information asset owner.\n",
@@ -949,6 +994,11 @@ def test_get_glossary_terms(mock_graph, searcher):
                 {
                     "entity": {
                         "urn": "urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
+                        "subTypes": {
+                            "typeNames": [
+                                "Publication dataset"
+                            ]
+                        },
                         "properties": {
                             "name": "Security classification",
                             "description": "Only data that is 'official'",
@@ -1062,7 +1112,7 @@ def test_search_for_charts(mock_graph, searcher):
                     "domain_id": "",
                     "entity_types": {
                         "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
