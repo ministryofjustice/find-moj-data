@@ -22,6 +22,7 @@ from home.service.details import (
     _parse_parent,
     is_access_requirements_a_url,
 )
+from home.urns import PlatformUrns
 from tests.conftest import (
     generate_chart_metadata,
     generate_dashboard_metadata,
@@ -219,6 +220,7 @@ class TestChartDetailsService:
             "parent_type": "dashboard",
             "h1_value": "test",
             "is_access_requirements_a_url": False,
+            "PlatformUrns": PlatformUrns,
         }
 
         assert context == expected
