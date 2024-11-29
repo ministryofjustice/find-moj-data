@@ -7,6 +7,7 @@ from data_platform_catalogue.entities import (
     AccessInformation,
     DataSummary,
     EntityRef,
+    EntityTypeMapping,
     FurtherInformation,
     TagRef,
     UsageRestrictions,
@@ -14,7 +15,6 @@ from data_platform_catalogue.entities import (
 from data_platform_catalogue.search_types import (
     FacetOption,
     MultiSelectFilter,
-    ResultType,
     SearchFacets,
     SearchResponse,
     SearchResult,
@@ -121,7 +121,7 @@ def test_one_search_result(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="jaffle_shop.customers",
@@ -211,7 +211,7 @@ def test_dataset_result(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="jaffle_shop.customers",
@@ -359,7 +359,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="jaffle_shop.customers",
@@ -453,7 +453,7 @@ def test_full_page(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers",
                 fully_qualified_name="jaffle_shop.customers",
                 display_name="customers",
@@ -484,7 +484,7 @@ def test_full_page(mock_graph, searcher):
             ),
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers2,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers2",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers2",
                 display_name="customers2",
@@ -515,7 +515,7 @@ def test_full_page(mock_graph, searcher):
             ),
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers3,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers3",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers3",
                 display_name="customers3",
@@ -592,7 +592,7 @@ def test_query_match(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers",
@@ -676,7 +676,7 @@ def test_result_with_owner(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypeMapping.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers",
@@ -983,7 +983,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                         }
                     ]
                 },
-                result_type=ResultType.GLOSSARY_TERM,
+                result_type=EntityTypeMapping.GLOSSARY_TERM,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
@@ -992,7 +992,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                 fully_qualified_name="Security classification",
                 description="Only data that is 'official'",
                 metadata={"parentNodes": []},
-                result_type=ResultType.GLOSSARY_TERM,
+                result_type=EntityTypeMapping.GLOSSARY_TERM,
             ),
         ],
     )
@@ -1044,7 +1044,7 @@ def test_search_for_charts(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:chart:(justice-data,absconds)",
-                result_type=ResultType.CHART,
+                result_type=EntityTypeMapping.CHART,
                 name="Absconds",
                 display_name="Absconds",
                 fully_qualified_name="Absconds",
@@ -1166,7 +1166,7 @@ def test_search_for_container(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:container:test_db",
-                result_type=ResultType.DATABASE,
+                result_type=EntityTypeMapping.DATABASE,
                 name="test_db",
                 display_name="test_db",
                 fully_qualified_name="test_db",
@@ -1220,7 +1220,7 @@ def test_search_for_container(mock_graph, searcher):
 def test_tag_to_display(tags, result):
     test_search_result = SearchResult(
         urn="urn:li:dataset:(urn:li:dataPlatform:athena,test_db.test_table,PROD)",
-        result_type=ResultType.TABLE,
+        result_type=EntityTypeMapping.TABLE,
         name="test_table",
         display_name="test_table",
         fully_qualified_name="test_db.test_table",
