@@ -64,10 +64,10 @@
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
-            {% if entity.custom_properties.data_summary.last_updated %}
+            {% if entity.data_last_modified %}
               <li>
                 <span class="govuk-!-font-weight-bold">{% translate "Last updated:" %}</span>
-                {{entity.custom_properties.data_summary.last_updated}}
+                {{entity.data_last_modified | date:"jS F Y"}}
               </li>
             {% endif %}
             {% if entity.custom_properties.data_summary.refresh_period %}
