@@ -404,7 +404,6 @@ class DataHubCatalogueClient:
                 "container"
             ]
             properties, custom_properties = parse_properties(response)
-            created, _ = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
             child_relations = parse_relations(
@@ -428,8 +427,9 @@ class DataHubCatalogueClient:
                 ),
                 tags=parse_tags(response),
                 glossary_terms=parse_glossary_terms(response),
-                last_modified=parse_last_modified(response),
-                created=created,
+                metadata_last_ingested=parse_metadata_last_ingested(response),
+                created=parse_data_created(properties),
+                data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
                 platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
             )
@@ -441,7 +441,6 @@ class DataHubCatalogueClient:
                 "dataset"
             ]
             properties, custom_properties = parse_properties(response)
-            created, modified = parse_created_and_modified(properties)
             name, display_name, qualified_name = parse_names(response, properties)
 
             parent_relations = parse_relations(
@@ -466,8 +465,9 @@ class DataHubCatalogueClient:
                 ),
                 tags=parse_tags(response),
                 glossary_terms=parse_glossary_terms(response),
-                last_modified=parse_last_modified(response),
-                created=created,
+                metadata_last_ingested=parse_metadata_last_ingested(response),
+                created=parse_data_created(properties),
+                data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
                 platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
             )
