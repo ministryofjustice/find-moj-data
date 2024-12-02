@@ -50,12 +50,6 @@ class EntityTypes(Enum):
         return obj
 
 
-RESULT_TYPES_TO_FILTER = [
-    EntityTypes.PUBLICATION_DATASET,
-    EntityTypes.PUBLICATION_COLLECTION
-]
-
-
 class Audience(Enum):
     INTERNAL = "Internal"
     PUBLISHED = "Published"

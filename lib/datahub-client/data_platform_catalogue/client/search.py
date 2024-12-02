@@ -88,8 +88,14 @@ class SearchClient:
 
         start = 0 if page is None else int(page) * count
 
-        types = self._map_result_types(result_types)
-        logger.debug(f"Getting facets with result types {types}")
+        datahub_types_set: list[str] = list(set(
+            self.fmd_type_to_datahub_types_mapping[result_type.value][0] for result_type in result_types))
+        datahub_subtypes = list(self.fmd_type_to_datahub_types_mapping[result_type.value][1] for result_type in result_types)
+        datahub_subtypes_set = list(set(subtype for subtypes in datahub_subtypes for subtype in subtypes))
+        datahub_subtypes_filter = MultiSelectFilter("typeNames", datahub_subtypes_set)
+        filters.append(datahub_subtypes_filter)
+
+        logger.warning(f"Getting facets with {datahub_types_set=} {datahub_subtypes_set=}")
 
         # This is the tag that any and every entity we want to present in search results
         # now must have.
@@ -104,7 +110,7 @@ class SearchClient:
             "count": count,
             "query": query,
             "start": start,
-            "types": types,
+            "types": datahub_types_set,
             "filters": formatted_filters,
         }
 
@@ -171,32 +177,6 @@ class SearchClient:
             matched_fields[name] = value
         return matched_fields
 
-    def search_facets(
-        self,
-        query: str = "*",
-        result_types: Sequence[EntityTypes] = (EntityTypes.TABLE,),
-        filters: Sequence[MultiSelectFilter] = (),
-    ) -> SearchFacets:
-        """
-        Returns facets that can be used to filter the search results.
-        """
-        types = self._map_result_types(result_types)
-        formatted_filters = self._map_filters(filters)
-
-        variables = {
-            "query": query,
-            "facets": [],
-            "types": types,
-            "filters": formatted_filters,
-        }
-
-        try:
-            response = self.graph.execute_graphql(self.facets_query, variables)
-        except GraphError as e:
-            raise CatalogueError("Unable to execute facets query") from e
-
-        response = response["aggregateAcrossEntities"]
-        return self._parse_facets(response.get("facets", []))
 
     def list_domains(
         self,

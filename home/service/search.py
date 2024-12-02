@@ -15,7 +15,6 @@ from django.utils.translation import gettext as _
 from django.utils.translation import pgettext
 from nltk.stem import PorterStemmer
 
-from data_platform_catalogue.entities import RESULT_TYPES_TO_FILTER
 from home.forms.search import SearchForm
 from home.models.domain_model import DomainModel
 
@@ -51,13 +50,11 @@ class SearchService(GenericService):
             entity
             for entity in EntityTypes
             if entity.name != "GLOSSARY_TERM"
-            and entity not in RESULT_TYPES_TO_FILTER
         )
         chosen_entities = (
             tuple(
                 EntityTypes[entity]
                 for entity in entity_types
-                if EntityTypes[entity] not in RESULT_TYPES_TO_FILTER
             )
             if entity_types
             else None
@@ -65,16 +62,16 @@ class SearchService(GenericService):
 
         return chosen_entities if chosen_entities else default_entities
 
-    def _build_entity_subtypes_filter(self, entity_types: list[str]) -> MultiSelectFilter | None:
-        # The filter needs a non-capitalised string rather than the enum value
-        subtype_strings = [
-            EntityTypes[entity_type].value
-            for entity_type in entity_types
-            if EntityTypes[entity_type] in RESULT_TYPES_TO_FILTER
-        ]
-        entity_subtypes_filter = MultiSelectFilter("typeNames", subtype_strings) if subtype_strings else None
+    # def _build_entity_subtypes_filter(self, entity_types: list[str]) -> MultiSelectFilter | None:
+    #     # The filter needs a non-capitalised string rather than the enum value
+    #     subtype_strings = [
+    #         EntityTypes[entity_type].value
+    #         for entity_type in entity_types
+    #         if EntityTypes[entity_type] in RESULT_TYPES_TO_FILTER
+    #     ]
+    #     entity_subtypes_filter = MultiSelectFilter("typeNames", subtype_strings) if subtype_strings else None
 
-        return entity_subtypes_filter
+    #     return entity_subtypes_filter
 
     def _format_query_value(self, query: str) -> str:
         query_pattern: str = r"^[\"'].+[\"']$"
@@ -102,7 +99,6 @@ class SearchService(GenericService):
             "dc_where_to_access_dataset=", form_data.get("where_to_access", [])
         )
         entity_types = self._build_entity_types(form_data.get("entity_types", []))
-        entity_subtypes_filter = self._build_entity_subtypes_filter(form_data.get("entity_types", []))
 
         filter_value = []
         if domain:
@@ -113,8 +109,6 @@ class SearchService(GenericService):
             filter_value.append(
                 MultiSelectFilter("tags", [f"urn:li:tag:{tag}" for tag in tags])
             )
-        if entity_subtypes_filter:
-            filter_value.append(entity_subtypes_filter)
 
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
