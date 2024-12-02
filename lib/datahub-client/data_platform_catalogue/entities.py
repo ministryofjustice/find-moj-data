@@ -15,8 +15,16 @@ class RelationshipType(Enum):
     CHILD = "CHILD"
 
 
+class DatahubEntityType(Enum):
+    CONTAINER = "CONTAINER"
+    DATASET = "DATASET"
+    DASHBOARD = "DASHBOARD"
+    CHART = "CHART"
+    GLOSSARY_TERM = "GLOSSARY_TERM"
+
+
 class EntityTypes(Enum):
-    """Mapping between entity type,  data hub entity types and the url_formatted representation
+    """Mapping between FMD entity type, data hub entity types and the url_formatted representation
 
       Each entity has 3 properties:
        - value: Human-Readable description of the entity
@@ -26,13 +34,13 @@ class EntityTypes(Enum):
        ex: EntityTypes.TABLE.value returns `Table`
            EntityTypes.GLOSSARY_TERM.datahub_entity_type returns `GLOSSARY_TERM`"""
 
-    TABLE = ("Table", "DATASET", "table")
-    GLOSSARY_TERM = ("Glossary term", "GLOSSARY_TERM", "glossary_term")
-    CHART = ("Chart", "CHART", "chart")
-    DATABASE = ("Database", "CONTAINER", "database")
-    DASHBOARD = ("Dashboard", "DASHBOARD", "dashboard")
-    PUBLICATION_DATASET = ("Publication dataset", "DATASET", "publication_dataset")
-    PUBLICATION_COLLECTION = ("Publication collection", "CONTAINER", "publication_collection")
+    TABLE = ("Table", DatahubEntityType.DATASET.value, "table")
+    GLOSSARY_TERM = ("Glossary term", DatahubEntityType.GLOSSARY_TERM.value, "glossary_term")
+    CHART = ("Chart", DatahubEntityType.CHART.value, "chart")
+    DATABASE = ("Database", DatahubEntityType.CONTAINER.value, "database")
+    DASHBOARD = ("Dashboard", DatahubEntityType.DASHBOARD.value, "dashboard")
+    PUBLICATION_DATASET = ("Publication dataset", DatahubEntityType.DATASET.value, "publication_dataset")
+    PUBLICATION_COLLECTION = ("Publication collection", DatahubEntityType.CONTAINER.value, "publication_collection")
 
     def __new__(cls, value, datahub_entity_type, url_formatted):
         obj = object.__new__(cls)

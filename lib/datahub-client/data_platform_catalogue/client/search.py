@@ -16,7 +16,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_properties,
     parse_tags,
 )
-from data_platform_catalogue.entities import EntityRef
+from data_platform_catalogue.entities import DatahubEntityType, EntityRef
 from collections import namedtuple
 from data_platform_catalogue.entities import EntityTypes
 from data_platform_catalogue.search_types import (
@@ -44,25 +44,26 @@ class SearchClient:
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
-        self.entity_subtype_mappings = {
-            EntityTypes.TABLE.datahub_entity_type: {
-                DatahubSubtype.PUBLICATION_DATASET.value: EntityTypeParsingFuncMap(result_type=EntityTypes.PUBLICATION_DATASET, parse_function=self._parse_dataset),
-                DatahubSubtype.METRIC.value: EntityTypeParsingFuncMap(result_type=EntityTypes.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.TABLE.value: EntityTypeParsingFuncMap(result_type=EntityTypes.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.MODEL.value: EntityTypeParsingFuncMap(result_type=EntityTypes.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.SEED.value: EntityTypeParsingFuncMap(result_type=EntityTypes.TABLE, parse_function=self._parse_dataset),
-                DatahubSubtype.SOURCE.value: EntityTypeParsingFuncMap(result_type=EntityTypes.TABLE, parse_function=self._parse_dataset),
-            },
-            EntityTypes.CHART.datahub_entity_type: {
-                EntityTypes.CHART.datahub_entity_type: EntityTypeParsingFuncMap(result_type=EntityTypes.CHART, parse_function=self._parse_dataset)
-            },
-            EntityTypes.DATABASE.datahub_entity_type: {
-                DatahubSubtype.DATABASE.value: EntityTypeParsingFuncMap(result_type=EntityTypes.DATABASE, parse_function=self._parse_container),
-                DatahubSubtype.PUBLICATION_COLLECTION.value: EntityTypeParsingFuncMap(result_type=EntityTypes.PUBLICATION_COLLECTION, parse_function=self._parse_container),
-            },
-            EntityTypes.DASHBOARD.datahub_entity_type: {
-                EntityTypes.DASHBOARD.datahub_entity_type: EntityTypeParsingFuncMap(result_type=EntityTypes.DASHBOARD, parse_function=self._parse_container)
-            }
+        self.fmd_type_to_datahub_types_mapping = {
+            EntityTypes.TABLE.value: (DatahubEntityType.DATASET.value, ["Model", "Table", "Seed", "Source"]),
+            EntityTypes.CHART.value: (DatahubEntityType.CHART.value, []),
+            EntityTypes.DATABASE.value: (DatahubEntityType.CONTAINER.value, ["Database"]),
+            EntityTypes.DASHBOARD.value: (DatahubEntityType.DASHBOARD.value, []),
+            EntityTypes.PUBLICATION_DATASET.value: (DatahubEntityType.DATASET.value, ["Publication dataset"]),
+            EntityTypes.PUBLICATION_COLLECTION.value: (DatahubEntityType.CONTAINER.value, ["Publication collection"]),
+        }
+        self.datahub_types_to_fmd_type_and_parser_mapping = {
+            (DatahubEntityType.DATASET.value, DatahubSubtype.PUBLICATION_DATASET.value): (self._parse_dataset, EntityTypes.PUBLICATION_DATASET),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (self._parse_dataset, EntityTypes.TABLE),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (self._parse_dataset, EntityTypes.TABLE),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (self._parse_dataset, EntityTypes.TABLE),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (self._parse_dataset, EntityTypes.TABLE),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (self._parse_dataset, EntityTypes.TABLE),
+            (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (self._parse_container, EntityTypes.DATABASE),
+            (DatahubEntityType.CONTAINER.value, DatahubSubtype.PUBLICATION_COLLECTION.value): (self._parse_container, EntityTypes.PUBLICATION_COLLECTION),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.PUBLICATION_DATASET.value): (self._parse_container, EntityTypes.PUBLICATION_COLLECTION),
+            (DatahubEntityType.CHART.value, None): (self._parse_dataset, EntityTypes.CHART),
+            (DatahubEntityType.DASHBOARD.value, None): (self._parse_container, EntityTypes.DASHBOARD),
         }
 
     def search(
@@ -137,13 +138,14 @@ class SearchClient:
             entity = result["entity"]
             entity_type = entity["type"]
             entity_urn = entity["urn"]
-            entity_subtypes = self._parse_types_and_sub_types(entity, entity_type).get("entity_sub_types")
+            entity_subtype = entity.get("subTypes", {}).get("typeNames", [None])[0]
             matched_fields = self._get_matched_fields(result=result)
 
             try:
-                # Assuming that the first subtype is the most specific one
-                entity_subtype_mapping = self.entity_subtype_mappings[entity_type][entity_subtypes[0]]
-                parsed_result = entity_subtype_mapping.parse_function(entity, matched_fields, entity_subtype_mapping.result_type)
+                parser, fmd_type = self.datahub_types_to_fmd_type_and_parser_mapping[
+                    (entity_type, entity_subtype)
+                ]
+                parsed_result = parser(entity, matched_fields, fmd_type)
                 page_results.append(parsed_result)
             except KeyError as k_e:
                 logger.exception(f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}")
