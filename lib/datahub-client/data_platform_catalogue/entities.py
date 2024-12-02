@@ -15,7 +15,7 @@ class RelationshipType(Enum):
     CHILD = "CHILD"
 
 
-class EntityTypeMapping(Enum):
+class EntityTypes(Enum):
     """Mapping between entity type,  data hub entity types and the url_formatted representation
 
       Each entity has 3 properties:
@@ -23,8 +23,8 @@ class EntityTypeMapping(Enum):
        - datahub_entity_type: datahubs description of the entity
        - url_formatted: URL formatted representation of the entity
 
-       ex: EntityTypeMapping.TABLE.value returns `Table`
-           EntityTypeMapping.GLOSSARY_TERM.datahub_entity_type returns `GLOSSARY_TERM`"""
+       ex: EntityTypes.TABLE.value returns `Table`
+           EntityTypes.GLOSSARY_TERM.datahub_entity_type returns `GLOSSARY_TERM`"""
 
     TABLE = ("Table", "DATASET", "table")
     GLOSSARY_TERM = ("Glossary term", "GLOSSARY_TERM", "glossary_term")
@@ -43,8 +43,8 @@ class EntityTypeMapping(Enum):
 
 
 RESULT_TYPES_TO_FILTER = [
-    EntityTypeMapping.PUBLICATION_DATASET,
-    EntityTypeMapping.PUBLICATION_COLLECTION
+    EntityTypes.PUBLICATION_DATASET,
+    EntityTypes.PUBLICATION_COLLECTION
 ]
 
 

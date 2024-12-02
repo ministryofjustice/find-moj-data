@@ -34,7 +34,7 @@ from data_platform_catalogue.entities import (
     Database,
     DomainRef,
     EntityRef,
-    EntityTypeMapping,
+    EntityTypes,
     EntitySummary,
     GlossaryTermRef,
     Governance,
@@ -307,7 +307,7 @@ def page_titles():
 
 
 def generate_search_result(
-    result_type: EntityTypeMapping | None = None, urn=None, metadata=None
+    result_type: EntityTypes | None = None, urn=None, metadata=None
 ) -> SearchResult:
     """
     Generate a random search result
@@ -317,7 +317,7 @@ def generate_search_result(
     return SearchResult(
         urn=urn or fake.unique.name(),
         result_type=(
-            choice((EntityTypeMapping.DATABASE, EntityTypeMapping.TABLE))
+            choice((EntityTypes.DATABASE, EntityTypes.TABLE))
             if result_type is None
             else result_type
         ),
@@ -331,7 +331,7 @@ def generate_search_result(
 def search_result_from_database(database: Database):
     return SearchResult(
         urn=database.urn or "",
-        result_type=EntityTypeMapping.DATABASE,
+        result_type=EntityTypes.DATABASE,
         name=database.name,
         fully_qualified_name=database.fully_qualified_name or "",
         description=database.description,
@@ -575,7 +575,7 @@ def example_table(name="example_table"):
     return generate_table_metadata(name=name)
 
 
-def generate_page(page_size=20, result_type: EntityTypeMapping | None = None):
+def generate_page(page_size=20, result_type: EntityTypes | None = None):
     """
     Generate a fake search page
     """
@@ -737,7 +737,7 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type=EntityTypeMapping.GLOSSARY_TERM,
+                result_type=EntityTypes.GLOSSARY_TERM,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
@@ -753,14 +753,14 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type=EntityTypeMapping.GLOSSARY_TERM,
+                result_type=EntityTypes.GLOSSARY_TERM,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
                 name="Security classification",
                 description="Only data that is 'official'",
                 metadata={"parentNodes": []},
-                result_type=EntityTypeMapping.GLOSSARY_TERM,
+                result_type=EntityTypes.GLOSSARY_TERM,
             ),
         ],
     )
@@ -822,7 +822,7 @@ def search_context(search_service):
 def detail_database_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
         total_results=1,
-        page_results=generate_page(page_size=1, result_type=EntityTypeMapping.DATABASE),
+        page_results=generate_page(page_size=1, result_type=EntityTypes.DATABASE),
     )
 
     details_service = DatabaseDetailsService(urn="urn:li:container:test")
@@ -844,7 +844,7 @@ def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
         total_results=1,
         page_results=[
             generate_search_result(
-                result_type=EntityTypeMapping.TABLE,
+                result_type=EntityTypes.TABLE,
                 urn="table-abc",
                 metadata={},
             )

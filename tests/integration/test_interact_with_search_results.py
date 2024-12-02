@@ -1,6 +1,6 @@
 import pytest
 from data_platform_catalogue.search_types import SearchResult
-from data_platform_catalogue.entities import EntityTypeMapping
+from data_platform_catalogue.entities import EntityTypes
 
 from tests.conftest import (
     generate_page,
@@ -46,7 +46,7 @@ class TestInteractWithSearchResults:
         """
         mock_search_response(
             mock_catalogue=mock_catalogue,
-            page_results=generate_page(result_type=EntityTypeMapping.TABLE),
+            page_results=generate_page(result_type=EntityTypes.TABLE),
             total_results=100,
         )
         self.start_on_the_search_page()
@@ -63,7 +63,7 @@ class TestInteractWithSearchResults:
         """
         mock_search_response(
             mock_catalogue=mock_catalogue,
-            page_results=generate_page(result_type=EntityTypeMapping.TABLE),
+            page_results=generate_page(result_type=EntityTypes.TABLE),
             total_results=100,
         )
         table_no_column_description = generate_table_metadata(column_description="")

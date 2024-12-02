@@ -2,7 +2,7 @@ import re
 from copy import deepcopy
 from typing import Any
 
-from data_platform_catalogue.entities import EntityTypeMapping
+from data_platform_catalogue.entities import EntityTypes
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
@@ -46,18 +46,18 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(self, entity_types: list[str]) -> tuple[EntityTypeMapping, ...]:
+    def _build_entity_types(self, entity_types: list[str]) -> tuple[EntityTypes, ...]:
         default_entities = tuple(
             entity
-            for entity in EntityTypeMapping
+            for entity in EntityTypes
             if entity.name != "GLOSSARY_TERM"
             and entity not in RESULT_TYPES_TO_FILTER
         )
         chosen_entities = (
             tuple(
-                EntityTypeMapping[entity]
+                EntityTypes[entity]
                 for entity in entity_types
-                if EntityTypeMapping[entity] not in RESULT_TYPES_TO_FILTER
+                if EntityTypes[entity] not in RESULT_TYPES_TO_FILTER
             )
             if entity_types
             else None
@@ -68,9 +68,9 @@ class SearchService(GenericService):
     def _build_entity_subtypes_filter(self, entity_types: list[str]) -> MultiSelectFilter | None:
         # The filter needs a non-capitalised string rather than the enum value
         subtype_strings = [
-            EntityTypeMapping[entity_type].value
+            EntityTypes[entity_type].value
             for entity_type in entity_types
-            if EntityTypeMapping[entity_type] in RESULT_TYPES_TO_FILTER
+            if EntityTypes[entity_type] in RESULT_TYPES_TO_FILTER
         ]
         entity_subtypes_filter = MultiSelectFilter("typeNames", subtype_strings) if subtype_strings else None
 

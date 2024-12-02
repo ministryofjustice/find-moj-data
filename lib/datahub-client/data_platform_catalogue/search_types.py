@@ -5,7 +5,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 
-from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef, EntityTypeMapping
+from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef, EntityTypes
 
 
 class DatahubSubtype(Enum):
@@ -71,7 +71,7 @@ class DomainOption:
 @dataclass
 class SearchResult:
     urn: str
-    result_type: EntityTypeMapping
+    result_type: EntityTypes
     name: str
     display_name: str = ""
     fully_qualified_name: str = ""

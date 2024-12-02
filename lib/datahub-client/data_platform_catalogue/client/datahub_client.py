@@ -63,7 +63,7 @@ from data_platform_catalogue.entities import (
     Database,
     EntityRef,
     EntitySummary,
-    EntityTypeMapping,
+    EntityTypes,
     Governance,
     RelationshipType,
     Table,
@@ -203,10 +203,10 @@ class DataHubCatalogueClient:
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[EntityTypeMapping] = (
-            EntityTypeMapping.TABLE,
-            EntityTypeMapping.CHART,
-            EntityTypeMapping.DATABASE,
+        result_types: Sequence[EntityTypes] = (
+                EntityTypes.TABLE,
+                EntityTypes.CHART,
+                EntityTypes.DATABASE,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
@@ -228,10 +228,10 @@ class DataHubCatalogueClient:
     def search_facets(
         self,
         query: str = "*",
-        result_types: Sequence[EntityTypeMapping] = (
-            EntityTypeMapping.TABLE,
-            EntityTypeMapping.CHART,
-            EntityTypeMapping.DATABASE,
+        result_types: Sequence[EntityTypes] = (
+                EntityTypes.TABLE,
+                EntityTypes.CHART,
+                EntityTypes.DATABASE,
         ),
         filters: Sequence[MultiSelectFilter] = (),
     ) -> SearchFacets:
@@ -367,7 +367,6 @@ class DataHubCatalogueClient:
                 "container"
             ]
             properties, custom_properties = parse_properties(response)
-            glossary_terms = parse_glossary_terms(response)
             name, display_name, qualified_name = parse_names(response, properties)
 
             child_relations = parse_relations(
@@ -389,7 +388,7 @@ class DataHubCatalogueClient:
                     data_owner=parse_data_owner(response), data_custodians=parse_custodians(response), data_stewards=parse_stewards(response)
                 ),
                 tags=parse_tags(response),
-                glossary_terms=glossary_terms,
+                glossary_terms=parse_glossary_terms(response),
                 metadata_last_ingested=parse_metadata_last_ingested(response),
                 created=parse_data_created(properties),
                 data_last_modified=parse_data_last_modified(properties),
@@ -409,7 +408,7 @@ class DataHubCatalogueClient:
             child_relations = parse_relations(
                 relationship_type=RelationshipType.CHILD,
                 relations_list=[response["relationships"]],
-                entity_type_of_relations=EntityTypeMapping.PUBLICATION_DATASET.url_formatted,
+                entity_type_of_relations=EntityTypes.PUBLICATION_DATASET.url_formatted,
             )
             relations_to_display = self.list_relations_to_display(child_relations)
 

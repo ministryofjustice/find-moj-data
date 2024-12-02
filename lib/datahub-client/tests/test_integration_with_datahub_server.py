@@ -35,7 +35,7 @@ from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
 )
-from data_platform_catalogue.entities import EntityTypeMapping
+from data_platform_catalogue.entities import EntityTypes
 
 jwt_token = os.environ.get("CATALOGUE_TOKEN")
 api_url = os.environ.get("CATALOGUE_URL", "")
@@ -66,7 +66,7 @@ def test_search_by_domain():
 
     response = client.search(
         filters=[MultiSelectFilter("domains", ["does-not-exist"])],
-        result_types=(EntityTypeMapping.TABLE,),
+        result_types=(EntityTypes.TABLE,),
     )
     assert response.total_results == 0
 
