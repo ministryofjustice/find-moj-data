@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-29 11:43+0000\n"
+"POT-Creation-Date: 2024-11-29 15:33+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -399,9 +399,10 @@ msgstr "Discover data from across the Ministry of Justice"
 #: templates/home.html:12
 msgid "service_description"
 msgstr ""
-"Find MoJ data shows you what data exists and how to access it. <a aria-"
-"label=\"Learn more about Find MoJ data\" href=\"https://user-guide.find-moj-"
-"data.service.justice.gov.uk/\">Learn more</a>"
+"Find MoJ Data shows you what data exists and how to access it. The service "
+"does not contain the data itself, only metadata – data which describes our "
+"assets. <a aria-label=\"Learn more about Find MoJ data\" href=\"https://user-"
+"guide.find-moj-data.service.justice.gov.uk/\">Learn more</a>"
 
 #: templates/home.html:44
 msgid "Browse by domain"
@@ -632,3 +633,17 @@ msgstr "first name"
 #: users/models.py:12
 msgid "last name"
 msgstr "last name"
+
+#, fuzzy
+#~| msgid "This dashboard is missing chart information."
+#~ msgid "This collection is missing publication information."
+#~ msgstr "This dashboard is missing table information."
+
+#~ msgid "Please contact the data owner for access information."
+#~ msgstr "Contact the data owner to request access."
+
+#~ msgid "Contact the data owner with questions."
+#~ msgstr "Contact the data owner with questions."
+
+#~ msgid "IAO or Data Owner"
+#~ msgstr "Data owner"
