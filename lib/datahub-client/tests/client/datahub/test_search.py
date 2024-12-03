@@ -392,7 +392,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
-                        "entity_type": "Dataset",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -501,7 +501,7 @@ def test_full_page(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -532,7 +532,7 @@ def test_full_page(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -563,7 +563,7 @@ def test_full_page(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -1158,7 +1158,7 @@ def test_search_for_container(mock_graph, searcher):
                     "domain_name": "testdom",
                     "domain_id": "urn:li:domain:testdom",
                     "entity_types": {
-                        "entity_type": "Container",
+                        "entity_type": "Database",
                         "entity_sub_types": ["Database"],
                     },
                     "usage_restrictions": UsageRestrictions(

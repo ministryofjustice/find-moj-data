@@ -13,7 +13,6 @@ from home.models.domain_model import DomainModel
 from home.service.details import DatabaseDetailsService
 from home.service.domain_fetcher import DomainFetcher
 from home.service.search import SearchService
-from home.service.search_facet_fetcher import SearchFacetFetcher
 from home.service.search_tag_fetcher import SearchTagFetcher
 from notifications_python_client.notifications import NotificationsAPIClient
 from pytest import CollectReport, StashKey
