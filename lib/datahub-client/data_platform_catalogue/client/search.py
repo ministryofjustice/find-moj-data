@@ -215,7 +215,11 @@ class SearchClient:
             entity = result["entity"]
             entity_type = entity["type"]
             entity_urn = entity["urn"]
-            entity_subtype = entity.get("subTypes", {}).get("typeNames", [None])[0]
+            entity_subtype = (
+                entity.get("subTypes", {}).get("typeNames", [None])[0]
+                if entity.get("subTypes") is not None
+                else None
+            )
             matched_fields = self._get_matched_fields(result=result)
 
             try:
