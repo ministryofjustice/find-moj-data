@@ -299,12 +299,6 @@ class SearchClient:
             {
                 "and": [
                     {"field": filter.filter_name, "values": filter.included_values},
-                    {
-                        "field": "_entityType",
-                        "values": self.fmd_type_to_datahub_types_mapping[
-                            filter.included_values[0]
-                        ][0],
-                    },
                     {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
                 ]
             }
@@ -386,7 +380,7 @@ class SearchClient:
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, "Dataset"),
+            "entity_types": self._parse_types_and_sub_types(entity, result_type.value),
         }
         logger.debug(f"{metadata=}")
 
@@ -526,7 +520,7 @@ class SearchClient:
             "owner_email": owner.email,
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, "Container"),
+            "entity_types": self._parse_types_and_sub_types(entity, subtype.value),
         }
 
         metadata.update(custom_properties)

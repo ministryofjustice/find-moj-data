@@ -139,7 +139,7 @@ def test_one_search_result(mock_graph, searcher):
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
-                        "entity_type": "DATASET",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -234,7 +234,7 @@ def test_dataset_result(mock_graph, searcher):
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
-                        "entity_type": "DATASET",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -610,7 +610,7 @@ def test_query_match(mock_graph, searcher):
                         "type": "DATASET",
                         "subTypes": {
                             "typeNames": [
-                                "Publication dataset"
+                                "Table"
                             ]
                         },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
@@ -649,7 +649,7 @@ def test_query_match(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -683,7 +683,7 @@ def test_result_with_owner(mock_graph, searcher):
                         "type": "DATASET",
                         "subTypes": {
                             "typeNames": [
-                                "Publication dataset"
+                                "Table"
                             ]
                         },
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
@@ -734,7 +734,7 @@ def test_result_with_owner(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
+                        "entity_type": "Table",
                         "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
@@ -1036,8 +1036,8 @@ def test_search_for_charts(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "CHART",
-                        "entity_sub_types": ["CHART"],
+                        "entity_type": "Chart",
+                        "entity_sub_types": ["Chart"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
