@@ -61,7 +61,7 @@ class SearchClient:
             (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (self._parse_dataset, EntityTypes.TABLE),
             (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (self._parse_container, EntityTypes.DATABASE),
             (DatahubEntityType.CONTAINER.value, DatahubSubtype.PUBLICATION_COLLECTION.value): (self._parse_container, EntityTypes.PUBLICATION_COLLECTION),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.PUBLICATION_DATASET.value): (self._parse_container, EntityTypes.PUBLICATION_COLLECTION),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.PUBLICATION_DATASET.value): (self._parse_container, EntityTypes.PUBLICATION_DATASET),
             (DatahubEntityType.CHART.value, None): (self._parse_dataset, EntityTypes.CHART),
             (DatahubEntityType.DASHBOARD.value, None): (self._parse_container, EntityTypes.DASHBOARD),
         }
