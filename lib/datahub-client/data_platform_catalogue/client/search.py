@@ -1,6 +1,7 @@
 import json
 import logging
-from typing import Any, Sequence, Tuple, Dict
+from collections import namedtuple
+from typing import Any, Sequence, Tuple
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
@@ -16,9 +17,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_properties,
     parse_tags,
 )
-from data_platform_catalogue.entities import DatahubEntityType, EntityRef
-from collections import namedtuple
-from data_platform_catalogue.entities import EntityTypes
+from data_platform_catalogue.entities import DatahubEntityType, EntityRef, EntityTypes
 from data_platform_catalogue.search_types import (
     DatahubSubtype,
     DomainOption,
@@ -45,25 +44,79 @@ class SearchClient:
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
         self.fmd_type_to_datahub_types_mapping = {
-            EntityTypes.TABLE.value: (DatahubEntityType.DATASET.value, ["Model", "Table", "Seed", "Source"]),
+            EntityTypes.TABLE.value: (
+                DatahubEntityType.DATASET.value,
+                ["Model", "Table", "Seed", "Source"],
+            ),
             EntityTypes.CHART.value: (DatahubEntityType.CHART.value, []),
-            EntityTypes.DATABASE.value: (DatahubEntityType.CONTAINER.value, ["Database"]),
+            EntityTypes.DATABASE.value: (
+                DatahubEntityType.CONTAINER.value,
+                ["Database"],
+            ),
             EntityTypes.DASHBOARD.value: (DatahubEntityType.DASHBOARD.value, []),
-            EntityTypes.PUBLICATION_DATASET.value: (DatahubEntityType.DATASET.value, ["Publication dataset"]),
-            EntityTypes.PUBLICATION_COLLECTION.value: (DatahubEntityType.CONTAINER.value, ["Publication collection"]),
+            EntityTypes.PUBLICATION_DATASET.value: (
+                DatahubEntityType.DATASET.value,
+                ["Publication dataset"],
+            ),
+            EntityTypes.PUBLICATION_COLLECTION.value: (
+                DatahubEntityType.CONTAINER.value,
+                ["Publication collection"],
+            ),
         }
         self.datahub_types_to_fmd_type_and_parser_mapping = {
-            (DatahubEntityType.DATASET.value, DatahubSubtype.PUBLICATION_DATASET.value): (self._parse_dataset, EntityTypes.PUBLICATION_DATASET),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (self._parse_dataset, EntityTypes.TABLE),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (self._parse_dataset, EntityTypes.TABLE),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (self._parse_dataset, EntityTypes.TABLE),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (self._parse_dataset, EntityTypes.TABLE),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (self._parse_dataset, EntityTypes.TABLE),
-            (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (self._parse_container, EntityTypes.DATABASE),
-            (DatahubEntityType.CONTAINER.value, DatahubSubtype.PUBLICATION_COLLECTION.value): (self._parse_container, EntityTypes.PUBLICATION_COLLECTION),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.PUBLICATION_DATASET.value): (self._parse_container, EntityTypes.PUBLICATION_DATASET),
-            (DatahubEntityType.CHART.value, None): (self._parse_dataset, EntityTypes.CHART),
-            (DatahubEntityType.DASHBOARD.value, None): (self._parse_container, EntityTypes.DASHBOARD),
+            (
+                DatahubEntityType.DATASET.value,
+                DatahubSubtype.PUBLICATION_DATASET.value,
+            ): (
+                self._parse_dataset,
+                EntityTypes.PUBLICATION_DATASET,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (
+                self._parse_container,
+                EntityTypes.DATABASE,
+            ),
+            (
+                DatahubEntityType.CONTAINER.value,
+                DatahubSubtype.PUBLICATION_COLLECTION.value,
+            ): (
+                self._parse_container,
+                EntityTypes.PUBLICATION_COLLECTION,
+            ),
+            (
+                DatahubEntityType.DATASET.value,
+                DatahubSubtype.PUBLICATION_DATASET.value,
+            ): (
+                self._parse_container,
+                EntityTypes.PUBLICATION_DATASET,
+            ),
+            (DatahubEntityType.CHART.value, None): (
+                self._parse_dataset,
+                EntityTypes.CHART,
+            ),
+            (DatahubEntityType.DASHBOARD.value, None): (
+                self._parse_container,
+                EntityTypes.DASHBOARD,
+            ),
         }
 
     def search(
@@ -72,9 +125,9 @@ class SearchClient:
         count: int = 20,
         page: str | None = None,
         result_types: Sequence[EntityTypes] = (
-                EntityTypes.TABLE,
-                EntityTypes.CHART,
-                EntityTypes.DATABASE,
+            EntityTypes.TABLE,
+            EntityTypes.CHART,
+            EntityTypes.DATABASE,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
@@ -88,29 +141,47 @@ class SearchClient:
 
         start = 0 if page is None else int(page) * count
 
-        datahub_types_set: list[str] = list(set(
-            self.fmd_type_to_datahub_types_mapping[result_type.value][0] for result_type in result_types))
-        datahub_subtypes = list(self.fmd_type_to_datahub_types_mapping[result_type.value][1] for result_type in result_types)
-        datahub_subtypes_set = list(set(subtype for subtypes in datahub_subtypes for subtype in subtypes))
-        datahub_subtypes_filter = MultiSelectFilter("typeNames", datahub_subtypes_set)
-        filters.append(datahub_subtypes_filter)
+        fmd_entity_types = [result_type.value for result_type in result_types]
+        entity_type_filters = [
+            (
+                MultiSelectFilter(
+                    "_entityType",
+                    self.fmd_type_to_datahub_types_mapping[entity_type][0],
+                ),
+                MultiSelectFilter(
+                    "typeNames", self.fmd_type_to_datahub_types_mapping[entity_type][1]
+                ),
+            )
+            for entity_type in fmd_entity_types
+        ]
 
-        logger.warning(f"Getting facets with {datahub_types_set=} {datahub_subtypes_set=}")
+        # datahub_types_set: list[str] = list(
+        #     set(self.fmd_type_to_datahub_types_mapping[result_type.value][0] for result_type in result_types)
+        # )
+        # # datahub_types_filter = MultiSelectFilter("_entityType", datahub_types_set)
+        # # filters.append(datahub_types_filter)
+        # datahub_subtypes = list(
+        #     self.fmd_type_to_datahub_types_mapping[result_type.value][1] for result_type in result_types
+        # )
+        # datahub_subtypes_set = list(set(subtype for subtypes in datahub_subtypes for subtype in subtypes))
+        # datahub_subtypes_filter = MultiSelectFilter("typeNames", datahub_subtypes_set)
 
-        # This is the tag that any and every entity we want to present in search results
-        # now must have.
-        display_in_catalogue_filter = MultiSelectFilter(
-            filter_name="tags", included_values=["urn:li:tag:dc_display_in_catalogue"]
-        )
+        # logger.warning(f"Getting facets with {datahub_types_set=} {datahub_subtypes_set=}")
 
-        filters.append(display_in_catalogue_filter)
-        formatted_filters = self._map_filters(filters)
+        # # This is the tag that any and every entity we want to present in search results
+        # # now must have.
+        # display_in_catalogue_filter = MultiSelectFilter(
+        #     filter_name="tags", included_values=["urn:li:tag:dc_display_in_catalogue"]
+        # )
+
+        # filters.append(display_in_catalogue_filter)
+        formatted_filters = self._map_filters(filters, entity_type_filters)
 
         variables = {
             "count": count,
             "query": query,
             "start": start,
-            "types": datahub_types_set,
+            "types": [],
             "filters": formatted_filters,
         }
 
@@ -154,7 +225,9 @@ class SearchClient:
                 parsed_result = parser(entity, matched_fields, fmd_type)
                 page_results.append(parsed_result)
             except KeyError as k_e:
-                logger.exception(f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}")
+                logger.exception(
+                    f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}"
+                )
                 malformed_result_urns.append(entity_urn)
             except Exception:
                 logger.exception(f"Parsing for result {entity_urn} failed")
@@ -177,20 +250,17 @@ class SearchClient:
             matched_fields[name] = value
         return matched_fields
 
-
     def list_domains(
         self,
         query: str = "*",
-        filters: Sequence[MultiSelectFilter] = [
-            MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
-        ],
+        filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
     ) -> list[DomainOption]:
         """
         Returns domains that can be used to filter the search results.
         """
         formatted_filters = self._map_filters(filters)
-
+        formatted_filters = formatted_filters[0]["and"]
         variables = {
             "count": count,
             "query": query,
@@ -229,15 +299,69 @@ class SearchClient:
         """
         Map result types to Datahub EntityTypes
         """
-        relevant_types = list(set(result_type.datahub_entity_type for result_type in result_types))
+        relevant_types = list(
+            {result_type.datahub_entity_type for result_type in result_types}
+        )
 
         return relevant_types
 
-    def _map_filters(self, filters: Sequence[MultiSelectFilter]):
+    def _map_filters(
+        self, filters: Sequence[MultiSelectFilter] | None, entity_filters=[]
+    ):
+        if filters is None:
+            # filters = [MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])]
+            filters = []
+
         result = [
-            {"field": filter.filter_name, "values": filter.included_values}
+            {
+                "and": [
+                    {"field": filter.filter_name, "values": filter.included_values},
+                    {
+                        "field": "_entityType",
+                        "values": self.fmd_type_to_datahub_types_mapping[
+                            filter.included_values[0]
+                        ][0],
+                    },
+                    {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
+                ]
+            }
             for filter in filters
+            if "urn:li:tag:dc_display_in_catalogue" not in filter.included_values
         ]
+        entities = [
+            {
+                "and": [
+                    {
+                        "field": filter[0].filter_name,
+                        "values": filter[0].included_values,
+                    },
+                    *(
+                        [
+                            {
+                                "field": filter[1].filter_name,
+                                "values": filter[1].included_values,
+                            }
+                        ]
+                        if filter[1].included_values
+                        else []
+                    ),
+                    {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
+                ]
+            }
+            for filter in entity_filters
+        ]
+        result.extend(entities)
+        if not result:
+            result.append(
+                {
+                    "and": [
+                        {
+                            "field": "tags",
+                            "values": ["urn:li:tag:dc_display_in_catalogue"],
+                        },
+                    ]
+                }
+            )
         return result
 
     def _parse_list_domains(

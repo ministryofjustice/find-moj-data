@@ -65,9 +65,10 @@ from data_platform_catalogue.entities import (
     EntitySummary,
     EntityTypes,
     Governance,
+    PublicationCollection,
+    PublicationDataset,
     RelationshipType,
     Table,
-    PublicationCollection, PublicationDataset,
 )
 from data_platform_catalogue.search_types import (
     DomainOption,
@@ -204,9 +205,9 @@ class DataHubCatalogueClient:
         count: int = 20,
         page: str | None = None,
         result_types: Sequence[EntityTypes] = (
-                EntityTypes.TABLE,
-                EntityTypes.CHART,
-                EntityTypes.DATABASE,
+            EntityTypes.TABLE,
+            EntityTypes.CHART,
+            EntityTypes.DATABASE,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
@@ -229,9 +230,9 @@ class DataHubCatalogueClient:
         self,
         query: str = "*",
         result_types: Sequence[EntityTypes] = (
-                EntityTypes.TABLE,
-                EntityTypes.CHART,
-                EntityTypes.DATABASE,
+            EntityTypes.TABLE,
+            EntityTypes.CHART,
+            EntityTypes.DATABASE,
         ),
         filters: Sequence[MultiSelectFilter] = (),
     ) -> SearchFacets:
@@ -245,18 +246,12 @@ class DataHubCatalogueClient:
     def list_domains(
         self,
         query: str = "*",
-        filters: Sequence[MultiSelectFilter]|None = None,
+        filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
     ) -> list[DomainOption]:
         """
         Returns a list of DomainOption objects
         """
-
-        if filters is None:
-            filters = [
-                MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
-            ]
-
         return self.search_client.list_domains(
             query=query, filters=filters, count=count
         )
@@ -347,7 +342,9 @@ class DataHubCatalogueClient:
                 fully_qualified_name=qualified_name,
                 domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=parse_data_owner(response), data_stewards=parse_stewards(response), data_custodians=parse_custodians(response)
+                    data_owner=parse_data_owner(response),
+                    data_stewards=parse_stewards(response),
+                    data_custodians=parse_custodians(response),
                 ),
                 relationships=self.list_relations_to_display(parent_relations),
                 tags=parse_tags(response),
@@ -355,7 +352,10 @@ class DataHubCatalogueClient:
                 created=parse_data_created(properties),
                 data_last_modified=parse_data_last_modified(properties),
                 metadata_last_ingested=parse_metadata_last_ingested(response),
-                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
+                platform=EntityRef(
+                    display_name=response["platform"]["name"],
+                    urn=response["platform"]["name"],
+                ),
                 custom_properties=custom_properties,
             )
 
@@ -385,7 +385,9 @@ class DataHubCatalogueClient:
                 relationships=relations_to_display,
                 domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=parse_data_owner(response), data_custodians=parse_custodians(response), data_stewards=parse_stewards(response)
+                    data_owner=parse_data_owner(response),
+                    data_custodians=parse_custodians(response),
+                    data_stewards=parse_stewards(response),
                 ),
                 tags=parse_tags(response),
                 glossary_terms=parse_glossary_terms(response),
@@ -393,7 +395,10 @@ class DataHubCatalogueClient:
                 created=parse_data_created(properties),
                 data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
+                platform=EntityRef(
+                    display_name=response["platform"]["name"],
+                    urn=response["platform"]["name"],
+                ),
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
@@ -422,7 +427,9 @@ class DataHubCatalogueClient:
                 relationships=relations_to_display,
                 domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=parse_data_owner(response), data_custodians=parse_custodians(response), data_stewards=parse_stewards(response)
+                    data_owner=parse_data_owner(response),
+                    data_custodians=parse_custodians(response),
+                    data_stewards=parse_stewards(response),
                 ),
                 tags=parse_tags(response),
                 glossary_terms=parse_glossary_terms(response),
@@ -430,7 +437,10 @@ class DataHubCatalogueClient:
                 created=parse_data_created(properties),
                 data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
+                platform=EntityRef(
+                    display_name=response["platform"]["name"],
+                    urn=response["platform"]["name"],
+                ),
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
@@ -460,7 +470,9 @@ class DataHubCatalogueClient:
                 relationships={**parent_relations_to_display},
                 domain=parse_domain(response),
                 governance=Governance(
-                    data_owner=parse_data_owner(response), data_custodians=parse_custodians(response), data_stewards=parse_stewards(response)
+                    data_owner=parse_data_owner(response),
+                    data_custodians=parse_custodians(response),
+                    data_stewards=parse_stewards(response),
                 ),
                 tags=parse_tags(response),
                 glossary_terms=parse_glossary_terms(response),
@@ -468,7 +480,10 @@ class DataHubCatalogueClient:
                 created=parse_data_created(properties),
                 data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
+                platform=EntityRef(
+                    display_name=response["platform"]["name"],
+                    urn=response["platform"]["name"],
+                ),
             )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
@@ -486,14 +501,14 @@ class DataHubCatalogueClient:
                 name=name,
                 fully_qualified_name=qualified_name,
                 description=properties.get("description", ""),
-                relationships=self.list_relations_to_display(parse_relations(
-                    RelationshipType.CHILD, [response["relationships"]]
-                )),
+                relationships=self.list_relations_to_display(
+                    parse_relations(RelationshipType.CHILD, [response["relationships"]])
+                ),
                 domain=parse_domain(response),
                 governance=Governance(
                     data_owner=parse_data_owner(response),
                     data_stewards=parse_stewards(response),
-                    data_custodians=parse_custodians(response)
+                    data_custodians=parse_custodians(response),
                 ),
                 external_url=properties.get("externalUrl", ""),
                 tags=parse_tags(response),
@@ -502,7 +517,10 @@ class DataHubCatalogueClient:
                 created=parse_data_created(properties),
                 data_last_modified=parse_data_last_modified(properties),
                 custom_properties=custom_properties,
-                platform=EntityRef(display_name=response["platform"]["name"], urn=response["platform"]["name"]),
+                platform=EntityRef(
+                    display_name=response["platform"]["name"],
+                    urn=response["platform"]["name"],
+                ),
             )
 
         raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")
@@ -550,9 +568,7 @@ class DataHubCatalogueClient:
             fields=[
                 SchemaFieldClass(
                     fieldPath=f"{column.display_name}",
-                    type=SchemaFieldDataTypeClass(
-                        type=DATAHUB_DATA_TYPE_MAPPING[column.type]  # type: ignore
-                    ),
+                    type=SchemaFieldDataTypeClass(type=DATAHUB_DATA_TYPE_MAPPING[column.type]),  # type: ignore
                     nativeDataType=column.type,
                     description=column.description,
                 )
