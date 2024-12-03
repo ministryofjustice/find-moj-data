@@ -295,7 +295,7 @@ class SearchClient:
         if filters is None:
             filters = []
 
-        result = [
+        other_filters = [
             {
                 "and": [
                     {"field": filter.filter_name, "values": filter.included_values},
@@ -327,7 +327,23 @@ class SearchClient:
             }
             for filter in entity_filters
         ]
-        result.extend(entities)
+
+        additional_filters = [
+            condition
+            for filter_dict in other_filters
+            for condition in filter_dict["and"]
+        ]
+
+        # if there are entity filters we need to add in all other filters to each and entity block
+        if entities:
+            result = (
+                [{"and": entity["and"] + additional_filters} for entity in entities]
+                if additional_filters
+                else entities
+            )
+        else:
+            result = other_filters
+
         if not result:
             result.append(
                 {
