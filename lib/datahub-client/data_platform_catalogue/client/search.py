@@ -155,26 +155,6 @@ class SearchClient:
             for entity_type in fmd_entity_types
         ]
 
-        # datahub_types_set: list[str] = list(
-        #     set(self.fmd_type_to_datahub_types_mapping[result_type.value][0] for result_type in result_types)
-        # )
-        # # datahub_types_filter = MultiSelectFilter("_entityType", datahub_types_set)
-        # # filters.append(datahub_types_filter)
-        # datahub_subtypes = list(
-        #     self.fmd_type_to_datahub_types_mapping[result_type.value][1] for result_type in result_types
-        # )
-        # datahub_subtypes_set = list(set(subtype for subtypes in datahub_subtypes for subtype in subtypes))
-        # datahub_subtypes_filter = MultiSelectFilter("typeNames", datahub_subtypes_set)
-
-        # logger.warning(f"Getting facets with {datahub_types_set=} {datahub_subtypes_set=}")
-
-        # # This is the tag that any and every entity we want to present in search results
-        # # now must have.
-        # display_in_catalogue_filter = MultiSelectFilter(
-        #     filter_name="tags", included_values=["urn:li:tag:dc_display_in_catalogue"]
-        # )
-
-        # filters.append(display_in_catalogue_filter)
         formatted_filters = self._map_filters(filters, entity_type_filters)
 
         variables = {
@@ -313,7 +293,6 @@ class SearchClient:
         self, filters: Sequence[MultiSelectFilter] | None, entity_filters=[]
     ):
         if filters is None:
-            # filters = [MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])]
             filters = []
 
         result = [

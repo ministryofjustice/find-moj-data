@@ -23,6 +23,59 @@ class DatahubEntityType(Enum):
     GLOSSARY_TERM = "GLOSSARY_TERM"
 
 
+@dataclass
+class FindMoJDataEntityMapper:
+    find_moj_data_type: str
+    datahub_type: str
+    datahub_subtypes: list[str]
+    url_formatted: str
+
+
+class TableEntityMapper(FindMoJDataEntityMapper):
+    def __init__(self):
+        super().__init__(
+            "Table",
+            DatahubEntityType.DATASET.value,
+            ["Model", "Table", "Seed", "Source"],
+            "table"
+        )
+
+
+class ChartEntityMapper(FindMoJDataEntityMapper):
+    def __init__(self):
+        super().__init__("Chart", DatahubEntityType.CHART.value, [], "chart")
+
+
+class DatabaseEntityMapper(FindMoJDataEntityMapper):
+    def __init__(self):
+        super().__init__("Database", DatahubEntityType.CONTAINER.value, ["Database"], "database")
+
+
+class DashboardEntityMapper(FindMoJDataEntityMapper):
+    def __init__(self):
+        super().__init__("Dashboard", DatahubEntityType.DASHBOARD.value, [], "dashboard")
+
+
+class PublicationDatasetEntityMapper(FindMoJDataEntityMapper):
+    def __init__(self):
+        super().__init__(
+            "Publication dataset",
+            DatahubEntityType.DATASET.value,
+            ["Publication dataset"],
+            "publication_dataset"
+        )
+
+
+class PublicationCollectionEntityMapper(FindMoJDataEntityMapper):
+    def __init__(self):
+        super().__init__(
+            "Publication collection",
+            DatahubEntityType.CONTAINER.value,
+            ["Publication collection"],
+            "publication_collection"
+        )
+
+
 class EntityTypes(Enum):
     """Mapping between FMD entity type, data hub entity types and the url_formatted representation
 

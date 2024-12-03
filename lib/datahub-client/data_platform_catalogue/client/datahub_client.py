@@ -226,23 +226,6 @@ class DataHubCatalogueClient:
             sort=sort,
         )
 
-    def search_facets(
-        self,
-        query: str = "*",
-        result_types: Sequence[EntityTypes] = (
-            EntityTypes.TABLE,
-            EntityTypes.CHART,
-            EntityTypes.DATABASE,
-        ),
-        filters: Sequence[MultiSelectFilter] = (),
-    ) -> SearchFacets:
-        """
-        Returns facets that can be used to filter the search results.
-        """
-        return self.search_client.search_facets(
-            query=query, result_types=result_types, filters=filters
-        )
-
     def list_domains(
         self,
         query: str = "*",

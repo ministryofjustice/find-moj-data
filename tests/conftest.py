@@ -641,26 +641,6 @@ def mock_catalogue(request, example_database, example_dashboard, example_table):
             ),
         ],
     )
-    mock_search_facets_response(
-        mock_catalogue,
-        domains=[
-            FacetOption(
-                value="urn:li:domain:prisons",
-                label="Prisons",
-                count=fake.random_int(min=0, max=100),
-            ),
-            FacetOption(
-                value="urn:li:domain:courts",
-                label="Courts",
-                count=fake.random_int(min=0, max=100),
-            ),
-            FacetOption(
-                value="urn:li:domain:finance",
-                label="Finance",
-                count=fake.random_int(min=0, max=100),
-            ),
-        ],
-    )
     mock_get_glossary_terms_response(mock_catalogue)
     mock_get_chart_details_response(mock_catalogue)
     mock_get_table_details_response(mock_catalogue, example_table)
@@ -705,10 +685,6 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 def mock_list_domains_response(mock_catalogue, domains):
     mock_catalogue.list_domains.return_value = domains
-
-
-def mock_search_facets_response(mock_catalogue, domains):
-    mock_catalogue.search_facets.return_value = SearchFacets({"domains": domains})
 
 
 def mock_get_tags_response(mock_catalogue):
@@ -764,11 +740,6 @@ def mock_get_glossary_terms_response(mock_catalogue):
             ),
         ],
     )
-
-
-@pytest.fixture
-def search_facets():
-    return SearchFacetFetcher().fetch()
 
 
 @pytest.fixture
