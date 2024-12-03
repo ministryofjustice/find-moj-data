@@ -3,7 +3,7 @@ query Search(
   $count: Int!
   $start: Int!
   $types: [EntityType!]
-  $filters: [FacetFilterInput!]
+  $filters: [AndFilterInput!]
   $sort: SearchSortInput
 ) {
   searchAcrossEntities(
@@ -12,7 +12,7 @@ query Search(
       query: $query
       start: $start
       count: $count
-      orFilters: [{ and: $filters }]
+      orFilters: $filters
       sortInput: $sort
     }
   ) {
