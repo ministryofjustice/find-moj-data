@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from data_platform_catalogue.client.search import SearchClient
+from data_platform_catalogue.client.search.search_client import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
     DataSummary,
@@ -77,11 +77,7 @@ def test_one_search_result(mock_graph, searcher):
                 {
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": {
@@ -174,11 +170,7 @@ def test_dataset_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -304,11 +296,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -345,11 +333,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "malformed",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -427,11 +411,7 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "ownership": None,
@@ -450,11 +430,7 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers2,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers2",
                         "properties": {"name": "customers2", "qualifiedName": None},
@@ -465,11 +441,7 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers3,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers3",
                         "properties": {
@@ -608,11 +580,7 @@ def test_query_match(mock_graph, searcher):
                     ],
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
@@ -681,11 +649,7 @@ def test_result_with_owner(mock_graph, searcher):
                 {
                     "entity": {
                         "type": "DATASET",
-                        "subTypes": {
-                            "typeNames": [
-                                "Table"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "ownership": {
@@ -894,11 +858,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                 {
                     "entity": {
                         "urn": "urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
-                        "subTypes": {
-                            "typeNames": [
-                                "Publication dataset"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Publication dataset"]},
                         "properties": {
                             "name": "IAO",
                             "description": "Information asset owner.\n",
@@ -918,11 +878,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                 {
                     "entity": {
                         "urn": "urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
-                        "subTypes": {
-                            "typeNames": [
-                                "Publication dataset"
-                            ]
-                        },
+                        "subTypes": {"typeNames": ["Publication dataset"]},
                         "properties": {
                             "name": "Security classification",
                             "description": "Only data that is 'official'",

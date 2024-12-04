@@ -55,7 +55,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_subtypes,
     parse_tags,
 )
-from data_platform_catalogue.client.search import SearchClient
+from data_platform_catalogue.client.search.search_client import SearchClient
 from data_platform_catalogue.entities import (
     Chart,
     CustomEntityProperties,
@@ -73,7 +73,6 @@ from data_platform_catalogue.entities import (
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
-    SearchFacets,
     SearchResponse,
     SortOption,
 )

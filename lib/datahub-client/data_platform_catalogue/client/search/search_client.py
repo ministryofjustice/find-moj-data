@@ -17,6 +17,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_properties,
     parse_tags,
 )
+from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.entities import DatahubEntityType, EntityRef, EntityTypes
 from data_platform_catalogue.search_types import (
     DatahubSubtype,
@@ -155,7 +156,7 @@ class SearchClient:
             for entity_type in fmd_entity_types
         ]
 
-        formatted_filters = self._map_filters(filters, entity_type_filters)
+        formatted_filters = map_filters(filters, entity_type_filters)
 
         variables = {
             "count": count,
@@ -243,7 +244,7 @@ class SearchClient:
         """
         Returns domains that can be used to filter the search results.
         """
-        formatted_filters = self._map_filters(filters)
+        formatted_filters = map_filters(filters)
         formatted_filters = formatted_filters[0]["and"]
         variables = {
             "count": count,
@@ -288,74 +289,6 @@ class SearchClient:
         )
 
         return relevant_types
-
-    def _map_filters(
-        self, filters: Sequence[MultiSelectFilter] | None, entity_filters=[]
-    ):
-        if filters is None:
-            filters = []
-
-        other_filters = [
-            {
-                "and": [
-                    {"field": filter.filter_name, "values": filter.included_values},
-                    {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
-                ]
-            }
-            for filter in filters
-            if "urn:li:tag:dc_display_in_catalogue" not in filter.included_values
-        ]
-        entities = [
-            {
-                "and": [
-                    {
-                        "field": filter[0].filter_name,
-                        "values": filter[0].included_values,
-                    },
-                    *(
-                        [
-                            {
-                                "field": filter[1].filter_name,
-                                "values": filter[1].included_values,
-                            }
-                        ]
-                        if filter[1].included_values
-                        else []
-                    ),
-                    {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
-                ]
-            }
-            for filter in entity_filters
-        ]
-
-        additional_filters = [
-            condition
-            for filter_dict in other_filters
-            for condition in filter_dict["and"]
-        ]
-
-        # if there are entity filters we need to add in all other filters to each and entity block
-        if entities:
-            result = (
-                [{"and": entity["and"] + additional_filters} for entity in entities]
-                if additional_filters
-                else entities
-            )
-        else:
-            result = other_filters
-
-        if not result:
-            result.append(
-                {
-                    "and": [
-                        {
-                            "field": "tags",
-                            "values": ["urn:li:tag:dc_display_in_catalogue"],
-                        },
-                    ]
-                }
-            )
-        return result
 
     def _parse_list_domains(
         self, list_domains_result: list[dict[str, Any]]
