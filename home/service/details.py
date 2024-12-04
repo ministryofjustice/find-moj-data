@@ -1,7 +1,7 @@
 import os
 from urllib.parse import urlsplit
 
-from data_platform_catalogue.entities import EntityRef, RelationshipType, EntityTypes
+from data_platform_catalogue.entities import EntityRef, EntityTypes, RelationshipType
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
 from django.utils.translation import gettext as _
@@ -203,7 +203,9 @@ class PublicationCollectionDetailsService(GenericService):
         self.urn = urn
         self.client = self._get_catalogue_client()
 
-        self.publication_collection_metadata = self.client.get_publication_collection_details(self.urn)
+        self.publication_collection_metadata = (
+            self.client.get_publication_collection_details(self.urn)
+        )
 
         if not self.publication_collection_metadata:
             raise ObjectDoesNotExist(urn)
@@ -229,6 +231,7 @@ class PublicationCollectionDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.publication_collection_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
 
         return context
@@ -239,7 +242,9 @@ class PublicationDatasetDetailsService(GenericService):
         self.urn = urn
         self.client = self._get_catalogue_client()
 
-        self.publication_dataset_metadata = self.client.get_publication_dataset_details(self.urn)
+        self.publication_dataset_metadata = self.client.get_publication_dataset_details(
+            self.urn
+        )
 
         if not self.publication_dataset_metadata:
             raise ObjectDoesNotExist(urn)
@@ -261,4 +266,5 @@ class PublicationDatasetDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.publication_dataset_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
