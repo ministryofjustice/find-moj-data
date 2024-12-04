@@ -37,7 +37,7 @@ class TableEntityMapper(FindMoJDataEntityMapper):
             "Table",
             DatahubEntityType.DATASET.value,
             ["Model", "Table", "Seed", "Source"],
-            "table"
+            "table",
         )
 
 
@@ -48,12 +48,16 @@ class ChartEntityMapper(FindMoJDataEntityMapper):
 
 class DatabaseEntityMapper(FindMoJDataEntityMapper):
     def __init__(self):
-        super().__init__("Database", DatahubEntityType.CONTAINER.value, ["Database"], "database")
+        super().__init__(
+            "Database", DatahubEntityType.CONTAINER.value, ["Database"], "database"
+        )
 
 
 class DashboardEntityMapper(FindMoJDataEntityMapper):
     def __init__(self):
-        super().__init__("Dashboard", DatahubEntityType.DASHBOARD.value, [], "dashboard")
+        super().__init__(
+            "Dashboard", DatahubEntityType.DASHBOARD.value, [], "dashboard"
+        )
 
 
 class PublicationDatasetEntityMapper(FindMoJDataEntityMapper):
@@ -62,7 +66,7 @@ class PublicationDatasetEntityMapper(FindMoJDataEntityMapper):
             "Publication dataset",
             DatahubEntityType.DATASET.value,
             ["Publication dataset"],
-            "publication_dataset"
+            "publication_dataset",
         )
 
 
@@ -72,28 +76,40 @@ class PublicationCollectionEntityMapper(FindMoJDataEntityMapper):
             "Publication collection",
             DatahubEntityType.CONTAINER.value,
             ["Publication collection"],
-            "publication_collection"
+            "publication_collection",
         )
 
 
 class EntityTypes(Enum):
     """Maps between Find MoJ data's entity type, Datahub entity types and the url_formatted representation
 
-      Each entity has 3 properties:
-       - value: Human-Readable description of the entity
-       - datahub_entity_type: Datahub's description of the entity
-       - url_formatted: URL formatted representation of the entity
+    Each entity has 3 properties:
+     - value: Human-Readable description of the entity
+     - datahub_entity_type: Datahub's description of the entity
+     - url_formatted: URL formatted representation of the entity
 
-       ex: EntityTypes.TABLE.value returns `Table`
-           EntityTypes.GLOSSARY_TERM.datahub_entity_type returns `GLOSSARY_TERM`"""
+     ex: EntityTypes.TABLE.value returns `Table`
+         EntityTypes.GLOSSARY_TERM.datahub_entity_type returns `GLOSSARY_TERM`"""
 
     TABLE = ("Table", DatahubEntityType.DATASET.value, "table")
-    GLOSSARY_TERM = ("Glossary term", DatahubEntityType.GLOSSARY_TERM.value, "glossary_term")
+    GLOSSARY_TERM = (
+        "Glossary term",
+        DatahubEntityType.GLOSSARY_TERM.value,
+        "glossary_term",
+    )
     CHART = ("Chart", DatahubEntityType.CHART.value, "chart")
     DATABASE = ("Database", DatahubEntityType.CONTAINER.value, "database")
     DASHBOARD = ("Dashboard", DatahubEntityType.DASHBOARD.value, "dashboard")
-    PUBLICATION_DATASET = ("Publication dataset", DatahubEntityType.DATASET.value, "publication_dataset")
-    PUBLICATION_COLLECTION = ("Publication collection", DatahubEntityType.CONTAINER.value, "publication_collection")
+    PUBLICATION_DATASET = (
+        "Publication dataset",
+        DatahubEntityType.DATASET.value,
+        "publication_dataset",
+    )
+    PUBLICATION_COLLECTION = (
+        "Publication collection",
+        DatahubEntityType.CONTAINER.value,
+        "publication_collection",
+    )
 
     def __new__(cls, value, datahub_entity_type, url_formatted):
         obj = object.__new__(cls)
@@ -583,20 +599,25 @@ class Database(Entity):
     )
     # tables: list = Field(description="list of tables in the database")
 
+
 class PublicationCollection(Entity):
     """Collections of datasets that are periodically published to GOV.UK"""
+
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:criminal_justice_stats"],
     )
     external_url: str = Field(
         description="URL to view the collection",
-        examples=["https://data.justice.gov.uk/prisons/criminal-jsutice/publications"],
+        examples=[
+            "https://www.gov.uk/government/collections/civil-justice-statistics-quarterly"
+        ],
     )
 
 
 class PublicationDataset(Entity):
     """A dataset published to GOV.UK"""
+
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:dataset:(urn:li:dataPlatform:gov.uk,statistics2011,DEV)"],
