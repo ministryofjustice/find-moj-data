@@ -77,7 +77,7 @@ class PublicationCollectionEntityMapper(FindMoJDataEntityMapper):
 
 
 class EntityTypes(Enum):
-    """Mapping between FMD entity type, data hub entity types and the url_formatted representation
+    """Maps between Find MoJ data's entity type, Datahub entity types and the url_formatted representation
 
       Each entity has 3 properties:
        - value: Human-Readable description of the entity
