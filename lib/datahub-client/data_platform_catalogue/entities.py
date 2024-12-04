@@ -81,7 +81,7 @@ class EntityTypes(Enum):
 
       Each entity has 3 properties:
        - value: Human-Readable description of the entity
-       - datahub_entity_type: datahubs description of the entity
+       - datahub_entity_type: Datahub's description of the entity
        - url_formatted: URL formatted representation of the entity
 
        ex: EntityTypes.TABLE.value returns `Table`
