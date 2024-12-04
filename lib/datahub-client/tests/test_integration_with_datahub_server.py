@@ -9,25 +9,20 @@ poetry run pytest tests/test_integration_with_datahub_server.py
 
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime
 
 import pytest
 
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
-    Column,
-    ColumnRef,
     CustomEntityProperties,
     Database,
-    DataSummary,
     DomainRef,
     EntityRef,
-    FurtherInformation,
+    TableEntityMapper,
     Governance,
     OwnerRef,
-    RelationshipType,
-    Table,
     TagRef,
     UsageRestrictions,
 )
@@ -35,7 +30,6 @@ from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
 )
-from data_platform_catalogue.entities import EntityTypes
 
 jwt_token = os.environ.get("CATALOGUE_TOKEN")
 api_url = os.environ.get("CATALOGUE_URL", "")
@@ -66,7 +60,7 @@ def test_search_by_domain():
 
     response = client.search(
         filters=[MultiSelectFilter("domains", ["does-not-exist"])],
-        result_types=(EntityTypes.TABLE,),
+        result_types=(TableEntityMapper),
     )
     assert response.total_results == 0
 

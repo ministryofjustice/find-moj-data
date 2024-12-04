@@ -34,6 +34,16 @@ class DatahubSubtype(Enum):
     DATABASE = "Database"
 
 
+class FindMoJDataEntityType(Enum):
+    TABLE = "Table"
+    GLOSSARY_TERM = "Glossary term"
+    CHART = "Chart"
+    DATABASE = "Database"
+    DASHBOARD = "Dashboard"
+    PUBLICATION_DATASET = "Publication dataset"
+    PUBLICATION_COLLECTION = "Publication collection"
+
+
 @dataclass
 class FindMoJDataEntityMapper:
     find_moj_data_type: str
@@ -42,92 +52,54 @@ class FindMoJDataEntityMapper:
     url_formatted: str
 
 
-class TableEntityMapper(FindMoJDataEntityMapper):
-    def __init__(self):
-        super().__init__(
-            "Table",
-            DatahubEntityType.DATASET.value,
-            ["Model", "Table", "Seed", "Source"],
-            "table",
-        )
+TableEntityMapper = FindMoJDataEntityMapper(
+    FindMoJDataEntityType.TABLE.value,
+    DatahubEntityType.DATASET.value,
+    ["Model", "Table", "Seed", "Source"],
+    "table"
+)
 
+ChartEntityMapper = FindMoJDataEntityMapper(
+    FindMoJDataEntityType.CHART.value,
+    DatahubEntityType.CHART.value,
+    [],
+    "chart"
+)
 
-class ChartEntityMapper(FindMoJDataEntityMapper):
-    def __init__(self):
-        super().__init__("Chart", DatahubEntityType.CHART.value, [], "chart")
+GlossaryTermEntityMapper = FindMoJDataEntityMapper(
+    FindMoJDataEntityType.GLOSSARY_TERM.value,
+    DatahubEntityType.GLOSSARY_TERM.value,
+    [],
+    "glossary_term"
+)
 
+DatabaseEntityMapper = FindMoJDataEntityMapper(
+    FindMoJDataEntityType.DATABASE.value,
+    DatahubEntityType.CONTAINER.value,
+    ["Database"],
+    "database"
+)
 
-class DatabaseEntityMapper(FindMoJDataEntityMapper):
-    def __init__(self):
-        super().__init__(
-            "Database", DatahubEntityType.CONTAINER.value, ["Database"], "database"
-        )
+DashboardEntityMapper = FindMoJDataEntityMapper(
+    FindMoJDataEntityType.DASHBOARD.value,
+    DatahubEntityType.DASHBOARD.value,
+    [],
+    "dashboard"
+)
 
+PublicationDatasetEntityMapper = FindMoJDataEntityMapper(
+    FindMoJDataEntityType.PUBLICATION_DATASET.value,
+    DatahubEntityType.DATASET.value,
+    ["Publication dataset"],
+    "publication_dataset"
+)
 
-class DashboardEntityMapper(FindMoJDataEntityMapper):
-    def __init__(self):
-        super().__init__(
-            "Dashboard", DatahubEntityType.DASHBOARD.value, [], "dashboard"
-        )
-
-
-class PublicationDatasetEntityMapper(FindMoJDataEntityMapper):
-    def __init__(self):
-        super().__init__(
-            "Publication dataset",
-            DatahubEntityType.DATASET.value,
-            ["Publication dataset"],
-            "publication_dataset",
-        )
-
-
-class PublicationCollectionEntityMapper(FindMoJDataEntityMapper):
-    def __init__(self):
-        super().__init__(
-            "Publication collection",
-            DatahubEntityType.CONTAINER.value,
-            ["Publication collection"],
-            "publication_collection",
-        )
-
-
-class EntityTypes(Enum):
-    """Maps between Find MoJ data's entity type, Datahub entity types and the url_formatted representation
-
-    Each entity has 3 properties:
-     - value: Human-Readable description of the entity
-     - datahub_entity_type: Datahub's description of the entity
-     - url_formatted: URL formatted representation of the entity
-
-     ex: EntityTypes.TABLE.value returns `Table`
-         EntityTypes.GLOSSARY_TERM.datahub_entity_type returns `GLOSSARY_TERM`"""
-
-    TABLE = ("Table", DatahubEntityType.DATASET.value, "table")
-    GLOSSARY_TERM = (
-        "Glossary term",
-        DatahubEntityType.GLOSSARY_TERM.value,
-        "glossary_term",
-    )
-    CHART = ("Chart", DatahubEntityType.CHART.value, "chart")
-    DATABASE = ("Database", DatahubEntityType.CONTAINER.value, "database")
-    DASHBOARD = ("Dashboard", DatahubEntityType.DASHBOARD.value, "dashboard")
-    PUBLICATION_DATASET = (
-        "Publication dataset",
-        DatahubEntityType.DATASET.value,
-        "publication_dataset",
-    )
-    PUBLICATION_COLLECTION = (
-        "Publication collection",
-        DatahubEntityType.CONTAINER.value,
-        "publication_collection",
-    )
-
-    def __new__(cls, value, datahub_entity_type, url_formatted):
-        obj = object.__new__(cls)
-        obj._value_ = value
-        obj.datahub_entity_type = datahub_entity_type
-        obj.url_formatted = url_formatted
-        return obj
+PublicationCollectionEntityMapper = FindMoJDataEntityMapper(
+    FindMoJDataEntityType.PUBLICATION_COLLECTION.value,
+    DatahubEntityType.CONTAINER.value,
+    ["Publication collection"],
+    "publication_collection"
+)
 
 
 class Audience(Enum):
@@ -610,25 +582,20 @@ class Database(Entity):
     )
     # tables: list = Field(description="list of tables in the database")
 
-
 class PublicationCollection(Entity):
-    """Collections of datasets that are periodically published to GOV.UK"""
-
+    """For source system publication collections"""
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:criminal_justice_stats"],
     )
     external_url: str = Field(
         description="URL to view the collection",
-        examples=[
-            "https://www.gov.uk/government/collections/civil-justice-statistics-quarterly"
-        ],
+        examples=["https://data.justice.gov.uk/prisons/criminal-jsutice/publications"],
     )
 
 
 class PublicationDataset(Entity):
-    """A dataset published to GOV.UK"""
-
+    """For source system publication collections"""
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:dataset:(urn:li:dataPlatform:gov.uk,statistics2011,DEV)"],

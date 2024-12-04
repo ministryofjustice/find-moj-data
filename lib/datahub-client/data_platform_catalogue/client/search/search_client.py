@@ -21,8 +21,15 @@ from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.entities import (
     DatahubEntityType,
     DatahubSubtype,
-    EntityRef,
-    EntityTypes,
+    FindMoJDataEntityMapper,
+    TableEntityMapper,
+    ChartEntityMapper,
+    DatabaseEntityMapper,
+    DashboardEntityMapper,
+    PublicationDatasetEntityMapper,
+    PublicationCollectionEntityMapper,
+    GlossaryTermEntityMapper,
+    EntityRef
 )
 from data_platform_catalogue.search_types import (
     DomainOption,
@@ -37,9 +44,6 @@ from data_platform_catalogue.search_types import (
 logger = logging.getLogger(__name__)
 
 
-EntityTypeParsingFuncMap = namedtuple("EntityTypes", ["result_type", "parse_function"])
-
-
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
         self.graph = graph
@@ -49,21 +53,21 @@ class SearchClient:
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
         self.fmd_type_to_datahub_types_mapping = {
-            EntityTypes.TABLE.value: (
+            TableEntityMapper.find_moj_data_type: (
                 DatahubEntityType.DATASET.value,
                 ["Model", "Table", "Seed", "Source"],
             ),
-            EntityTypes.CHART.value: (DatahubEntityType.CHART.value, []),
-            EntityTypes.DATABASE.value: (
+            ChartEntityMapper.find_moj_data_type: (DatahubEntityType.CHART.value, []),
+            DatabaseEntityMapper.find_moj_data_type: (
                 DatahubEntityType.CONTAINER.value,
                 ["Database"],
             ),
-            EntityTypes.DASHBOARD.value: (DatahubEntityType.DASHBOARD.value, []),
-            EntityTypes.PUBLICATION_DATASET.value: (
+            DashboardEntityMapper.find_moj_data_type: (DatahubEntityType.DASHBOARD.value, []),
+            PublicationDatasetEntityMapper.find_moj_data_type: (
                 DatahubEntityType.DATASET.value,
                 ["Publication dataset"],
             ),
-            EntityTypes.PUBLICATION_COLLECTION.value: (
+            PublicationCollectionEntityMapper.find_moj_data_type: (
                 DatahubEntityType.CONTAINER.value,
                 ["Publication collection"],
             ),
@@ -74,53 +78,53 @@ class SearchClient:
                 DatahubSubtype.PUBLICATION_DATASET.value,
             ): (
                 self._parse_dataset,
-                EntityTypes.PUBLICATION_DATASET,
+                PublicationDatasetEntityMapper,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (
                 self._parse_dataset,
-                EntityTypes.TABLE,
+                TableEntityMapper,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (
                 self._parse_dataset,
-                EntityTypes.TABLE,
+                TableEntityMapper,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (
                 self._parse_dataset,
-                EntityTypes.TABLE,
+                TableEntityMapper,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (
                 self._parse_dataset,
-                EntityTypes.TABLE,
+                TableEntityMapper,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (
                 self._parse_dataset,
-                EntityTypes.TABLE,
+                TableEntityMapper,
             ),
             (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (
                 self._parse_container,
-                EntityTypes.DATABASE,
+                DatabaseEntityMapper,
             ),
             (
                 DatahubEntityType.CONTAINER.value,
                 DatahubSubtype.PUBLICATION_COLLECTION.value,
             ): (
                 self._parse_container,
-                EntityTypes.PUBLICATION_COLLECTION,
+                PublicationCollectionEntityMapper,
             ),
             (
                 DatahubEntityType.DATASET.value,
                 DatahubSubtype.PUBLICATION_DATASET.value,
             ): (
                 self._parse_container,
-                EntityTypes.PUBLICATION_DATASET,
+                PublicationDatasetEntityMapper,
             ),
             (DatahubEntityType.CHART.value, None): (
                 self._parse_dataset,
-                EntityTypes.CHART,
+                ChartEntityMapper,
             ),
             (DatahubEntityType.DASHBOARD.value, None): (
                 self._parse_container,
-                EntityTypes.DASHBOARD,
+                DashboardEntityMapper,
             ),
         }
 
@@ -129,10 +133,10 @@ class SearchClient:
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[EntityTypes] = (
-            EntityTypes.TABLE,
-            EntityTypes.CHART,
-            EntityTypes.DATABASE,
+        result_types: Sequence[FindMoJDataEntityMapper] = (
+            TableEntityMapper,
+            ChartEntityMapper,
+            DatabaseEntityMapper,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
@@ -146,7 +150,7 @@ class SearchClient:
 
         start = 0 if page is None else int(page) * count
 
-        fmd_entity_types = [result_type.value for result_type in result_types]
+        fmd_entity_types = [result_type.find_moj_data_type for result_type in result_types]
         entity_type_filters = [
             (
                 MultiSelectFilter(
@@ -275,7 +279,7 @@ class SearchClient:
             matched_fields: dict = {}
             if entity_type == "DATASET":
                 page_results.append(
-                    self._parse_dataset(entity, matched_fields, EntityTypes.TABLE)
+                    self._parse_dataset(entity, matched_fields, TableEntityMapper)
                 )
             else:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
@@ -283,7 +287,7 @@ class SearchClient:
 
     def _map_result_types(
         self,
-        result_types: Sequence[EntityTypes],
+        result_types: Sequence[FindMoJDataEntityMapper],
     ) -> list[str]:
         """
         Map result types to Datahub EntityTypes
@@ -310,7 +314,7 @@ class SearchClient:
         return list_domain_options
 
     def _parse_dataset(
-        self, entity: dict[str, Any], matches, result_type: EntityTypes
+        self, entity: dict[str, Any], matches, result_type: FindMoJDataEntityMapper
     ) -> SearchResult:
         """
         Map a dataset entity to a SearchResult
@@ -333,7 +337,7 @@ class SearchClient:
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, result_type.value),
+            "entity_types": self._parse_types_and_sub_types(entity, result_type.find_moj_data_type),
         }
         logger.debug(f"{metadata=}")
 
@@ -392,7 +396,7 @@ class SearchClient:
 
         return SearchResult(
             urn=entity["urn"],
-            result_type=EntityTypes.GLOSSARY_TERM,
+            result_type=GlossaryTermEntityMapper,
             matches={},
             name=name,
             display_name=display_name,
@@ -455,7 +459,7 @@ class SearchClient:
         return tags_list
 
     def _parse_container(
-        self, entity: dict[str, Any], matches, subtype: EntityTypes
+        self, entity: dict[str, Any], matches, subtype: FindMoJDataEntityMapper
     ) -> SearchResult:
         """
         Map a Container entity to a SearchResult
@@ -473,7 +477,7 @@ class SearchClient:
             "owner_email": owner.email,
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, subtype.value),
+            "entity_types": self._parse_types_and_sub_types(entity, subtype.find_moj_data_type),
         }
 
         metadata.update(custom_properties)

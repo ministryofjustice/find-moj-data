@@ -1,7 +1,10 @@
 import os
 from urllib.parse import urlsplit
 
-from data_platform_catalogue.entities import EntityRef, EntityTypes, RelationshipType
+from data_platform_catalogue.entities import (
+    EntityRef, RelationshipType, DatabaseEntityMapper,
+    DashboardEntityMapper, PublicationCollectionEntityMapper, PublicationDatasetEntityMapper
+)
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
 from django.utils.translation import gettext as _
@@ -114,7 +117,7 @@ class DatasetDetailsService(GenericService):
             "entity": self.table_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
-            "parent_type": EntityTypes.DATABASE.name.lower(),
+            "parent_type": DatabaseEntityMapper.datahub_type.lower(),
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
@@ -161,7 +164,7 @@ class ChartDetailsService(GenericService):
                 self.chart_metadata.platform.display_name
             ),
             "parent_entity": self.parent_entity,
-            "parent_type": EntityTypes.DASHBOARD.name.lower(),
+            "parent_type": DashboardEntityMapper.datahub_type.lower(),
             "h1_value": self.chart_metadata.name,
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.chart_metadata.custom_properties.access_information.dc_access_requirements
@@ -219,7 +222,7 @@ class PublicationCollectionDetailsService(GenericService):
     def _get_context(self):
         context = {
             "entity": self.publication_collection_metadata,
-            "entity_type": EntityTypes.PUBLICATION_COLLECTION.value,
+            "entity_type": PublicationCollectionEntityMapper.find_moj_data_type,
             "platform_name": friendly_platform_name(
                 self.publication_collection_metadata.platform.display_name
             ),
@@ -258,12 +261,12 @@ class PublicationDatasetDetailsService(GenericService):
 
         return {
             "entity": self.publication_dataset_metadata,
-            "entity_type": EntityTypes.PUBLICATION_DATASET.value,
+            "entity_type": PublicationDatasetEntityMapper.find_moj_data_type,
             "parent_entity": self.parent_entity,
             "platform_name": friendly_platform_name(
                 self.publication_dataset_metadata.platform.display_name
             ),
-            "parent_type": EntityTypes.PUBLICATION_COLLECTION.name.lower(),
+            "parent_type": DatabaseEntityMapper.datahub_type.lower(),
             "h1_value": self.publication_dataset_metadata.name,
             # noqa: E501
             "is_access_requirements_a_url": is_access_requirements_a_url(

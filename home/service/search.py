@@ -2,7 +2,7 @@ import re
 from copy import deepcopy
 from typing import Any
 
-from data_platform_catalogue.entities import EntityTypes
+from data_platform_catalogue.entities import FindMoJDataEntityType
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
@@ -45,15 +45,15 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(self, entity_types: list[str]) -> tuple[EntityTypes, ...]:
+    def _build_entity_types(self, entity_types: list[str]) -> tuple[FindMoJDataEntityType, ...]:
         default_entities = tuple(
             entity
-            for entity in EntityTypes
+            for entity in FindMoJDataEntityType
             if entity.name != "GLOSSARY_TERM"
         )
         chosen_entities = (
             tuple(
-                EntityTypes[entity]
+                FindMoJDataEntityType[entity]
                 for entity in entity_types
             )
             if entity_types
