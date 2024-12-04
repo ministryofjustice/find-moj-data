@@ -62,17 +62,6 @@ class SearchService(GenericService):
 
         return chosen_entities if chosen_entities else default_entities
 
-    # def _build_entity_subtypes_filter(self, entity_types: list[str]) -> MultiSelectFilter | None:
-    #     # The filter needs a non-capitalised string rather than the enum value
-    #     subtype_strings = [
-    #         EntityTypes[entity_type].value
-    #         for entity_type in entity_types
-    #         if EntityTypes[entity_type] in RESULT_TYPES_TO_FILTER
-    #     ]
-    #     entity_subtypes_filter = MultiSelectFilter("typeNames", subtype_strings) if subtype_strings else None
-
-    #     return entity_subtypes_filter
-
     def _format_query_value(self, query: str) -> str:
         query_pattern: str = r"^[\"'].+[\"']$"
         # Datahub treats any query with underscores as exact, so if the string is not quoted,
