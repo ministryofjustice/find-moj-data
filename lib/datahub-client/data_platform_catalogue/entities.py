@@ -55,7 +55,12 @@ class FindMoJDataEntityMapper:
 TableEntityMapper = FindMoJDataEntityMapper(
     FindMoJDataEntityType.TABLE.value,
     DatahubEntityType.DATASET.value,
-    ["Model", "Table", "Seed", "Source"],
+    [
+        DatahubSubtype.MODEL.value,
+        DatahubSubtype.TABLE.value,
+        DatahubSubtype.SEED.value,
+        DatahubSubtype.SOURCE.value
+    ],
     "table"
 )
 
@@ -76,7 +81,7 @@ GlossaryTermEntityMapper = FindMoJDataEntityMapper(
 DatabaseEntityMapper = FindMoJDataEntityMapper(
     FindMoJDataEntityType.DATABASE.value,
     DatahubEntityType.CONTAINER.value,
-    ["Database"],
+    [DatahubSubtype.DATABASE.value],
     "database"
 )
 
@@ -90,14 +95,14 @@ DashboardEntityMapper = FindMoJDataEntityMapper(
 PublicationDatasetEntityMapper = FindMoJDataEntityMapper(
     FindMoJDataEntityType.PUBLICATION_DATASET.value,
     DatahubEntityType.DATASET.value,
-    ["Publication dataset"],
+    [DatahubSubtype.PUBLICATION_DATASET.value],
     "publication_dataset"
 )
 
 PublicationCollectionEntityMapper = FindMoJDataEntityMapper(
     FindMoJDataEntityType.PUBLICATION_COLLECTION.value,
     DatahubEntityType.CONTAINER.value,
-    ["Publication collection"],
+    [DatahubSubtype.PUBLICATION_COLLECTION.value],
     "publication_collection"
 )
 
