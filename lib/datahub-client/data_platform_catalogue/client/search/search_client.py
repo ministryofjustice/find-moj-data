@@ -52,26 +52,6 @@ class SearchClient:
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
-        self.fmd_type_to_datahub_types_mapping = {
-            TableEntityMapper.find_moj_data_type: (
-                DatahubEntityType.DATASET.value,
-                ["Model", "Table", "Seed", "Source"],
-            ),
-            ChartEntityMapper.find_moj_data_type: (DatahubEntityType.CHART.value, []),
-            DatabaseEntityMapper.find_moj_data_type: (
-                DatahubEntityType.CONTAINER.value,
-                ["Database"],
-            ),
-            DashboardEntityMapper.find_moj_data_type: (DatahubEntityType.DASHBOARD.value, []),
-            PublicationDatasetEntityMapper.find_moj_data_type: (
-                DatahubEntityType.DATASET.value,
-                ["Publication dataset"],
-            ),
-            PublicationCollectionEntityMapper.find_moj_data_type: (
-                DatahubEntityType.CONTAINER.value,
-                ["Publication collection"],
-            ),
-        }
         self.datahub_types_to_fmd_type_and_parser_mapping = {
             (
                 DatahubEntityType.DATASET.value,
@@ -150,18 +130,12 @@ class SearchClient:
 
         start = 0 if page is None else int(page) * count
 
-        fmd_entity_types = [result_type.find_moj_data_type for result_type in result_types]
         entity_type_filters = [
             (
-                MultiSelectFilter(
-                    "_entityType",
-                    self.fmd_type_to_datahub_types_mapping[entity_type][0],
-                ),
-                MultiSelectFilter(
-                    "typeNames", self.fmd_type_to_datahub_types_mapping[entity_type][1]
-                ),
+                MultiSelectFilter("_entityType", result.datahub_type),
+                MultiSelectFilter("typeNames", result.datahub_subtypes),
             )
-            for entity_type in fmd_entity_types
+            for result in result_types
         ]
 
         formatted_filters = map_filters(filters, entity_type_filters)
