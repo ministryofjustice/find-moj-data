@@ -584,7 +584,7 @@ class Database(Entity):
     # tables: list = Field(description="list of tables in the database")
 
 class PublicationCollection(Entity):
-    """For source system publication collections"""
+    """Collections of datasets that are periodically published to GOV.UK"""
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:criminal_justice_stats"],
