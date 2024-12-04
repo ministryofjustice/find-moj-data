@@ -56,6 +56,9 @@
         </div>
         {% block extra_description %}
         {% endblock extra_description %}
+      <button id="copyButton" class="govuk-button govuk-button--secondary">
+        Copy link
+      </button>
         {% block metadata_list %}
           <ul class="govuk-list govuk-body" id="metadata-property-list">
             {% if entity.created %}
@@ -120,3 +123,7 @@
   {% block extra_details %}
   {% endblock extra_details %}
 {% endblock content %}
+
+{% block scripts %}
+  <script src="{% static 'assets/js/copy-button.js' %}"></script>
+{% endblock scripts %}
