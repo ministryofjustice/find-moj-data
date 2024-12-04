@@ -2,20 +2,14 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum, auto
 from typing import Any
 
-from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef
-
-
-class ResultType(Enum):
-    """Result type."""
-
-    TABLE = auto()
-    GLOSSARY_TERM = auto()
-    CHART = auto()
-    DATABASE = auto()
-    DASHBOARD = auto()
+from data_platform_catalogue.entities import (
+    EntityRef,
+    EntityTypes,
+    GlossaryTermRef,
+    TagRef,
+)
 
 
 @dataclass
@@ -70,7 +64,7 @@ class DomainOption:
 @dataclass
 class SearchResult:
     urn: str
-    result_type: ResultType
+    result_type: EntityTypes
     name: str
     display_name: str = ""
     fully_qualified_name: str = ""

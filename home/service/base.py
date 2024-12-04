@@ -8,3 +8,4 @@ class GenericService:
         return DataHubCatalogueClient(
             jwt_token=settings.CATALOGUE_TOKEN, api_url=settings.CATALOGUE_URL
         )
+

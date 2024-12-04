@@ -63,3 +63,9 @@ code {
 .moj-filter .govuk-select {
   min-width: 5.5em;
 }
+
+// We've increased the max width of this tag as it was wrapping
+// the text for "Publication collection"
+.govuk-tag {
+  max-width: 180px
+}

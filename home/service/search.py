@@ -2,10 +2,10 @@ import re
 from copy import deepcopy
 from typing import Any
 
+from data_platform_catalogue.entities import EntityTypes
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
-    ResultType,
     SearchResponse,
     SortOption,
 )
@@ -45,15 +45,21 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(self, entity_types: list[str]) -> tuple[ResultType, ...]:
+    def _build_entity_types(self, entity_types: list[str]) -> tuple[EntityTypes, ...]:
         default_entities = tuple(
-            entity for entity in ResultType if entity.name != "GLOSSARY_TERM"
+            entity
+            for entity in EntityTypes
+            if entity.name != "GLOSSARY_TERM"
         )
         chosen_entities = (
-            tuple(ResultType[entity] for entity in entity_types)
+            tuple(
+                EntityTypes[entity]
+                for entity in entity_types
+            )
             if entity_types
             else None
         )
+
         return chosen_entities if chosen_entities else default_entities
 
     def _format_query_value(self, query: str) -> str:
@@ -68,8 +74,8 @@ class SearchService(GenericService):
         form_data = self.form_data
         query = self._format_query_value(form_data.get("query", ""))
 
-        # we want to sort results ascending when a user is browsing data via non
-        # keyword searches - otherwise we use the default releveant ordering
+        # we want to sort results ascending when a user is browsing data via
+        # non-keyword searches - otherwise we use the default relevant ordering
         sort = (
             form_data.get("sort", "relevance")
             if query not in ["*", ""]
@@ -82,6 +88,7 @@ class SearchService(GenericService):
             "dc_where_to_access_dataset=", form_data.get("where_to_access", [])
         )
         entity_types = self._build_entity_types(form_data.get("entity_types", []))
+
         filter_value = []
         if domain:
             filter_value.append(MultiSelectFilter("domains", [domain]))
@@ -199,7 +206,7 @@ class SearchService(GenericService):
 
         return context
 
-    def _highlight_results(self):
+    def _highlight_results(self) -> SearchResponse:
         "Take a SearchResponse and add bold markdown where the query appears"
         query = self.form.cleaned_data.get("query", "") if self.form.is_valid() else ""
         highlighted_results = deepcopy(self.results)

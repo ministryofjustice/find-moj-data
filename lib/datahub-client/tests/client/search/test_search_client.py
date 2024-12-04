@@ -2,11 +2,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from data_platform_catalogue.client.search import SearchClient
+from data_platform_catalogue.client.search.search_client import SearchClient
 from data_platform_catalogue.entities import (
     AccessInformation,
     DataSummary,
     EntityRef,
+    EntityTypes,
     FurtherInformation,
     TagRef,
     UsageRestrictions,
@@ -14,7 +15,6 @@ from data_platform_catalogue.entities import (
 from data_platform_catalogue.search_types import (
     FacetOption,
     MultiSelectFilter,
-    ResultType,
     SearchFacets,
     SearchResponse,
     SearchResult,
@@ -77,6 +77,7 @@ def test_one_search_result(mock_graph, searcher):
                 {
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": {
@@ -121,7 +122,7 @@ def test_one_search_result(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="jaffle_shop.customers",
@@ -134,8 +135,8 @@ def test_one_search_result(mock_graph, searcher):
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -169,6 +170,7 @@ def test_dataset_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -211,7 +213,7 @@ def test_dataset_result(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="jaffle_shop.customers",
@@ -224,8 +226,8 @@ def test_dataset_result(mock_graph, searcher):
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -294,6 +296,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
@@ -330,10 +333,11 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "malformed",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
-                        "ownership": 1234,
+                        "ownership": 12345,
                         "name": "john",
                         "properties": {
                             "name": "customers",
@@ -359,7 +363,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="jaffle_shop.customers",
@@ -372,8 +376,8 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -407,6 +411,7 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "platform": {"name": "bigquery"},
                         "ownership": None,
@@ -425,6 +430,7 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers2,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers2",
                         "properties": {"name": "customers2", "qualifiedName": None},
@@ -435,6 +441,7 @@ def test_full_page(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers3,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers3",
                         "properties": {
@@ -453,7 +460,7 @@ def test_full_page(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers",
                 fully_qualified_name="jaffle_shop.customers",
                 display_name="customers",
@@ -466,8 +473,8 @@ def test_full_page(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -484,7 +491,7 @@ def test_full_page(mock_graph, searcher):
             ),
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers2,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers2",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers2",
                 display_name="customers2",
@@ -497,8 +504,8 @@ def test_full_page(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -515,7 +522,7 @@ def test_full_page(mock_graph, searcher):
             ),
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers3,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers3",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers3",
                 display_name="customers3",
@@ -528,8 +535,8 @@ def test_full_page(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -573,6 +580,7 @@ def test_query_match(mock_graph, searcher):
                     ],
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
@@ -592,7 +600,7 @@ def test_query_match(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers",
@@ -609,8 +617,8 @@ def test_query_match(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -641,6 +649,7 @@ def test_result_with_owner(mock_graph, searcher):
                 {
                     "entity": {
                         "type": "DATASET",
+                        "subTypes": {"typeNames": ["Table"]},
                         "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "ownership": {
@@ -676,7 +685,7 @@ def test_result_with_owner(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
-                result_type=ResultType.TABLE,
+                result_type=EntityTypes.TABLE,
                 name="customers",
                 display_name="customers",
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers",
@@ -689,8 +698,8 @@ def test_result_with_owner(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Table",
+                        "entity_sub_types": ["Table"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -747,87 +756,6 @@ def test_sort(searcher, mock_graph):
     assert response == SearchResponse(
         total_results=0,
         page_results=[],
-    )
-
-
-def test_facets(searcher, mock_graph):
-    datahub_response = {
-        "aggregateAcrossEntities": {
-            "facets": [
-                {
-                    "field": "_entityType",
-                    "displayName": "Type",
-                    "aggregations": [
-                        {"value": "DATASET", "count": 1505, "entity": None}
-                    ],
-                },
-                {
-                    "field": "glossaryTerms",
-                    "displayName": "Glossary Term",
-                    "aggregations": [
-                        {
-                            "value": "urn:li:glossaryTerm:Classification.Sensitive",
-                            "count": 1,
-                            "entity": {"properties": {"name": "Sensitive"}},
-                        },
-                        {
-                            "value": "urn:li:glossaryTerm:Silver",
-                            "count": 1,
-                            "entity": {"properties": None},
-                        },
-                    ],
-                },
-                {
-                    "field": "domains",
-                    "displayName": "Domain",
-                    "aggregations": [
-                        {
-                            "value": "urn:li:domain:094dc54b-0ebc-40a6-a4cf-e1b75e8b8089",
-                            "count": 7,
-                            "entity": {"properties": {"name": "Pet Adoptions"}},
-                        },
-                        {
-                            "value": "urn:li:domain:7186eeff-a860-4b0a-989f-69473a0c9c67",
-                            "count": 4,
-                            "entity": {"properties": {"name": "E-Commerce"}},
-                        },
-                    ],
-                },
-            ],
-        }
-    }
-
-    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
-
-    response = searcher.search_facets()
-
-    assert response == SearchFacets(
-        {
-            "glossaryTerms": [
-                FacetOption(
-                    value="urn:li:glossaryTerm:Classification.Sensitive",
-                    label="Sensitive",
-                    count=1,
-                ),
-                FacetOption(
-                    value="urn:li:glossaryTerm:Silver",
-                    label="urn:li:glossaryTerm:Silver",
-                    count=1,
-                ),
-            ],
-            "domains": [
-                FacetOption(
-                    value="urn:li:domain:094dc54b-0ebc-40a6-a4cf-e1b75e8b8089",
-                    label="Pet Adoptions",
-                    count=7,
-                ),
-                FacetOption(
-                    value="urn:li:domain:7186eeff-a860-4b0a-989f-69473a0c9c67",
-                    label="E-Commerce",
-                    count=4,
-                ),
-            ],
-        }
     )
 
 
@@ -930,6 +858,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                 {
                     "entity": {
                         "urn": "urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
+                        "subTypes": {"typeNames": ["Publication dataset"]},
                         "properties": {
                             "name": "IAO",
                             "description": "Information asset owner.\n",
@@ -949,6 +878,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                 {
                     "entity": {
                         "urn": "urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
+                        "subTypes": {"typeNames": ["Publication dataset"]},
                         "properties": {
                             "name": "Security classification",
                             "description": "Only data that is 'official'",
@@ -983,7 +913,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                         }
                     ]
                 },
-                result_type=ResultType.GLOSSARY_TERM,
+                result_type=EntityTypes.GLOSSARY_TERM,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
@@ -992,7 +922,7 @@ def test_get_glossary_terms(mock_graph, searcher):
                 fully_qualified_name="Security classification",
                 description="Only data that is 'official'",
                 metadata={"parentNodes": []},
-                result_type=ResultType.GLOSSARY_TERM,
+                result_type=EntityTypes.GLOSSARY_TERM,
             ),
         ],
     )
@@ -1021,6 +951,7 @@ def test_search_for_charts(mock_graph, searcher):
                     ],
                     "entity": {
                         "type": "CHART",
+                        "subTypes": None,
                         "urn": "urn:li:chart:(justice-data,absconds)",
                         "platform": {"name": "justice-data"},
                         "ownership": None,
@@ -1044,7 +975,7 @@ def test_search_for_charts(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:chart:(justice-data,absconds)",
-                result_type=ResultType.CHART,
+                result_type=EntityTypes.CHART,
                 name="Absconds",
                 display_name="Absconds",
                 fully_qualified_name="Absconds",
@@ -1061,8 +992,8 @@ def test_search_for_charts(mock_graph, searcher):
                     "domain_name": "",
                     "domain_id": "",
                     "entity_types": {
-                        "entity_type": "Dataset",
-                        "entity_sub_types": ["Dataset"],
+                        "entity_type": "Chart",
+                        "entity_sub_types": ["Chart"],
                     },
                     "dpia_required": None,
                     "dpia_location": "",
@@ -1166,7 +1097,7 @@ def test_search_for_container(mock_graph, searcher):
         page_results=[
             SearchResult(
                 urn="urn:li:container:test_db",
-                result_type=ResultType.DATABASE,
+                result_type=EntityTypes.DATABASE,
                 name="test_db",
                 display_name="test_db",
                 fully_qualified_name="test_db",
@@ -1183,7 +1114,7 @@ def test_search_for_container(mock_graph, searcher):
                     "domain_name": "testdom",
                     "domain_id": "urn:li:domain:testdom",
                     "entity_types": {
-                        "entity_type": "Container",
+                        "entity_type": "Database",
                         "entity_sub_types": ["Database"],
                     },
                     "usage_restrictions": UsageRestrictions(
@@ -1220,7 +1151,7 @@ def test_search_for_container(mock_graph, searcher):
 def test_tag_to_display(tags, result):
     test_search_result = SearchResult(
         urn="urn:li:dataset:(urn:li:dataPlatform:athena,test_db.test_table,PROD)",
-        result_type=ResultType.TABLE,
+        result_type=EntityTypes.TABLE,
         name="test_table",
         display_name="test_table",
         fully_qualified_name="test_db.test_table",
