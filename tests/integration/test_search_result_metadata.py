@@ -1,4 +1,5 @@
 import pytest
+from data_platform_catalogue.entities import DatabaseEntityMapper
 from data_platform_catalogue.search_types import SearchResult
 
 from tests.conftest import mock_search_response
