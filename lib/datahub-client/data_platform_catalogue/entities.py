@@ -596,7 +596,7 @@ class PublicationCollection(Entity):
 
 
 class PublicationDataset(Entity):
-    """For source system publication collections"""
+    """A dataset published to GOV.UK"""
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:dataset:(urn:li:dataPlatform:gov.uk,statistics2011,DEV)"],
