@@ -96,15 +96,7 @@ def test_multiple_entity_type_filters_plus_other_filters():
                 {"field": "typeNames", "values": ["Model", "Seed"]},
                 {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
                 {"field": "someField", "values": ["foo"]},
-                {
-                    "field": "tags",
-                    "values": ["urn:li:tag:dc_display_in_catalogue"],
-                },  # ?
                 {"field": "someOtherField", "values": ["bar", "baz"]},
-                {
-                    "field": "tags",
-                    "values": ["urn:li:tag:dc_display_in_catalogue"],
-                },  # ?
             ]
         },
         {
@@ -112,15 +104,7 @@ def test_multiple_entity_type_filters_plus_other_filters():
                 {"field": "_entityType", "values": ["CHART"]},
                 {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
                 {"field": "someField", "values": ["foo"]},
-                {
-                    "field": "tags",
-                    "values": ["urn:li:tag:dc_display_in_catalogue"],
-                },  # ?
                 {"field": "someOtherField", "values": ["bar", "baz"]},
-                {
-                    "field": "tags",
-                    "values": ["urn:li:tag:dc_display_in_catalogue"],
-                },  # ?
             ]
         },
     ]

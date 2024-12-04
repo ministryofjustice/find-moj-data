@@ -7,16 +7,9 @@ def map_filters(filters: Sequence[MultiSelectFilter] | None, entity_filters=[]):
     if filters is None:
         filters = []
 
-    other_filters = [
-        {
-            "and": [
-                {"field": filter.filter_name, "values": filter.included_values},
-                {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
-            ]
-        }
-        for filter in filters
-        if "urn:li:tag:dc_display_in_catalogue" not in filter.included_values
-    ]
+    # If we have entity filters, we need the subtype filters to only apply to
+    # the corresponding entity type. The resulting filter query is a union
+    # of many andFilters.
     entities = [
         {
             "and": [
@@ -40,19 +33,27 @@ def map_filters(filters: Sequence[MultiSelectFilter] | None, entity_filters=[]):
         for filter in entity_filters
     ]
 
-    additional_filters = [
-        condition for filter_dict in other_filters for condition in filter_dict["and"]
-    ]
-
     # if there are entity filters we need to add in all other filters to each and entity block
     if entities:
-        result = (
-            [{"and": entity["and"] + additional_filters} for entity in entities]
-            if additional_filters
-            else entities
-        )
+        for entity in entities:
+            entity["and"].extend(
+                [
+                    {"field": filter.filter_name, "values": filter.included_values}
+                    for filter in filters
+                ]
+            )
+            result = entities
     else:
-        result = other_filters
+        result = [
+            {
+                "and": [
+                    {"field": filter.filter_name, "values": filter.included_values},
+                    {"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]},
+                ]
+            }
+            for filter in filters
+            if "urn:li:tag:dc_display_in_catalogue" not in filter.included_values
+        ]
 
     if not result:
         result.append(
