@@ -2,21 +2,14 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum
 from typing import Any
 
-from data_platform_catalogue.entities import EntityRef, GlossaryTermRef, TagRef, EntityTypes
-
-
-class DatahubSubtype(Enum):
-    PUBLICATION_DATASET = "Publication dataset"
-    PUBLICATION_COLLECTION = "Publication collection"
-    METRIC = "Metric"
-    TABLE = "Table"
-    MODEL = "Model"
-    SEED = "Seed"
-    SOURCE = "Source"
-    DATABASE = "Database"
+from data_platform_catalogue.entities import (
+    EntityRef,
+    EntityTypes,
+    GlossaryTermRef,
+    TagRef,
+)
 
 
 @dataclass

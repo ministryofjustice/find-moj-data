@@ -18,9 +18,13 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_tags,
 )
 from data_platform_catalogue.client.search.filters import map_filters
-from data_platform_catalogue.entities import DatahubEntityType, EntityRef, EntityTypes
-from data_platform_catalogue.search_types import (
+from data_platform_catalogue.entities import (
+    DatahubEntityType,
     DatahubSubtype,
+    EntityRef,
+    EntityTypes,
+)
+from data_platform_catalogue.search_types import (
     DomainOption,
     FacetOption,
     MultiSelectFilter,

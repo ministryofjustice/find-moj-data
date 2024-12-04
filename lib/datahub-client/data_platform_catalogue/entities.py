@@ -23,6 +23,17 @@ class DatahubEntityType(Enum):
     GLOSSARY_TERM = "GLOSSARY_TERM"
 
 
+class DatahubSubtype(Enum):
+    PUBLICATION_DATASET = "Publication dataset"
+    PUBLICATION_COLLECTION = "Publication collection"
+    METRIC = "Metric"
+    TABLE = "Table"
+    MODEL = "Model"
+    SEED = "Seed"
+    SOURCE = "Source"
+    DATABASE = "Database"
+
+
 @dataclass
 class FindMoJDataEntityMapper:
     find_moj_data_type: str
