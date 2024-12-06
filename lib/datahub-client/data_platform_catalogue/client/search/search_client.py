@@ -52,7 +52,7 @@ class SearchClient:
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
-        self.datahub_type.values_to_fmd_type_and_parser_mapping = {
+        self.fmd_type_to_datahub_types_mapping = {
             (
                 DatahubEntityType.DATASET.value,
                 DatahubSubtype.PUBLICATION_DATASET.value,
@@ -186,7 +186,7 @@ class SearchClient:
             matched_fields = self._get_matched_fields(result=result)
 
             try:
-                parser, fmd_type = self.datahub_type.values_to_fmd_type_and_parser_mapping[
+                parser, fmd_type = self.fmd_type_to_datahub_types_mapping[
                     (entity_type, entity_subtype)
                 ]
                 parsed_result = parser(entity, matched_fields, fmd_type)
