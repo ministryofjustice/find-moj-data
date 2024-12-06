@@ -260,7 +260,10 @@ class PublicationDatasetDetailsService(GenericService):
             "entity": self.publication_dataset_metadata,
             "entity_type": EntityTypes.PUBLICATION_DATASET.value,
             "parent_entity": self.parent_entity,
-            "parent_type": EntityTypes.DATABASE.name.lower(),
+            "platform_name": friendly_platform_name(
+                self.publication_dataset_metadata.platform.display_name
+            ),
+            "parent_type": EntityTypes.PUBLICATION_COLLECTION.name.lower(),
             "h1_value": self.publication_dataset_metadata.name,
             # noqa: E501
             "is_access_requirements_a_url": is_access_requirements_a_url(
