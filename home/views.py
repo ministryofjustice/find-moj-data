@@ -3,6 +3,14 @@ import logging
 from urllib.parse import urlparse
 
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
+from data_platform_catalogue.entities import (
+    ChartEntityMapper,
+    DashboardEntityMapper,
+    DatabaseEntityMapper,
+    PublicationCollectionEntityMapper,
+    PublicationDatasetEntityMapper,
+    TableEntityMapper,
+)
 from data_platform_catalogue.search_types import DomainOption
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
@@ -10,7 +18,6 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_control
 
-from data_platform_catalogue.entities import EntityTypes
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,
@@ -31,12 +38,12 @@ from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 
 type_details_map = {
-    EntityTypes.TABLE.url_formatted: DatasetDetailsService,
-    EntityTypes.DATABASE.url_formatted: DatabaseDetailsService,
-    EntityTypes.CHART.url_formatted: ChartDetailsService,
-    EntityTypes.DASHBOARD.url_formatted: DashboardDetailsService,
-    EntityTypes.PUBLICATION_COLLECTION.url_formatted: PublicationCollectionDetailsService,
-    EntityTypes.PUBLICATION_DATASET.url_formatted: PublicationDatasetDetailsService
+    TableEntityMapper.url_formatted: DatasetDetailsService,
+    DatabaseEntityMapper.url_formatted: DatabaseDetailsService,
+    ChartEntityMapper.url_formatted: ChartDetailsService,
+    DashboardEntityMapper.url_formatted: DashboardDetailsService,
+    PublicationCollectionEntityMapper.url_formatted: PublicationCollectionDetailsService,
+    PublicationDatasetEntityMapper.url_formatted: PublicationDatasetDetailsService
 }
 
 
@@ -66,11 +73,11 @@ def details_view(request, result_type, urn):
 @cache_control(max_age=300, private=True)
 def details_view_csv(request, result_type, urn) -> HttpResponse:
     match result_type:
-        case EntityTypes.TABLE.url_formatted:
+        case TableEntityMapper.url_formatted:
             csv_formatter = DatasetDetailsCsvFormatter(DatasetDetailsService(urn))
-        case EntityTypes.DATABASE.url_formatted:
+        case DatabaseEntityMapper.url_formatted:
             csv_formatter = DatabaseDetailsCsvFormatter(DatabaseDetailsService(urn))
-        case EntityTypes.DASHBOARD.url_formatted:
+        case DashboardEntityMapper.url_formatted:
             csv_formatter = DashboardDetailsCsvFormatter(DashboardDetailsService(urn))
         case _:
             logging.error("Invalid result type for csv details view %s", result_type)

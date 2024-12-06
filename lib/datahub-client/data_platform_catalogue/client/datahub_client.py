@@ -63,7 +63,10 @@ from data_platform_catalogue.entities import (
     Database,
     EntityRef,
     EntitySummary,
-    EntityTypes,
+    FindMoJDataEntityMapper,
+    TableEntityMapper,
+    ChartEntityMapper,
+    DatabaseEntityMapper,
     Governance,
     PublicationCollection,
     PublicationDataset,
@@ -203,10 +206,10 @@ class DataHubCatalogueClient:
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[EntityTypes] = (
-            EntityTypes.TABLE,
-            EntityTypes.CHART,
-            EntityTypes.DATABASE,
+        result_types: Sequence[FindMoJDataEntityMapper] = (
+            TableEntityMapper,
+            ChartEntityMapper,
+            DatabaseEntityMapper,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
@@ -395,7 +398,7 @@ class DataHubCatalogueClient:
             child_relations = parse_relations(
                 relationship_type=RelationshipType.CHILD,
                 relations_list=[response["relationships"]],
-                entity_type_of_relations=EntityTypes.PUBLICATION_DATASET.url_formatted,
+                entity_type_of_relations=PublicationDatasetEntityMapper.url_formatted,
             )
             relations_to_display = self.list_relations_to_display(child_relations)
 
