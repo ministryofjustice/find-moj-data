@@ -32,6 +32,15 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: .service.justice.gov.uk
+            initialDelaySeconds: 40
+            periodSeconds: 60
           env:
             - name: ENV
               value: "${ENV}"
