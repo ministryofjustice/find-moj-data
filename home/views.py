@@ -140,8 +140,3 @@ def cookies_view(request):
         "previous_page": referer or "/",  # Provide a default fallback if none found
     }
     return render(request, "cookies.html", context)
-
-
-def health_view(request):
-    """Endpoint for readiness & liveness probe target"""
-    return HttpResponse("Ok")
