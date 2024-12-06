@@ -259,9 +259,7 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
         "REDIRECT_URI": os.environ.get("AZURE_REDIRECT_URI"),
         "SCOPES": ["User.Read"],
         "AUTHORITY": os.environ.get("AZURE_AUTHORITY"),
-        "PUBLIC_PATHS": [
-            "/metrics",
-        ],
+        "PUBLIC_PATHS": ["/metrics", "/health"],
         "USERNAME_ATTRIBUTE": "mail",
         "USER_MAPPING_FN": "users.helper.user_mapping_fn",
     }

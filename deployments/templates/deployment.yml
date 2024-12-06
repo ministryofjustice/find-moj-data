@@ -34,7 +34,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /metrics
+              path: /health
               port: 8000
               httpHeaders:
                 - name: Host
