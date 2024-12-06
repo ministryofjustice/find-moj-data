@@ -35,7 +35,7 @@ spec:
           readinessProbe:
             httpGet:
               httpGet:
-              path: /health
+              path: /
               port: 8000
               httpHeaders:
                 - name: Host
@@ -45,7 +45,7 @@ spec:
             timeoutSeconds: 10
           livenessProbe:
             httpGet:
-              path: /health
+              path: /
               port: 8000
               httpHeaders:
                 - name: Host
