@@ -46,15 +46,15 @@ class FindMoJDataEntityType(Enum):
 
 @dataclass
 class FindMoJDataEntityMapper:
-    find_moj_data_type: str
-    datahub_type: str
+    find_moj_data_type: FindMoJDataEntityType
+    datahub_type: DatahubEntityType
     datahub_subtypes: list[str]
     url_formatted: str
 
 
 TableEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.TABLE.value,
-    DatahubEntityType.DATASET.value,
+    FindMoJDataEntityType.TABLE,
+    DatahubEntityType.DATASET,
     [
         DatahubSubtype.MODEL.value,
         DatahubSubtype.TABLE.value,
@@ -65,46 +65,56 @@ TableEntityMapper = FindMoJDataEntityMapper(
 )
 
 ChartEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.CHART.value,
-    DatahubEntityType.CHART.value,
+    FindMoJDataEntityType.CHART,
+    DatahubEntityType.CHART,
     [],
     "chart"
 )
 
 GlossaryTermEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.GLOSSARY_TERM.value,
-    DatahubEntityType.GLOSSARY_TERM.value,
+    FindMoJDataEntityType.GLOSSARY_TERM,
+    DatahubEntityType.GLOSSARY_TERM,
     [],
     "glossary_term"
 )
 
 DatabaseEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.DATABASE.value,
-    DatahubEntityType.CONTAINER.value,
+    FindMoJDataEntityType.DATABASE,
+    DatahubEntityType.CONTAINER,
     [DatahubSubtype.DATABASE.value],
     "database"
 )
 
 DashboardEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.DASHBOARD.value,
-    DatahubEntityType.DASHBOARD.value,
+    FindMoJDataEntityType.DASHBOARD,
+    DatahubEntityType.DASHBOARD,
     [],
     "dashboard"
 )
 
 PublicationDatasetEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.PUBLICATION_DATASET.value,
-    DatahubEntityType.DATASET.value,
+    FindMoJDataEntityType.PUBLICATION_DATASET,
+    DatahubEntityType.DATASET,
     [DatahubSubtype.PUBLICATION_DATASET.value],
     "publication_dataset"
 )
 
 PublicationCollectionEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.PUBLICATION_COLLECTION.value,
-    DatahubEntityType.CONTAINER.value,
+    FindMoJDataEntityType.PUBLICATION_COLLECTION,
+    DatahubEntityType.CONTAINER,
     [DatahubSubtype.PUBLICATION_COLLECTION.value],
     "publication_collection"
 )
+
+Mappers = [
+    TableEntityMapper,
+    ChartEntityMapper,
+    GlossaryTermEntityMapper,
+    DatabaseEntityMapper,
+    DashboardEntityMapper,
+    PublicationDatasetEntityMapper,
+    PublicationCollectionEntityMapper
+]
 
 
 class Audience(Enum):

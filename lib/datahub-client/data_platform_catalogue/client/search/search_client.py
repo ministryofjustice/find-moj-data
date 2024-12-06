@@ -52,7 +52,7 @@ class SearchClient:
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
-        self.datahub_types_to_fmd_type_and_parser_mapping = {
+        self.datahub_type.values_to_fmd_type_and_parser_mapping = {
             (
                 DatahubEntityType.DATASET.value,
                 DatahubSubtype.PUBLICATION_DATASET.value,
@@ -132,7 +132,7 @@ class SearchClient:
 
         entity_type_filters = [
             (
-                MultiSelectFilter("_entityType", result.datahub_type),
+                MultiSelectFilter("_entityType", result.datahub_type.value),
                 MultiSelectFilter("typeNames", result.datahub_subtypes),
             )
             for result in result_types
@@ -186,7 +186,7 @@ class SearchClient:
             matched_fields = self._get_matched_fields(result=result)
 
             try:
-                parser, fmd_type = self.datahub_types_to_fmd_type_and_parser_mapping[
+                parser, fmd_type = self.datahub_type.values_to_fmd_type_and_parser_mapping[
                     (entity_type, entity_subtype)
                 ]
                 parsed_result = parser(entity, matched_fields, fmd_type)
@@ -311,7 +311,7 @@ class SearchClient:
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, result_type.find_moj_data_type),
+            "entity_types": self._parse_types_and_sub_types(entity, result_type.find_moj_data_type.value),
         }
         logger.debug(f"{metadata=}")
 
@@ -451,7 +451,7 @@ class SearchClient:
             "owner_email": owner.email,
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, subtype.find_moj_data_type),
+            "entity_types": self._parse_types_and_sub_types(entity, subtype.find_moj_data_type.value),
         }
 
         metadata.update(custom_properties)
