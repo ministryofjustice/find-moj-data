@@ -3,6 +3,7 @@ import logging
 from urllib.parse import urlparse
 
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
+from data_platform_catalogue.entities import EntityTypes
 from data_platform_catalogue.search_types import DomainOption
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
@@ -10,7 +11,6 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_control
 
-from data_platform_catalogue.entities import EntityTypes
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,
@@ -36,7 +36,7 @@ type_details_map = {
     EntityTypes.CHART.url_formatted: ChartDetailsService,
     EntityTypes.DASHBOARD.url_formatted: DashboardDetailsService,
     EntityTypes.PUBLICATION_COLLECTION.url_formatted: PublicationCollectionDetailsService,
-    EntityTypes.PUBLICATION_DATASET.url_formatted: PublicationDatasetDetailsService
+    EntityTypes.PUBLICATION_DATASET.url_formatted: PublicationDatasetDetailsService,
 }
 
 
@@ -62,6 +62,7 @@ def details_view(request, result_type, urn):
         raise Http404(f"{result_type} '{urn}' does not exist")
 
     return render(request, service.template, service.context)
+
 
 @cache_control(max_age=300, private=True)
 def details_view_csv(request, result_type, urn) -> HttpResponse:
