@@ -32,6 +32,17 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              httpGet:
+              path: /health
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: .service.justice.gov.uk
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 10
           livenessProbe:
             httpGet:
               path: /health
