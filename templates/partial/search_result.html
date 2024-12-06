@@ -11,23 +11,9 @@
           {% with result_type=result.result_type.name|lower %}
             <a href="{% url 'home:details' result_type=result_type urn=result.urn %}" class="govuk-link">{{result.name}}</a>
           {% endwith %}
-          {% if result.result_type.name == "TABLE" %}
-            <strong class="govuk-tag govuk-!-margin-left-2">
-              {% translate "Table" %}
-            </strong>
-          {% elif result.result_type.name == "DATABASE" %}
-            <strong class="govuk-tag govuk-!-margin-left-2">
-              {% translate "Database" %}
-            </strong>
-          {% elif result.result_type.name == "CHART" %}
-            <strong class="govuk-tag govuk-!-margin-left-2">
-              {% translate "Chart" %}
-            </strong>
-          {% elif result.result_type.name == "DASHBOARD" %}
-            <strong class="govuk-tag govuk-!-margin-left-2">
-              Dashboard
-            </strong>
-          {% endif %}
+          <strong class="govuk-tag govuk-!-margin-left-2">
+            {{ result.result_type.value }}
+          </strong>
         </h3>
         {% if result.description %}
           <div class="govuk-body-m">

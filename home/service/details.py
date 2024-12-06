@@ -1,12 +1,12 @@
 import os
 from urllib.parse import urlsplit
 
-from data_platform_catalogue.entities import EntityRef, RelationshipType
-from data_platform_catalogue.search_types import ResultType
+from data_platform_catalogue.entities import EntityRef, EntityTypes, RelationshipType
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
 from django.utils.translation import gettext as _
 
+from ..urns import PlatformUrns
 from .base import GenericService
 
 
@@ -65,6 +65,7 @@ class DatabaseDetailsService(GenericService):
             RelationshipType.CHILD
         ]
         self.context = self._get_context()
+        self.template = "details_database.html"
 
     def _get_context(self):
         context = {
@@ -79,6 +80,7 @@ class DatabaseDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.database_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
 
         return context
@@ -112,13 +114,14 @@ class DatasetDetailsService(GenericService):
             "entity": self.table_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
-            "parent_type": ResultType.DATABASE.name.lower(),
+            "parent_type": EntityTypes.DATABASE.name.lower(),
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.table_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
 
     def _get_template(self):
@@ -148,6 +151,7 @@ class ChartDetailsService(GenericService):
         self.chart_metadata = self.client.get_chart_details(urn)
         self.parent_entity = _parse_parent(self.chart_metadata.relationships or {})
         self.context = self._get_context()
+        self.template = "details_chart.html"
 
     def _get_context(self):
         return {
@@ -157,11 +161,12 @@ class ChartDetailsService(GenericService):
                 self.chart_metadata.platform.display_name
             ),
             "parent_entity": self.parent_entity,
-            "parent_type": ResultType.DASHBOARD.name.lower(),
+            "parent_type": EntityTypes.DASHBOARD.name.lower(),
             "h1_value": self.chart_metadata.name,
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.chart_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
         }
 
 
@@ -171,6 +176,7 @@ class DashboardDetailsService(GenericService):
         self.dashboard_metadata = self.client.get_dashboard_details(urn)
         self.children = self.dashboard_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()
+        self.template = "details_dashboard.html"
 
     def _get_context(self):
 
@@ -188,4 +194,80 @@ class DashboardDetailsService(GenericService):
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.dashboard_metadata.custom_properties.access_information.dc_access_requirements
             ),
+            "PlatformUrns": PlatformUrns,
+        }
+
+
+class PublicationCollectionDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.urn = urn
+        self.client = self._get_catalogue_client()
+
+        self.publication_collection_metadata = (
+            self.client.get_publication_collection_details(self.urn)
+        )
+
+        if not self.publication_collection_metadata:
+            raise ObjectDoesNotExist(urn)
+
+        self.entities_in_container = self.publication_collection_metadata.relationships[
+            RelationshipType.CHILD
+        ]
+        self.context = self._get_context()
+        self.template = "details_publication_collection.html"
+
+    def _get_context(self):
+        context = {
+            "entity": self.publication_collection_metadata,
+            "entity_type": EntityTypes.PUBLICATION_COLLECTION.value,
+            "platform_name": friendly_platform_name(
+                self.publication_collection_metadata.platform.display_name
+            ),
+            "publications": sorted(
+                self.entities_in_container,
+                key=lambda d: d.entity_ref.display_name,
+            ),
+            "h1_value": self.publication_collection_metadata.name,
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.publication_collection_metadata.custom_properties.access_information.dc_access_requirements
+            ),
+            "PlatformUrns": PlatformUrns,
+        }
+
+        return context
+
+
+class PublicationDatasetDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.urn = urn
+        self.client = self._get_catalogue_client()
+
+        self.publication_dataset_metadata = self.client.get_publication_dataset_details(
+            self.urn
+        )
+
+        if not self.publication_dataset_metadata:
+            raise ObjectDoesNotExist(urn)
+
+        relationships = self.publication_dataset_metadata.relationships or {}
+        self.parent_entity = _parse_parent(relationships)
+        self.context = self._get_context()
+        self.template = "details_publication_dataset.html"
+
+    def _get_context(self):
+
+        return {
+            "entity": self.publication_dataset_metadata,
+            "entity_type": EntityTypes.PUBLICATION_DATASET.value,
+            "parent_entity": self.parent_entity,
+            "platform_name": friendly_platform_name(
+                self.publication_dataset_metadata.platform.display_name
+            ),
+            "parent_type": EntityTypes.PUBLICATION_COLLECTION.name.lower(),
+            "h1_value": self.publication_dataset_metadata.name,
+            # noqa: E501
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.publication_dataset_metadata.custom_properties.access_information.dc_access_requirements
+            ),
+            "PlatformUrns": PlatformUrns,
         }

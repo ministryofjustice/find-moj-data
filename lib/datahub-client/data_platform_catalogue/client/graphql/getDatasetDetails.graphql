@@ -93,6 +93,7 @@ query getDatasetDetails($urn: String!) {
       name
       qualifiedName
       description
+      externalUrl
       customProperties {
         key
         value

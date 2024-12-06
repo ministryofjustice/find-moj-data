@@ -1,11 +1,10 @@
+import logging
 from collections import defaultdict
 from datetime import datetime
 from importlib.resources import files
-import logging
 from typing import Any, Tuple
 
 from data_platform_catalogue.entities import (
-    Audience,
     AccessInformation,
     Column,
     ColumnRef,
@@ -116,32 +115,39 @@ def parse_stewards(entity: dict[str, Any]) -> list[OwnerRef]:
     return _parse_owners_by_type(entity, DATA_STEWARD)
 
 
-def parse_last_modified(entity: dict[str, Any]) -> datetime | None:
+def parse_metadata_last_ingested(entity: dict[str, Any]) -> datetime | None:
     """
-    Parse the last updated timestamp, if available
+    Parse the timestamp the metadata was last changed
     """
     timestamp = entity.get("lastIngested")
     if timestamp is None:
+        logger.warning("lastIngested timestamp is missing for entity: %r", entity)
         return None
     return timestamp
 
 
-def parse_created_and_modified(
-    properties: dict[str, Any]
-) -> Tuple[datetime | None, datetime | None]:
+def parse_data_created(properties: dict[str, Any]) -> datetime | None:
+    """
+    Return the time when the data was created in the source system
+    (not Datahub)
+    """
     created = properties.get("created")
+    return None if created == 0 else created
+
+
+def parse_data_last_modified(properties: dict[str, Any]) -> datetime | None:
+    """
+    Return the time when the data was last updated in the source system
+    (not Datahub)
+    """
     modified = (properties.get("lastModified") or {}).get("time")
-    if created == 0:
-        created = None
-    if modified == 0:
-        modified = None
-
-    return created, modified
+    return None if modified == 0 else modified
 
 
-def parse_updated(
-    response: dict[str, Any]
-) -> datetime | None:
+def parse_last_datajob_run_date(response: dict[str, Any]) -> datetime | None:
+    """
+    Look for the last job that produced/consumed the dataset and return the time it ran.
+    """
     list_of_runs: list = response.get("runs", {}).get("runs", [])
     if not list_of_runs:
         updated = None
@@ -178,8 +184,7 @@ def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
 
 
 def get_refresh_period_from_cadet_tags(
-    tags: list[TagRef],
-    refresh_schedules: list[str] = ["daily", "weekly", "monthly"]
+    tags: list[TagRef], refresh_schedules: list[str] = ["daily", "weekly", "monthly"]
 ) -> str:
     # Check if any of the tags are refresh period tags eg "daily_opg"
     relevant_refresh_schedules = [
@@ -261,7 +266,7 @@ def parse_properties(
         usage_restrictions=usage_restrictions,
         data_summary=data_summary,
         further_information=further_information,
-        audience=audience
+        audience=audience,
     )
 
     return properties, custom_properties

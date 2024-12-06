@@ -12,6 +12,7 @@ import time
 from datetime import datetime, timezone
 
 import pytest
+
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -33,8 +34,8 @@ from data_platform_catalogue.entities import (
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
-    ResultType,
 )
+from data_platform_catalogue.entities import EntityTypes
 
 jwt_token = os.environ.get("CATALOGUE_TOKEN")
 api_url = os.environ.get("CATALOGUE_URL", "")
@@ -65,69 +66,9 @@ def test_search_by_domain():
 
     response = client.search(
         filters=[MultiSelectFilter("domains", ["does-not-exist"])],
-        result_types=(ResultType.TABLE,),
+        result_types=(EntityTypes.TABLE,),
     )
     assert response.total_results == 0
-
-
-@runs_on_development_server
-def test_domain_facets_are_returned():
-    client = DataHubCatalogueClient(jwt_token=jwt_token, api_url=api_url)
-
-    database = Database(
-        urn=None,
-        name="my_database",
-        display_name="database",
-        fully_qualified_name="my_database",
-        description="little test db",
-        governance=Governance(
-            data_owner=OwnerRef(
-                urn="2e1fa91a-c607-49e4-9be2-6f072ebe27c7",
-                display_name="April Gonzalez",
-                email="abc@digital.justice.gov.uk",
-            ),
-            data_stewards=[
-                OwnerRef(
-                    urn="abc",
-                    display_name="Jonjo Shelvey",
-                    email="j.shelvey@digital.justice.gov.uk",
-                )
-            ],
-        ),
-        domain=DomainRef(urn="LAA", display_name="LAA"),
-        tables=[
-            {
-                "entity": {
-                    "urn": "urn:li:dataset:fake_table",
-                    "properties": {
-                        "name": "fake_table",
-                        "description": "table description",
-                    },
-                    "editableProperties": None,
-                }
-            }
-        ],
-        last_modified=datetime(2020, 5, 17),
-        created=datetime(2020, 5, 17),
-        tags=[TagRef(urn="test", display_name="test")],
-        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
-        custom_properties=CustomEntityProperties(
-            usage_restrictions=UsageRestrictions(
-                dpia_required=False,
-                dpia_location="",
-            ),
-            access_information=AccessInformation(
-                dc_where_to_access_dataset="analytical_platform",
-                s3_location="s3://databucket/",
-            ),
-        ),
-    )
-    urn = client.upsert_database(database)
-
-    response = client.search()
-    assert response.facets.options("domains")
-    assert client.search_facets().options("domains")
-    client.graph.hard_delete_entity(urn)
 
 
 @runs_on_development_server
@@ -156,7 +97,7 @@ def test_filter_by_urn():
         ),
         domain=DomainRef(urn="LAA", display_name="LAA"),
         tables=[],
-        last_modified=datetime(2020, 5, 17),
+        metadata_last_ingested=datetime(2020, 5, 17),
         created=datetime(2020, 5, 17),
         tags=[TagRef(urn="test", display_name="test")],
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),

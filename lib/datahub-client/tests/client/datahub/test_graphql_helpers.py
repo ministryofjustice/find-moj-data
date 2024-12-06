@@ -1,6 +1,3 @@
-from datetime import datetime, timezone
-
-import pytest
 import pytest
 
 from data_platform_catalogue.client.graphql_helpers import (
@@ -9,18 +6,19 @@ from data_platform_catalogue.client.graphql_helpers import (
     _parse_owners_by_type,
     get_refresh_period_from_cadet_tags,
     parse_columns,
-    parse_created_and_modified,
+    parse_data_created,
+    parse_data_last_modified,
     parse_data_owner,
     parse_glossary_terms,
+    parse_last_datajob_run_date,
     parse_properties,
     parse_relations,
     parse_subtypes,
     parse_tags,
-    parse_updated,
 )
 from data_platform_catalogue.entities import (
-    Audience,
     AccessInformation,
+    Audience,
     Column,
     ColumnRef,
     CustomEntityProperties,
@@ -266,7 +264,8 @@ def test_parse_created_and_modified(
         "lastModified": raw_last_modified,
     }
 
-    created, modified = parse_created_and_modified(properties)
+    created = parse_data_created(properties)
+    modified = parse_data_last_modified(properties)
 
     assert created == expected_created
     assert modified == expected_modified
@@ -649,16 +648,12 @@ def test_parse_owners():
 def test_parse_updated():
     expected_timestamp = 12345678
     example_with_updated = {
-        "runs": {
-            "runs": [
-                {"created": {"time": expected_timestamp}}
-            ]
-        }
+        "runs": {"runs": [{"created": {"time": expected_timestamp}}]}
     }
     example_no_updated = {}
 
-    assert parse_updated(example_with_updated) == expected_timestamp
-    assert parse_updated(example_no_updated) is None
+    assert parse_last_datajob_run_date(example_with_updated) == expected_timestamp
+    assert parse_last_datajob_run_date(example_no_updated) is None
 
 
 @pytest.mark.parametrize(
@@ -670,9 +665,9 @@ def test_parse_updated():
         (
             [
                 TagRef(display_name="daily", urn="urn:li:tag:dc_cadet"),
-                TagRef(display_name="monthly", urn="urn:li:tag:dc_cadet")
+                TagRef(display_name="monthly", urn="urn:li:tag:dc_cadet"),
             ],
-            "Daily, monthly"
+            "Daily, monthly",
         ),
     ],
 )

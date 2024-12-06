@@ -1,5 +1,6 @@
 import json
 import logging
+from collections import namedtuple
 from typing import Any, Sequence, Tuple
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
@@ -8,21 +9,25 @@ from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
-    parse_created_and_modified,
+    parse_data_last_modified,
     parse_data_owner,
     parse_domain,
     parse_glossary_terms,
-    parse_last_modified,
     parse_names,
     parse_properties,
     parse_tags,
 )
-from data_platform_catalogue.entities import EntityRef
+from data_platform_catalogue.client.search.filters import map_filters
+from data_platform_catalogue.entities import (
+    DatahubEntityType,
+    DatahubSubtype,
+    EntityRef,
+    EntityTypes,
+)
 from data_platform_catalogue.search_types import (
     DomainOption,
     FacetOption,
     MultiSelectFilter,
-    ResultType,
     SearchFacets,
     SearchResponse,
     SearchResult,
@@ -30,6 +35,9 @@ from data_platform_catalogue.search_types import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+EntityTypeParsingFuncMap = namedtuple("EntityTypes", ["result_type", "parse_function"])
 
 
 class SearchClient:
@@ -40,43 +48,125 @@ class SearchClient:
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
+        self.fmd_type_to_datahub_types_mapping = {
+            EntityTypes.TABLE.value: (
+                DatahubEntityType.DATASET.value,
+                ["Model", "Table", "Seed", "Source"],
+            ),
+            EntityTypes.CHART.value: (DatahubEntityType.CHART.value, []),
+            EntityTypes.DATABASE.value: (
+                DatahubEntityType.CONTAINER.value,
+                ["Database"],
+            ),
+            EntityTypes.DASHBOARD.value: (DatahubEntityType.DASHBOARD.value, []),
+            EntityTypes.PUBLICATION_DATASET.value: (
+                DatahubEntityType.DATASET.value,
+                ["Publication dataset"],
+            ),
+            EntityTypes.PUBLICATION_COLLECTION.value: (
+                DatahubEntityType.CONTAINER.value,
+                ["Publication collection"],
+            ),
+        }
+        self.datahub_types_to_fmd_type_and_parser_mapping = {
+            (
+                DatahubEntityType.DATASET.value,
+                DatahubSubtype.PUBLICATION_DATASET.value,
+            ): (
+                self._parse_dataset,
+                EntityTypes.PUBLICATION_DATASET,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (
+                self._parse_dataset,
+                EntityTypes.TABLE,
+            ),
+            (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (
+                self._parse_container,
+                EntityTypes.DATABASE,
+            ),
+            (
+                DatahubEntityType.CONTAINER.value,
+                DatahubSubtype.PUBLICATION_COLLECTION.value,
+            ): (
+                self._parse_container,
+                EntityTypes.PUBLICATION_COLLECTION,
+            ),
+            (
+                DatahubEntityType.DATASET.value,
+                DatahubSubtype.PUBLICATION_DATASET.value,
+            ): (
+                self._parse_container,
+                EntityTypes.PUBLICATION_DATASET,
+            ),
+            (DatahubEntityType.CHART.value, None): (
+                self._parse_dataset,
+                EntityTypes.CHART,
+            ),
+            (DatahubEntityType.DASHBOARD.value, None): (
+                self._parse_container,
+                EntityTypes.DASHBOARD,
+            ),
+        }
 
     def search(
         self,
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[ResultType] = (
-            ResultType.TABLE,
-            ResultType.CHART,
-            ResultType.DATABASE,
+        result_types: Sequence[EntityTypes] = (
+            EntityTypes.TABLE,
+            EntityTypes.CHART,
+            EntityTypes.DATABASE,
         ),
-        filters: Sequence[MultiSelectFilter] = [],
+        filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
     ) -> SearchResponse:
         """
         Wraps the catalogue's search function.
         """
 
+        if filters is None:
+            filters = []
+
         start = 0 if page is None else int(page) * count
 
-        types = self._map_result_types(result_types)
-        logger.debug(f"Getting facets with result types {types}")
+        fmd_entity_types = [result_type.value for result_type in result_types]
+        entity_type_filters = [
+            (
+                MultiSelectFilter(
+                    "_entityType",
+                    self.fmd_type_to_datahub_types_mapping[entity_type][0],
+                ),
+                MultiSelectFilter(
+                    "typeNames", self.fmd_type_to_datahub_types_mapping[entity_type][1]
+                ),
+            )
+            for entity_type in fmd_entity_types
+        ]
 
-        # This is the tag that any and every entity we want to present in search results
-        # now must have.
-        display_in_catalogue_filter = MultiSelectFilter(
-            filter_name="tags", included_values=["urn:li:tag:dc_display_in_catalogue"]
-        )
-
-        filters.append(display_in_catalogue_filter)
-        formatted_filters = self._map_filters(filters)
+        formatted_filters = map_filters(filters, entity_type_filters)
 
         variables = {
             "count": count,
             "query": query,
             "start": start,
-            "types": types,
+            "types": [],
             "filters": formatted_filters,
         }
 
@@ -94,7 +184,6 @@ class SearchClient:
 
         logger.debug(json.dumps(response, indent=2))
 
-        # Should these 2 variables be bound or unbound?
         page_results, malformed_result_urns = self._parse_search_results(response)
 
         return SearchResponse(
@@ -111,31 +200,24 @@ class SearchClient:
             entity = result["entity"]
             entity_type = entity["type"]
             entity_urn = entity["urn"]
+            entity_subtype = (
+                entity.get("subTypes", {}).get("typeNames", [None])[0]
+                if entity.get("subTypes") is not None
+                else None
+            )
             matched_fields = self._get_matched_fields(result=result)
 
             try:
-                if entity_type == "DATASET":
-                    parsed_result = self._parse_dataset(
-                        entity, matched_fields, ResultType.TABLE
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "CHART":
-                    parsed_result = self._parse_dataset(
-                        entity, matched_fields, ResultType.CHART
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "CONTAINER":
-                    parsed_result = self._parse_container(
-                        entity, matched_fields, ResultType.DATABASE
-                    )
-                    page_results.append(parsed_result)
-                elif entity_type == "DASHBOARD":
-                    parsed_result = self._parse_container(
-                        entity, matched_fields, ResultType.DASHBOARD
-                    )
-                    page_results.append(parsed_result)
-                else:
-                    raise Exception
+                parser, fmd_type = self.datahub_types_to_fmd_type_and_parser_mapping[
+                    (entity_type, entity_subtype)
+                ]
+                parsed_result = parser(entity, matched_fields, fmd_type)
+                page_results.append(parsed_result)
+            except KeyError as k_e:
+                logger.exception(
+                    f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}"
+                )
+                malformed_result_urns.append(entity_urn)
             except Exception:
                 logger.exception(f"Parsing for result {entity_urn} failed")
                 malformed_result_urns.append(entity_urn)
@@ -157,46 +239,17 @@ class SearchClient:
             matched_fields[name] = value
         return matched_fields
 
-    def search_facets(
-        self,
-        query: str = "*",
-        result_types: Sequence[ResultType] = (ResultType.TABLE,),
-        filters: Sequence[MultiSelectFilter] = (),
-    ) -> SearchFacets:
-        """
-        Returns facets that can be used to filter the search results.
-        """
-        types = self._map_result_types(result_types)
-        formatted_filters = self._map_filters(filters)
-
-        variables = {
-            "query": query,
-            "facets": [],
-            "types": types,
-            "filters": formatted_filters,
-        }
-
-        try:
-            response = self.graph.execute_graphql(self.facets_query, variables)
-        except GraphError as e:
-            raise CatalogueError("Unable to execute facets query") from e
-
-        response = response["aggregateAcrossEntities"]
-        return self._parse_facets(response.get("facets", []))
-
     def list_domains(
         self,
         query: str = "*",
-        filters: Sequence[MultiSelectFilter] = [
-            MultiSelectFilter("tags", ["urn:li:tag:dc_display_in_catalogue"])
-        ],
+        filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
     ) -> list[DomainOption]:
         """
         Returns domains that can be used to filter the search results.
         """
-        formatted_filters = self._map_filters(filters)
-
+        formatted_filters = map_filters(filters)
+        formatted_filters = formatted_filters[0]["and"]
         variables = {
             "count": count,
             "query": query,
@@ -222,36 +275,24 @@ class SearchClient:
             matched_fields: dict = {}
             if entity_type == "DATASET":
                 page_results.append(
-                    self._parse_dataset(entity, matched_fields, ResultType.TABLE)
+                    self._parse_dataset(entity, matched_fields, EntityTypes.TABLE)
                 )
             else:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
         return page_results
 
-    def _map_result_types(self, result_types: Sequence[ResultType]):
+    def _map_result_types(
+        self,
+        result_types: Sequence[EntityTypes],
+    ) -> list[str]:
         """
         Map result types to Datahub EntityTypes
         """
-        types = []
-        if ResultType.TABLE in result_types:
-            types.append("DATASET")
-        if ResultType.GLOSSARY_TERM in result_types:
-            types.append("GLOSSARY_TERM")
-        if ResultType.CHART in result_types:
-            types.append("CHART")
-        if ResultType.DATABASE in result_types:
-            types.append("CONTAINER")
-        if ResultType.DASHBOARD in result_types:
-            types.append("DASHBOARD")
+        relevant_types = list(
+            {result_type.datahub_entity_type for result_type in result_types}
+        )
 
-        return types
-
-    def _map_filters(self, filters: Sequence[MultiSelectFilter]):
-        result = [
-            {"field": filter.filter_name, "values": filter.included_values}
-            for filter in filters
-        ]
-        return result
+        return relevant_types
 
     def _parse_list_domains(
         self, list_domains_result: list[dict[str, Any]]
@@ -269,7 +310,7 @@ class SearchClient:
         return list_domain_options
 
     def _parse_dataset(
-        self, entity: dict[str, Any], matches, result_type: ResultType
+        self, entity: dict[str, Any], matches, result_type: EntityTypes
     ) -> SearchResult:
         """
         Map a dataset entity to a SearchResult
@@ -278,7 +319,6 @@ class SearchClient:
         properties, custom_properties = parse_properties(entity)
         tags = parse_tags(entity)
         terms = parse_glossary_terms(entity)
-        last_modified = parse_last_modified(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
         container = entity.get("container")
         if container:
@@ -293,7 +333,7 @@ class SearchClient:
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, "Dataset"),
+            "entity_types": self._parse_types_and_sub_types(entity, result_type.value),
         }
         logger.debug(f"{metadata=}")
 
@@ -301,7 +341,7 @@ class SearchClient:
         metadata.update(custom_properties.access_information.model_dump())
         metadata.update(custom_properties.data_summary.model_dump())
 
-        _, modified = parse_created_and_modified(properties)
+        modified = parse_data_last_modified(properties)
 
         return SearchResult(
             urn=entity["urn"],
@@ -319,7 +359,7 @@ class SearchClient:
             metadata=metadata,
             tags=tags,
             glossary_terms=terms,
-            last_modified=modified or last_modified,
+            last_modified=modified,
         )
 
     def _parse_facets(self, facets: list[dict[str, Any]]) -> SearchFacets:
@@ -352,7 +392,7 @@ class SearchClient:
 
         return SearchResult(
             urn=entity["urn"],
-            result_type=ResultType.GLOSSARY_TERM,
+            result_type=EntityTypes.GLOSSARY_TERM,
             matches={},
             name=name,
             display_name=display_name,
@@ -415,15 +455,15 @@ class SearchClient:
         return tags_list
 
     def _parse_container(
-        self, entity: dict[str, Any], matches, subtype: ResultType
+        self, entity: dict[str, Any], matches, subtype: EntityTypes
     ) -> SearchResult:
         """
         Map a Container entity to a SearchResult
         """
         tags = parse_tags(entity)
         terms = parse_glossary_terms(entity)
-        last_modified = parse_last_modified(entity)
         properties, custom_properties = parse_properties(entity)
+        modified = parse_data_last_modified(properties)
         domain = parse_domain(entity)
         owner = parse_data_owner(entity)
         name, display_name, qualified_name = parse_names(entity, properties)
@@ -433,7 +473,7 @@ class SearchClient:
             "owner_email": owner.email,
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, "Container"),
+            "entity_types": self._parse_types_and_sub_types(entity, subtype.value),
         }
 
         metadata.update(custom_properties)
@@ -449,7 +489,7 @@ class SearchClient:
             metadata=metadata,
             tags=tags,
             glossary_terms=terms,
-            last_modified=last_modified,
+            last_modified=modified,
         )
 
     def _parse_types_and_sub_types(self, entity: dict, entity_type: str) -> dict:
