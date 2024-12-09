@@ -1,5 +1,3 @@
-from datetime import datetime, timezone
-from pathlib import Path
 from random import choice
 from typing import Any, Generator
 from unittest.mock import MagicMock, patch
@@ -15,7 +13,6 @@ from home.service.domain_fetcher import DomainFetcher
 from home.service.search import SearchService
 from home.service.search_tag_fetcher import SearchTagFetcher
 from notifications_python_client.notifications import NotificationsAPIClient
-from pytest import CollectReport, StashKey
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -33,7 +30,10 @@ from data_platform_catalogue.entities import (
     Database,
     DomainRef,
     EntityRef,
-    EntityTypes,
+    FindMoJdataEntityMapper,
+    DatabaseEntityMapping,
+    TableEntityMapping,
+    GlossaryTermEntityMapping,
     EntitySummary,
     GlossaryTermRef,
     Governance,
@@ -44,8 +44,6 @@ from data_platform_catalogue.entities import (
 )
 from data_platform_catalogue.search_types import (
     DomainOption,
-    FacetOption,
-    SearchFacets,
     SearchResponse,
     SearchResult,
 )
@@ -306,7 +304,7 @@ def page_titles():
 
 
 def generate_search_result(
-    result_type: EntityTypes | None = None, urn=None, metadata=None
+    result_type: FindMoJdataEntityMapper | None = None, urn=None, metadata=None
 ) -> SearchResult:
     """
     Generate a random search result
@@ -316,7 +314,7 @@ def generate_search_result(
     return SearchResult(
         urn=urn or fake.unique.name(),
         result_type=(
-            choice((EntityTypes.DATABASE, EntityTypes.TABLE))
+            choice((DatabaseEntityMapping, TableEntityMapping))
             if result_type is None
             else result_type
         ),
@@ -330,7 +328,7 @@ def generate_search_result(
 def search_result_from_database(database: Database):
     return SearchResult(
         urn=database.urn or "",
-        result_type=EntityTypes.DATABASE,
+        result_type=DatabaseEntityMapping,
         name=database.name,
         fully_qualified_name=database.fully_qualified_name or "",
         description=database.description,
@@ -574,7 +572,7 @@ def example_table(name="example_table"):
     return generate_table_metadata(name=name)
 
 
-def generate_page(page_size=20, result_type: EntityTypes | None = None):
+def generate_page(page_size=20, result_type: FindMoJdataEntityMapper | None = None):
     """
     Generate a fake search page
     """
@@ -712,7 +710,7 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type=EntityTypes.GLOSSARY_TERM,
+                result_type=GlossaryTermEntityMapping,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
@@ -728,14 +726,14 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type=EntityTypes.GLOSSARY_TERM,
+                result_type=GlossaryTermEntityMapping,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
                 name="Security classification",
                 description="Only data that is 'official'",
                 metadata={"parentNodes": []},
-                result_type=EntityTypes.GLOSSARY_TERM,
+                result_type=GlossaryTermEntityMapping,
             ),
         ],
     )
@@ -792,7 +790,7 @@ def search_context(search_service):
 def detail_database_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
         total_results=1,
-        page_results=generate_page(page_size=1, result_type=EntityTypes.DATABASE),
+        page_results=generate_page(page_size=1, result_type=DatabaseEntityMapping),
     )
 
     details_service = DatabaseDetailsService(urn="urn:li:container:test")
@@ -814,7 +812,7 @@ def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
         total_results=1,
         page_results=[
             generate_search_result(
-                result_type=EntityTypes.TABLE,
+                result_type=TableEntityMapping,
                 urn="table-abc",
                 metadata={},
             )

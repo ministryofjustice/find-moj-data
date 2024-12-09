@@ -2,7 +2,7 @@ import re
 from copy import deepcopy
 from typing import Any
 
-from data_platform_catalogue.entities import EntityTypes
+from data_platform_catalogue.entities import FindMoJdataEntityMapper, Mappers
 from data_platform_catalogue.search_types import (
     DomainOption,
     MultiSelectFilter,
@@ -45,19 +45,16 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(self, entity_types: list[str]) -> tuple[EntityTypes, ...]:
+    def _build_entity_types(self, entity_types: list[str]) -> tuple[FindMoJdataEntityMapper, ...]:
         default_entities = tuple(
-            entity
-            for entity in EntityTypes
-            if entity.name != "GLOSSARY_TERM"
+            Mapper
+            for Mapper in Mappers
+            if Mapper.datahub_type.value != "GLOSSARY_TERM"
         )
-        chosen_entities = (
-            tuple(
-                EntityTypes[entity]
-                for entity in entity_types
-            )
-            if entity_types
-            else None
+        chosen_entities = tuple(
+            Mapper
+            for Mapper in Mappers
+            if Mapper.find_moj_data_type.name in entity_types
         )
 
         return chosen_entities if chosen_entities else default_entities

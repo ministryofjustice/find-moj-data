@@ -1,6 +1,6 @@
 import pytest
+from data_platform_catalogue.entities import DatabaseEntityMapping
 from data_platform_catalogue.search_types import SearchResult
-from data_platform_catalogue.entities import EntityTypes
 
 from tests.conftest import mock_search_response
 
@@ -21,7 +21,7 @@ class TestSearchResultMetadata:
     def test_matched_fields_hidden(self, mock_catalogue):
         result = SearchResult(
             urn="fake-urn",
-            result_type=EntityTypes.DATABASE,
+            result_type=DatabaseEntityMapping,
             name="abc",
             fully_qualified_name="abc",
             description="bla bla bla",
@@ -36,7 +36,7 @@ class TestSearchResultMetadata:
     def test_matched_fields_shown(self, mock_catalogue):
         result = SearchResult(
             urn="fake-urn",
-            result_type=EntityTypes.DATABASE,
+            result_type=DatabaseEntityMapping,
             name="abc",
             fully_qualified_name="abc",
             description="bla bla bla",

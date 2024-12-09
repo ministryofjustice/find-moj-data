@@ -6,8 +6,8 @@ from typing import Any
 
 from data_platform_catalogue.entities import (
     EntityRef,
-    EntityTypes,
     GlossaryTermRef,
+    FindMoJdataEntityMapper,
     TagRef,
 )
 
@@ -64,7 +64,7 @@ class DomainOption:
 @dataclass
 class SearchResult:
     urn: str
-    result_type: EntityTypes
+    result_type: FindMoJdataEntityMapper
     name: str
     display_name: str = ""
     fully_qualified_name: str = ""
