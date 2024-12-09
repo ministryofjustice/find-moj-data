@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 
 @pytest.mark.slow
 @pytest.mark.datahub
-class TestDatahubToFindMoJData:
+class TestDatahubToFindMoJdata:
     """
     Test that Find MoJ data works with a real Datahub backend.
     The datahub mark is used to bypass the `mock_catalogue` fixture.

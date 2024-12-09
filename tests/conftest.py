@@ -30,7 +30,7 @@ from data_platform_catalogue.entities import (
     Database,
     DomainRef,
     EntityRef,
-    FindMoJDataEntityMapper,
+    FindMoJdataEntityMapper,
     DatabaseEntityMapping,
     TableEntityMapping,
     GlossaryTermEntityMapping,
@@ -304,7 +304,7 @@ def page_titles():
 
 
 def generate_search_result(
-    result_type: FindMoJDataEntityMapper | None = None, urn=None, metadata=None
+    result_type: FindMoJdataEntityMapper | None = None, urn=None, metadata=None
 ) -> SearchResult:
     """
     Generate a random search result
@@ -572,7 +572,7 @@ def example_table(name="example_table"):
     return generate_table_metadata(name=name)
 
 
-def generate_page(page_size=20, result_type: FindMoJDataEntityMapper | None = None):
+def generate_page(page_size=20, result_type: FindMoJdataEntityMapper | None = None):
     """
     Generate a fake search page
     """

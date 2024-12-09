@@ -21,7 +21,7 @@ from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.entities import (
     DatahubEntityType,
     DatahubSubtype,
-    FindMoJDataEntityMapper,
+    FindMoJdataEntityMapper,
     TableEntityMapping,
     ChartEntityMapping,
     DatabaseEntityMapping,
@@ -113,7 +113,7 @@ class SearchClient:
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[FindMoJDataEntityMapper] = (
+        result_types: Sequence[FindMoJdataEntityMapper] = (
             TableEntityMapping,
             ChartEntityMapping,
             DatabaseEntityMapping,
@@ -261,7 +261,7 @@ class SearchClient:
 
     def _map_result_types(
         self,
-        result_types: Sequence[FindMoJDataEntityMapper],
+        result_types: Sequence[FindMoJdataEntityMapper],
     ) -> list[str]:
         """
         Map result types to Datahub EntityTypes
@@ -288,7 +288,7 @@ class SearchClient:
         return list_domain_options
 
     def _parse_dataset(
-        self, entity: dict[str, Any], matches, result_type: FindMoJDataEntityMapper
+        self, entity: dict[str, Any], matches, result_type: FindMoJdataEntityMapper
     ) -> SearchResult:
         """
         Map a dataset entity to a SearchResult
@@ -433,7 +433,7 @@ class SearchClient:
         return tags_list
 
     def _parse_container(
-        self, entity: dict[str, Any], matches, subtype: FindMoJDataEntityMapper
+        self, entity: dict[str, Any], matches, subtype: FindMoJdataEntityMapper
     ) -> SearchResult:
         """
         Map a Container entity to a SearchResult

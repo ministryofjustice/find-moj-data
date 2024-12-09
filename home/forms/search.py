@@ -1,7 +1,7 @@
 from copy import deepcopy
 from urllib.parse import urlencode
 
-from data_platform_catalogue.entities import FindMoJDataEntityType
+from data_platform_catalogue.entities import FindMoJdataEntityType
 from data_platform_catalogue.search_types import DomainOption
 from django import forms
 from django.utils.translation import gettext as _
@@ -38,7 +38,7 @@ def get_entity_types():
     return sorted(
         [
             (entity.name, entity.value)
-            for entity in FindMoJDataEntityType
+            for entity in FindMoJdataEntityType
             if entity.name != "GLOSSARY_TERM"
         ]
     )

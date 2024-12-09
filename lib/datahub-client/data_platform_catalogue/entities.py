@@ -34,7 +34,7 @@ class DatahubSubtype(Enum):
     DATABASE = "Database"
 
 
-class FindMoJDataEntityType(Enum):
+class FindMoJdataEntityType(Enum):
     TABLE = "Table"
     GLOSSARY_TERM = "Glossary term"
     CHART = "Chart"
@@ -45,15 +45,15 @@ class FindMoJDataEntityType(Enum):
 
 
 @dataclass
-class FindMoJDataEntityMapper:
-    find_moj_data_type: FindMoJDataEntityType
+class FindMoJdataEntityMapper:
+    find_moj_data_type: FindMoJdataEntityType
     datahub_type: DatahubEntityType
     datahub_subtypes: list[str]
     url_formatted: str
 
 
-TableEntityMapping = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.TABLE,
+TableEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.TABLE,
     DatahubEntityType.DATASET,
     [
         DatahubSubtype.MODEL.value,
@@ -64,43 +64,43 @@ TableEntityMapping = FindMoJDataEntityMapper(
     "table"
 )
 
-ChartEntityMapping = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.CHART,
+ChartEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.CHART,
     DatahubEntityType.CHART,
     [],
     "chart"
 )
 
-GlossaryTermEntityMapping = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.GLOSSARY_TERM,
+GlossaryTermEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.GLOSSARY_TERM,
     DatahubEntityType.GLOSSARY_TERM,
     [],
     "glossary_term"
 )
 
-DatabaseEntityMapping = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.DATABASE,
+DatabaseEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.DATABASE,
     DatahubEntityType.CONTAINER,
     [DatahubSubtype.DATABASE.value],
     "database"
 )
 
-DashboardEntityMapping = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.DASHBOARD,
+DashboardEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.DASHBOARD,
     DatahubEntityType.DASHBOARD,
     [],
     "dashboard"
 )
 
-PublicationDatasetEntityMapping = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.PUBLICATION_DATASET,
+PublicationDatasetEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.PUBLICATION_DATASET,
     DatahubEntityType.DATASET,
     [DatahubSubtype.PUBLICATION_DATASET.value],
     "publication_dataset"
 )
 
-PublicationCollectionEntityMapper = FindMoJDataEntityMapper(
-    FindMoJDataEntityType.PUBLICATION_COLLECTION,
+PublicationCollectionEntityMapper = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.PUBLICATION_COLLECTION,
     DatahubEntityType.CONTAINER,
     [DatahubSubtype.PUBLICATION_COLLECTION.value],
     "publication_collection"

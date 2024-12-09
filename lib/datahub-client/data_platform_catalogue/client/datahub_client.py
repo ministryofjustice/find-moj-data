@@ -63,7 +63,7 @@ from data_platform_catalogue.entities import (
     Database,
     EntityRef,
     EntitySummary,
-    FindMoJDataEntityMapper,
+    FindMoJdataEntityMapper,
     TableEntityMapping,
     ChartEntityMapping,
     DatabaseEntityMapping,
@@ -206,7 +206,7 @@ class DataHubCatalogueClient:
         query: str = "*",
         count: int = 20,
         page: str | None = None,
-        result_types: Sequence[FindMoJDataEntityMapper] = (
+        result_types: Sequence[FindMoJdataEntityMapper] = (
             TableEntityMapping,
             ChartEntityMapping,
             DatabaseEntityMapping,
