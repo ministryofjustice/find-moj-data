@@ -25,4 +25,5 @@ urlpatterns = [
     ),
     path("pagination/<str:page>", views.search_view, name="pagination"),
     path("cookies", views.cookies_view, name="cookies"),
+    path("goodbye-for-now", views.redirect_view, name="redirect"),
 ]
