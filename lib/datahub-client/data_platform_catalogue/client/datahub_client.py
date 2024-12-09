@@ -58,20 +58,21 @@ from data_platform_catalogue.client.graphql_helpers import (
 from data_platform_catalogue.client.search.search_client import SearchClient
 from data_platform_catalogue.entities import (
     Chart,
+    ChartEntityMapping,
     CustomEntityProperties,
     Dashboard,
     Database,
+    DatabaseEntityMapping,
     EntityRef,
     EntitySummary,
     FindMoJdataEntityMapper,
-    TableEntityMapping,
-    ChartEntityMapping,
-    DatabaseEntityMapping,
     Governance,
     PublicationCollection,
     PublicationDataset,
+    PublicationDatasetEntityMapping,
     RelationshipType,
     Table,
+    TableEntityMapping,
 )
 from data_platform_catalogue.search_types import (
     DomainOption,

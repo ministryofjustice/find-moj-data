@@ -26,6 +26,7 @@ from data_platform_catalogue.entities import (
     FurtherInformation,
     Governance,
     OwnerRef,
+    PublicationCollection,
     RelationshipType,
     Table,
     TagRef,
@@ -546,6 +547,115 @@ class TestCatalogueClientWithDatahub:
             ),
             external_url="https://data.justice.gov.uk/prisons/public-protection/absconds",
         )
+
+    def test_get_publication_collection_details(self, datahub_client, base_mock_graph):
+        urn = "urn:li:container:some_publication"
+        datahub_response = {
+            "container": {
+                "urn": "urn:li:container",
+                "type": "CONTAINER",
+                "platform": {"name": "platform"},
+                "properties": {
+                    "name": "some publication",
+                },
+                "parentContainers": {
+                    "count": 0,
+                },
+                "relationships": {
+                    "total": 1,
+                    "relationships": [
+                        {
+                            "entity": {
+                                "name": "publication",
+                                "urn": "urn:li:dataset:publication",
+                                "properties": {"name": "publication"},
+                                "tags": {
+                                    "tags": [
+                                        {
+                                            "tag": {
+                                                "urn": "urn:li:tag:dc_display_in_catalogue",
+                                                "properties": {
+                                                    "name": "dc:display_in_catalogue",
+                                                },
+                                            }
+                                        }
+                                    ]
+                                },
+                            }
+                        }
+                    ],
+                },
+            }
+        }
+        base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        with patch(
+            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+        ) as mock_exists:
+            mock_exists.return_value = True
+            collection = datahub_client.get_publication_collection_details(urn)
+
+        expected_relationships = {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:dataset:publication", display_name="publication"
+                    ),
+                    description="",
+                    entity_type="publication_dataset",
+                    tags=[
+                        TagRef(
+                            display_name="dc:display_in_catalogue",
+                            urn="urn:li:tag:dc_display_in_catalogue",
+                        )
+                    ],
+                )
+            ]
+        }
+
+        expected_custom_properties = CustomEntityProperties(
+            usage_restrictions=UsageRestrictions(dpia_required=None, dpia_location=""),
+            access_information=AccessInformation(
+                dc_where_to_access_dataset="",
+                source_dataset_name="",
+                s3_location="",
+                dc_access_requirements="",
+            ),
+            data_summary=DataSummary(row_count="", refresh_period=""),
+            further_information=FurtherInformation(
+                dc_slack_channel_name="",
+                dc_slack_channel_url="",
+                dc_teams_channel_name="",
+                dc_teams_channel_url="",
+                dc_team_email="",
+            ),
+            audience="Internal",
+        )
+
+        expected = PublicationCollection(
+            urn="urn:li:container:some_publication",
+            display_name="some publication",
+            name="some publication",
+            fully_qualified_name="some publication",
+            description="",
+            relationships=expected_relationships,
+            domain=DomainRef(display_name="", urn=""),
+            governance=Governance(
+                data_owner=OwnerRef(display_name="", email="", urn=""),
+                data_stewards=[],
+                data_custodians=[],
+            ),
+            tags=[],
+            glossary_terms=[],
+            metadata_last_ingested=None,
+            created=None,
+            data_last_modified=None,
+            platform=EntityRef(urn="platform", display_name="platform"),
+            custom_properties=expected_custom_properties,
+            external_url="",
+        )
+
+        assert collection == expected
 
     def test_get_database_details_filters_entities(
         self, datahub_client, base_mock_graph
