@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Find MoJ data\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-29 15:33+0000\n"
+"POT-Creation-Date: 2024-12-09 10:41+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,28 +97,28 @@ msgstr "Give feedback on Find MOJ data"
 msgid "Report an issue with %s"
 msgstr ""
 
-#: home/forms/search.py:16
+#: home/forms/search.py:17
 msgid "All domains"
 msgstr "All subject areas"
 
-#: home/forms/search.py:33
+#: home/forms/search.py:34
 msgid "Analytical Platform"
 msgstr "Analytical Platform"
 
-#: home/forms/search.py:54 home/service/search.py:127
-#: home/service/search.py:237 templates/partial/filter.html:19
+#: home/forms/search.py:55 home/service/search.py:134
+#: home/service/search.py:244 templates/partial/filter.html:19
 msgid "Domain"
 msgstr "Subject area"
 
-#: home/forms/search.py:55 templates/partial/filter.html:36
+#: home/forms/search.py:56 templates/partial/filter.html:36
 msgid "filter-refresh"
 msgstr "selection will trigger the filter and refresh the search results"
 
-#: home/service/details.py:73 templates/partial/search_result.html:20
+#: home/service/details.py:73
 msgid "Database"
 msgstr "Database"
 
-#: home/service/details.py:158 templates/partial/search_result.html:24
+#: home/service/details.py:159
 msgid "Chart"
 msgstr "Chart"
 
@@ -130,62 +130,63 @@ msgstr "Glossary"
 msgid "Metadata specification"
 msgstr "Metadata specification"
 
-#: home/service/search.py:136 templates/partial/filter.html:33
+#: home/service/search.py:143 templates/partial/filter.html:33
 msgid "Entity Types"
 msgstr "Entity types"
 
-#: home/service/search.py:146
+#: home/service/search.py:153
 msgid "Where To Access"
 msgstr "Where to access"
 
-#: home/service/search.py:154
+#: home/service/search.py:161
 msgid "Tags"
 msgstr "Tags"
 
-#: home/service/search.py:186
+#: home/service/search.py:193
 msgctxt "Page title"
 msgid "Search MoJ data"
 msgstr "Search MoJ data"
 
-#: home/service/search.py:235
+#: home/service/search.py:242
 msgid "ID"
 msgstr "ID"
 
-#: home/service/search.py:236
+#: home/service/search.py:243
 msgid "URN"
 msgstr "URN"
 
-#: home/service/search.py:238
+#: home/service/search.py:245
 msgid "Title"
 msgstr "Title"
 
-#: home/service/search.py:239
+#: home/service/search.py:246
 msgid "Name"
 msgstr "Name"
 
-#: home/service/search.py:240 templates/details_base.html:48
+#: home/service/search.py:247 templates/details_base.html:48
 #: templates/details_dashboard.html:14 templates/details_database.html:14
+#: templates/details_publication_collection.html:15
 #: templates/details_table.html:15
 msgid "Description"
 msgstr "Description"
 
-#: home/service/search.py:241 templates/details_table.html:14
+#: home/service/search.py:248 templates/details_table.html:14
 msgid "Column name"
 msgstr "Column name"
 
-#: home/service/search.py:242
+#: home/service/search.py:249
 msgid "Column description"
 msgstr "Column description"
 
-#: home/service/search.py:243
+#: home/service/search.py:250
 msgid "Available on"
 msgstr "Available on"
 
-#: home/service/search.py:244
+#: home/service/search.py:251
 msgid "Qualified name"
 msgstr "Qualified name"
 
-#: home/views.py:36 templates/base/navigation.html:64
+#: home/views.py:49 templates/base/navigation.html:64
 msgid "Home"
 msgstr "Home"
 
@@ -293,26 +294,32 @@ msgstr "Data first created:"
 msgid "Last updated:"
 msgstr "Data last updated:"
 
-#: templates/details_base.html:92 templates/partial/search_result.html:39
+#: templates/details_base.html:92 templates/partial/search_result.html:25
 msgid "Domain:"
 msgstr "Subject area:"
 
-#: templates/details_base.html:93 templates/partial/contact_info.html:15
-#: templates/partial/contact_info.html:42
-#: templates/partial/search_result.html:40
+#: templates/details_base.html:93 templates/partial/contact_info.html:16
+#: templates/partial/contact_info.html:43
+#: templates/partial/search_result.html:26
 msgid "Not provided"
 msgstr "Not provided."
 
 #: templates/details_chart.html:8 templates/details_dashboard.html:50
+#: templates/details_publication_collection.html:50
+#: templates/details_publication_dataset.html:8
 msgid "Access this data"
 msgstr "Access this data"
 
 #: templates/details_chart.html:11
+#: templates/details_publication_collection.html:53
+#: templates/details_publication_dataset.html:11
 #, python-format
 msgid "\"%(display_name)s\" on %(platform_name)s"
 msgstr ""
 
 #: templates/details_chart.html:11 templates/details_dashboard.html:53
+#: templates/details_publication_collection.html:53
+#: templates/details_publication_dataset.html:11
 msgid "(opens in new tab)"
 msgstr "(opens in new tab)"
 
@@ -347,6 +354,21 @@ msgstr ""
 #: templates/details_database.html:49
 msgid "This database is missing table information."
 msgstr "This database is missing table information."
+
+#: templates/details_publication_collection.html:11
+#: templates/details_publication_collection.html:44
+msgid "Publication Collection content"
+msgstr ""
+
+#: templates/details_publication_collection.html:14
+msgid "Publication"
+msgstr ""
+
+#: templates/details_publication_collection.html:45
+#, fuzzy
+#| msgid "This dashboard is missing chart information."
+msgid "This Publication Collection is missing Publications information."
+msgstr "This dashboard is missing table information."
 
 #: templates/details_table.html:11 templates/details_table.html:50
 msgid "Table schema"
@@ -436,28 +458,28 @@ msgstr "giving us feedback"
 msgid "Access requirements"
 msgstr "Request access"
 
-#: templates/partial/contact_info.html:8
+#: templates/partial/contact_info.html:9
 msgid "Click link for access information (opens in new tab)"
 msgstr "Select this link for access information (opens in new tab)"
 
-#: templates/partial/contact_info.html:13
+#: templates/partial/contact_info.html:14
 msgid "Please contact the data custodian for access information."
 msgstr "Contact the data custodian to request access."
 
-#: templates/partial/contact_info.html:22
+#: templates/partial/contact_info.html:23
 msgid "Contact channels for questions"
 msgstr "Ask a question"
 
-#: templates/partial/contact_info.html:40
+#: templates/partial/contact_info.html:41
 msgid "Contact the data custodian with questions."
 msgstr ""
 
-#: templates/partial/contact_info.html:50
-#: templates/partial/contact_info.html:57
+#: templates/partial/contact_info.html:51
+#: templates/partial/contact_info.html:58
 msgid "Data custodian"
 msgstr "Data custodian (technical contact)"
 
-#: templates/partial/contact_info.html:64
+#: templates/partial/contact_info.html:65
 msgid ""
 "Not provided - <a href=\"https://moj.enterprise.slack.com/archives/"
 "C06NPM2200N\" class=\"govuk-link\" rel=\"noreferrer noopener\" "
@@ -548,15 +570,11 @@ msgstr "Previous<span class=\"govuk-visually-hidden\"> page</span>"
 msgid "Next<span class=\"govuk-visually-hidden\"> page</span>"
 msgstr "Next<span class=\"govuk-visually-hidden\"> page</span>"
 
-#: templates/partial/search_result.html:16
-msgid "Table"
-msgstr "Table"
-
-#: templates/partial/search_result.html:44
+#: templates/partial/search_result.html:30
 msgid "Database:"
 msgstr "Database:"
 
-#: templates/partial/search_result.html:64
+#: templates/partial/search_result.html:50
 msgid "Matched fields:"
 msgstr "Matched fields:"
 
@@ -585,7 +603,6 @@ msgid "Search query tips"
 msgstr "Search tips"
 
 #: templates/search.html:34
-#, python-format
 msgid ""
 "<ul class=\"govuk-list govuk-list--bullet\"> <li><p>Use multiple words to "
 "narrow down your search.</p><p>For example: <strong>prisons probation</"
@@ -597,8 +614,7 @@ msgid ""
 "phrase \"case management\" but not either word on its own.</p></li> "
 "<li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -"
 "magistrates</strong> excludes any results that mention \"magistrates\".</p></"
-"li> </ul> <p><a href=\"%(more_examples_href)s\">More search query examples</"
-"a></p>"
+"li> </ul>"
 msgstr ""
 "            <ul class=\"govuk-list govuk-list--bullet\">              "
 "<li><p>Use multiple words to narrow down your search.</p><p>For example: "
@@ -611,10 +627,9 @@ msgstr ""
 "management\" but not either word on its own.</p></li>              "
 "<li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -"
 "magistrates</strong> excludes any results that mention \"magistrates\".</p></"
-"li>            </ul>            <p><a href=\"%(more_examples_href)s\">More "
-"advanced search options</a></p>"
+"li>            </ul>"
 
-#: templates/search.html:51
+#: templates/search.html:50
 msgid "Some results were malformed and are not shown"
 msgstr "Some results were malformed and are not shown"
 
@@ -634,10 +649,8 @@ msgstr "first name"
 msgid "last name"
 msgstr "last name"
 
-#, fuzzy
-#~| msgid "This dashboard is missing chart information."
-#~ msgid "This collection is missing publication information."
-#~ msgstr "This dashboard is missing table information."
+#~ msgid "Table"
+#~ msgstr "Table"
 
 #~ msgid "Please contact the data owner for access information."
 #~ msgstr "Contact the data owner to request access."

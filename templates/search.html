@@ -8,7 +8,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4" id="searchform" 
+      <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4" id="searchform"
         onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
         <div class="govuk-form-group">
           <h1 class="govuk-heading-l">{{h1_value}}</h1>
@@ -38,7 +38,6 @@
               <li><p>Quote phrases to require an exact match.</p><p>For example: <strong>"case management"</strong> matches the exact phrase "case management" but not either word on its own.</p></li>
               <li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -magistrates</strong> excludes any results that mention "magistrates".</p></li>
             </ul>
-            <p><a href="{{ more_examples_href }}">More search query examples</a></p>
           {% endblocktranslate %}
         </div>
       </details>
