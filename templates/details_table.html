@@ -56,7 +56,7 @@
           {% translate "See where this data came from and how it is used in other tables." %}
         </div class="govuk-body-m">
         <div class="govuk-body">
-          <a href="{{lineage_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">
+          <a href="{% url 'home:redirect' %}?url={{ lineage_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">
             {% translate "View lineage in DataHub (opens in new tab)" %}
           </a>
         </div>

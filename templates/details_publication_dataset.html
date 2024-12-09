@@ -8,7 +8,7 @@
                 {% translate "Access this data" %}
             </h2>
             <div class="govuk-body">
-                <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% blocktranslate with display_name=entity.display_name platform_name=platform_name %}"{{ display_name }}" on {{platform_name}}{% endblocktranslate %}</a> {% translate '(opens in new tab)' %}
+                <a href="{% url 'home:redirect' %}?url={{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% blocktranslate with display_name=entity.display_name platform_name=platform_name %}"{{ display_name }}" on {{platform_name}} (opens in new tab){% endblocktranslate %}</a>
             </div>
         </div>
     </div>
