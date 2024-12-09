@@ -70,6 +70,7 @@ def details_view(request, result_type, urn):
 
     return render(request, service.template, service.context)
 
+
 @cache_control(max_age=300, private=True)
 def details_view_csv(request, result_type, urn) -> HttpResponse:
     match result_type:
