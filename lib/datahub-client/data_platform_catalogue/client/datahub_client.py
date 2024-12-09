@@ -67,6 +67,7 @@ from data_platform_catalogue.entities import (
     TableEntityMapping,
     ChartEntityMapping,
     DatabaseEntityMapping,
+    PublicationDatasetEntityMapping,
     Governance,
     PublicationCollection,
     PublicationDataset,
