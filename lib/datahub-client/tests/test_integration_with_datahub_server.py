@@ -20,7 +20,7 @@ from data_platform_catalogue.entities import (
     Database,
     DomainRef,
     EntityRef,
-    TableEntityMapper,
+    TableEntityMapping,
     Governance,
     OwnerRef,
     TagRef,
@@ -60,7 +60,7 @@ def test_search_by_domain():
 
     response = client.search(
         filters=[MultiSelectFilter("domains", ["does-not-exist"])],
-        result_types=(TableEntityMapper),
+        result_types=(TableEntityMapping),
     )
     assert response.total_results == 0
 

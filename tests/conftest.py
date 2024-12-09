@@ -31,9 +31,9 @@ from data_platform_catalogue.entities import (
     DomainRef,
     EntityRef,
     FindMoJDataEntityMapper,
-    DatabaseEntityMapper,
-    TableEntityMapper,
-    GlossaryTermEntityMapper,
+    DatabaseEntityMapping,
+    TableEntityMapping,
+    GlossaryTermEntityMapping,
     EntitySummary,
     GlossaryTermRef,
     Governance,
@@ -314,7 +314,7 @@ def generate_search_result(
     return SearchResult(
         urn=urn or fake.unique.name(),
         result_type=(
-            choice((DatabaseEntityMapper, TableEntityMapper))
+            choice((DatabaseEntityMapping, TableEntityMapping))
             if result_type is None
             else result_type
         ),
@@ -328,7 +328,7 @@ def generate_search_result(
 def search_result_from_database(database: Database):
     return SearchResult(
         urn=database.urn or "",
-        result_type=DatabaseEntityMapper,
+        result_type=DatabaseEntityMapping,
         name=database.name,
         fully_qualified_name=database.fully_qualified_name or "",
         description=database.description,
@@ -710,7 +710,7 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type=GlossaryTermEntityMapper,
+                result_type=GlossaryTermEntityMapping,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
@@ -726,14 +726,14 @@ def mock_get_glossary_terms_response(mock_catalogue):
                         }
                     ]
                 },
-                result_type=GlossaryTermEntityMapper,
+                result_type=GlossaryTermEntityMapping,
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
                 name="Security classification",
                 description="Only data that is 'official'",
                 metadata={"parentNodes": []},
-                result_type=GlossaryTermEntityMapper,
+                result_type=GlossaryTermEntityMapping,
             ),
         ],
     )
@@ -790,7 +790,7 @@ def search_context(search_service):
 def detail_database_context(mock_catalogue):
     mock_catalogue.search.return_value = SearchResponse(
         total_results=1,
-        page_results=generate_page(page_size=1, result_type=DatabaseEntityMapper),
+        page_results=generate_page(page_size=1, result_type=DatabaseEntityMapping),
     )
 
     details_service = DatabaseDetailsService(urn="urn:li:container:test")
@@ -812,7 +812,7 @@ def dataset_with_parent(mock_catalogue) -> dict[str, Any]:
         total_results=1,
         page_results=[
             generate_search_result(
-                result_type=TableEntityMapper,
+                result_type=TableEntityMapping,
                 urn="table-abc",
                 metadata={},
             )

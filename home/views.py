@@ -4,12 +4,12 @@ from urllib.parse import urlparse
 
 from data_platform_catalogue.client.exceptions import EntityDoesNotExist
 from data_platform_catalogue.entities import (
-    ChartEntityMapper,
-    DashboardEntityMapper,
-    DatabaseEntityMapper,
+    ChartEntityMapping,
+    DashboardEntityMapping,
+    DatabaseEntityMapping,
     PublicationCollectionEntityMapper,
-    PublicationDatasetEntityMapper,
-    TableEntityMapper,
+    PublicationDatasetEntityMapping,
+    TableEntityMapping,
 )
 from data_platform_catalogue.search_types import DomainOption
 from django.conf import settings
@@ -38,12 +38,12 @@ from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 
 type_details_map = {
-    TableEntityMapper.url_formatted: DatasetDetailsService,
-    DatabaseEntityMapper.url_formatted: DatabaseDetailsService,
-    ChartEntityMapper.url_formatted: ChartDetailsService,
-    DashboardEntityMapper.url_formatted: DashboardDetailsService,
+    TableEntityMapping.url_formatted: DatasetDetailsService,
+    DatabaseEntityMapping.url_formatted: DatabaseDetailsService,
+    ChartEntityMapping.url_formatted: ChartDetailsService,
+    DashboardEntityMapping.url_formatted: DashboardDetailsService,
     PublicationCollectionEntityMapper.url_formatted: PublicationCollectionDetailsService,
-    PublicationDatasetEntityMapper.url_formatted: PublicationDatasetDetailsService
+    PublicationDatasetEntityMapping.url_formatted: PublicationDatasetDetailsService
 }
 
 
@@ -74,11 +74,11 @@ def details_view(request, result_type, urn):
 @cache_control(max_age=300, private=True)
 def details_view_csv(request, result_type, urn) -> HttpResponse:
     match result_type:
-        case TableEntityMapper.url_formatted:
+        case TableEntityMapping.url_formatted:
             csv_formatter = DatasetDetailsCsvFormatter(DatasetDetailsService(urn))
-        case DatabaseEntityMapper.url_formatted:
+        case DatabaseEntityMapping.url_formatted:
             csv_formatter = DatabaseDetailsCsvFormatter(DatabaseDetailsService(urn))
-        case DashboardEntityMapper.url_formatted:
+        case DashboardEntityMapping.url_formatted:
             csv_formatter = DashboardDetailsCsvFormatter(DashboardDetailsService(urn))
         case _:
             logging.error("Invalid result type for csv details view %s", result_type)

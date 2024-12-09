@@ -52,7 +52,7 @@ class FindMoJDataEntityMapper:
     url_formatted: str
 
 
-TableEntityMapper = FindMoJDataEntityMapper(
+TableEntityMapping = FindMoJDataEntityMapper(
     FindMoJDataEntityType.TABLE,
     DatahubEntityType.DATASET,
     [
@@ -64,35 +64,35 @@ TableEntityMapper = FindMoJDataEntityMapper(
     "table"
 )
 
-ChartEntityMapper = FindMoJDataEntityMapper(
+ChartEntityMapping = FindMoJDataEntityMapper(
     FindMoJDataEntityType.CHART,
     DatahubEntityType.CHART,
     [],
     "chart"
 )
 
-GlossaryTermEntityMapper = FindMoJDataEntityMapper(
+GlossaryTermEntityMapping = FindMoJDataEntityMapper(
     FindMoJDataEntityType.GLOSSARY_TERM,
     DatahubEntityType.GLOSSARY_TERM,
     [],
     "glossary_term"
 )
 
-DatabaseEntityMapper = FindMoJDataEntityMapper(
+DatabaseEntityMapping = FindMoJDataEntityMapper(
     FindMoJDataEntityType.DATABASE,
     DatahubEntityType.CONTAINER,
     [DatahubSubtype.DATABASE.value],
     "database"
 )
 
-DashboardEntityMapper = FindMoJDataEntityMapper(
+DashboardEntityMapping = FindMoJDataEntityMapper(
     FindMoJDataEntityType.DASHBOARD,
     DatahubEntityType.DASHBOARD,
     [],
     "dashboard"
 )
 
-PublicationDatasetEntityMapper = FindMoJDataEntityMapper(
+PublicationDatasetEntityMapping = FindMoJDataEntityMapper(
     FindMoJDataEntityType.PUBLICATION_DATASET,
     DatahubEntityType.DATASET,
     [DatahubSubtype.PUBLICATION_DATASET.value],
@@ -107,12 +107,12 @@ PublicationCollectionEntityMapper = FindMoJDataEntityMapper(
 )
 
 Mappers = [
-    TableEntityMapper,
-    ChartEntityMapper,
-    GlossaryTermEntityMapper,
-    DatabaseEntityMapper,
-    DashboardEntityMapper,
-    PublicationDatasetEntityMapper,
+    TableEntityMapping,
+    ChartEntityMapping,
+    GlossaryTermEntityMapping,
+    DatabaseEntityMapping,
+    DashboardEntityMapping,
+    PublicationDatasetEntityMapping,
     PublicationCollectionEntityMapper
 ]
 

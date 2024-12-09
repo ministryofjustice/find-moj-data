@@ -2,8 +2,8 @@ import os
 from urllib.parse import urlsplit
 
 from data_platform_catalogue.entities import (
-    EntityRef, RelationshipType, DatabaseEntityMapper,
-    DashboardEntityMapper, PublicationCollectionEntityMapper, PublicationDatasetEntityMapper
+    EntityRef, RelationshipType, DatabaseEntityMapping,
+    DashboardEntityMapping, PublicationCollectionEntityMapper, PublicationDatasetEntityMapping
 )
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
@@ -117,7 +117,7 @@ class DatasetDetailsService(GenericService):
             "entity": self.table_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
-            "parent_type": DatabaseEntityMapper.url_formatted,
+            "parent_type": DatabaseEntityMapping.url_formatted,
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),
             "lineage_url": f"{split_datahub_url.scheme}://{split_datahub_url.netloc}/dataset/{self.table_metadata.urn}/Lineage?is_lineage_mode=true&",  # noqa: E501
@@ -164,7 +164,7 @@ class ChartDetailsService(GenericService):
                 self.chart_metadata.platform.display_name
             ),
             "parent_entity": self.parent_entity,
-            "parent_type": DashboardEntityMapper.url_formatted,
+            "parent_type": DashboardEntityMapping.url_formatted,
             "h1_value": self.chart_metadata.name,
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.chart_metadata.custom_properties.access_information.dc_access_requirements
@@ -261,12 +261,12 @@ class PublicationDatasetDetailsService(GenericService):
 
         return {
             "entity": self.publication_dataset_metadata,
-            "entity_type": PublicationDatasetEntityMapper.find_moj_data_type.value,
+            "entity_type": PublicationDatasetEntityMapping.find_moj_data_type.value,
             "parent_entity": self.parent_entity,
             "platform_name": friendly_platform_name(
                 self.publication_dataset_metadata.platform.display_name
             ),
-            "parent_type": DatabaseEntityMapper.url_formatted,
+            "parent_type": DatabaseEntityMapping.url_formatted,
             "h1_value": self.publication_dataset_metadata.name,
             # noqa: E501
             "is_access_requirements_a_url": is_access_requirements_a_url(

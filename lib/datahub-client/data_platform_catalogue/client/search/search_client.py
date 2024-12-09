@@ -22,13 +22,13 @@ from data_platform_catalogue.entities import (
     DatahubEntityType,
     DatahubSubtype,
     FindMoJDataEntityMapper,
-    TableEntityMapper,
-    ChartEntityMapper,
-    DatabaseEntityMapper,
-    DashboardEntityMapper,
-    PublicationDatasetEntityMapper,
+    TableEntityMapping,
+    ChartEntityMapping,
+    DatabaseEntityMapping,
+    DashboardEntityMapping,
+    PublicationDatasetEntityMapping,
     PublicationCollectionEntityMapper,
-    GlossaryTermEntityMapper,
+    GlossaryTermEntityMapping,
     EntityRef
 )
 from data_platform_catalogue.search_types import (
@@ -58,31 +58,31 @@ class SearchClient:
                 DatahubSubtype.PUBLICATION_DATASET.value,
             ): (
                 self._parse_dataset,
-                PublicationDatasetEntityMapper,
+                PublicationDatasetEntityMapping,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (
                 self._parse_dataset,
-                TableEntityMapper,
+                TableEntityMapping,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (
                 self._parse_dataset,
-                TableEntityMapper,
+                TableEntityMapping,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (
                 self._parse_dataset,
-                TableEntityMapper,
+                TableEntityMapping,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (
                 self._parse_dataset,
-                TableEntityMapper,
+                TableEntityMapping,
             ),
             (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (
                 self._parse_dataset,
-                TableEntityMapper,
+                TableEntityMapping,
             ),
             (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (
                 self._parse_container,
-                DatabaseEntityMapper,
+                DatabaseEntityMapping,
             ),
             (
                 DatahubEntityType.CONTAINER.value,
@@ -96,15 +96,15 @@ class SearchClient:
                 DatahubSubtype.PUBLICATION_DATASET.value,
             ): (
                 self._parse_container,
-                PublicationDatasetEntityMapper,
+                PublicationDatasetEntityMapping,
             ),
             (DatahubEntityType.CHART.value, None): (
                 self._parse_dataset,
-                ChartEntityMapper,
+                ChartEntityMapping,
             ),
             (DatahubEntityType.DASHBOARD.value, None): (
                 self._parse_container,
-                DashboardEntityMapper,
+                DashboardEntityMapping,
             ),
         }
 
@@ -114,9 +114,9 @@ class SearchClient:
         count: int = 20,
         page: str | None = None,
         result_types: Sequence[FindMoJDataEntityMapper] = (
-            TableEntityMapper,
-            ChartEntityMapper,
-            DatabaseEntityMapper,
+            TableEntityMapping,
+            ChartEntityMapping,
+            DatabaseEntityMapping,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
@@ -253,7 +253,7 @@ class SearchClient:
             matched_fields: dict = {}
             if entity_type == "DATASET":
                 page_results.append(
-                    self._parse_dataset(entity, matched_fields, TableEntityMapper)
+                    self._parse_dataset(entity, matched_fields, TableEntityMapping)
                 )
             else:
                 raise ValueError(f"Unexpected entity type: {entity_type}")
@@ -370,7 +370,7 @@ class SearchClient:
 
         return SearchResult(
             urn=entity["urn"],
-            result_type=GlossaryTermEntityMapper,
+            result_type=GlossaryTermEntityMapping,
             matches={},
             name=name,
             display_name=display_name,
