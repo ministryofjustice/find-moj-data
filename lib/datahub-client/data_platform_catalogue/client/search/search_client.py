@@ -2,6 +2,9 @@ import json
 import logging
 from typing import Any, Sequence, Tuple
 
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
@@ -37,8 +40,6 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -299,9 +300,7 @@ class SearchClient:
             if name.lower() not in lowercase_subject_area_tags:
                 continue
 
-            subject_areas.append(
-                DomainOption(urn.replace(":tag:", ":domain:"), name, count)
-            )
+            subject_areas.append(DomainOption(urn, name, count))
         return subject_areas
 
     def _parse_dataset(
