@@ -116,22 +116,28 @@ Mappers = [
 class SubjectAreaTag:
     name: str
 
+    # FIXME: use better naming
     @property
     def urn(self):
-        return "urn:tag:" + quote(self.name)
+        return "urn:li:tag:" + quote(self.name)
+
+    @property
+    def urn_unescaped(self):
+        return "urn:li:tag:" + self.name
 
     @property
     def domain_urn(self):
         return self.urn.replace(":tag:", ":domain:")
 
 
+# FIXME: allow lookup by URN?
+GENERAL_TAG = SubjectAreaTag("General")
 SUBJECT_AREA_TAGS = [
     SubjectAreaTag("Bold"),
     SubjectAreaTag("Civil"),
     SubjectAreaTag("Courts"),
     SubjectAreaTag("Electronic monitoring"),
     SubjectAreaTag("Finance"),
-    SubjectAreaTag("General"),
     SubjectAreaTag("Interventions"),
     SubjectAreaTag("OPG"),
     SubjectAreaTag("People"),
@@ -139,6 +145,7 @@ SUBJECT_AREA_TAGS = [
     SubjectAreaTag("Probation"),
     SubjectAreaTag("Property"),
     SubjectAreaTag("Risk"),
+    GENERAL_TAG,
 ]
 
 

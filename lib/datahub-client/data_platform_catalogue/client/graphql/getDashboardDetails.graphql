@@ -39,6 +39,10 @@ query getDashboard($urn: String!) {
               tags {
                 tag {
                   urn
+                  name
+                  properties {
+                    name
+                  }
                 }
               }
             }

@@ -67,6 +67,7 @@ query Search(
             tags {
               tag {
                 urn
+                name
                 properties {
                   name
                   description
@@ -137,6 +138,7 @@ query Search(
             tags {
               tag {
                 urn
+                name
                 properties {
                   name
                   description
@@ -197,6 +199,7 @@ query Search(
             tags {
               tag {
                 urn
+                name
                 properties {
                   name
                   description
@@ -257,6 +260,7 @@ query Search(
             tags {
               tag {
                 urn
+                name
                 properties {
                   name
                   description

@@ -111,6 +111,7 @@ query getDatasetDetails($urn: String!) {
       tags {
         tag {
           urn
+          name
           properties {
             name
             description

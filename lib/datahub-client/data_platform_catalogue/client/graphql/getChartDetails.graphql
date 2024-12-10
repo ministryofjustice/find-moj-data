@@ -36,6 +36,7 @@ query getChartDetails($urn: String!) {
       tags {
         tag {
           urn
+          name
           properties {
             name
             description

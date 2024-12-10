@@ -5,6 +5,7 @@ from importlib.resources import files
 from typing import Any, Tuple
 
 from data_platform_catalogue.entities import (
+    SUBJECT_AREA_TAGS,
     AccessInformation,
     Column,
     ColumnRef,
@@ -295,17 +296,19 @@ def parse_names(
     return name, display_name, qualified_name
 
 
+# FIXME: rename this to subject area to avoid confusion with Datahub domain
 def parse_domain(entity: dict[str, Any]) -> DomainRef:
-    domain = entity.get("domain") or {}
-    inner_domain = domain.get("domain") or {}
-    domain_id = inner_domain.get("urn", "")
-    if inner_domain:
-        domain_properties, _ = parse_properties(inner_domain)
-        display_name = domain_properties.get("name", "")
-    else:
-        display_name = ""
+    outer_tags = entity.get("tags") or {}
+    for tag in outer_tags.get("tags", []):
+        tag_inner = tag["tag"]
+        properties = tag.get("properties") or {}
+        name = properties.get("name") or tag_inner.get("name")
+        urn = tag_inner["urn"]
+        if urn in [s.urn_unescaped for s in SUBJECT_AREA_TAGS]:
+            return DomainRef(display_name=name, urn=urn)
 
-    return DomainRef(display_name=display_name, urn=domain_id)
+    # TODO: perhaps everything without a domain should be displayed as General?
+    return DomainRef(display_name="", urn="")
 
 
 def parse_columns(entity: dict[str, Any]) -> list[Column]:
