@@ -45,11 +45,11 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(self, entity_types: list[str]) -> tuple[FindMoJdataEntityMapper, ...]:
+    def _build_entity_types(
+        self, entity_types: list[str]
+    ) -> tuple[FindMoJdataEntityMapper, ...]:
         default_entities = tuple(
-            Mapper
-            for Mapper in Mappers
-            if Mapper.datahub_type.value != "GLOSSARY_TERM"
+            Mapper for Mapper in Mappers if Mapper.datahub_type.value != "GLOSSARY_TERM"
         )
         chosen_entities = tuple(
             Mapper
@@ -88,7 +88,9 @@ class SearchService(GenericService):
 
         filter_value = []
         if domain:
-            filter_value.append(MultiSelectFilter("domains", [domain]))
+            filter_value.append(
+                MultiSelectFilter("tags", [domain.replace(":domain:", ":tag:")])
+            )
         if where_to_access:
             filter_value.append(MultiSelectFilter("customProperties", where_to_access))
         if tags:
