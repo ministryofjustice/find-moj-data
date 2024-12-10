@@ -4,14 +4,15 @@ import pytest
 
 from data_platform_catalogue.client.search.search_client import SearchClient
 from data_platform_catalogue.entities import (
+    SUBJECT_AREA_TAGS,
     AccessInformation,
+    ChartEntityMapping,
+    DatabaseEntityMapping,
     DataSummary,
     EntityRef,
-    TableEntityMapping,
-    DatabaseEntityMapping,
-    ChartEntityMapping,
-    GlossaryTermEntityMapping,
     FurtherInformation,
+    GlossaryTermEntityMapping,
+    TableEntityMapping,
     TagRef,
     UsageRestrictions,
 )
@@ -71,6 +72,7 @@ def test_no_search_results(mock_graph, searcher):
 
 
 def test_one_search_result(mock_graph, searcher):
+    subject_area = SUBJECT_AREA_TAGS[0]
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -99,18 +101,15 @@ def test_one_search_result(mock_graph, searcher):
                                 {"key": "dataSensitivity", "value": "OFFICIAL"},
                             ],
                         },
-                        "domain": {
-                            "domain": {
-                                "urn": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
-                                "id": "3dc18e48-c062-4407-84a9-73e23f768023",
-                                "properties": {
-                                    "name": "HMPPS",
-                                    "description": "HMPPS is an executive agency that ...",
-                                },
-                            },
-                            "editableProperties": None,
-                            "tags": None,
-                            "lastIngested": 1705990502353,
+                        "tags": {
+                            "tags": [
+                                {
+                                    "tag": {
+                                        "name": subject_area.name,
+                                        "urn": subject_area.urn_unescaped,
+                                    }
+                                }
+                            ]
                         },
                     },
                 }
@@ -135,8 +134,8 @@ def test_one_search_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "HMPPS",
-                    "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
+                    "domain_name": subject_area.name,
+                    "domain_id": subject_area.urn_unescaped,
                     "entity_types": {
                         "entity_type": "Table",
                         "entity_sub_types": ["Table"],
@@ -150,7 +149,12 @@ def test_one_search_result(mock_graph, searcher):
                     "refresh_period": "",
                     "row_count": "",
                 },
-                tags=[],
+                tags=[
+                    TagRef(
+                        display_name=subject_area.name,
+                        urn=subject_area.urn_unescaped,
+                    )
+                ],
                 last_modified=None,
                 created=None,
                 parent_entity=EntityRef(urn="urn:li:container:abc", display_name="abc"),
@@ -162,6 +166,7 @@ def test_one_search_result(mock_graph, searcher):
 
 
 def test_dataset_result(mock_graph, searcher):
+    subject_area = SUBJECT_AREA_TAGS[-1]
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -190,18 +195,15 @@ def test_dataset_result(mock_graph, searcher):
                                 },
                             ],
                         },
-                        "domain": {
-                            "domain": {
-                                "urn": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
-                                "id": "3dc18e48-c062-4407-84a9-73e23f768023",
-                                "properties": {
-                                    "name": "HMPPS",
-                                    "description": "HMPPS is an executive agency that ...",
-                                },
-                            },
-                            "editableProperties": None,
-                            "tags": None,
-                            "lastIngested": 1705990502353,
+                        "tags": {
+                            "tags": [
+                                {
+                                    "tag": {
+                                        "name": subject_area.name,
+                                        "urn": subject_area.urn_unescaped,
+                                    }
+                                }
+                            ]
                         },
                     },
                 }
@@ -226,8 +228,8 @@ def test_dataset_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "HMPPS",
-                    "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
+                    "domain_name": subject_area.name,
+                    "domain_id": subject_area.urn_unescaped,
                     "entity_types": {
                         "entity_type": "Table",
                         "entity_sub_types": ["Table"],
@@ -241,7 +243,11 @@ def test_dataset_result(mock_graph, searcher):
                     "refresh_period": "",
                     "row_count": "",
                 },
-                tags=[],
+                tags=[
+                    TagRef(
+                        display_name=subject_area.name, urn=subject_area.urn_unescaped
+                    )
+                ],
                 last_modified=None,
                 created=None,
             )
@@ -288,6 +294,7 @@ def test_bad_entity_type(mock_graph, searcher):
 
 
 def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
+    subject_area = SUBJECT_AREA_TAGS[0]
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -316,18 +323,15 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                                 },
                             ],
                         },
-                        "domain": {
-                            "domain": {
-                                "urn": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
-                                "id": "3dc18e48-c062-4407-84a9-73e23f768023",
-                                "properties": {
-                                    "name": "HMPPS",
-                                    "description": "HMPPS is an executive agency that ...",
-                                },
-                            },
-                            "editableProperties": None,
-                            "tags": None,
-                            "lastIngested": 1705990502353,
+                        "tags": {
+                            "tags": [
+                                {
+                                    "tag": {
+                                        "name": subject_area.name,
+                                        "urn": subject_area.urn_unescaped,
+                                    }
+                                }
+                            ]
                         },
                     },
                 },
@@ -376,8 +380,8 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "HMPPS",
-                    "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
+                    "domain_name": subject_area.name,
+                    "domain_id": subject_area.urn_unescaped,
                     "entity_types": {
                         "entity_type": "Table",
                         "entity_sub_types": ["Table"],
@@ -391,7 +395,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "refresh_period": "",
                     "row_count": "",
                 },
-                tags=[],
+                tags=[TagRef(display_name=subject_area.name, urn=subject_area.urn)],
                 last_modified=None,
                 created=None,
             )
@@ -1019,6 +1023,7 @@ def test_search_for_charts(mock_graph, searcher):
 
 
 def test_search_for_container(mock_graph, searcher):
+    subject_area = SUBJECT_AREA_TAGS[0]
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -1066,13 +1071,6 @@ def test_search_for_container(mock_graph, searcher):
                                 {"key": "dpia_required", "value": "False"},
                             ],
                         },
-                        "domain": {
-                            "domain": {
-                                "urn": "urn:li:domain:testdom",
-                                "id": "general",
-                                "properties": {"name": "testdom", "description": ""},
-                            }
-                        },
                         "tags": {
                             "tags": [
                                 {
@@ -1083,7 +1081,13 @@ def test_search_for_container(mock_graph, searcher):
                                             "description": "test tag",
                                         },
                                     }
-                                }
+                                },
+                                {
+                                    "tag": {
+                                        "name": subject_area.name,
+                                        "urn": subject_area.urn_unescaped,
+                                    }
+                                },
                             ]
                         },
                     },
@@ -1114,8 +1118,8 @@ def test_search_for_container(mock_graph, searcher):
                     "audience": "Internal",
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
-                    "domain_name": "testdom",
-                    "domain_id": "urn:li:domain:testdom",
+                    "domain_name": subject_area.name,
+                    "domain_id": subject_area.urn_unescaped,
                     "entity_types": {
                         "entity_type": "Database",
                         "entity_sub_types": ["Database"],
@@ -1132,7 +1136,12 @@ def test_search_for_container(mock_graph, searcher):
                     "data_summary": DataSummary(),
                     "further_information": FurtherInformation(),
                 },
-                tags=[TagRef(display_name="test", urn="urn:li:tag:test")],
+                tags=[
+                    TagRef(display_name="test", urn="urn:li:tag:test"),
+                    TagRef(
+                        display_name=subject_area.name, urn=subject_area.urn_unescaped
+                    ),
+                ],
                 last_modified=None,
                 created=None,
             )
