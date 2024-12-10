@@ -1,0 +1,26 @@
+query listSubjectAreas(
+    $filters:[FacetFilterInput!]
+    $query: String!
+    $types: [EntityType!]
+) {
+  aggregateAcrossEntities(
+      input: {query: $query, types: $types, facets: ["tags"], orFilters: [{and: $filters}]}
+  ) {
+    facets {
+      field
+      aggregations {
+        value
+        count
+        entity {
+          urn
+          ... on Tag {
+            name
+            properties {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}

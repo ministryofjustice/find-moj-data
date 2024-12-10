@@ -1,10 +1,6 @@
 import json
 import logging
-from collections import namedtuple
 from typing import Any, Sequence, Tuple
-
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
@@ -19,17 +15,18 @@ from data_platform_catalogue.client.graphql_helpers import (
 )
 from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.entities import (
+    SUBJECT_AREA_TAGS,
+    ChartEntityMapping,
+    DashboardEntityMapping,
+    DatabaseEntityMapping,
     DatahubEntityType,
     DatahubSubtype,
+    EntityRef,
     FindMoJdataEntityMapper,
-    TableEntityMapping,
-    ChartEntityMapping,
-    DatabaseEntityMapping,
-    DashboardEntityMapping,
-    PublicationDatasetEntityMapping,
-    PublicationCollectionEntityMapper,
     GlossaryTermEntityMapping,
-    EntityRef
+    PublicationCollectionEntityMapper,
+    PublicationDatasetEntityMapping,
+    TableEntityMapping,
 )
 from data_platform_catalogue.search_types import (
     DomainOption,
@@ -40,6 +37,8 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +48,7 @@ class SearchClient:
         self.graph = graph
         self.search_query = get_graphql_query("search")
         self.facets_query = get_graphql_query("facets")
-        self.list_domains_query = get_graphql_query("listDomains")
+        self.list_subject_areas_query = get_graphql_query("listSubjectAreas")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
         self.datahub_types_to_fmd_type_and_parser_mapping = {
@@ -226,21 +225,31 @@ class SearchClient:
         """
         Returns domains that can be used to filter the search results.
         """
+        filters = list(filters or [])
+
+        #
+        # FIXME: maxAggValues doesn't work, so this only returns the top 20 tags!
+        #
         formatted_filters = map_filters(filters)
         formatted_filters = formatted_filters[0]["and"]
         variables = {
             "count": count,
             "query": query,
             "filters": formatted_filters,
+            # FIXME: this should apply the same logic as the search query to apply type and subtype filters
+            # based on what we are showing in the catalogue,
+            "types": ["DATASET", "CONTAINER", "CHART", "DASHBOARD"],
         }
 
         try:
-            response = self.graph.execute_graphql(self.list_domains_query, variables)
+            response = self.graph.execute_graphql(
+                self.list_subject_areas_query, variables
+            )
         except GraphError as e:
             raise CatalogueError("Unable to execute list domains query") from e
 
-        response = response["listDomains"]
-        return self._parse_list_domains(response.get("domains"))
+        response = response["aggregateAcrossEntities"]
+        return self._parse_list_subject_areas(response["facets"])
 
     def _get_data_collection_page_results(self, response, key_for_results: str):
         """
@@ -272,20 +281,28 @@ class SearchClient:
 
         return relevant_types
 
-    def _parse_list_domains(
-        self, list_domains_result: list[dict[str, Any]]
+    def _parse_list_subject_areas(
+        self, facets: list[dict[str, Any]]
     ) -> list[DomainOption]:
-        list_domain_options: list[DomainOption] = []
+        # FIXME - tag names should be stored with the correct casing
+        lowercase_subject_area_tags = {tag.name.lower() for tag in SUBJECT_AREA_TAGS}
 
-        for domain in list_domains_result:
-            urn = domain.get("urn", "")
-            properties = domain.get("properties", {})
-            name = properties.get("name", "")
-            entities = domain.get("entities", {})
-            total = entities.get("total", 0)
+        subject_areas: list[DomainOption] = []
 
-            list_domain_options.append(DomainOption(urn, name, total))
-        return list_domain_options
+        for aggregation in facets[0]["aggregations"]:
+            count = aggregation["count"]
+            entity = aggregation["entity"]
+            urn = entity.get("urn", "")
+            properties = entity.get("properties") or {}
+            name = properties.get("name") or entity.get("name")
+
+            if name.lower() not in lowercase_subject_area_tags:
+                continue
+
+            subject_areas.append(
+                DomainOption(urn.replace(":tag:", ":domain:"), name, count)
+            )
+        return subject_areas
 
     def _parse_dataset(
         self, entity: dict[str, Any], matches, result_type: FindMoJdataEntityMapper
@@ -311,7 +328,9 @@ class SearchClient:
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, result_type.find_moj_data_type.value),
+            "entity_types": self._parse_types_and_sub_types(
+                entity, result_type.find_moj_data_type.value
+            ),
         }
         logger.debug(f"{metadata=}")
 
@@ -451,7 +470,9 @@ class SearchClient:
             "owner_email": owner.email,
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, subtype.find_moj_data_type.value),
+            "entity_types": self._parse_types_and_sub_types(
+                entity, subtype.find_moj_data_type.value
+            ),
         }
 
         metadata.update(custom_properties)

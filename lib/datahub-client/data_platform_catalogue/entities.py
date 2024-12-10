@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+from urllib.parse import quote
 
 from pydantic import BaseModel, Field
 
@@ -59,51 +60,45 @@ TableEntityMapping = FindMoJdataEntityMapper(
         DatahubSubtype.MODEL.value,
         DatahubSubtype.TABLE.value,
         DatahubSubtype.SEED.value,
-        DatahubSubtype.SOURCE.value
+        DatahubSubtype.SOURCE.value,
     ],
-    "table"
+    "table",
 )
 
 ChartEntityMapping = FindMoJdataEntityMapper(
-    FindMoJdataEntityType.CHART,
-    DatahubEntityType.CHART,
-    [],
-    "chart"
+    FindMoJdataEntityType.CHART, DatahubEntityType.CHART, [], "chart"
 )
 
 GlossaryTermEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.GLOSSARY_TERM,
     DatahubEntityType.GLOSSARY_TERM,
     [],
-    "glossary_term"
+    "glossary_term",
 )
 
 DatabaseEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.DATABASE,
     DatahubEntityType.CONTAINER,
     [DatahubSubtype.DATABASE.value],
-    "database"
+    "database",
 )
 
 DashboardEntityMapping = FindMoJdataEntityMapper(
-    FindMoJdataEntityType.DASHBOARD,
-    DatahubEntityType.DASHBOARD,
-    [],
-    "dashboard"
+    FindMoJdataEntityType.DASHBOARD, DatahubEntityType.DASHBOARD, [], "dashboard"
 )
 
 PublicationDatasetEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.PUBLICATION_DATASET,
     DatahubEntityType.DATASET,
     [DatahubSubtype.PUBLICATION_DATASET.value],
-    "publication_dataset"
+    "publication_dataset",
 )
 
 PublicationCollectionEntityMapper = FindMoJdataEntityMapper(
     FindMoJdataEntityType.PUBLICATION_COLLECTION,
     DatahubEntityType.CONTAINER,
     [DatahubSubtype.PUBLICATION_COLLECTION.value],
-    "publication_collection"
+    "publication_collection",
 )
 
 Mappers = [
@@ -113,7 +108,37 @@ Mappers = [
     DatabaseEntityMapping,
     DashboardEntityMapping,
     PublicationDatasetEntityMapping,
-    PublicationCollectionEntityMapper
+    PublicationCollectionEntityMapper,
+]
+
+
+@dataclass
+class SubjectAreaTag:
+    name: str
+
+    @property
+    def urn(self):
+        return "urn:tag:" + quote(self.name)
+
+    @property
+    def domain_urn(self):
+        return self.urn.replace(":tag:", ":domain:")
+
+
+SUBJECT_AREA_TAGS = [
+    SubjectAreaTag("Bold"),
+    SubjectAreaTag("Civil"),
+    SubjectAreaTag("Courts"),
+    SubjectAreaTag("Electronic monitoring"),
+    SubjectAreaTag("Finance"),
+    SubjectAreaTag("General"),
+    SubjectAreaTag("Interventions"),
+    SubjectAreaTag("OPG"),
+    SubjectAreaTag("People"),
+    SubjectAreaTag("Prison"),
+    SubjectAreaTag("Probation"),
+    SubjectAreaTag("Property"),
+    SubjectAreaTag("Risk"),
 ]
 
 
@@ -597,8 +622,10 @@ class Database(Entity):
     )
     # tables: list = Field(description="list of tables in the database")
 
+
 class PublicationCollection(Entity):
     """For source system publication collections"""
+
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:criminal_justice_stats"],
@@ -611,6 +638,7 @@ class PublicationCollection(Entity):
 
 class PublicationDataset(Entity):
     """For source system publication collections"""
+
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:dataset:(urn:li:dataPlatform:gov.uk,statistics2011,DEV)"],
