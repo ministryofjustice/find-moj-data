@@ -2,9 +2,6 @@ import json
 import logging
 from typing import Any, Sequence, Tuple
 
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
-
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
     get_graphql_query,
@@ -32,14 +29,16 @@ from data_platform_catalogue.entities import (
     TableEntityMapping,
 )
 from data_platform_catalogue.search_types import (
-    DomainOption,
     FacetOption,
     MultiSelectFilter,
     SearchFacets,
     SearchResponse,
     SearchResult,
     SortOption,
+    SubjectAreaOption,
 )
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -222,7 +221,7 @@ class SearchClient:
         query: str = "*",
         filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
-    ) -> list[DomainOption]:
+    ) -> list[SubjectAreaOption]:
         """
         Returns domains that can be used to filter the search results.
         """
@@ -284,11 +283,11 @@ class SearchClient:
 
     def _parse_list_subject_areas(
         self, facets: list[dict[str, Any]]
-    ) -> list[DomainOption]:
+    ) -> list[SubjectAreaOption]:
         # FIXME - tag names should be stored with the correct casing
         lowercase_subject_area_tags = {tag.name.lower() for tag in SUBJECT_AREA_TAGS}
 
-        subject_areas: list[DomainOption] = []
+        subject_areas: list[SubjectAreaOption] = []
 
         for aggregation in facets[0]["aggregations"]:
             count = aggregation["count"]
@@ -300,7 +299,7 @@ class SearchClient:
             if name.lower() not in lowercase_subject_area_tags:
                 continue
 
-            subject_areas.append(DomainOption(urn, name, count))
+            subject_areas.append(SubjectAreaOption(urn, name, count))
         return subject_areas
 
     def _parse_dataset(

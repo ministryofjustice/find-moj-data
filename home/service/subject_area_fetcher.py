@@ -1,12 +1,12 @@
-from data_platform_catalogue.search_types import DomainOption
+from data_platform_catalogue.search_types import SubjectAreaOption
 from django.core.cache import cache
 
 from .base import GenericService
 
 
-class DomainFetcher(GenericService):
+class SubjectAreaFetcher(GenericService):
     """
-    DomainFetcher implementation to fetch domains with the total number of
+    Fetch subject areas with the total number of
     associated entities from the backend.
     """
 
@@ -16,10 +16,10 @@ class DomainFetcher(GenericService):
         self.cache_timeout_seconds = 300
         self.filter_zero_entities = filter_zero_entities
 
-    def fetch(self) -> list[DomainOption]:
+    def fetch(self) -> list[SubjectAreaOption]:
         """
         Fetch a static list of options that is independent of the search query
-        and any applied filters. Values are cached for 5 seconds to avoid
+        and any applied filters. Values are cached for 5 minutes to avoid
         unnecessary queries.
         """
         result = cache.get(self.cache_key)

@@ -4,10 +4,10 @@ from typing import Any
 
 from data_platform_catalogue.entities import FindMoJdataEntityMapper, Mappers
 from data_platform_catalogue.search_types import (
-    DomainOption,
     MultiSelectFilter,
     SearchResponse,
     SortOption,
+    SubjectAreaOption,
 )
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -16,16 +16,16 @@ from django.utils.translation import pgettext
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
+from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
 
 from .base import GenericService
-from .domain_fetcher import DomainFetcher
+from .subject_area_fetcher import SubjectAreaFetcher
 
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
-        domains: list[DomainOption] = DomainFetcher().fetch()
-        self.domain_model = DomainModel(domains)
+        subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
+        self.subject_area_taxonomy = SubjectAreaTaxonomy(subject_areas)
         self.stemmer = PorterStemmer()
         self.form = form
         if self.form.is_bound:
@@ -168,7 +168,7 @@ class SearchService(GenericService):
     ) -> dict[str, str]:
         domain = self.form.cleaned_data.get("domain", "")
 
-        label = self.domain_model.get_label(domain)
+        label = self.subject_area_taxonomy.get_label(domain)
 
         return {
             label: (
