@@ -1,0 +1,17 @@
+
+{% extends "base/base.html" %}
+{% block content %}
+    <div class="govuk-width-container">
+        <h1 class="govuk-heading-l" tabindex="-1" autofocus aria-label="You are now leaving Find MoJ data and will be redirected to {{ external_domain }}">
+            You are now leaving Find MoJ data
+        </h1>
+        <p class="govuk-body"  tabindex="-1">
+            <a href="#" onclick="window.close(); return false;">Cancel and return to the previous page</a>
+            <p>Otherwise you will be redirected to {{ external_domain }}</p>
+            </p>
+            <meta http-equiv="refresh" content="5;url={{external_url}}">
+            <p>
+
+        </p>
+    </div>
+{% endblock %}

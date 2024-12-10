@@ -43,7 +43,7 @@ type_details_map = {
     ChartEntityMapping.url_formatted: ChartDetailsService,
     DashboardEntityMapping.url_formatted: DashboardDetailsService,
     PublicationCollectionEntityMapper.url_formatted: PublicationCollectionDetailsService,
-    PublicationDatasetEntityMapping.url_formatted: PublicationDatasetDetailsService
+    PublicationDatasetEntityMapping.url_formatted: PublicationDatasetDetailsService,
 }
 
 
@@ -147,3 +147,15 @@ def cookies_view(request):
         "previous_page": referer or "/",  # Provide a default fallback if none found
     }
     return render(request, "cookies.html", context)
+
+
+def redirect_view(request):
+    external_url = request.GET.get("url")
+    return render(
+        request,
+        "external_redirect.html",
+        {
+            "external_url": external_url,
+            "external_domain": urlparse(external_url).netloc,
+        },
+    )
