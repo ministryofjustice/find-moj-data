@@ -4,7 +4,7 @@ query listSubjectAreas(
     $types: [EntityType!]
 ) {
   aggregateAcrossEntities(
-      input: {query: $query, types: $types, facets: ["tags"], orFilters: [{and: $filters}]}
+      input: {searchFlags: {maxAggValues:100}, query: $query, types: $types, facets: ["tags"], orFilters: [{and: $filters}]}
   ) {
     facets {
       field
