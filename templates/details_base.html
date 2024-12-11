@@ -70,12 +70,10 @@
                 {{entity.data_last_modified | date:"jS F Y"}}
               </li>
             {% endif %}
-            {% if entity.custom_properties.data_summary.refresh_period %}
               <li>
                 <span class="govuk-!-font-weight-bold">Refresh Period:</span>
-                {{entity.custom_properties.data_summary.refresh_period}}
+                {{entity.custom_properties.data_summary.refresh_period | default:_('Not provided') }}
               </li>
-            {% endif %}
             {% if entity.custom_properties.audience %}
               <li>
                 <span class="govuk-!-font-weight-bold">Audience:</span>
