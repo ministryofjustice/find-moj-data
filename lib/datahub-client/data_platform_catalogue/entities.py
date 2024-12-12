@@ -59,51 +59,45 @@ TableEntityMapping = FindMoJdataEntityMapper(
         DatahubSubtype.MODEL.value,
         DatahubSubtype.TABLE.value,
         DatahubSubtype.SEED.value,
-        DatahubSubtype.SOURCE.value
+        DatahubSubtype.SOURCE.value,
     ],
-    "table"
+    "table",
 )
 
 ChartEntityMapping = FindMoJdataEntityMapper(
-    FindMoJdataEntityType.CHART,
-    DatahubEntityType.CHART,
-    [],
-    "chart"
+    FindMoJdataEntityType.CHART, DatahubEntityType.CHART, [], "chart"
 )
 
 GlossaryTermEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.GLOSSARY_TERM,
     DatahubEntityType.GLOSSARY_TERM,
     [],
-    "glossary_term"
+    "glossary_term",
 )
 
 DatabaseEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.DATABASE,
     DatahubEntityType.CONTAINER,
     [DatahubSubtype.DATABASE.value],
-    "database"
+    "database",
 )
 
 DashboardEntityMapping = FindMoJdataEntityMapper(
-    FindMoJdataEntityType.DASHBOARD,
-    DatahubEntityType.DASHBOARD,
-    [],
-    "dashboard"
+    FindMoJdataEntityType.DASHBOARD, DatahubEntityType.DASHBOARD, [], "dashboard"
 )
 
 PublicationDatasetEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.PUBLICATION_DATASET,
     DatahubEntityType.DATASET,
     [DatahubSubtype.PUBLICATION_DATASET.value],
-    "publication_dataset"
+    "publication_dataset",
 )
 
-PublicationCollectionEntityMapper = FindMoJdataEntityMapper(
+PublicationCollectionEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.PUBLICATION_COLLECTION,
     DatahubEntityType.CONTAINER,
     [DatahubSubtype.PUBLICATION_COLLECTION.value],
-    "publication_collection"
+    "publication_collection",
 )
 
 Mappers = [
@@ -113,7 +107,7 @@ Mappers = [
     DatabaseEntityMapping,
     DashboardEntityMapping,
     PublicationDatasetEntityMapping,
-    PublicationCollectionEntityMapper
+    PublicationCollectionEntityMapping,
 ]
 
 
@@ -595,10 +589,11 @@ class Database(Entity):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:my_database"],
     )
-    # tables: list = Field(description="list of tables in the database")
+
 
 class PublicationCollection(Entity):
     """For source system publication collections"""
+
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:criminal_justice_stats"],
@@ -611,6 +606,7 @@ class PublicationCollection(Entity):
 
 class PublicationDataset(Entity):
     """For source system publication collections"""
+
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:dataset:(urn:li:dataPlatform:gov.uk,statistics2011,DEV)"],

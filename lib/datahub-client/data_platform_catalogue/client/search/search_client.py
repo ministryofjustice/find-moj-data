@@ -1,10 +1,6 @@
 import json
 import logging
-from collections import namedtuple
 from typing import Any, Sequence, Tuple
-
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 from data_platform_catalogue.client.exceptions import CatalogueError
 from data_platform_catalogue.client.graphql_helpers import (
@@ -19,17 +15,17 @@ from data_platform_catalogue.client.graphql_helpers import (
 )
 from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.entities import (
+    ChartEntityMapping,
+    DashboardEntityMapping,
+    DatabaseEntityMapping,
     DatahubEntityType,
     DatahubSubtype,
+    EntityRef,
     FindMoJdataEntityMapper,
-    TableEntityMapping,
-    ChartEntityMapping,
-    DatabaseEntityMapping,
-    DashboardEntityMapping,
-    PublicationDatasetEntityMapping,
-    PublicationCollectionEntityMapper,
     GlossaryTermEntityMapping,
-    EntityRef
+    PublicationCollectionEntityMapping,
+    PublicationDatasetEntityMapping,
+    TableEntityMapping,
 )
 from data_platform_catalogue.search_types import (
     DomainOption,
@@ -40,6 +36,8 @@ from data_platform_catalogue.search_types import (
     SearchResult,
     SortOption,
 )
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +87,7 @@ class SearchClient:
                 DatahubSubtype.PUBLICATION_COLLECTION.value,
             ): (
                 self._parse_container,
-                PublicationCollectionEntityMapper,
+                PublicationCollectionEntityMapping,
             ),
             (
                 DatahubEntityType.DATASET.value,
@@ -311,7 +309,9 @@ class SearchClient:
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, result_type.find_moj_data_type.value),
+            "entity_types": self._parse_types_and_sub_types(
+                entity, result_type.find_moj_data_type.value
+            ),
         }
         logger.debug(f"{metadata=}")
 
@@ -451,7 +451,9 @@ class SearchClient:
             "owner_email": owner.email,
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(entity, subtype.find_moj_data_type.value),
+            "entity_types": self._parse_types_and_sub_types(
+                entity, subtype.find_moj_data_type.value
+            ),
         }
 
         metadata.update(custom_properties)

@@ -7,7 +7,7 @@ from data_platform_catalogue.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
     DatabaseEntityMapping,
-    PublicationCollectionEntityMapper,
+    PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
     TableEntityMapping,
 )
@@ -42,8 +42,8 @@ type_details_map = {
     DatabaseEntityMapping.url_formatted: DatabaseDetailsService,
     ChartEntityMapping.url_formatted: ChartDetailsService,
     DashboardEntityMapping.url_formatted: DashboardDetailsService,
-    PublicationCollectionEntityMapper.url_formatted: PublicationCollectionDetailsService,
-    PublicationDatasetEntityMapping.url_formatted: PublicationDatasetDetailsService
+    PublicationCollectionEntityMapping.url_formatted: PublicationCollectionDetailsService,
+    PublicationDatasetEntityMapping.url_formatted: PublicationDatasetDetailsService,
 }
 
 

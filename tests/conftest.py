@@ -3,23 +3,6 @@ from typing import Any, Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
-from django.conf import settings
-from django.test import Client
-from faker import Faker
-from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
-from home.service.details import DatabaseDetailsService
-from home.service.domain_fetcher import DomainFetcher
-from home.service.search import SearchService
-from home.service.search_tag_fetcher import SearchTagFetcher
-from notifications_python_client.notifications import NotificationsAPIClient
-from selenium.webdriver import ChromeOptions
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.select import Select
-
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     Chart,
@@ -28,18 +11,22 @@ from data_platform_catalogue.entities import (
     CustomEntityProperties,
     Dashboard,
     Database,
+    DatabaseEntityMapping,
     DomainRef,
     EntityRef,
-    FindMoJdataEntityMapper,
-    DatabaseEntityMapping,
-    TableEntityMapping,
-    GlossaryTermEntityMapping,
     EntitySummary,
+    FindMoJdataEntityMapper,
+    GlossaryTermEntityMapping,
     GlossaryTermRef,
     Governance,
     OwnerRef,
+    PublicationCollection,
+    PublicationCollectionEntityMapping,
+    PublicationDataset,
+    PublicationDatasetEntityMapping,
     RelationshipType,
     Table,
+    TableEntityMapping,
     TagRef,
 )
 from data_platform_catalogue.search_types import (
@@ -47,6 +34,23 @@ from data_platform_catalogue.search_types import (
     SearchResponse,
     SearchResult,
 )
+from django.conf import settings
+from django.test import Client
+from faker import Faker
+from notifications_python_client.notifications import NotificationsAPIClient
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
+
+from home.forms.search import SearchForm
+from home.models.domain_model import DomainModel
+from home.service.details import DatabaseDetailsService
+from home.service.domain_fetcher import DomainFetcher
+from home.service.search import SearchService
+from home.service.search_tag_fetcher import SearchTagFetcher
 
 fake = Faker()
 
@@ -157,6 +161,38 @@ class HomePage(Page):
         if not result:
             raise Exception(f"{domain!r} not found in {all_domain_names!r}")
         return result
+
+
+class PublicationCollectionDetailsPage(DetailsPage):
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
+    def collection_details(self):
+        return self.selenium.find_element(By.ID, "metadata-property-list")
+
+    def datasets(self):
+        return self.selenium.find_element(By.TAG_NAME, "table")
+
+    def dataset_link(self):
+        return self.selenium.find_element(
+            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
+        )
+
+
+class PublicationDatasetDetailsPage(DetailsPage):
+    def primary_heading(self):
+        return self.selenium.find_element(By.TAG_NAME, "h1")
+
+    def dataset_details(self):
+        return self.selenium.find_element(By.ID, "metadata-property-list")
+
+    def datasets(self):
+        return self.selenium.find_element(By.TAG_NAME, "table")
+
+    def dataset_link(self):
+        return self.selenium.find_element(
+            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
+        )
 
 
 class SearchResultWrapper:
@@ -295,6 +331,16 @@ def table_details_page(selenium) -> TableDetailsPage:
 
 
 @pytest.fixture
+def publication_collection_details_page(selenium) -> PublicationCollectionDetailsPage:
+    return PublicationCollectionDetailsPage(selenium)
+
+
+@pytest.fixture
+def publication_dataset_details_page(selenium) -> PublicationDatasetDetailsPage:
+    return PublicationDatasetDetailsPage(selenium)
+
+
+@pytest.fixture
 def page_titles():
     pages = [
         "Home",
@@ -332,6 +378,32 @@ def search_result_from_database(database: Database):
         name=database.name,
         fully_qualified_name=database.fully_qualified_name or "",
         description=database.description,
+        metadata={},
+    )
+
+
+def search_result_from_publication_collection(
+    publication_collection: PublicationCollection,
+):
+    return SearchResult(
+        urn=publication_collection.urn or "",
+        result_type=PublicationCollectionEntityMapping,
+        name=publication_collection.name,
+        fully_qualified_name=publication_collection.fully_qualified_name or "",
+        description=publication_collection.description,
+        metadata={},
+    )
+
+
+def search_result_from_publication_dataset(
+    publication_dataset: PublicationDataset,
+):
+    return SearchResult(
+        urn=publication_dataset.urn or "",
+        result_type=PublicationDatasetEntityMapping,
+        name=publication_dataset.name,
+        fully_qualified_name=publication_dataset.fully_qualified_name or "",
+        description=publication_dataset.description,
         metadata={},
     )
 
@@ -557,6 +629,123 @@ def generate_dashboard_metadata(
     )
 
 
+def generate_publication_collection_metadata(
+    name: str = fake.unique.name(),
+    description: str = fake.unique.paragraph(),
+    relations=None,
+    custom_properties=None,
+) -> PublicationCollection:
+    """
+    Generate a fake database metadata object
+    """
+    return PublicationCollection(
+        urn="urn:li:container:fake",
+        external_url="https://data.justice.gov.uk/prisons/criminal-jsutice/publications",
+        display_name=f"Foo.{name}",
+        name=name,
+        fully_qualified_name=f"Foo.{name}",
+        description=description,
+        relationships=relations
+        or {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(
+                        urn="urn:li:dataset:fake_publication",
+                        display_name="fake_publication",
+                    ),
+                    description="publication description",
+                    tags=[
+                        TagRef(
+                            display_name="some-tag",
+                            urn="urn:li:tag:dc_display_in_catalogue",
+                        )
+                    ],
+                    entity_type="PUBLICATION_DATASET",
+                )
+            ]
+        },
+        domain=DomainRef(display_name="LAA", urn="LAA"),
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
+            ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+            data_custodians=[
+                OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
+            ],
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        glossary_terms=[
+            GlossaryTermRef(
+                display_name="some-term",
+                urn="urn:li:glossaryTerm:Entity",
+                description="some description",
+            )
+        ],
+        metadata_last_ingested=1710426920000,
+        created=None,
+        platform=EntityRef(
+            urn="urn:li:dataPlatform:justice-data", display_name="justice-data"
+        ),
+        custom_properties=custom_properties or CustomEntityProperties(),
+    )
+
+
+def generate_publication_dataset_metadata(
+    name: str = fake.unique.name(),
+    description: str = fake.unique.paragraph(),
+    column_description: str = "description **with markdown**",
+    relations=None,
+    custom_properties=None,
+) -> PublicationDataset:
+    """
+    Generate a fake publication dataset metadata object
+    """
+    return PublicationDataset(
+        urn="urn:li:Dataset:fake",
+        external_url="https://data.justice.gov.uk/prisons/criminal-jsutice/publications",
+        display_name=f"Foo.{name}",
+        name=name,
+        fully_qualified_name=f"Foo.{name}",
+        description=description,
+        relationships=relations
+        or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
+        domain=DomainRef(display_name="LAA", urn="LAA"),
+        governance=Governance(
+            data_owner=OwnerRef(
+                display_name="", email="Contact email for the user", urn=""
+            ),
+            data_stewards=[
+                OwnerRef(display_name="", email="Contact email for the user", urn="")
+            ],
+        ),
+        tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
+        glossary_terms=[
+            GlossaryTermRef(
+                display_name="some-term",
+                urn="urn:li:glossaryTerm:Entity",
+                description="some description",
+            )
+        ],
+        metadata_last_ingested=1710426920000,
+        created=None,
+        platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
+        custom_properties=custom_properties or CustomEntityProperties(),
+    )
+
+
+@pytest.fixture(autouse=True)
+def example_publication_collection(name="example_publication_collection"):
+    return generate_publication_collection_metadata(name=name)
+
+
+@pytest.fixture(autouse=True)
+def example_publication_dataset(name="example_publication_dataset"):
+    return generate_publication_dataset_metadata(name=name)
+
+
 @pytest.fixture(autouse=True)
 def example_database(name="example_database"):
     return generate_database_metadata(name=name)
@@ -601,7 +790,14 @@ def mock_notifications_client():
 
 
 @pytest.fixture(autouse=True)
-def mock_catalogue(request, example_database, example_dashboard, example_table):
+def mock_catalogue(
+    request,
+    example_database,
+    example_dashboard,
+    example_table,
+    example_publication_collection,
+    example_publication_dataset,
+):
     if "datahub" in request.keywords:
         yield None
         return
@@ -644,6 +840,12 @@ def mock_catalogue(request, example_database, example_dashboard, example_table):
     mock_get_database_details_response(mock_catalogue, example_database)
     mock_get_dashboard_details_response(mock_catalogue, example_dashboard)
     mock_get_tags_response(mock_catalogue)
+    mock_get_publication_collection_details_response(
+        mock_catalogue, example_publication_collection
+    )
+    mock_get_publication_dataset_details_response(
+        mock_catalogue, example_publication_dataset
+    )
 
     yield mock_catalogue
 
@@ -736,6 +938,22 @@ def mock_get_glossary_terms_response(mock_catalogue):
                 result_type=GlossaryTermEntityMapping,
             ),
         ],
+    )
+
+
+def mock_get_publication_collection_details_response(
+    mock_catalogue, example_publication_collection
+):
+    mock_catalogue.get_publication_collection_details.return_value = (
+        example_publication_collection
+    )
+
+
+def mock_get_publication_dataset_details_response(
+    mock_catalogue, example_publication_dataset
+):
+    mock_catalogue.get_publication_dataset_details.return_value = (
+        example_publication_dataset
     )
 
 

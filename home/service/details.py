@@ -2,8 +2,12 @@ import os
 from urllib.parse import urlsplit
 
 from data_platform_catalogue.entities import (
-    EntityRef, RelationshipType, DatabaseEntityMapping,
-    DashboardEntityMapping, PublicationCollectionEntityMapper, PublicationDatasetEntityMapping
+    DashboardEntityMapping,
+    DatabaseEntityMapping,
+    EntityRef,
+    PublicationCollectionEntityMapping,
+    PublicationDatasetEntityMapping,
+    RelationshipType,
 )
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
@@ -222,7 +226,7 @@ class PublicationCollectionDetailsService(GenericService):
     def _get_context(self):
         context = {
             "entity": self.publication_collection_metadata,
-            "entity_type": PublicationCollectionEntityMapper.find_moj_data_type.value,
+            "entity_type": PublicationCollectionEntityMapping.find_moj_data_type.value,
             "platform_name": friendly_platform_name(
                 self.publication_collection_metadata.platform.display_name
             ),

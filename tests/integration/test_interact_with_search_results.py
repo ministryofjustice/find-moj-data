@@ -1,12 +1,14 @@
 import pytest
-
 from data_platform_catalogue.entities import TableEntityMapping
+
 from tests.conftest import (
     generate_page,
     generate_table_metadata,
     mock_get_table_details_response,
     mock_search_response,
     search_result_from_database,
+    search_result_from_publication_collection,
+    search_result_from_publication_dataset,
 )
 
 
@@ -26,6 +28,8 @@ class TestInteractWithSearchResults:
         search_page,
         details_database_page,
         table_details_page,
+        publication_collection_details_page,
+        publication_dataset_details_page,
         chromedriver_path,
         axe_version,
         page_titles,
@@ -35,6 +39,8 @@ class TestInteractWithSearchResults:
         self.search_page = search_page
         self.details_database_page = details_database_page
         self.table_details_page = table_details_page
+        self.publication_collection_details_page = publication_collection_details_page
+        self.publication_dataset_details_page = publication_dataset_details_page
         self.chromedriver_path = chromedriver_path
         self.page_titles = page_titles
         self.axe_version = axe_version
@@ -94,6 +100,49 @@ class TestInteractWithSearchResults:
             "Description:\ndescription with markdown"
         )
 
+    def test_publication_collection_search_to_details(
+        self, mock_catalogue, example_publication_collection
+    ):
+        """
+        Users can search for a publication collection and access a detail page
+        """
+        mock_search_response(
+            mock_catalogue=mock_catalogue,
+            page_results=[
+                search_result_from_publication_collection(
+                    example_publication_collection
+                )
+            ],
+            total_results=100,
+        )
+        self.start_on_the_search_page()
+        self.enter_a_query_and_submit("court timeliness")
+        item_name = self.click_on_the_first_result()
+        self.verify_i_am_on_the_publications_collections_details_page(item_name)
+        self.verify_publication_collection_details()
+        self.verify_publication_collection_datasets_listed()
+        self.click_on_publication_collection_dataset_link()
+        self.verify_i_am_on_the_publication_dataset_details_page()
+
+    def test_publication_dataset_search_to_details(
+        self, mock_catalogue, example_publication_dataset
+    ):
+        """
+        Users can search for a publication dataset and access a detail page
+        """
+        mock_search_response(
+            mock_catalogue=mock_catalogue,
+            page_results=[
+                search_result_from_publication_dataset(example_publication_dataset)
+            ],
+            total_results=100,
+        )
+        self.start_on_the_search_page()
+        self.enter_a_query_and_submit("court timeliness")
+        self.click_on_the_first_result()
+        self.verify_i_am_on_the_publication_dataset_details_page()
+        self.verify_publication_dataset_details()
+
     def start_on_the_search_page(self):
         self.selenium.get(f"{self.live_server_url}/search?new=True")
         assert self.selenium.title in self.page_titles
@@ -144,3 +193,39 @@ class TestInteractWithSearchResults:
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
         assert self.table_details_page.column_descriptions() == [column_description]
+
+    def click_on_publication_collection_dataset_link(self):
+        self.publication_collection_details_page.dataset_link().click()
+
+    def verify_publication_collection_details(self):
+        publication_collection_details = (
+            self.publication_collection_details_page.collection_details()
+        )
+        assert publication_collection_details.text
+
+    def verify_publication_dataset_details(self):
+        publication_dataset_details = (
+            self.publication_dataset_details_page.dataset_details()
+        )
+        assert publication_dataset_details.text
+
+    def verify_publication_collection_datasets_listed(self):
+        publications = self.publication_collection_details_page.datasets()
+        assert publications.text
+
+    def verify_i_am_on_the_publications_collections_details_page(self, item_name):
+        heading_text = (
+            self.publication_collection_details_page.primary_heading().text.replace(
+                " Publication collection", ""
+            )
+        )
+        assert heading_text == self.selenium.title.split("-")[0].strip()
+        assert item_name.endswith(heading_text)
+
+    def verify_i_am_on_the_publication_dataset_details_page(self):
+        heading_text = (
+            self.publication_dataset_details_page.primary_heading().text.replace(
+                " Publication dataset", ""
+            )
+        )
+        assert heading_text == self.selenium.title.split("-")[0].strip()
