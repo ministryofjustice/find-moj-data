@@ -79,3 +79,4 @@ Current swicthes and default settings:
 
 - `search-sort-radio-buttons` off - switches on/off radio selection buttons for sort order of search results.
 - `display-result-tags` off - switches on/off the display of tags in search and results pages
+- `show_is_nullable_in_table_details_column` - swicthes on/off the `Is Nullable` column in the table details page
