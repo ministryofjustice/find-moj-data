@@ -28,12 +28,14 @@ def send(
 
     personalisation = {
         "assetOwner": (
-            issue.data_custodian_email if issue.data_custodian_email else "Data Catalog Team"
+            issue.data_custodian_email
+            if issue.data_custodian_email
+            else "Data Catalog Team"
         ),
         "userEmail": issue.created_by.email if issue.created_by else "",
         "assetName": issue.entity_name,
         "userMessage": issue.additional_info,
-        "assetUrl": issue.entity_url,
+        "assetUrl": issue.formatted_entity_url,
     }
 
     reference = str(issue.id)
