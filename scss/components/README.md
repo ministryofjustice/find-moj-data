@@ -128,3 +128,44 @@ The masthead is an extended header with search included.
 ### Similar components elsewhere
 
 - [GOV.UK Design system documentation](https://github.com/alphagov/govuk-design-system/blob/b3223714d8f2e9564b7e9d2ca703a3f902bf1ce8/src/stylesheets/components/_masthead.scss)
+
+## Table component
+This enhances the [GOV.UK table component](https://design-system.service.gov.uk/components/table/), making tables on result details pages responsive when loaded in small resolutions.
+
+### Expected behaviours
+
+- At high zooms table contents are wrapped and transposed or rotated so all information is still visible. With headings becoming part of the table rows.
+
+### Usage
+```html
+<table class="govuk-table app-table-responsive">
+  <caption class="govuk-table__caption govuk-table__caption--m">Table schema</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Column name</th>
+      <th scope="col" class="govuk-table__header">"Description</th>
+      <th scope="col" class="govuk-table__header">Type</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body app-table-responsive__body">
+    {% for column in entity.column_details %}
+      <tr class="govuk-table__row app-table-responsive__row">
+        <td class="govuk-table__cell"><span class="app-table-responsive__heading">Column name:</span>{{column.display_name}}</td>
+        <td class="govuk-table__cell column-description"><span class="app-table-responsive__heading">Description:</span>
+        {% if column.description %}
+        <div>
+          {{column.description|default:''|markdown:3}}
+        </div>
+        {% else %}
+        <p class="govuk-visually-hidden">A description for {{column.display_name}} does not exist</p>
+        {% endif %}
+        </td>
+        <td class="govuk-table__cell"><span class="app-table-responsive__heading">Type:</span>{{column.type|title}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+```
+
+### Similar components elsewhere
+- [NHS UK frontend](https://github.com/nhsuk/nhsuk-frontend/blob/e8928ebe19d39fe6137a5ca046217f9ac043b29b/packages/components/tables/_tables.scss#L80)
