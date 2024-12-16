@@ -309,9 +309,6 @@ class SearchClient:
             "total_parents": entity.get("relationships", {}).get("total", 0),
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(
-                entity, result_type.find_moj_data_type.value
-            ),
         }
         logger.debug(f"{metadata=}")
 
@@ -451,9 +448,6 @@ class SearchClient:
             "owner_email": owner.email,
             "domain_name": domain.display_name,
             "domain_id": domain.urn,
-            "entity_types": self._parse_types_and_sub_types(
-                entity, subtype.find_moj_data_type.value
-            ),
         }
 
         metadata.update(custom_properties)
@@ -471,11 +465,3 @@ class SearchClient:
             glossary_terms=terms,
             last_modified=modified,
         )
-
-    def _parse_types_and_sub_types(self, entity: dict, entity_type: str) -> dict:
-        entity_sub_type = (
-            entity.get("subTypes", {}).get("typeNames", [entity_type])
-            if entity.get("subTypes") is not None
-            else [entity_type]
-        )
-        return {"entity_type": entity_type, "entity_sub_types": entity_sub_type}
