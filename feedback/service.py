@@ -35,7 +35,7 @@ def send(
         "userEmail": issue.created_by.email if issue.created_by else "",
         "assetName": issue.entity_name,
         "userMessage": issue.additional_info,
-        "assetUrl": issue.formatted_entity_url,
+        "assetUrl": issue.encoded_entity_url,
     }
 
     reference = str(issue.id)

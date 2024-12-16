@@ -1,4 +1,4 @@
-from urllib.parse import quote, urlparse, urlunparse
+from urllib.parse import ParseResult, quote, urlparse, urlunparse
 
 from django.conf import settings
 from django.core.validators import MinLengthValidator
@@ -59,10 +59,10 @@ class Issue(models.Model):
     data_custodian_email = models.CharField(max_length=250)
 
     @property
-    def formatted_entity_url(self):
-        parsed_url = urlparse(self.entity_url)
-        encoded_path = quote(parsed_url.path)
-        formatted_entity_url = urlunparse(
+    def encoded_entity_url(self):
+        parsed_url: ParseResult = urlparse(self.entity_url)
+        encoded_path: str = quote(parsed_url.path)
+        encoded_entity_url: str = urlunparse(
             (
                 parsed_url.scheme,
                 parsed_url.netloc,
@@ -72,4 +72,4 @@ class Issue(models.Model):
                 parsed_url.fragment,
             )
         )
-        return formatted_entity_url
+        return encoded_entity_url
