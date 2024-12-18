@@ -81,11 +81,9 @@ COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} feedback ./feedback
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} home ./home
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} templates ./templates
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} lib ./lib
-COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} locale ./locale
 
 # Run django commands
 RUN python manage.py collectstatic --noinput
-RUN python manage.py compilemessages
 
 EXPOSE 8000
 

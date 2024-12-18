@@ -6,7 +6,7 @@ ENV := local
 all: build
 
 # Setup the application
-build: install_deps set_env $(ENV_FILE) assets migrate setup_waffle_switches messages
+build: install_deps set_env $(ENV_FILE) assets migrate setup_waffle_switches
 
 # Install Python dependencies
 install_python_deps:
@@ -56,14 +56,6 @@ setup_waffle_switches:
 	poetry run python manage.py waffle_switch display-result-tags off --create
 	poetry run python manage.py waffle_switch show_is_nullable_in_table_details_column off --create
 
-# Run makemessages
-messages:
-	poetry run python manage.py makemessages --locale=en --ignore venv
-	poetry run python manage.py compilemessages --ignore venv
-
-compilemessages:
-	poetry run python manage.py compilemessages --ignore venv
-
 # Run the application
 run:
 	poetry run python manage.py runserver
@@ -98,4 +90,4 @@ clean:
 lint:
 	pre-commit run --all-files
 
-.PHONY: all build install_deps set_env assets migrate setup_waffle_switches messages compilemessages run test unit integration clean lint
+.PHONY: all build install_deps set_env assets migrate setup_waffle_switches run test unit integration clean lint
