@@ -15,7 +15,6 @@ from data_platform_catalogue.search_types import DomainOption
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_control
 
 from home.forms.search import SearchForm
@@ -53,7 +52,7 @@ def home_view(request):
     Displys only domains that have entities tagged for display in the catalog.
     """
     domains: list[DomainOption] = DomainFetcher().fetch()
-    context = {"domains": domains, "h1_value": _("Home")}
+    context = {"domains": domains, "h1_value": "Home"}
     return render(request, "home.html", context)
 
 

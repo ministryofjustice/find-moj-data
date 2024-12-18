@@ -11,8 +11,6 @@ from data_platform_catalogue.search_types import (
 )
 from django.conf import settings
 from django.core.paginator import Paginator
-from django.utils.translation import gettext as _
-from django.utils.translation import pgettext
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
@@ -187,7 +185,7 @@ class SearchService(GenericService):
             "results": self.results.page_results,
             "malformed_result_urns": self.results.malformed_result_urns,
             "highlighted_results": self.highlighted_results.page_results,
-            "h1_value": pgettext("Page title", "Search MoJ data"),
+            "h1_value": "Search MoJ data",
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(  # type: ignore
                 self.page, on_each_side=2, on_ends=1
@@ -236,14 +234,14 @@ class SearchService(GenericService):
 
     def _get_match_reason_display_names(self):
         return {
-            "id": _("ID"),
-            "urn": _("URN"),
+            "id": "ID",
+            "urn": "URN",
             "domains": "Subject area",
-            "title": _("Title"),
-            "name": _("Name"),
-            "description": _("Description"),
-            "fieldPaths": _("Column name"),
-            "fieldDescriptions": _("Column description"),
-            "dc_where_to_access_dataset": _("Available on"),
-            "qualifiedName": _("Qualified name"),
+            "title": "Title",
+            "name": "Name",
+            "description": "Description",
+            "fieldPaths": "Column name",
+            "fieldDescriptions": "Column description",
+            "dc_where_to_access_dataset": "Available on",
+            "qualifiedName": "Qualified name",
         }

@@ -1,8 +1,6 @@
 from itertools import groupby
 from sys import maxsize
 
-from django.utils.translation import gettext as _
-
 from .base import GenericService
 
 GLOSSARY_ORDERING = [
@@ -58,6 +56,6 @@ class GlossaryService(GenericService):
             else:
                 parent_term["description"] = ""
 
-        context = {"results": sorted_total_results, "h1_value": _("Glossary")}
+        context = {"results": sorted_total_results, "h1_value": "Glossary"}
 
         return context
