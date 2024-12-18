@@ -11,8 +11,6 @@ from data_platform_catalogue.search_types import (
 )
 from django.conf import settings
 from django.core.paginator import Paginator
-from django.utils.translation import gettext as _
-from django.utils.translation import pgettext
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
@@ -45,11 +43,11 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
-    def _build_entity_types(self, entity_types: list[str]) -> tuple[FindMoJdataEntityMapper, ...]:
+    def _build_entity_types(
+        self, entity_types: list[str]
+    ) -> tuple[FindMoJdataEntityMapper, ...]:
         default_entities = tuple(
-            Mapper
-            for Mapper in Mappers
-            if Mapper.datahub_type.value != "GLOSSARY_TERM"
+            Mapper for Mapper in Mappers if Mapper.datahub_type.value != "GLOSSARY_TERM"
         )
         chosen_entities = tuple(
             Mapper
@@ -128,7 +126,7 @@ class SearchService(GenericService):
             tags = self.form.cleaned_data.get("tags", [])
             remove_filter_hrefs = {}
             if domain:
-                remove_filter_hrefs[_("Domain")] = self._generate_domain_clear_href()
+                remove_filter_hrefs["Subject area"] = self._generate_domain_clear_href()
             if entity_types:
                 entity_types_clear_href = {}
                 for entity_type in entity_types:
@@ -137,7 +135,7 @@ class SearchService(GenericService):
                             filter_name="entity_types", filter_value=entity_type
                         )
                     )
-                remove_filter_hrefs[_("Entity Types")] = entity_types_clear_href
+                remove_filter_hrefs["Entity types"] = entity_types_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}
@@ -147,7 +145,7 @@ class SearchService(GenericService):
                             filter_name="where_to_access", filter_value=access
                         )
                     )
-                remove_filter_hrefs[_("Where To Access")] = where_to_access_clear_href
+                remove_filter_hrefs["Where to access"] = where_to_access_clear_href
 
             if tags:
                 tags_clear_href = {}
@@ -155,7 +153,7 @@ class SearchService(GenericService):
                     tags_clear_href[tag] = self.form.encode_without_filter(
                         filter_name="tags", filter_value=tag
                     )
-                remove_filter_hrefs[_("Tags")] = tags_clear_href
+                remove_filter_hrefs["Tags"] = tags_clear_href
         else:
             remove_filter_hrefs = None
 
@@ -187,7 +185,7 @@ class SearchService(GenericService):
             "results": self.results.page_results,
             "malformed_result_urns": self.results.malformed_result_urns,
             "highlighted_results": self.highlighted_results.page_results,
-            "h1_value": pgettext("Page title", "Search MoJ data"),
+            "h1_value": "Search MoJ data",
             "page_obj": self.paginator.get_page(self.page),
             "page_range": self.paginator.get_elided_page_range(  # type: ignore
                 self.page, on_each_side=2, on_ends=1
@@ -236,14 +234,14 @@ class SearchService(GenericService):
 
     def _get_match_reason_display_names(self):
         return {
-            "id": _("ID"),
-            "urn": _("URN"),
-            "domains": _("Domain"),
-            "title": _("Title"),
-            "name": _("Name"),
-            "description": _("Description"),
-            "fieldPaths": _("Column name"),
-            "fieldDescriptions": _("Column description"),
-            "dc_where_to_access_dataset": _("Available on"),
-            "qualifiedName": _("Qualified name"),
+            "id": "ID",
+            "urn": "URN",
+            "domains": "Subject area",
+            "title": "Title",
+            "name": "Name",
+            "description": "Description",
+            "fieldPaths": "Column name",
+            "fieldDescriptions": "Column description",
+            "dc_where_to_access_dataset": "Available on",
+            "qualifiedName": "Qualified name",
         }

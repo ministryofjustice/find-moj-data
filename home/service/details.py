@@ -11,7 +11,6 @@ from data_platform_catalogue.entities import (
 )
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import URLValidator
-from django.utils.translation import gettext as _
 
 from ..urns import PlatformUrns
 from .base import GenericService
@@ -77,7 +76,7 @@ class DatabaseDetailsService(GenericService):
     def _get_context(self):
         context = {
             "entity": self.database_metadata,
-            "entity_type": _("Database"),
+            "entity_type": "Database",
             "tables": sorted(
                 self.entities_in_database,
                 key=lambda d: d.entity_ref.display_name,
@@ -163,7 +162,7 @@ class ChartDetailsService(GenericService):
     def _get_context(self):
         return {
             "entity": self.chart_metadata,
-            "entity_type": _("Chart"),
+            "entity_type": "Chart",
             "platform_name": friendly_platform_name(
                 self.chart_metadata.platform.display_name
             ),

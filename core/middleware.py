@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.http import Http404
 from django.shortcuts import render
-from django.utils.translation import gettext as _
 
 logger = logging.getLogger(__name__)
 
@@ -25,21 +24,21 @@ class CustomErrorMiddleware:
             return render(
                 request,
                 "500_datahub_unavailable.html",
-                context={"h1_value": _("Catalogue service unavailable")},
+                context={"h1_value": "Catalogue service unavailable"},
                 status=500,
             )
         elif isinstance(exception, BadRequest):
             return render(
                 request,
                 "400.html",
-                context={"h1_value": _("Bad request")},
+                context={"h1_value": "Bad request"},
                 status=400,
             )
         elif isinstance(exception, Http404):
             return render(
                 request,
                 "404.html",
-                context={"h1_value": _("Asset does not exist")},
+                context={"h1_value": "Asset does not exist"},
                 status=404,
             )
 
@@ -47,6 +46,6 @@ class CustomErrorMiddleware:
             return render(
                 request,
                 "500.html",
-                context={"h1_value": _("There is a problem with this service")},
+                context={"h1_value": "There is a problem with this service"},
                 status=500,
             )

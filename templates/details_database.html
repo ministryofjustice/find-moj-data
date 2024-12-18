@@ -1,17 +1,16 @@
 {% extends "details_base.html" %}
 {% load markdown %}
-{% load i18n %}
 
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       {% if tables %}
         <table class="govuk-table app-table-responsive">
-          <caption class="govuk-table__caption govuk-table__caption--m">{% translate "Database content" %}</caption>
+          <caption class="govuk-table__caption govuk-table__caption--m">Database content</caption>
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header app-custom-class">{% translate "Table name" %}</th>
-              <th scope="col" class="govuk-table__header app-custom-class">{% translate "Description" %}</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Table name</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Description</th>
             </tr>
           </thead>
           <tbody class="govuk-table__body app-table-responsive__body">
@@ -41,12 +40,12 @@
         </table>
         <form action="{% url 'home:details_csv' result_type='database' urn=entity.urn %}">
           <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-            {% translate 'Download table descriptions (CSV format)' %}
+            Download table descriptions (CSV format)
           </button>
         </form>
       {% else %}
-        <h2 class="govuk-heading-m">{% translate "Database content" %}</h2>
-        <p class="govuk-body">{% translate "This database is missing table information." %}</p>
+        <h2 class="govuk-heading-m">Database content</h2>
+        <p class="govuk-body">This database is missing table information.</p>
       {% endif %}
     </div>
   </div>

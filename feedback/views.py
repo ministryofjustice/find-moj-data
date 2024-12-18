@@ -2,7 +2,6 @@ import logging
 
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.utils.translation import gettext as _
 
 from .forms import FeedbackForm, IssueForm
 from .service import send_notifications
@@ -26,7 +25,7 @@ def feedback_form_view(request) -> HttpResponse:
         request,
         "feedback.html",
         {
-            "h1_value": _("Give feedback on Find MOJ data"),
+            "h1_value": "Give feedback on Find MOJ data",
             "form": form,
         },
     )
@@ -36,7 +35,7 @@ def thank_you_view(request) -> HttpResponse:
     return render(
         request,
         "thanks.html",
-        {"h1_value": _("Thank you for your feedback")},
+        {"h1_value": "Thank you for your feedback"},
     )
 
 
@@ -70,18 +69,20 @@ def report_issue_view(request) -> HttpResponse:
                 request,
                 "report_issue.html",
                 {
-                    "h1_value": _("Report an issue with %s")
+                    "h1_value": "Report an issue with %s"
                     % (request.session.get("entity_name")),
                     "form": form,
                 },
             )
     else:
-        entity_name = _(request.GET.get("entity_name"))
-        entity_url = _(request.GET.get("entity_url"))
+        entity_name = request.GET.get("entity_name")
+        entity_url = request.GET.get("entity_url")
 
         request.session["entity_name"] = entity_name
         request.session["entity_url"] = entity_url
-        request.session["data_custodian_email"] = _(request.GET.get("data_custodian_email", ""))
+        request.session["data_custodian_email"] = request.GET.get(
+            "data_custodian_email", ""
+        )
 
         form = IssueForm()
 
@@ -89,7 +90,7 @@ def report_issue_view(request) -> HttpResponse:
         request,
         "report_issue.html",
         {
-            "h1_value": _("Report an issue with %s") % (entity_name),
+            "h1_value": f"Report an issue with {entity_name}",
             "form": form,
             "entity_name": entity_name,
             "entity_url": entity_url,

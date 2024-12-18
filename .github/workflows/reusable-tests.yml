@@ -79,9 +79,6 @@ jobs:
           poetry install --no-interaction --no-root
           sudo apt-get install gettext
 
-      - name: Make compilemessages
-        run: make compilemessages
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

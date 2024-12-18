@@ -1,6 +1,5 @@
 {% extends "details_base.html" %}
 {% load markdown %}
-{% load i18n %}
 {% load waffle_tags %}
 
 {% block extra_details %}
@@ -8,14 +7,14 @@
     <div class="govuk-grid-column-full">
       {% if entity.column_details %}
         <table class="govuk-table app-table-responsive">
-          <caption class="govuk-table__caption govuk-table__caption--m">{% translate "Table schema" %}</caption>
+          <caption class="govuk-table__caption govuk-table__caption--m">Table schema</caption>
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header">{% translate "Column name" %}</th>
-              <th scope="col" class="govuk-table__header">{% translate "Description" %}</th>
-              <th scope="col" class="govuk-table__header">{% translate "Type" %}</th>
+              <th scope="col" class="govuk-table__header">Column name</th>
+              <th scope="col" class="govuk-table__header">Description</th>
+              <th scope="col" class="govuk-table__header">Type</th>
               {% switch 'show_is_nullable_in_table_details_column' %}
-                <th scope="col" class="govuk-table__header">{% translate "Is Nullable" %}</th>
+                <th scope="col" class="govuk-table__header">Is nullable</th>
               {% endswitch %}
             </tr>
           </thead>
@@ -34,7 +33,7 @@
                 </td>
                 <td class="govuk-table__cell"><span class="app-table-responsive__heading">Type:</span>{{column.type|title}}</td>
                 {% switch 'show_is_nullable_in_table_details_column' %}
-                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Is Nullable:</span>{{column.nullable|yesno:"Yes,No,"}}</td>
+                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Is nullable:</span>{{column.nullable|yesno:"Yes,No,"}}</td>
                 {% endswitch %}
               </tr>
             {% endfor %}
@@ -43,21 +42,21 @@
 
         <form action="{% url 'home:details_csv' result_type='table' urn=entity.urn %}">
           <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-            {% translate 'Download table schema (CSV format)' %}
+            Download table schema (CSV format)
           </button>
         </form>
       {% else %}
-        <h2 class="govuk-heading-m">{% translate "Table schema" %}</h2>
-        <p class="govuk-body">{% translate "The schema for this table is not available." %}</p>
+        <h2 class="govuk-heading-m">Table schema</h2>
+        <p class="govuk-body">The schema for this table is not available.</p>
       {% endif %}
       {% if has_lineage %}
-        <h2 class="govuk-heading-m">{% translate "Lineage" %}</h2>
+        <h2 class="govuk-heading-m">Lineage</h2>
         <div class="govuk-body-m" >
-          {% translate "See where this data came from and how it is used in other tables." %}
+          See where this data came from and how it is used in other tables.
         </div class="govuk-body-m">
         <div class="govuk-body">
           <a href="{{lineage_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">
-            {% translate "View lineage in DataHub (opens in new tab)" %}
+            View lineage in DataHub (opens in new tab)
           </a>
         </div>
       {% endif %}

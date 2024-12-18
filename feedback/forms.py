@@ -1,6 +1,5 @@
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea, TextInput
-from django.utils.translation import gettext as _
 
 from .models import Feedback, Issue
 
@@ -55,8 +54,8 @@ class IssueForm(forms.ModelForm):
         widget=RadioSelect(
             attrs={"class": "govuk-radios__input", "required": "True"},
         ),
-        choices=(("Yes", _("Yes")), ("No", _("No"))),
+        choices=(("Yes", "Yes"), ("No", "No")),
         coerce=lambda x: x == "Yes",
         required=True,
-        label=_("Would you like us to email you a copy of this report?"),
+        label="Would you like us to email you a copy of this report?",
     )

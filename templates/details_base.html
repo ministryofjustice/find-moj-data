@@ -3,7 +3,6 @@
 {% load markdown %}
 {% load humanize %}
 {% load waffle_tags %}
-{% load i18n %}
 {% load page_title %}
 {% load format_timesince %}
 
@@ -17,7 +16,7 @@
   <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">{% translate "Search" %}</a>
+        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
       </li>
       {% if parent_entity %}
         <li class="govuk-breadcrumbs__list-item">
@@ -45,13 +44,13 @@
     <div class="govuk-grid-column-two-thirds">
       <div class="app-summary-card">
         <h2 class="govuk-heading-s govuk-!-margin-top-3">
-          {% translate "Description" %}
+          Description
         </h2>
         <div class="govuk-body">
           {% if entity.description %}
             {{entity.description|markdown:3}}
           {% else %}
-            {% translate "No description available." %}
+            No description available.
           {% endif %}
         </div>
         {% block extra_description %}
@@ -60,19 +59,19 @@
           <ul class="govuk-list govuk-body" id="metadata-property-list">
             {% if entity.created %}
               <li>
-                <span class="govuk-!-font-weight-bold">{% translate "First created:" %}</span>
+                <span class="govuk-!-font-weight-bold">Data first created:</span>
                 {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
               </li>
             {% endif %}
             {% if entity.data_last_modified and entity.platform.urn != PlatformUrns.CADET %}
               <li>
-                <span class="govuk-!-font-weight-bold">{% translate "Last updated:" %}</span>
+                <span class="govuk-!-font-weight-bold">Data last updated:</span>
                 {{entity.data_last_modified | date:"jS F Y"}}
               </li>
             {% endif %}
               <li>
-                <span class="govuk-!-font-weight-bold">Refresh Period:</span>
-                {{entity.custom_properties.data_summary.refresh_period | default:_('Not provided') }}
+                <span class="govuk-!-font-weight-bold">Refresh period:</span>
+                {{entity.custom_properties.data_summary.refresh_period | default:'Not provided' }}
               </li>
             {% if entity.custom_properties.audience %}
               <li>
@@ -87,8 +86,8 @@
               </li>
             {% endif %} -->
             <li>
-              <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
-              {{entity.domain.display_name | default:_('Not provided') }}
+              <span class="govuk-!-font-weight-bold">Subject area</span>
+              {{entity.domain.display_name | default:'Not provided' }}
             </li>
             {% switch 'display-result-tags' %}
               {% if entity.tags_to_display %}

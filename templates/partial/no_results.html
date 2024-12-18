@@ -1,14 +1,9 @@
-{% load i18n %}
-<h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{% translate "No results found" %}</h2>
+<h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">No results found</h2>
 {% if number_of_words > 1 %}
     {# Search tips for long queries #}
-    {% blocktranslate trimmed %}
-        <p>Try including less words in your search query.</p>
-        <p>If you want to include results for multiple things, separate words with pipe characters. For example: <strong>prisons | probation</strong> matches data mentioning "prisons" OR "probation".</p>
-    {% endblocktranslate %}
+    <p>Try including less words in your search query.</p>
+    <p>If you want to include results for multiple things, separate words with pipe characters. For example: <strong>prisons | probation</strong> matches data mentioning "prisons" OR "probation".</p>
 {% else %}
     {# General search tips #}
-    {% blocktranslate trimmed %}
-        <p>If you didn't find what you are looking for, make sure that all words are spelled correctly.</p>
-    {% endblocktranslate %}
+    <p>If you didn't find what you are looking for, make sure that all words are spelled correctly.</p>
 {% endif %}

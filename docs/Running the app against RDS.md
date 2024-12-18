@@ -141,21 +141,3 @@ and run `npm install -g chromedriver chromedriver@latest` to install the latest 
 
 If making changes to the scss, to ensure your changes are reflected in local deployments, run:
 `make build` to update the css files.
-
-## Copy editing
-
-Find MoJ data is only available in english, but we use django's translation system
-so that we can review and edit the copy in one place,
-[the message file](./locale/en/LC_MESSAGES/django.po).
-
-When adding new copy to the service, developers should mark it up with
-[translation strings](https://docs.djangoproject.com/en/5.0/topics/i18n/translation/),
-before running `make messages` (or `manage.py makemessages`).
-
-To change a message in github:
-
-1. Open the [message file](./locale/en/LC_MESSAGES/django.po) in github
-2. Click the pencil icon (edit this file)
-3. Change the `msgstring` values (leave `msgid` unchanged)
-4. Click the green "Commit changes" button
-5. Add a description of your changes, and then click "Propose changes"
