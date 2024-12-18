@@ -1,17 +1,16 @@
 {% extends "details_base.html" %}
 {% load markdown %}
-{% load i18n %}
 
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       {% if charts %}
         <table class="govuk-table app-table-responsive">
-          <caption class="govuk-table__caption govuk-table__caption--m">{% translate "Dashboard content" %}</caption>
+          <caption class="govuk-table__caption govuk-table__caption--m">Dashboard content</caption>
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header app-custom-class">{% translate "Chart name" %}</th>
-              <th scope="col" class="govuk-table__header app-custom-class">{% translate "Description" %}</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Chart name</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Description</th>
             </tr>
           </thead>
           <tbody class="govuk-table__body app-table-responsive__body">
@@ -35,22 +34,22 @@
         </table>
         <form action="{% url 'home:details_csv' result_type='dashboard' urn=entity.urn %}">
           <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-            {% translate 'Download chart descriptions (CSV format)' %}
+            Download chart descriptions (CSV format)
           </button>
         </form>
       {% else %}
-        <h2 class="govuk-heading-m">{% translate "Dashboard content" %}</h2>
-        <p class="govuk-body">{% translate "This dashboard is missing chart information." %}</p>
+        <h2 class="govuk-heading-m">Dashboard content</h2>
+        <p class="govuk-body">This dashboard is missing chart information.</p>
       {% endif %}
     </div>
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-heading-s govuk-!-margin-top-3">
-        {% translate "Access this data" %}
+        Access this data
       </h2>
       <div class="govuk-body">
-        <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ platform_name }}</a> {% translate "(opens in new tab)" %}
+        <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ platform_name }}</a> (opens in new tab)
       </div>
     </div>
   </div>

@@ -1,7 +1,6 @@
 {% load markdown %}
 {% load humanize %}
 {% load waffle_tags %}
-{% load i18n %}
 
 <div id="search-results">
   {% for result in highlighted_results %}
@@ -22,12 +21,12 @@
         {% endif %}
         <ul class="govuk-list govuk-body">
           <li>
-            <span class="govuk-!-font-weight-bold">{% translate "Domain:" %}</span>
-            <span>{{result.metadata.domain_name | default:_('Not provided')}}</span>
+            <span class="govuk-!-font-weight-bold">Subject area:</span>
+            <span>{{result.metadata.domain_name | default:'Not provided'}}</span>
           </li>
           {% if result.result_type.name == "TABLE" %}
             <li>
-              <span class="govuk-!-font-weight-bold">{% translate "Database:" %}</span>
+              <span class="govuk-!-font-weight-bold">Database:</span>
               <span>{{result.parent_entity.display_name}}</span>
             </li>
           {% endif %}
@@ -47,7 +46,7 @@
           {% with match_reasons=result.matches|lookup:readable_match_reasons|join:", " %}
             {% if match_reasons %}
               <li>
-                <span class="govuk-!-font-weight-bold">{% translate "Matched fields:" %}</span>
+                <span class="govuk-!-font-weight-bold">Matched fields:</span>
                 <span>{{ match_reasons }}</span>
               </li>
             {% endif %}

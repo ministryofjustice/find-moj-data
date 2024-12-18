@@ -1,14 +1,13 @@
 {% extends "details_base.html" %}
-{% load i18n %}
 
 {% block extra_details %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h2 class="govuk-heading-s govuk-!-margin-top-3">
-                {% translate "Access this data" %}
+                Access this data
             </h2>
             <div class="govuk-body">
-                <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% blocktranslate with display_name=entity.display_name platform_name=platform_name %}"{{ display_name }}" on {{platform_name}}{% endblocktranslate %}</a> {% translate '(opens in new tab)' %}
+                <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">"{{ entity.display_name }}" on {{platform_name}}</a> (opens in new tab)
             </div>
         </div>
     </div>

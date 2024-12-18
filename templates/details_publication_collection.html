@@ -1,6 +1,5 @@
 {% extends "details_base.html" %}
 {% load markdown %}
-{% load i18n %}
 
 {% block extra_details %}
 
@@ -8,11 +7,11 @@
     <div class="govuk-grid-column-full">
       {% if publications %}
         <table class="govuk-table app-table-responsive">
-          <caption class="govuk-table__caption govuk-table__caption--m">{% translate "Publication Collection content" %}</caption>
+          <caption class="govuk-table__caption govuk-table__caption--m">Publication Collection content</caption>
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header app-custom-class">{% translate "Publication" %}</th>
-              <th scope="col" class="govuk-table__header app-custom-class">{% translate "Description" %}</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Publication</th>
+              <th scope="col" class="govuk-table__header app-custom-class">Description</th>
             </tr>
           </thead>
           <tbody class="govuk-table__body app-table-responsive__body">
@@ -41,16 +40,16 @@
           </tbody>
         </table>
       {% else %}
-        <h2 class="govuk-heading-m">{% translate "Publication Collection content" %}</h2>
-        <p class="govuk-body">{% translate "This Publication Collection is missing Publications information." %}</p>
+        <h2 class="govuk-heading-m">Publication Collection content</h2>
+        <p class="govuk-body">This Publication Collection is missing Publications information.</p>
       {% endif %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h2 class="govuk-heading-s govuk-!-margin-top-3">
-                {% translate "Access this data" %}
+                Access this data
             </h2>
             <div class="govuk-body">
-                <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% blocktranslate with display_name=entity.display_name platform_name=platform_name %}"{{ display_name }}" on {{platform_name}}{% endblocktranslate %}</a> {% translate '(opens in new tab)' %}
+                <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">"{{ entity.display_name }}" on {{platform_name}}</a> (opens in new tab)
             </div>
         </div>
     </div>
