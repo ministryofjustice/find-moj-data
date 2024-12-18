@@ -9,9 +9,12 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl app-masthead__title">{% translate "Discover data from across the Ministry of Justice" %}</h1>
-            <p class="govuk-body-l" style="color: white;"> {% translate "service_description" %} </p>
+            <p class="govuk-body-l" style="color: white;">
+              Find MoJ Data shows you what data exists and how to access it.
+              The service does not contain the data itself, only metadata – data which describes our assets. <a aria-label="Learn more about Find MoJ data" href="https://user-guide.find-moj-data.service.justice.gov.uk/">Learn more</a>
+            </p>
 
-            <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0" 
+            <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0"
               onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
               <div
                 class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
@@ -41,7 +44,7 @@
     <div class="govuk-main-wrapper govuk-main-wrapper--l">
       <div class="govuk-width-container app-width-container">
         {% if domains %}
-          <h2 id="browse-by-domain" class="govuk-heading-l">{% translate "Browse by domain" %}</h2>
+          <h2 id="browse-by-domain" class="govuk-heading-l">Browse by subject area</h2>
           <ul id="domain-list" class="govuk-list govuk-list--bullet">
             {% for domain in domains  %}
               <li><a aria-label="Browse data for {{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})" href="{% url 'home:search' %}?domain={{domain.urn}}">{{domain.name}} ({{domain.total}} result{{ domain.total|pluralize }})</a></li>

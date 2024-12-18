@@ -1,26 +1,26 @@
 {% load i18n %}
 
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Access requirements" %}</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Request access</h2>
   <p id="request_access" class="govuk-body">
 
     {% if access_requirements %}
       {% if is_access_url %}
-        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{% translate "Click link for access information (opens in new tab)" %}</a>
+        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Select this link for access information (opens in new tab)</a>
       {% else %}
         {{ access_requirements }}
       {% endif %}
     {% elif governance.data_custodians or governance.data_owner.email %}
-      {% translate "Please contact the data custodian for access information." %}
+      Contact the data custodian to request access.
     {% else %}
-      {% translate "Not provided" %}
+      Not provided
     {% endif %}
   </p>
 </div>
 <!-- placeholder until we have more contact channels than just slack -->
 
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Contact channels for questions" %}</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Ask a question</h2>
   <ul id="contact_channels" class="govuk-list">
     {% if further_information.dc_slack_channel_url %}
       <li id="contact_channels_slack">
@@ -48,14 +48,14 @@
 
 {% if governance.data_custodians and governance.data_custodians.0.email %}
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Data custodian" %}</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Data custodian (technical contact)</h2>
   <p id="data_owner" class="govuk-body">
       {{ governance.data_custodians.0.email|urlize }}
   </p>
 </div>
 {% else %}
 <div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{% translate "Data custodian" %}</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Data custodian (technical contact)</h2>
   <p id="data_owner" class="govuk-body">
     {% if governance.data_owner.email %}
       {{ governance.data_owner.email|urlize }}

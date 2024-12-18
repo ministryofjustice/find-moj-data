@@ -4,7 +4,6 @@ from urllib.parse import urlencode
 from data_platform_catalogue.entities import FindMoJdataEntityType
 from data_platform_catalogue.search_types import DomainOption
 from django import forms
-from django.utils.translation import gettext as _
 
 from ..models.domain_model import Domain
 from ..service.domain_fetcher import DomainFetcher
@@ -14,7 +13,7 @@ from ..service.search_tag_fetcher import SearchTagFetcher
 def get_domain_choices() -> list[Domain]:
     """Make Domains API call to obtain domain choices"""
     choices = [
-        Domain("", _("All domains")),
+        Domain("", "All subject areas"),
     ]
     list_domain_options: list[DomainOption] = DomainFetcher().fetch()
     domains: list[Domain] = [Domain(d.urn, d.name) for d in list_domain_options]
@@ -31,7 +30,7 @@ def get_sort_choices():
 
 
 def get_where_to_access_choices():
-    return [("analytical_platform", _("Analytical Platform"))]
+    return [("analytical_platform", "Analytical Platform")]
 
 
 def get_entity_types():
@@ -52,8 +51,10 @@ def get_tags():
 class SearchForm(forms.Form):
     """Django form to represent search page inputs"""
 
-    domain_translate = _("Domain")
-    select_filter_translate = _("filter-refresh")
+    domain_translate = "Subject area"
+    select_filter_translate = (
+        "selection will trigger the filter and refresh the search results"
+    )
 
     query = forms.CharField(
         strip=False,

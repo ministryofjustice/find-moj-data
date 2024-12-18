@@ -12,10 +12,10 @@
 
       </svg>
 
-      <a class="moj-header__link moj-header__link--organisation-name" href="{% url 'home:home' %}">{% translate "Ministry of Justice" %}</a>
+      <a class="moj-header__link moj-header__link--organisation-name" href="{% url 'home:home' %}">Ministry of Justice</a>
 
       <span class="moj-header__link moj-header__link--service-name">
-        <a href="{% url 'home:home' %}">{% translate "Find MOJ data" %}</a>
+        <a href="{% url 'home:home' %}">Find MoJ data</a>
         {% if ENV == "dev" or ENV is None %}&nbsp;
         <strong class="govuk-tag govuk-tag--yellow">Development</strong>
         {% endif %}
@@ -33,10 +33,10 @@
 
         <ul class="moj-header__navigation-list">
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="{% url 'feedback:feedback' %}">{% translate "Feedback" %}</a>
+            <a class="moj-header__navigation-link" href="{% url 'feedback:feedback' %}">Feedback</a>
           </li>
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="{% url 'azure_auth:logout' %}">{% translate "Sign out" %}</a>
+            <a class="moj-header__navigation-link" href="{% url 'azure_auth:logout' %}">Sign out</a>
           </li>
         </ul>
 

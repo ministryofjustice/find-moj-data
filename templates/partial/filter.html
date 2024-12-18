@@ -1,10 +1,9 @@
 {% load clear_filter %}
-{% load i18n %}
 <div class="govuk-grid-column-one-third">
   <div class="moj-filter">
     <div class="moj-filter__header">
       <div class="moj-filter__header-title">
-        <h2 class="govuk-heading-m">{% translate "Filter" %}</h2>
+        <h2 class="govuk-heading-m">Filter</h2>
       </div>
       <div class="moj-filter__header-action">
       </div>
@@ -16,13 +15,13 @@
       <div class="moj-filter__options">
         <div class="govuk-form-group">
           <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{% translate "Domain" %}</legend>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Subject area</legend>
             <div class="govuk-form-group">
               {{form.domain}}
             </div>
             {% if form.subdomain.choices %}
               <div class="govuk-form-group js-required">
-                <label class="govuk-label" for="{{form.subdomain.id_for_label}}">{% translate "Subdomain" %}</label>
+                <label class="govuk-label" for="{{form.subdomain.id_for_label}}">Subdomain</label>
                 {{form.subdomain}}
               </div>
             {% endif %}
@@ -30,10 +29,10 @@
         </div>
         <div class="govuk-form-group">
           <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{% translate "Entity Types" %}</legend>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Entity types</legend>
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
               {% for entity_type in form.entity_types %}
-                <div aria-label="{% translate 'filter-refresh' %}" class="govuk-checkboxes__item">
+                <div aria-label="selection will trigger the filter and refresh the search results" class="govuk-checkboxes__item">
                   {{ entity_type.tag}}
                   <label class="govuk-label govuk-checkboxes__label" for="{{ entity_type.id_for_label }}">{{entity_type.choice_label}}</label>
                 </div>
