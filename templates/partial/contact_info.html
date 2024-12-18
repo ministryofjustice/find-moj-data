@@ -11,7 +11,7 @@
     {% elif governance.data_custodians or governance.data_owner.email %}
       Contact the data custodian to request access.
     {% else %}
-      Not provided
+      Not provided.
     {% endif %}
   </p>
 </div>
@@ -37,7 +37,7 @@
       {% if governance.data_custodians or governance.data_owner.email %}
       <li id="contact_channels_data_owner">Contact the data custodian with questions.</li>
       {% else %}
-      <li id="contact_channels_not_provided">Not provided</li>
+      <li id="contact_channels_not_provided">Not provided.</li>
       {% endif %}
     {% endif %}
   </ul>

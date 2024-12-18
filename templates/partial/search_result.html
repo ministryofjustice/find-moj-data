@@ -22,7 +22,7 @@
         <ul class="govuk-list govuk-body">
           <li>
             <span class="govuk-!-font-weight-bold">Subject area:</span>
-            <span>{{result.metadata.domain_name | default:'Not provided'}}</span>
+            <span>{{result.metadata.domain_name | default:'Not provided.'}}</span>
           </li>
           {% if result.result_type.name == "TABLE" %}
             <li>
