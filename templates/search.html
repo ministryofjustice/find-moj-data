@@ -3,7 +3,6 @@
 {% load markdown %}
 {% load humanize %}
 {% load waffle_tags %}
-{% load i18n %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -13,7 +12,7 @@
         <div class="govuk-form-group">
           <h1 class="govuk-heading-l">{{h1_value}}</h1>
           <div class="app-search app-search--compact">
-            <label for="{{ form.query.id_for_label }}" class="govuk-label govuk-visually-hidden-focusable">{% translate "Search input" %}</label>
+            <label for="{{ form.query.id_for_label }}" class="govuk-label govuk-visually-hidden-focusable">Search input</label>
             {{ form.query }}
             <button class="search-button" type="submit" id="search-button" aria-label="Search button">
               <svg aria-hidden="true" class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="40" height="40">
@@ -31,14 +30,12 @@
         </summary>
         <div class="govuk-details__text">
           {# Search query tips (when expanded) #}
-          {% blocktranslate trimmed with more_examples_href="https://datahubproject.io/docs/how/search/#advanced-queries" %}
             <ul class="govuk-list govuk-list--bullet">
               <li><p>Use multiple words to narrow down your search.</p><p>For example: <strong>prisons probation</strong> matches data mentioning "prisons" AND "probation".</p></li>
               <li><p>Separate words with a pipe to broaden your search.</p><p>For example: <strong>prisons | probation</strong> matches data mentioning "prisons" OR "probation".</p></li>
               <li><p>Quote phrases to require an exact match.</p><p>For example: <strong>"case management"</strong> matches the exact phrase "case management" but not either word on its own.</p></li>
               <li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -magistrates</strong> excludes any results that mention "magistrates".</p></li>
             </ul>
-          {% endblocktranslate %}
         </div>
       </details>
     </div>
@@ -47,7 +44,7 @@
     {% include "partial/filter.html" %}
     <div class="govuk-grid-column-two-thirds">
       {% if malformed_result_urns %}
-        <p class="govuk-error-message">{% translate "Some results were malformed and are not shown" %}</p>
+        <p class="govuk-error-message">Some results were malformed and are not shown</p>
       {% endif %}
       {% if results %}
         <h2 class="govuk-heading-l govuk-!-display-inline-block" id="result-count">{{total_results_str|intcomma}} results</h2>
