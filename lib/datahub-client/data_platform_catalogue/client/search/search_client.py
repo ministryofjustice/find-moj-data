@@ -14,6 +14,7 @@ from data_platform_catalogue.client.graphql_helpers import (
     parse_tags,
 )
 from data_platform_catalogue.client.search.filters import map_filters
+from data_platform_catalogue.client.parsers import EntityParserFactory
 from data_platform_catalogue.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
@@ -172,23 +173,14 @@ class SearchClient:
     def _parse_search_results(self, response) -> Tuple[list, list]:
         page_results = []
         malformed_result_urns = []
+        parser_factory = EntityParserFactory()
         for result in response["searchResults"]:
-            entity = result["entity"]
-            entity_type = entity["type"]
-            entity_urn = entity["urn"]
-            entity_subtype = (
-                entity.get("subTypes", {}).get("typeNames", [None])[0]
-                if entity.get("subTypes") is not None
-                else None
-            )
-            matched_fields = self._get_matched_fields(result=result)
-
             try:
-                parser, fmd_type = self.datahub_types_to_fmd_type_and_parser_mapping[
-                    (entity_type, entity_subtype)
-                ]
-                parsed_result = parser(entity, matched_fields, fmd_type)
-                page_results.append(parsed_result)
+                entity_urn = result["entity"]["urn"]
+                parser = parser_factory.get_parser(result["entity"])
+                parsed_search_result = parser.parse(result["entity"])
+                page_results.append(parsed_search_result)
+
             except KeyError as k_e:
                 logger.exception(
                     f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}"
@@ -199,21 +191,6 @@ class SearchClient:
                 malformed_result_urns.append(entity_urn)
 
         return page_results, malformed_result_urns
-
-    @staticmethod
-    def _get_matched_fields(result: dict) -> dict:
-        fields = result.get("matchedFields", [])
-        matched_fields = {}
-        for field in fields:
-            name = field.get("name")
-            value = field.get("value")
-            if name == "customProperties" and value != "":
-                try:
-                    name, value = value.split("=")
-                except ValueError:
-                    continue
-            matched_fields[name] = value
-        return matched_fields
 
     def list_domains(
         self,
