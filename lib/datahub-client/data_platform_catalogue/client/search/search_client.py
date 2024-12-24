@@ -174,10 +174,14 @@ class SearchClient:
         page_results = []
         malformed_result_urns = []
         parser_factory = EntityParserFactory()
+
         for result in response["searchResults"]:
+
             try:
                 entity_urn = result["entity"]["urn"]
                 parser = parser_factory.get_parser(result["entity"])
+                parser.set_matched_fields(result=result)
+
                 parsed_search_result = parser.parse(result["entity"])
                 page_results.append(parsed_search_result)
 

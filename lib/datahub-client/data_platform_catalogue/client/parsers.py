@@ -3,204 +3,12 @@ from datetime import datetime
 from typing import Any, Tuple
 
 from data_platform_catalogue.entities import CustomEntityProperties, AccessInformation, UsageRestrictions, DataSummary, \
-    TagRef, FurtherInformation, OwnerRef, GlossaryTermRef, DomainRef, TableEntityMapping, DatabaseEntityMapping, DatahubEntityType, EntityRef
+    TagRef, FurtherInformation, OwnerRef, GlossaryTermRef, DomainRef, TableEntityMapping, ChartEntityMapping, \
+    DatabaseEntityMapping, DatahubEntityType, EntityRef, PublicationDatasetEntityMapping, DashboardEntityMapping, \
+    DatahubSubtype, PublicationCollectionEntityMapping
 from data_platform_catalogue.search_types import SearchResult
 
 logger = logging.getLogger(__name__)
-
-table_result = {
-    'entity': {'urn': 'urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.analytical_platform_value_derived.example_query,PROD)', 'name': 'example_query', 'type': 'DATASET', 'origin': 'PROD', 'uri': None, 'lastIngested': 1734938742935, 'platform': {'urn': 'urn:li:dataPlatform:dbt', 'type': 'DATA_PLATFORM', 'lastIngested': None, 'name': 'dbt', 'properties': {'type': 'OTHERS', 'displayName': 'dbt', 'datasetNameDelimiter': '.', 'logoUrl': '/assets/platforms/dbtlogo.png', '__typename': 'DataPlatformProperties'}, 'displayName': None, 'info': None, '__typename': 'DataPlatform'}, 'dataPlatformInstance': {'urn': 'urn:li:dataPlatformInstance:(urn:li:dataPlatform:dbt,cadet)', 'type': 'DATA_PLATFORM_INSTANCE', 'platform': {'urn': 'urn:li:dataPlatform:dbt', 'type': 'DATA_PLATFORM', 'lastIngested': None, 'name': 'dbt', 'properties': {'type': 'OTHERS', 'displayName': 'dbt', 'datasetNameDelimiter': '.', 'logoUrl': '/assets/platforms/dbtlogo.png', '__typename': 'DataPlatformProperties'}, 'displayName': None, 'info': None, '__typename': 'DataPlatform'}, 'instanceId': 'cadet', '__typename': 'DataPlatformInstance'}, 'platformNativeType': None, 'properties': {'name': 'example_query', 'description': 'Example metric to build the folder structure, can be removed', 'customProperties': [{'key': 'catalog_version', 'value': '1.8.3', '__typename': 'CustomPropertiesEntry'}, {'key': 'audience', 'value': 'Internal', '__typename': 'CustomPropertiesEntry'}, {'key': 'catalog_schema', 'value': 'https://schemas.getdbt.com/dbt/catalog/v1.json', '__typename': 'CustomPropertiesEntry'}, {'key': 'dbt_file_path', 'value': 'models/people/analytical_platform_value_derived/analytical_platform_value_derived__example_query.sql', '__typename': 'CustomPropertiesEntry'}, {'key': 'materialization', 'value': 'table', '__typename': 'CustomPropertiesEntry'}, {'key': 'dc_access_requirements', 'value': 'https://user-guidance.analytical-platform.service.justice.gov.uk/tools/create-a-derived-table/database-access/#database-access', '__typename': 'CustomPropertiesEntry'}, {'key': 'language', 'value': 'sql', '__typename': 'CustomPropertiesEntry'}, {'key': 'dc_where_to_access_dataset', 'value': 'AnalyticalPlatform', '__typename': 'CustomPropertiesEntry'}, {'key': 'dc_slack_channel_name', 'value': '#ask-data-modelling', '__typename': 'CustomPropertiesEntry'}, {'key': 'dc_slack_channel_url', 'value': 'https://moj.enterprise.slack.com/archives/C03J21VFHQ9', '__typename': 'CustomPropertiesEntry'}, {'key': 'node_type', 'value': 'model', '__typename': 'CustomPropertiesEntry'}, {'key': 'dc_data_custodian', 'value': 'holly.furniss', '__typename': 'CustomPropertiesEntry'}, {'key': 'manifest_version', 'value': '1.8.3', '__typename': 'CustomPropertiesEntry'}, {'key': 'manifest_adapter', 'value': 'athena', '__typename': 'CustomPropertiesEntry'}, {'key': 'dbt_package_name', 'value': 'mojap_derived_tables', '__typename': 'CustomPropertiesEntry'}, {'key': 'dbt_unique_id', 'value': 'model.mojap_derived_tables.analytical_platform_value_derived__example_query', '__typename': 'CustomPropertiesEntry'}, {'key': 'manifest_schema', 'value': 'https://schemas.getdbt.com/dbt/manifest/v12.json', '__typename': 'CustomPropertiesEntry'}], 'externalUrl': None, 'lastModified': {'time': 0, 'actor': None, '__typename': 'AuditStamp'}, '__typename': 'DatasetProperties'}, 'structuredProperties': None, 'editableProperties': None, 'ownership': {'owners': [{'owner': {'urn': 'urn:li:corpuser:holly.furniss', 'type': 'CORP_USER', 'username': 'holly.furniss', 'info': {'active': False, 'displayName': 'holly furniss', 'title': None, 'email': 'holly.furniss@justice.gov.uk', 'firstName': None, 'lastName': None, 'fullName': None, '__typename': 'CorpUserInfo'}, 'properties': {'active': False, 'displayName': 'holly furniss', 'title': None, 'email': 'holly.furniss@justice.gov.uk', 'firstName': None, 'lastName': None, 'fullName': None, '__typename': 'CorpUserProperties'}, 'editableProperties': None, '__typename': 'CorpUser'}, 'type': 'DATAOWNER', 'ownershipType': {'urn': 'urn:li:ownershipType:__system__dataowner', 'type': 'CUSTOM_OWNERSHIP_TYPE', 'info': None, 'status': None, '__typename': 'OwnershipTypeEntity'}, 'associatedUrn': 'urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.analytical_platform_value_derived.example_query,PROD)', '__typename': 'Owner'}], 'lastModified': {'time': 0, '__typename': 'AuditStamp'}, '__typename': 'Ownership'}, 'institutionalMemory': None, 'globalTags': {'tags': [{'tag': {'urn': 'urn:li:tag:daily', 'type': 'TAG', 'name': 'daily', 'description': None, 'properties': None, '__typename': 'Tag'}, 'associatedUrn': 'urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.analytical_platform_value_derived.example_query,PROD)', '__typename': 'TagAssociation'}, {'tag': {'urn': 'urn:li:tag:dc_cadet', 'type': 'TAG', 'name': 'dc_cadet', 'description': None, 'properties': None, '__typename': 'Tag'}, 'associatedUrn': 'urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.analytical_platform_value_derived.example_query,PROD)', '__typename': 'TagAssociation'}], '__typename': 'GlobalTags'}, 'glossaryTerms': None, 'subTypes': {'typeNames': ['Model'], '__typename': 'SubTypes'}, 'domain': {'domain': {'urn': 'urn:li:domain:People', 'type': 'DOMAIN', 'properties': {'name': 'People', 'description': None, '__typename': 'DomainProperties'}, 'parentDomains': {'count': 0, 'domains': [], '__typename': 'ParentDomainsResult'}, 'entities': {'total': 184, '__typename': 'SearchResults'}, 'dataProducts': {'total': 0, '__typename': 'SearchResults'}, 'children': {'total': 0, '__typename': 'EntityRelationshipsResult'}, '__typename': 'Domain'}, 'associatedUrn': 'urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.analytical_platform_value_derived.example_query,PROD)', '__typename': 'DomainAssociation'}, 'dataProduct': {'relationships': [], '__typename': 'EntityRelationshipsResult'}, '__typename': 'Dataset', 'container': {'urn': 'urn:li:container:2f60a1d543690979bb961bda0eab1c6f', 'platform': {'urn': 'urn:li:dataPlatform:dbt', 'type': 'DATA_PLATFORM', 'lastIngested': None, 'name': 'dbt', 'properties': {'type': 'OTHERS', 'displayName': 'dbt', 'datasetNameDelimiter': '.', 'logoUrl': '/assets/platforms/dbtlogo.png', '__typename': 'DataPlatformProperties'}, 'displayName': None, 'info': None, '__typename': 'DataPlatform'}, 'properties': {'name': 'analytical_platform_value_derived', '__typename': 'ContainerProperties'}, 'subTypes': {'typeNames': ['Database'], '__typename': 'SubTypes'}, 'deprecation': None, '__typename': 'Container'}, 'deprecation': None, 'embed': None, 'browsePathV2': {'path': [{'name': 'cadet', 'entity': None, '__typename': 'BrowsePathEntry'}, {'name': 'awsdatacatalog', 'entity': None, '__typename': 'BrowsePathEntry'}, {'name': 'analytical_platform_value_derived', 'entity': None, '__typename': 'BrowsePathEntry'}], '__typename': 'BrowsePathV2'}, 'exists': True, 'parentContainers': {'count': 1, 'containers': [{'urn': 'urn:li:container:2f60a1d543690979bb961bda0eab1c6f', 'properties': {'name': 'analytical_platform_value_derived', '__typename': 'ContainerProperties'}, 'subTypes': {'typeNames': ['Database'], '__typename': 'SubTypes'}, '__typename': 'Container'}], '__typename': 'ParentContainersResult'}, 'usageStats': {'buckets': [], 'aggregations': {'uniqueUserCount': 0, 'totalSqlQueries': None, 'fields': [], '__typename': 'UsageQueryResultAggregations'}, '__typename': 'UsageQueryResult'}, 'datasetProfiles': [], 'health': [{'type': 'INCIDENTS', 'status': 'PASS', 'message': None, 'causes': None, '__typename': 'Health'}], 'assertions': {'total': 0, '__typename': 'EntityAssertionsResult'}, 'access': None, 'operations': [], 'viewProperties': {'materialized': True, 'logic': 'asdfasd', 'formattedLogic': None, 'language': 'SQL', '__typename': 'ViewProperties'}, 'autoRenderAspects': [], 'status': {'removed': False, '__typename': 'Status'}, 'runs': {'count': 20, 'start': 0, 'total': 1, '__typename': 'DataProcessInstanceResult'}, 'testResults': None, 'statsSummary': {'queryCountLast30Days': None, 'uniqueUserCountLast30Days': 0, 'topUsersLast30Days': [], '__typename': 'DatasetStatsSummary'}, 'siblings': {'isPrimary': True, '__typename': 'SiblingProperties', 'siblings': [{'urn': 'urn:li:dataset:(urn:li:dataPlatform:athena,athena_cadet.awsdatacatalog.analytical_platform_value_derived.example_query,PROD)', 'type': 'DATASET', 'name': 'athena_cadet.awsdatacatalog.analytical_platform_value_derived.example_query', 'origin': 'PROD', 'uri': None, 'lastIngested': 1734509716880, 'platform': {'urn': 'urn:li:dataPlatform:athena', 'type': 'DATA_PLATFORM', 'lastIngested': None, 'name': 'athena', 'properties': {'type': 'RELATIONAL_DB', 'displayName': 'AWS Athena', 'datasetNameDelimiter': '.', 'logoUrl': '/assets/platforms/awsathenalogo.png', '__typename': 'DataPlatformProperties'}, 'displayName': None, 'info': None, '__typename': 'DataPlatform'}, 'dataPlatformInstance': None, 'platformNativeType': None, 'properties': None, 'structuredProperties': None, 'editableProperties': None, 'ownership': None, 'institutionalMemory': None, 'globalTags': None, 'glossaryTerms': None, 'subTypes': None, 'domain': None, 'dataProduct': {'relationships': [], '__typename': 'EntityRelationshipsResult'}, '__typename': 'Dataset', 'container': None, 'deprecation': None, 'embed': None, 'browsePathV2': {'path': [{'name': 'athena_cadet', 'entity': None, '__typename': 'BrowsePathEntry'}, {'name': 'awsdatacatalog', 'entity': None, '__typename': 'BrowsePathEntry'}, {'name': 'analytical_platform_value_derived', 'entity': None, '__typename': 'BrowsePathEntry'}], '__typename': 'BrowsePathV2'}, 'exists': True, 'parentContainers': {'count': 0, 'containers': [], '__typename': 'ParentContainersResult'}, 'usageStats': {'buckets': [], 'aggregations': {'uniqueUserCount': 0, 'totalSqlQueries': None, 'fields': [], '__typename': 'UsageQueryResultAggregations'}, '__typename': 'UsageQueryResult'}, 'datasetProfiles': [], 'health': [{'type': 'INCIDENTS', 'status': 'PASS', 'message': None, 'causes': None, '__typename': 'Health'}], 'assertions': {'total': 0, '__typename': 'EntityAssertionsResult'}, 'access': None, 'operations': [], 'viewProperties': None, 'autoRenderAspects': [], 'status': None, 'runs': {'count': 20, 'start': 0, 'total': 0, '__typename': 'DataProcessInstanceResult'}, 'testResults': None, 'statsSummary': {'queryCountLast30Days': None, 'uniqueUserCountLast30Days': 0, 'topUsersLast30Days': [], '__typename': 'DatasetStatsSummary'}, 'siblings': {'isPrimary': False, '__typename': 'SiblingProperties'}, 'activeIncidents': {'total': 0, '__typename': 'EntityIncidentsResult'}, 'privileges': {'canEditLineage': False, 'canEditQueries': False, 'canEditEmbed': False, 'canManageEntity': None, 'canManageChildren': None, 'canEditProperties': False, '__typename': 'EntityPrivileges'}, 'forms': None}]}, 'activeIncidents': {'total': 0, '__typename': 'EntityIncidentsResult'}, 'privileges': {'canEditLineage': False, 'canEditQueries': False, 'canEditEmbed': False, 'canManageEntity': None, 'canManageChildren': None, 'canEditProperties': False, '__typename': 'EntityPrivileges'}, 'forms': None}
-}
-container_result = {
-    "data": {
-        "entity": {
-            "urn": "urn:li:container:2f60a1d543690979bb961bda0eab1c6f",
-            "type": "CONTAINER",
-            "exists": True,
-            "lastIngested": 1735025010359,
-            "platform": {
-                "urn": "urn:li:dataPlatform:dbt",
-                "type": "DATA_PLATFORM",
-                "lastIngested": None,
-                "name": "dbt",
-                "properties": {
-                    "type": "OTHERS",
-                    "displayName": "dbt",
-                    "datasetNameDelimiter": ".",
-                    "logoUrl": "/assets/platforms/dbtlogo.png",
-                    "__typename": "DataPlatformProperties"
-                },
-                "displayName": None,
-                "info": None,
-                "__typename": "DataPlatform"
-            },
-            "properties": {
-                "name": "analytical_platform_value_derived",
-                "description": None,
-                "externalUrl": None,
-                "customProperties": [
-                    {
-                        "key": "database",
-                        "value": "analytical_platform_value_derived",
-                        "__typename": "CustomPropertiesEntry"
-                    },
-                    {
-                        "key": "audience",
-                        "value": "Internal",
-                        "__typename": "CustomPropertiesEntry"
-                    },
-                    {
-                        "key": "instance",
-                        "value": "cadet.awsdatacatalog",
-                        "__typename": "CustomPropertiesEntry"
-                    },
-                    {
-                        "key": "env",
-                        "value": "PROD",
-                        "__typename": "CustomPropertiesEntry"
-                    },
-                    {
-                        "key": "platform",
-                        "value": "dbt",
-                        "__typename": "CustomPropertiesEntry"
-                    },
-                    {
-                        "key": "domain",
-                        "value": "people",
-                        "__typename": "CustomPropertiesEntry"
-                    }
-                ],
-                "__typename": "ContainerProperties"
-            },
-            "privileges": {
-                "canEditLineage": False,
-                "canEditQueries": None,
-                "canEditEmbed": None,
-                "canManageEntity": None,
-                "canManageChildren": None,
-                "canEditProperties": False,
-                "__typename": "EntityPrivileges"
-            },
-            "editableProperties": None,
-            "ownership": None,
-            "tags": {
-                "tags": [
-                    {
-                        "tag": {
-                            "urn": "urn:li:tag:People",
-                            "type": "TAG",
-                            "name": "People",
-                            "description": None,
-                            "properties": None,
-                            "__typename": "Tag"
-                        },
-                        "associatedUrn": "urn:li:container:2f60a1d543690979bb961bda0eab1c6f",
-                        "__typename": "TagAssociation"
-                    },
-                    {
-                        "tag": {
-                            "urn": "urn:li:tag:dc_cadet",
-                            "type": "TAG",
-                            "name": "dc_cadet",
-                            "description": None,
-                            "properties": None,
-                            "__typename": "Tag"
-                        },
-                        "associatedUrn": "urn:li:container:2f60a1d543690979bb961bda0eab1c6f",
-                        "__typename": "TagAssociation"
-                    }
-                ],
-                "__typename": "GlobalTags"
-            },
-            "institutionalMemory": None,
-            "glossaryTerms": None,
-            "subTypes": {
-                "typeNames": [
-                    "Database"
-                ],
-                "__typename": "SubTypes"
-            },
-            "entities": {
-                "total": 1,
-                "__typename": "SearchResults"
-            },
-            "container": None,
-            "parentContainers": {
-                "count": 0,
-                "containers": [],
-                "__typename": "ParentContainersResult"
-            },
-            "domain": {
-                "domain": {
-                    "urn": "urn:li:domain:People",
-                    "type": "DOMAIN",
-                    "properties": {
-                        "name": "People",
-                        "description": None,
-                        "__typename": "DomainProperties"
-                    },
-                    "parentDomains": {
-                        "count": 0,
-                        "domains": [],
-                        "__typename": "ParentDomainsResult"
-                    },
-                    "entities": {
-                        "total": 184,
-                        "__typename": "SearchResults"
-                    },
-                    "dataProducts": {
-                        "total": 0,
-                        "__typename": "SearchResults"
-                    },
-                    "children": {
-                        "total": 0,
-                        "__typename": "EntityRelationshipsResult"
-                    },
-                    "__typename": "Domain"
-                },
-                "associatedUrn": "urn:li:container:2f60a1d543690979bb961bda0eab1c6f",
-                "__typename": "DomainAssociation"
-            },
-            "dataProduct": {
-                "relationships": [],
-                "__typename": "EntityRelationshipsResult"
-            },
-            "__typename": "Container",
-            "deprecation": None,
-            "dataPlatformInstance": {
-                "urn": "urn:li:dataPlatformInstance:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog)",
-                "type": "DATA_PLATFORM_INSTANCE",
-                "platform": {
-                    "urn": "urn:li:dataPlatform:dbt",
-                    "type": "DATA_PLATFORM",
-                    "lastIngested": None,
-                    "name": "dbt",
-                    "properties": {
-                        "type": "OTHERS",
-                        "displayName": "dbt",
-                        "datasetNameDelimiter": ".",
-                        "logoUrl": "/assets/platforms/dbtlogo.png",
-                        "__typename": "DataPlatformProperties"
-                    },
-                    "displayName": None,
-                    "info": None,
-                    "__typename": "DataPlatform"
-                },
-                "instanceId": "cadet.awsdatacatalog",
-                "__typename": "DataPlatformInstance"
-            },
-            "status": {
-                "removed": False,
-                "__typename": "Status"
-            },
-            "autoRenderAspects": [],
-            "structuredProperties": None,
-            "forms": None
-        }
-    },
-    "extensions": {}
-}
-
 
 PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
 DATA_OWNER = "urn:li:ownershipType:__system__dataowner"
@@ -209,14 +17,17 @@ DATA_CUSTODIAN = "urn:li:ownershipType:data_custodian"
 
 
 class EntityParser:
-    def __init__():
+    def __init__(self):
         pass
 
     def parse(self, search_response):
         raise NotImplementedError
 
-    def parse_names(self,
-                    entity: dict[str, Any], properties: dict[str, Any]
+    def set_matched_fields(self, result: dict) -> None:
+        self.matched_fields = self._get_matched_fields(result=result)
+
+    @staticmethod
+    def parse_names(entity: dict[str, Any], properties: dict[str, Any]
                     ) -> Tuple[str, str, str]:
         """
         Returns a tuple of 3 name values.
@@ -237,7 +48,8 @@ class EntityParser:
 
         return name, display_name, qualified_name
 
-    def parse_tags(self, entity: dict[str, Any]) -> list[TagRef]:
+    @staticmethod
+    def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
         """
         Parse tag information into a list of TagRef objects for displaying
         as part of the search result.
@@ -438,19 +250,17 @@ class EntityParser:
 
 class DatasetParser(EntityParser):
     def __init__(self):
-        self.mapper = TableEntityMapping
-        self.matched_fields = None
-
-    def set_matched_fields(self, matched_fields: dict) -> None:
-        self.matched_fields = matched_fields
+        super().__init__()
+        self.mapper = None
 
     def parse(self, entity: dict[str, Any]) -> SearchResult:
+
         owner = self.parse_data_owner(entity)
         properties, custom_properties = self.parse_properties(entity)
         tags = self.parse_tags(entity)
-        terms = self.parse_glossary_terms(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
         domain = self.parse_domain(entity)
+
 
         container = entity.get("container")
         if container:
@@ -473,7 +283,7 @@ class DatasetParser(EntityParser):
 
         modified = self.parse_data_last_modified(properties)
 
-        return SearchResult(
+        result = SearchResult(
             urn=entity["urn"],
             result_type=self.mapper,
             matches=self.matched_fields,
@@ -488,24 +298,42 @@ class DatasetParser(EntityParser):
             description=properties.get("description", ""),
             metadata=metadata,
             tags=tags,
-            glossary_terms=terms,
+            glossary_terms=self.parse_glossary_terms(entity),
             last_modified=modified,
         )
+
+        logger.info(f"{result=}")
+
+        return result
+
+
+class TableParser(DatasetParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = TableEntityMapping
+
+
+class ChartParser(DatasetParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = ChartEntityMapping
+
+
+class PublicationDatasetParser(DatasetParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = PublicationDatasetEntityMapping
 
 
 class ContainerParser(EntityParser):
     def __init__(self):
-        self.mapper = DatabaseEntityMapping
-        self.matched_fields = None
-
-    def set_matched_fields(self, matched_fields: dict) -> None:
-        self.matched_fields = matched_fields
+        self.mapper = None
+        self.matched_fields = {}
 
     def parse(self, entity: dict[str, Any]) -> SearchResult:
         """Map a Container entity to a SearchResult"""
         owner = self.parse_data_owner(entity)
         properties, custom_properties = self.parse_properties(entity)
-        tags = self.parse_tags(entity)
         terms = self.parse_glossary_terms(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
         modified = self.parse_data_last_modified(properties)
@@ -520,7 +348,7 @@ class ContainerParser(EntityParser):
 
         metadata.update(custom_properties)
 
-        return SearchResult(
+        result = SearchResult(
             urn=entity["urn"],
             result_type=self.mapper,
             matches=self.matched_fields,
@@ -529,14 +357,34 @@ class ContainerParser(EntityParser):
             display_name=display_name,
             description=properties.get("description", ""),
             metadata=metadata,
-            tags=tags,
+            tags=self.parse_tags(entity),
             glossary_terms=terms,
             last_modified=modified,
         )
 
+        logger.info(f"{result=}")
+
+        return result
+
+
+class DatabaseParser(ContainerParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = DatabaseEntityMapping
+
+
+class PublicationCollectionParser(ContainerParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = PublicationCollectionEntityMapping
+
+class DashboardParser(ContainerParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = DashboardEntityMapping
 
 class EntityParserFactory:
-    def __init__(self, result):
+    def __init__(self):
         pass
 
     @staticmethod
@@ -549,20 +397,16 @@ class EntityParserFactory:
         )
 
         if entity_type == DatahubEntityType.DATASET.value:
-            return DatasetParser()
+            if entity_subtype == DatahubSubtype.PUBLICATION_DATASET.value:
+                return PublicationDatasetParser()
+            else:
+                return TableParser()
         if entity_type == DatahubEntityType.CHART.value:
-            return DatasetParser()
+            return ChartParser()
         if entity_type == DatahubEntityType.DASHBOARD.value:
-            return ContainerParser()
+            return DashboardParser()
         if entity_type == DatahubEntityType.CONTAINER.value:
-            return ContainerParser()
-
-
-table_parser = EntityParserFactory.get_parser(table_result["entity"])
-table = table_parser.parse(table_result["entity"])
-print(table)
-
-database_parser = EntityParserFactory.get_parser(container_result["data"]["entity"])
-table = database_parser.parse(container_result["data"]["entity"])
-
-print(table)
+            if entity_subtype == DatahubSubtype.PUBLICATION_COLLECTION.value:
+                return PublicationCollectionParser()
+            else:
+                return DatabaseParser()
