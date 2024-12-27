@@ -17,15 +17,10 @@ from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.client.parsers import EntityParserFactory
 from data_platform_catalogue.entities import (
     ChartEntityMapping,
-    DashboardEntityMapping,
     DatabaseEntityMapping,
-    DatahubEntityType,
-    DatahubSubtype,
     EntityRef,
     FindMoJdataEntityMapper,
     GlossaryTermEntityMapping,
-    PublicationCollectionEntityMapping,
-    PublicationDatasetEntityMapping,
     TableEntityMapping,
 )
 from data_platform_catalogue.search_types import (
@@ -51,61 +46,6 @@ class SearchClient:
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
-        self.datahub_types_to_fmd_type_and_parser_mapping = {
-            (
-                DatahubEntityType.DATASET.value,
-                DatahubSubtype.PUBLICATION_DATASET.value,
-            ): (
-                self._parse_dataset,
-                PublicationDatasetEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (
-                self._parse_container,
-                DatabaseEntityMapping,
-            ),
-            (
-                DatahubEntityType.CONTAINER.value,
-                DatahubSubtype.PUBLICATION_COLLECTION.value,
-            ): (
-                self._parse_container,
-                PublicationCollectionEntityMapping,
-            ),
-            (
-                DatahubEntityType.DATASET.value,
-                DatahubSubtype.PUBLICATION_DATASET.value,
-            ): (
-                self._parse_container,
-                PublicationDatasetEntityMapping,
-            ),
-            (DatahubEntityType.CHART.value, None): (
-                self._parse_dataset,
-                ChartEntityMapping,
-            ),
-            (DatahubEntityType.DASHBOARD.value, None): (
-                self._parse_container,
-                DashboardEntityMapping,
-            ),
-        }
 
     def search(
         self,
@@ -176,13 +116,10 @@ class SearchClient:
         parser_factory = EntityParserFactory()
 
         for result in response["searchResults"]:
-
+            entity_urn = result["entity"]["urn"]
             try:
-                entity_urn = result["entity"]["urn"]
-                parser = parser_factory.get_parser(result["entity"])
-                parser.set_matched_fields(result=result)
-
-                parsed_search_result = parser.parse(result["entity"])
+                parser = parser_factory.get_parser(result)
+                parsed_search_result = parser.parse(result)
                 page_results.append(parsed_search_result)
 
             except KeyError as k_e:

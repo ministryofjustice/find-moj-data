@@ -1,3 +1,4 @@
+from collections import defaultdict
 import logging
 from datetime import datetime
 from typing import Any, Tuple
@@ -5,7 +6,7 @@ from typing import Any, Tuple
 from data_platform_catalogue.entities import CustomEntityProperties, AccessInformation, UsageRestrictions, DataSummary, \
     TagRef, FurtherInformation, OwnerRef, GlossaryTermRef, DomainRef, TableEntityMapping, ChartEntityMapping, \
     DatabaseEntityMapping, DatahubEntityType, EntityRef, PublicationDatasetEntityMapping, DashboardEntityMapping, \
-    DatahubSubtype, PublicationCollectionEntityMapping
+    DatahubSubtype, PublicationCollectionEntityMapping, Entity, Table, Chart, Database, PublicationDataset, Dashboard, PublicationCollection, RelationshipType, Governance, Column, EntitySummary
 from data_platform_catalogue.search_types import SearchResult
 
 logger = logging.getLogger(__name__)
@@ -20,11 +21,13 @@ class EntityParser:
     def __init__(self):
         pass
 
-    def parse(self, search_response):
+    def parse(self, search_response) -> SearchResult:
+        """Parse graphql response to a SearchResult object"""
         raise NotImplementedError
 
-    def set_matched_fields(self, result: dict) -> None:
-        self.matched_fields = self._get_matched_fields(result=result)
+    def parse_to_entity_object(self, response: dict, urn: str) -> Entity:
+        """Parse graphql response to an Entity object"""
+        raise NotImplementedError
 
     @staticmethod
     def parse_names(entity: dict[str, Any], properties: dict[str, Any]
@@ -247,20 +250,237 @@ class EntityParser:
             matched_fields[name] = value
         return matched_fields
 
+    def parse_columns(self, entity: dict[str, Any]) -> list[Column]:
+        """
+        Parse the schema metadata from Datahub into a flattened list of column
+        information.
+
+        Note: The format of each column is similar to but not the same
+        as the format used when ingesting table metadata.
+        - `type` refers to the Datahub type, not AWS glue type
+        - `nullable`, 'isPrimaryKey` and `foreignKeys` metadata is added
+        """
+        result = []
+
+        schema_metadata = entity.get("schemaMetadata", {})
+        if not schema_metadata:
+            return []
+
+        primary_keys = set(schema_metadata.get("primaryKeys") or ())
+
+        foreign_keys = defaultdict(list)
+
+        # Attempt to match foreign keys to the main fields.
+        #
+        # Assumptions:
+        # - A given field may have multiple foreign keys to other datasets
+        # - Some foreign keys will not match on fieldPath, because fields
+        #   may be defined using STRUCT types and foreign keys can reference
+        #   subfields within the struct. We will simply ignore these.
+        for foreign_key in schema_metadata.get("foreignKeys") or ():
+            if not foreign_key["sourceFields"] or not foreign_key["foreignFields"]:
+                continue
+
+            source_path = foreign_key["sourceFields"][0]["fieldPath"]
+            foreign_path = foreign_key["foreignFields"][0]["fieldPath"]
+
+            foreign_table = EntityRef(
+                urn=foreign_key["foreignDataset"]["urn"],
+                display_name=foreign_key["foreignDataset"]["properties"]["name"],
+            )
+
+            display_name = foreign_path.split(".")[-1]
+            foreign_keys[source_path].append(
+                ColumnRef(name=foreign_path, display_name=display_name, table=foreign_table)
+            )
+
+        for field in schema_metadata.get("fields", ()):
+            foreign_keys_for_field = foreign_keys[field["fieldPath"]]
+
+            # Work out if the field is primary.
+            # This is an oversimplification: in the case of a composite
+            # primary key, we report that each component field is primary.
+            is_primary_key = field["fieldPath"] in primary_keys
+            field_path = field["fieldPath"]
+            display_name = field_path.split(".")[-1]
+
+            result.append(
+                Column(
+                    name=field_path,
+                    display_name=display_name,
+                    description=field.get("description") or "",
+                    type=field.get("nativeDataType", field["type"]),
+                    nullable=field["nullable"],
+                    is_primary_key=is_primary_key,
+                    foreign_keys=foreign_keys_for_field,
+                )
+            )
+
+        # Sort primary keys first, then sort alphabetically
+        return sorted(result, key=lambda c: (0 if c.is_primary_key else 1, c.name))
+
+    def _parse_owners_by_type(self,
+        entity: dict[str, Any],
+        ownership_type_urn: str,
+    ) -> list[OwnerRef]:
+        """
+        Parse ownership information, if it is set, and return a list of owners
+        of type `ownership_type_urn`.
+        If no owner information exists, the list will be empty.
+        """
+        ownership = entity.get("ownership") or {}
+        owners = [
+            i["owner"]
+            for i in ownership.get("owners", [])
+            if i["ownershipType"]["urn"] == ownership_type_urn
+        ]
+
+        return [self._parse_owner_object(owner) for owner in owners]
+
+    def parse_stewards(self, entity: dict[str, Any]) -> list[OwnerRef]:
+        """
+        Parse ownership information, if it is set, and return a list of data stewards.
+        If no owners exist with a matching ownership type, the list will be empty.
+        """
+        return self._parse_owners_by_type(entity, DATA_STEWARD)
+
+    def parse_custodians(self, entity: dict[str, Any]) -> list[OwnerRef]:
+        """
+        Parse ownership information, if it is set, and return a list of data custodians.
+        If no owners exist with a matching ownership type, the list will be empty.
+        """
+        return self._parse_owners_by_type(entity, DATA_CUSTODIAN)
+
+    def parse_data_created(self, properties: dict[str, Any]) -> datetime | None:
+        """
+        Return the time when the data was created in the source system
+        (not Datahub)
+        """
+        created = properties.get("created")
+        return None if created == 0 else created
+
+    def parse_relations(
+        self,
+        relationship_type: RelationshipType,
+        relations_list: list[dict],
+        relation_key="relationships",
+        entity_type_of_relations: None | str = None,
+    ) -> dict[RelationshipType, list[EntitySummary]]:
+        """
+        parse the relationships results returned from a graphql querys
+        """
+
+        # we may want to do something with total relations if we are returning child
+        # relations and need to paginate through relations - 10 relations returned as is
+        # There may be more than 10 lineage entities but since we currently only care
+        # if lineage exists for a dataset we don't need to capture everything
+        related_entities = []
+        for all_relations in relations_list:
+            for relation in all_relations.get(relation_key, []):
+                urn = relation.get("entity").get("urn")
+                # we sometimes have multiple sub-types loaded or no subtype
+                if entity_type_of_relations is None:
+                    entity_type = (
+                        relation.get("entity")
+                        .get("subTypes", {})
+                        .get("typeNames", [relation.get("entity").get("type")])[0]
+                        if relation.get("entity").get("subTypes") is not None
+                        else [relation.get("entity").get("type")][0]
+                    )
+                else:
+                    entity_type = entity_type_of_relations
+
+                display_name = (
+                    relation.get("entity").get("properties").get("name")
+                    if relation.get("entity", {}).get("properties") is not None
+                    else relation.get("entity").get("name", "")
+                )
+                description = (
+                    relation.get("entity").get("properties", {}).get("description", "")
+                    if relation.get("entity", {}).get("properties") is not None
+                    else ""
+                )
+                tags = self.parse_tags(relation.get("entity"))
+                related_entities.append(
+                    EntitySummary(
+                        entity_ref=EntityRef(urn=urn, display_name=display_name),
+                        description=description,
+                        entity_type=entity_type,
+                        tags=tags,
+                    )
+                )
+
+        relations_return = {relationship_type: related_entities}
+        return relations_return
+
+    def list_relations_to_display(
+        self, relations: dict[RelationshipType, list[EntitySummary]]
+    ) -> dict[RelationshipType, list[EntitySummary]]:
+        """
+        returns a dict of relationships tagged to display
+        """
+        relations_to_display = {}
+
+        for key, value in relations.items():
+            relations_to_display[key] = [
+                entity
+                for entity in value
+                if "urn:li:tag:dc_display_in_catalogue"
+                in [tag.urn for tag in entity.tags]
+            ]
+
+        return relations_to_display
+
+    def parse_subtypes(self, entity: dict[str, Any]) -> list[str]:
+        subtypes = entity.get("subTypes", {})
+        if not subtypes:
+            return []
+        return subtypes.get("typeNames", [])
+
+    def parse_metadata_last_ingested(self, entity: dict[str, Any]) -> datetime | None:
+        """
+        Parse the timestamp the metadata was last changed
+        """
+        timestamp = entity.get("lastIngested")
+        if timestamp is None:
+            logger.warning("lastIngested timestamp is missing for entity: %r", entity)
+            return None
+        return timestamp
+
+    def parse_data_last_modified(self, properties: dict[str, Any]) -> datetime | None:
+        """
+        Return the time when the data was last updated in the source system
+        (not Datahub)
+        """
+        modified = (properties.get("lastModified") or {}).get("time")
+        return None if modified == 0 else modified
+
+    def parse_last_datajob_run_date(self, response: dict[str, Any]) -> datetime | None:
+        """
+        Look for the last job that produced/consumed the dataset and return the time it ran.
+        """
+        list_of_runs: list = response.get("runs", {}).get("runs", [])
+        if not list_of_runs:
+            updated = None
+        if list_of_runs:
+            updated = list_of_runs[0].get("created", {}).get("time", {})
+
+        return updated
+
 
 class DatasetParser(EntityParser):
     def __init__(self):
         super().__init__()
         self.mapper = None
 
-    def parse(self, entity: dict[str, Any]) -> SearchResult:
-
+    def parse(self, result: dict[str, Any]) -> SearchResult:
+        matched_fields = self._get_matched_fields(result)
+        entity = result["entity"]
         owner = self.parse_data_owner(entity)
         properties, custom_properties = self.parse_properties(entity)
         tags = self.parse_tags(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
         domain = self.parse_domain(entity)
-
 
         container = entity.get("container")
         if container:
@@ -286,7 +506,7 @@ class DatasetParser(EntityParser):
         result = SearchResult(
             urn=entity["urn"],
             result_type=self.mapper,
-            matches=self.matched_fields,
+            matches=matched_fields,
             name=name,
             display_name=display_name,
             fully_qualified_name=qualified_name,
@@ -306,6 +526,59 @@ class DatasetParser(EntityParser):
 
         return result
 
+    def parse_to_entity_object(self, response: dict, urn: str) -> Table:
+        platform_name = response["platform"]["name"]
+        properties, custom_properties = self.parse_properties(response)
+        columns = self.parse_columns(response)
+        domain = self.parse_domain(response)
+        owner = self.parse_data_owner(response)
+        stewards = self.parse_stewards(response)
+        custodians = self.parse_custodians(response)
+        tags = self.parse_tags(response)
+        glossary_terms = self.parse_glossary_terms(response)
+        created = self.parse_data_created(properties)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        lineage_relations = self.parse_relations(
+            RelationshipType.DATA_LINEAGE,
+            [
+                response.get("downstream_lineage_relations", {}),
+                response.get("upstream_lineage_relations", {}),
+            ],
+        )
+
+        parent_relations = self.parse_relations(
+            RelationshipType.PARENT,
+            [response.get("parent_container_relations", {})],
+        )
+        parent_relations_to_display = self.list_relations_to_display(
+            parent_relations
+        )
+        subtypes = self.parse_subtypes(response)
+
+        return Table(
+            urn=urn,
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships={**lineage_relations, **parent_relations_to_display},
+            domain=domain,
+            governance=Governance(
+                data_owner=owner, data_stewards=stewards, data_custodians=custodians
+            ),
+            subtypes=subtypes,
+            tags=tags,
+            glossary_terms=glossary_terms,
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            last_datajob_run_date=self.parse_last_datajob_run_date(response),
+            created=created,
+            data_last_modified=self.parse_data_last_modified(properties),
+            column_details=columns,
+            custom_properties=custom_properties,
+            platform=EntityRef(display_name=platform_name, urn=platform_name),
+        )
+
 
 class TableParser(DatasetParser):
     def __init__(self):
@@ -317,6 +590,39 @@ class ChartParser(DatasetParser):
     def __init__(self):
         super().__init__()
         self.mapper = ChartEntityMapping
+
+    def parse_to_entity_object(self, response, urn):
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+        parent_relations = self.parse_relations(
+            RelationshipType.PARENT, [response.get("relationships", {})]
+        )
+
+        return Chart(
+            urn=urn,
+            external_url=properties.get("externalUrl", ""),
+            description=properties.get("description", ""),
+            name=name,
+            display_name=display_name,
+            fully_qualified_name=qualified_name,
+            domain=self.parse_domain(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_stewards=self.parse_stewards(response),
+                data_custodians=self.parse_custodians(response),
+            ),
+            relationships=self.list_relations_to_display(parent_relations),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+            custom_properties=custom_properties,
+        )
 
 
 class PublicationDatasetParser(DatasetParser):
@@ -330,8 +636,10 @@ class ContainerParser(EntityParser):
         self.mapper = None
         self.matched_fields = {}
 
-    def parse(self, entity: dict[str, Any]) -> SearchResult:
+    def parse(self, result: dict[str, Any]) -> SearchResult:
         """Map a Container entity to a SearchResult"""
+        matched_fields = self._get_matched_fields(result)
+        entity = result["entity"]
         owner = self.parse_data_owner(entity)
         properties, custom_properties = self.parse_properties(entity)
         terms = self.parse_glossary_terms(entity)
@@ -351,7 +659,7 @@ class ContainerParser(EntityParser):
         result = SearchResult(
             urn=entity["urn"],
             result_type=self.mapper,
-            matches=self.matched_fields,
+            matches=matched_fields,
             name=name,
             fully_qualified_name=qualified_name,
             display_name=display_name,
@@ -372,23 +680,62 @@ class DatabaseParser(ContainerParser):
         super().__init__()
         self.mapper = DatabaseEntityMapping
 
+    def parse_to_entity_object(self, response, urn):
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        child_relations = self.parse_relations(
+            relationship_type=RelationshipType.CHILD,
+            relations_list=[response["relationships"]],
+            entity_type_of_relations="TABLE",
+        )
+        relations_to_display = self.list_relations_to_display(child_relations)
+
+        return Database(
+            urn=urn,
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships=relations_to_display,
+            domain=self.parse_domain(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_custodians=self.parse_custodians(response),
+                data_stewards=self.parse_stewards(response),
+            ),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            custom_properties=custom_properties,
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+        )
+
 
 class PublicationCollectionParser(ContainerParser):
     def __init__(self):
         super().__init__()
         self.mapper = PublicationCollectionEntityMapping
 
+
 class DashboardParser(ContainerParser):
     def __init__(self):
         super().__init__()
         self.mapper = DashboardEntityMapping
+
 
 class EntityParserFactory:
     def __init__(self):
         pass
 
     @staticmethod
-    def get_parser(entity: dict) -> EntityParser:
+    def get_parser(result: dict) -> EntityParser:
+        entity = result["entity"]
         entity_type = entity["type"]
         entity_subtype = (
             entity.get("subTypes", {}).get("typeNames", [None])[0]
