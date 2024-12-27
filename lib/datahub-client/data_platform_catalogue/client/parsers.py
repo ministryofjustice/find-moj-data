@@ -625,12 +625,6 @@ class ChartParser(DatasetParser):
         )
 
 
-class PublicationDatasetParser(DatasetParser):
-    def __init__(self):
-        super().__init__()
-        self.mapper = PublicationDatasetEntityMapping
-
-
 class ContainerParser(EntityParser):
     def __init__(self):
         self.mapper = None
@@ -722,11 +716,124 @@ class PublicationCollectionParser(ContainerParser):
         super().__init__()
         self.mapper = PublicationCollectionEntityMapping
 
+    def parse_to_entity_object(self, response: dict[str, Any], urn: str) -> PublicationCollection:
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        child_relations = self.parse_relations(
+            relationship_type=RelationshipType.CHILD,
+            relations_list=[response["relationships"]],
+            entity_type_of_relations=PublicationDatasetEntityMapping.url_formatted,
+        )
+        relations_to_display = self.list_relations_to_display(child_relations)
+
+        return PublicationCollection(
+            urn=urn,
+            external_url=properties.get("externalUrl", ""),
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships=relations_to_display,
+            domain=self.parse_domain(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_custodians=self.parse_custodians(response),
+                data_stewards=self.parse_stewards(response),
+            ),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            custom_properties=custom_properties,
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+        )
+
+
+class PublicationDatasetParser(ContainerParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = PublicationDatasetEntityMapping
+
+    def parse_to_entity_object(self, response, urn) -> PublicationDataset:
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        parent_relations = self.parse_relations(
+            RelationshipType.PARENT,
+            [response.get("parent_container_relations", {})],
+        )
+        parent_relations_to_display = self.list_relations_to_display(
+            parent_relations
+        )
+
+        return PublicationDataset(
+            urn=urn,
+            external_url=properties.get("externalUrl", ""),
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships={**parent_relations_to_display},
+            domain=self.parse_domain(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_custodians=self.parse_custodians(response),
+                data_stewards=self.parse_stewards(response),
+            ),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            custom_properties=custom_properties,
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+        )
+
 
 class DashboardParser(ContainerParser):
     def __init__(self):
         super().__init__()
         self.mapper = DashboardEntityMapping
+
+    def parse_to_entity_object(self, response: dict[str, Any], urn: str) -> Dashboard:
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        return Dashboard(
+            urn=urn,
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships=self.list_relations_to_display(
+                self.parse_relations(RelationshipType.CHILD, [response["relationships"]])
+            ),
+            domain=self.parse_domain(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_stewards=self.parse_stewards(response),
+                data_custodians=self.parse_custodians(response),
+            ),
+            external_url=properties.get("externalUrl", ""),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            custom_properties=custom_properties,
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+        )
 
 
 class EntityParserFactory:

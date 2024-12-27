@@ -38,24 +38,7 @@ from data_platform_catalogue.client.exceptions import (
     InvalidUser,
     ReferencedEntityMissing,
 )
-from data_platform_catalogue.client.graphql_helpers import (
-    parse_columns,
-    parse_custodians,
-    parse_data_created,
-    parse_data_last_modified,
-    parse_data_owner,
-    parse_domain,
-    parse_glossary_terms,
-    parse_last_datajob_run_date,
-    parse_metadata_last_ingested,
-    parse_names,
-    parse_properties,
-    parse_relations,
-    parse_stewards,
-    parse_subtypes,
-    parse_tags,
-)
-from data_platform_catalogue.client.parsers import ChartParser, DatabaseParser, TableParser
+from data_platform_catalogue.client.parsers import ChartParser, DashboardParser, DatabaseParser, PublicationCollectionParser, PublicationDatasetParser, TableParser
 from data_platform_catalogue.client.search.search_client import SearchClient
 from data_platform_catalogue.entities import (
     Chart,
@@ -64,13 +47,10 @@ from data_platform_catalogue.entities import (
     Dashboard,
     Database,
     DatabaseEntityMapping,
-    EntityRef,
     EntitySummary,
     FindMoJdataEntityMapper,
-    Governance,
     PublicationCollection,
     PublicationDataset,
-    PublicationDatasetEntityMapping,
     RelationshipType,
     Table,
     TableEntityMapping,
@@ -284,41 +264,8 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
                 "container"
             ]
-            properties, custom_properties = parse_properties(response)
-            name, display_name, qualified_name = parse_names(response, properties)
-
-            child_relations = parse_relations(
-                relationship_type=RelationshipType.CHILD,
-                relations_list=[response["relationships"]],
-                entity_type_of_relations=PublicationDatasetEntityMapping.url_formatted,
-            )
-            relations_to_display = self.list_relations_to_display(child_relations)
-
-            return PublicationCollection(
-                urn=urn,
-                external_url=properties.get("externalUrl", ""),
-                display_name=display_name,
-                name=name,
-                fully_qualified_name=qualified_name,
-                description=properties.get("description", ""),
-                relationships=relations_to_display,
-                domain=parse_domain(response),
-                governance=Governance(
-                    data_owner=parse_data_owner(response),
-                    data_custodians=parse_custodians(response),
-                    data_stewards=parse_stewards(response),
-                ),
-                tags=parse_tags(response),
-                glossary_terms=parse_glossary_terms(response),
-                metadata_last_ingested=parse_metadata_last_ingested(response),
-                created=parse_data_created(properties),
-                data_last_modified=parse_data_last_modified(properties),
-                custom_properties=custom_properties,
-                platform=EntityRef(
-                    display_name=response["platform"]["name"],
-                    urn=response["platform"]["name"],
-                ),
-            )
+            publication_collection_object = PublicationCollectionParser().parse_to_entity_object(response, urn)
+            return publication_collection_object
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
     def get_publication_dataset_details(self, urn: str) -> PublicationDataset:
@@ -326,42 +273,9 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})[
                 "dataset"
             ]
-            properties, custom_properties = parse_properties(response)
-            name, display_name, qualified_name = parse_names(response, properties)
+            publication_dataset_object = PublicationDatasetParser().parse_to_entity_object(response, urn)
+            return publication_dataset_object
 
-            parent_relations = parse_relations(
-                RelationshipType.PARENT,
-                [response.get("parent_container_relations", {})],
-            )
-            parent_relations_to_display = self.list_relations_to_display(
-                parent_relations
-            )
-
-            return PublicationDataset(
-                urn=urn,
-                external_url=properties.get("externalUrl", ""),
-                display_name=display_name,
-                name=name,
-                fully_qualified_name=qualified_name,
-                description=properties.get("description", ""),
-                relationships={**parent_relations_to_display},
-                domain=parse_domain(response),
-                governance=Governance(
-                    data_owner=parse_data_owner(response),
-                    data_custodians=parse_custodians(response),
-                    data_stewards=parse_stewards(response),
-                ),
-                tags=parse_tags(response),
-                glossary_terms=parse_glossary_terms(response),
-                metadata_last_ingested=parse_metadata_last_ingested(response),
-                created=parse_data_created(properties),
-                data_last_modified=parse_data_last_modified(properties),
-                custom_properties=custom_properties,
-                platform=EntityRef(
-                    display_name=response["platform"]["name"],
-                    urn=response["platform"]["name"],
-                ),
-            )
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
     def get_dashboard_details(self, urn: str) -> Dashboard:
@@ -369,36 +283,8 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.dashboard_query, {"urn": urn})[
                 "dashboard"
             ]
-            properties, custom_properties = parse_properties(response)
-            name, display_name, qualified_name = parse_names(response, properties)
-
-            return Dashboard(
-                urn=urn,
-                display_name=display_name,
-                name=name,
-                fully_qualified_name=qualified_name,
-                description=properties.get("description", ""),
-                relationships=self.list_relations_to_display(
-                    parse_relations(RelationshipType.CHILD, [response["relationships"]])
-                ),
-                domain=parse_domain(response),
-                governance=Governance(
-                    data_owner=parse_data_owner(response),
-                    data_stewards=parse_stewards(response),
-                    data_custodians=parse_custodians(response),
-                ),
-                external_url=properties.get("externalUrl", ""),
-                tags=parse_tags(response),
-                glossary_terms=parse_glossary_terms(response),
-                metadata_last_ingested=parse_metadata_last_ingested(response),
-                created=parse_data_created(properties),
-                data_last_modified=parse_data_last_modified(properties),
-                custom_properties=custom_properties,
-                platform=EntityRef(
-                    display_name=response["platform"]["name"],
-                    urn=response["platform"]["name"],
-                ),
-            )
+            dashboard_object = DashboardParser().parse_to_entity_object(response, urn)
+            return dashboard_object
 
         raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")
 

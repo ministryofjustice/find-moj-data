@@ -3,16 +3,7 @@ import logging
 from typing import Any, Sequence, Tuple
 
 from data_platform_catalogue.client.exceptions import CatalogueError
-from data_platform_catalogue.client.graphql_helpers import (
-    get_graphql_query,
-    parse_data_last_modified,
-    parse_data_owner,
-    parse_domain,
-    parse_glossary_terms,
-    parse_names,
-    parse_properties,
-    parse_tags,
-)
+from data_platform_catalogue.client.graphql_helpers import get_graphql_query
 from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.client.parsers import EntityParserFactory
 from data_platform_catalogue.entities import (
