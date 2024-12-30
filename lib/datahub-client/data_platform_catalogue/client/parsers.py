@@ -17,6 +17,7 @@ from data_platform_catalogue.entities import (
     TableEntityMapping,
     ChartEntityMapping,
     DatabaseEntityMapping,
+    GlossaryTermEntityMapping,
     DatahubEntityType,
     EntityRef,
     PublicationDatasetEntityMapping,
@@ -868,6 +869,33 @@ class DashboardParser(ContainerParser):
                 display_name=response["platform"]["name"],
                 urn=response["platform"]["name"],
             ),
+        )
+
+
+class GlossaryTermParser(EntityParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = GlossaryTermEntityMapping
+
+    def parse_to_entity_object(self):
+        pass
+
+    def parse(self, entity) -> SearchResult:
+        properties, _ = self.parse_properties(entity)
+        metadata = {"parentNodes": entity["parentNodes"]["nodes"]}
+        name, display_name, qualified_name = self.parse_names(entity, properties)
+
+        return SearchResult(
+            urn=entity["urn"],
+            result_type=self.mapper,
+            matches={},
+            name=name,
+            display_name=display_name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            metadata=metadata,
+            tags=[],
+            last_modified=None,
         )
 
 

@@ -1,13 +1,9 @@
 import pytest
+from data_platform_catalogue.search_types import SearchResult
 from data_platform_catalogue.client.parsers import (
     DATA_CUSTODIAN,
     EntityParser,
     EntityParserFactory,
-)
-from data_platform_catalogue.search_types import SearchResult
-
-from data_platform_catalogue.client.parsers import (
-    EntityParser,
     DatasetParser,
     TableParser,
     ChartParser,
