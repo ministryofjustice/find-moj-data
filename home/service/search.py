@@ -43,8 +43,9 @@ class SearchService(GenericService):
     ) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
+    @staticmethod
     def _build_entity_types(
-        self, entity_types: list[str]
+        entity_types: list[str]
     ) -> tuple[FindMoJdataEntityMapper, ...]:
         default_entities = tuple(
             Mapper for Mapper in Mappers if Mapper.datahub_type.value != "GLOSSARY_TERM"
@@ -57,7 +58,8 @@ class SearchService(GenericService):
 
         return chosen_entities if chosen_entities else default_entities
 
-    def _format_query_value(self, query: str) -> str:
+    @staticmethod
+    def _format_query_value(query: str) -> str:
         query_pattern: str = r"^[\"'].+[\"']$"
         # Datahub treats any query with underscores as exact, so if the string is not quoted,
         # we convert underscores to spaces so that we get partial matches as well.
@@ -232,7 +234,8 @@ class SearchService(GenericService):
     def _add_mark_tags(description: str, pattern: re.Pattern) -> str:
         return pattern.sub(r"<mark>\1</mark>", description)
 
-    def _get_match_reason_display_names(self):
+    @staticmethod
+    def _get_match_reason_display_names():
         return {
             "id": "ID",
             "urn": "URN",
