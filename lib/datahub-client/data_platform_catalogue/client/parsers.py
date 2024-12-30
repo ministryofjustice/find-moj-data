@@ -483,6 +483,18 @@ class EntityParser:
             return None
         return timestamp
 
+    def parse_last_datajob_run_date(self, response: dict[str, Any]) -> datetime | None:
+        """
+        Look for the last job that produced/consumed the dataset and return the time it ran.
+        """
+        list_of_runs: list = response.get("runs", {}).get("runs", [])
+        if not list_of_runs:
+            updated = None
+        if list_of_runs:
+            updated = list_of_runs[0].get("created", {}).get("time", {})
+
+        return updated
+
 
 class DatasetParser(EntityParser):
     def __init__(self):
@@ -592,18 +604,6 @@ class DatasetParser(EntityParser):
             custom_properties=custom_properties,
             platform=EntityRef(display_name=platform_name, urn=platform_name),
         )
-
-    def parse_last_datajob_run_date(self, response: dict[str, Any]) -> datetime | None:
-        """
-        Look for the last job that produced/consumed the dataset and return the time it ran.
-        """
-        list_of_runs: list = response.get("runs", {}).get("runs", [])
-        if not list_of_runs:
-            updated = None
-        if list_of_runs:
-            updated = list_of_runs[0].get("created", {}).get("time", {})
-
-        return updated
 
 
 class TableParser(DatasetParser):
