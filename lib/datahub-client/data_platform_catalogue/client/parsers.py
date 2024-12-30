@@ -132,7 +132,7 @@ class EntityParser:
             if schedule in tag_ref.display_name
         ]
         if len(relevant_refresh_schedules) > 1:
-            logger.warn(f"More than one refresh period tag found: {tags=}")
+            logger.warning(f"More than one refresh period tag found: {tags=}")
 
         if relevant_refresh_schedules:
             refresh_schedule = ", ".join(relevant_refresh_schedules).capitalize()
@@ -483,26 +483,6 @@ class EntityParser:
             return None
         return timestamp
 
-    def parse_data_last_modified(self, properties: dict[str, Any]) -> datetime | None:
-        """
-        Return the time when the data was last updated in the source system
-        (not Datahub)
-        """
-        modified = (properties.get("lastModified") or {}).get("time")
-        return None if modified == 0 else modified
-
-    def parse_last_datajob_run_date(self, response: dict[str, Any]) -> datetime | None:
-        """
-        Look for the last job that produced/consumed the dataset and return the time it ran.
-        """
-        list_of_runs: list = response.get("runs", {}).get("runs", [])
-        if not list_of_runs:
-            updated = None
-        if list_of_runs:
-            updated = list_of_runs[0].get("created", {}).get("time", {})
-
-        return updated
-
 
 class DatasetParser(EntityParser):
     def __init__(self):
@@ -612,6 +592,18 @@ class DatasetParser(EntityParser):
             custom_properties=custom_properties,
             platform=EntityRef(display_name=platform_name, urn=platform_name),
         )
+
+    def parse_last_datajob_run_date(self, response: dict[str, Any]) -> datetime | None:
+        """
+        Look for the last job that produced/consumed the dataset and return the time it ran.
+        """
+        list_of_runs: list = response.get("runs", {}).get("runs", [])
+        if not list_of_runs:
+            updated = None
+        if list_of_runs:
+            updated = list_of_runs[0].get("created", {}).get("time", {})
+
+        return updated
 
 
 class TableParser(DatasetParser):
