@@ -3,10 +3,38 @@ import logging
 from datetime import datetime
 from typing import Any, Tuple
 
-from data_platform_catalogue.entities import CustomEntityProperties, AccessInformation, UsageRestrictions, DataSummary, \
-    TagRef, FurtherInformation, OwnerRef, GlossaryTermRef, DomainRef, TableEntityMapping, ChartEntityMapping, \
-    DatabaseEntityMapping, DatahubEntityType, EntityRef, PublicationDatasetEntityMapping, DashboardEntityMapping, \
-    DatahubSubtype, PublicationCollectionEntityMapping, Entity, Table, Chart, Database, PublicationDataset, Dashboard, PublicationCollection, RelationshipType, Governance, Column, EntitySummary
+from data_platform_catalogue.entities import (
+    ColumnRef,
+    CustomEntityProperties,
+    AccessInformation,
+    UsageRestrictions,
+    DataSummary,
+    TagRef,
+    FurtherInformation,
+    OwnerRef,
+    GlossaryTermRef,
+    DomainRef,
+    TableEntityMapping,
+    ChartEntityMapping,
+    DatabaseEntityMapping,
+    DatahubEntityType,
+    EntityRef,
+    PublicationDatasetEntityMapping,
+    DashboardEntityMapping,
+    DatahubSubtype,
+    PublicationCollectionEntityMapping,
+    Entity,
+    Table,
+    Chart,
+    Database,
+    PublicationDataset,
+    Dashboard,
+    PublicationCollection,
+    RelationshipType,
+    Governance,
+    Column,
+    EntitySummary,
+)
 from data_platform_catalogue.search_types import SearchResult
 
 logger = logging.getLogger(__name__)
@@ -30,8 +58,9 @@ class EntityParser:
         raise NotImplementedError
 
     @staticmethod
-    def parse_names(entity: dict[str, Any], properties: dict[str, Any]
-                    ) -> Tuple[str, str, str]:
+    def parse_names(
+        entity: dict[str, Any], properties: dict[str, Any]
+    ) -> Tuple[str, str, str]:
         """
         Returns a tuple of 3 name values.
 
@@ -90,9 +119,10 @@ class EntityParser:
         return DomainRef(display_name=display_name, urn=domain_id)
 
     @staticmethod
-    def get_refresh_period_from_cadet_tags(tags: list[TagRef],
-                                           refresh_schedules: tuple[str] = ("daily", "weekly", "monthly")
-                                           ) -> str:
+    def get_refresh_period_from_cadet_tags(
+        tags: list[TagRef],
+        refresh_schedules: tuple[str] = ("daily", "weekly", "monthly"),
+    ) -> str:
         # Check if any of the tags are refresh period tags eg "daily_opg"
         relevant_refresh_schedules = [
             schedule
@@ -110,7 +140,9 @@ class EntityParser:
         if not relevant_refresh_schedules:
             return ""
 
-    def parse_properties(self, entity: dict[str, Any]) -> Tuple[dict[str, Any], CustomEntityProperties]:
+    def parse_properties(
+        self, entity: dict[str, Any]
+    ) -> Tuple[dict[str, Any], CustomEntityProperties]:
         """
         Parse properties and editableProperties into a single dictionary.
         """
@@ -130,7 +162,7 @@ class EntityParser:
 
         if "dpia_required" in custom_properties_dict:
             custom_properties_dict["dpia_required"] = (
-                    custom_properties_dict["dpia_required"] == "True"
+                custom_properties_dict["dpia_required"] == "True"
             )
 
         properties.pop("customProperties", None)
@@ -291,7 +323,9 @@ class EntityParser:
 
             display_name = foreign_path.split(".")[-1]
             foreign_keys[source_path].append(
-                ColumnRef(name=foreign_path, display_name=display_name, table=foreign_table)
+                ColumnRef(
+                    name=foreign_path, display_name=display_name, table=foreign_table
+                )
             )
 
         for field in schema_metadata.get("fields", ()):
@@ -319,7 +353,8 @@ class EntityParser:
         # Sort primary keys first, then sort alphabetically
         return sorted(result, key=lambda c: (0 if c.is_primary_key else 1, c.name))
 
-    def _parse_owners_by_type(self,
+    def _parse_owners_by_type(
+        self,
         entity: dict[str, Any],
         ownership_type_urn: str,
     ) -> list[OwnerRef]:
@@ -551,9 +586,7 @@ class DatasetParser(EntityParser):
             RelationshipType.PARENT,
             [response.get("parent_container_relations", {})],
         )
-        parent_relations_to_display = self.list_relations_to_display(
-            parent_relations
-        )
+        parent_relations_to_display = self.list_relations_to_display(parent_relations)
         subtypes = self.parse_subtypes(response)
 
         return Table(
@@ -716,7 +749,9 @@ class PublicationCollectionParser(ContainerParser):
         super().__init__()
         self.mapper = PublicationCollectionEntityMapping
 
-    def parse_to_entity_object(self, response: dict[str, Any], urn: str) -> PublicationCollection:
+    def parse_to_entity_object(
+        self, response: dict[str, Any], urn: str
+    ) -> PublicationCollection:
         properties, custom_properties = self.parse_properties(response)
         name, display_name, qualified_name = self.parse_names(response, properties)
 
@@ -767,9 +802,7 @@ class PublicationDatasetParser(ContainerParser):
             RelationshipType.PARENT,
             [response.get("parent_container_relations", {})],
         )
-        parent_relations_to_display = self.list_relations_to_display(
-            parent_relations
-        )
+        parent_relations_to_display = self.list_relations_to_display(parent_relations)
 
         return PublicationDataset(
             urn=urn,
@@ -814,7 +847,9 @@ class DashboardParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships=self.list_relations_to_display(
-                self.parse_relations(RelationshipType.CHILD, [response["relationships"]])
+                self.parse_relations(
+                    RelationshipType.CHILD, [response["relationships"]]
+                )
             ),
             domain=self.parse_domain(response),
             governance=Governance(

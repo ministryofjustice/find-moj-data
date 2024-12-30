@@ -1,15 +1,44 @@
 import pytest
-from data_platform_catalogue.client.parsers import DATA_CUSTODIAN, EntityParser, EntityParserFactory
+from data_platform_catalogue.client.parsers import (
+    DATA_CUSTODIAN,
+    EntityParser,
+    EntityParserFactory,
+)
 from data_platform_catalogue.search_types import SearchResult
 
 from data_platform_catalogue.client.parsers import (
-    EntityParser, DatasetParser, TableParser, ChartParser,
-    DatabaseParser, PublicationCollectionParser, PublicationDatasetParser, DashboardParser
+    EntityParser,
+    DatasetParser,
+    TableParser,
+    ChartParser,
+    DatabaseParser,
+    PublicationCollectionParser,
+    PublicationDatasetParser,
+    DashboardParser,
 )
 from data_platform_catalogue.entities import (
-    AccessInformation, Audience, ColumnRef, CustomEntityProperties, DataSummary, DatahubEntityType, DatahubSubtype, EntitySummary,
-    FurtherInformation,  OwnerRef, RelationshipType, TagRef, GlossaryTermRef, Table, Chart, Database,
-    PublicationDataset, Dashboard, PublicationCollection, EntityRef, Column, UsageRestrictions
+    AccessInformation,
+    Audience,
+    ColumnRef,
+    CustomEntityProperties,
+    DataSummary,
+    DatahubEntityType,
+    DatahubSubtype,
+    EntitySummary,
+    FurtherInformation,
+    OwnerRef,
+    RelationshipType,
+    TagRef,
+    GlossaryTermRef,
+    Table,
+    Chart,
+    Database,
+    PublicationDataset,
+    Dashboard,
+    PublicationCollection,
+    EntityRef,
+    Column,
+    UsageRestrictions,
 )
 
 
@@ -91,14 +120,12 @@ def mock_dataset_graphql_entity():
 
 @pytest.fixture
 def mock_graphql_search_result(mock_dataset_graphql_entity):
-    return {
-        "entity": mock_dataset_graphql_entity,
-        "matchedFields": []
-    }
+    return {"entity": mock_dataset_graphql_entity, "matchedFields": []}
 
 
 @pytest.mark.parametrize(
-    "parser, entity_object_type", [
+    "parser, entity_object_type",
+    [
         (DatasetParser(), Table),
         (TableParser(), Table),
         (ChartParser(), Chart),
@@ -106,22 +133,24 @@ def mock_graphql_search_result(mock_dataset_graphql_entity):
         (PublicationCollectionParser(), PublicationCollection),
         (PublicationDatasetParser(), PublicationDataset),
         (DashboardParser(), Dashboard),
-    ]
+    ],
 )
-class TestParsers():
+class TestParsers:
     def test_parse(self, parser, entity_object_type, mock_graphql_search_result):
         search_result = parser.parse(mock_graphql_search_result)
         assert isinstance(search_result, SearchResult)
         assert search_result.urn == mock_graphql_search_result["entity"]["urn"]
 
-    def test_parse_to_entity_object(self, parser, entity_object_type, mock_dataset_graphql_entity):
+    def test_parse_to_entity_object(
+        self, parser, entity_object_type, mock_dataset_graphql_entity
+    ):
         urn = "urn:li:dataset:test_dataset"
         table = parser.parse_to_entity_object(mock_dataset_graphql_entity, urn)
         assert isinstance(table, entity_object_type)
         assert table.urn == urn
 
 
-class TestEntityParser():
+class TestEntityParser:
     @pytest.fixture
     def parser(self):
         return EntityParser()
@@ -284,10 +313,17 @@ class TestEntityParser():
                         "entity": {
                             "urn": "urn:li:dataProduct:test",
                             "type": "DATA_PRODUCT",
-                            "properties": {"name": "test", "description": "a test entity"},
+                            "properties": {
+                                "name": "test",
+                                "description": "a test entity",
+                            },
                             "tags": {
                                 "tags": [
-                                    {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}
+                                    {
+                                        "tag": {
+                                            "urn": "urn:li:tag:dc_display_in_catalogue"
+                                        }
+                                    }
                                 ]
                             },
                         }
@@ -295,7 +331,9 @@ class TestEntityParser():
                 ],
             }
         }
-        result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
+        result = parser.parse_relations(
+            RelationshipType.PARENT, [relations["relationships"]]
+        )
         assert result == {
             RelationshipType.PARENT: [
                 EntitySummary(
@@ -316,7 +354,9 @@ class TestEntityParser():
 
     def test_parse_relations_blank(self, parser):
         relations = {"relationships": {"total": 0, "relationships": []}}
-        result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
+        result = parser.parse_relations(
+            RelationshipType.PARENT, [relations["relationships"]]
+        )
         assert result == {RelationshipType.PARENT: []}
 
     @pytest.mark.parametrize(
@@ -343,7 +383,12 @@ class TestEntityParser():
         ],
     )
     def test_parse_created_and_modified(
-        self, parser, raw_created, raw_last_modified, expected_created, expected_modified
+        self,
+        parser,
+        raw_created,
+        raw_last_modified,
+        expected_created,
+        expected_modified,
     ):
         properties = {
             "created": raw_created,
@@ -363,7 +408,10 @@ class TestEntityParser():
                     {"key": "dpia_required", "value": False},
                     {"key": "dpia_location", "value": ""},
                     {"key": "data_sensitivity_level", "value": "OFFICIAL"},
-                    {"key": "dc_where_to_access_dataset", "value": "analytical_platform"},
+                    {
+                        "key": "dc_where_to_access_dataset",
+                        "value": "analytical_platform",
+                    },
                     {"key": "dc_slack_channel_name", "value": "test-channel"},
                     {"key": "dc_slack_channel_url", "value": "test-url"},
                     {"key": "source_dataset_name", "value": ""},
@@ -410,7 +458,10 @@ class TestEntityParser():
                     {"key": "dpia_required", "value": False},
                     {"key": "dpia_location", "value": ""},
                     {"key": "data_sensitivity_level", "value": "OFFICIAL"},
-                    {"key": "dc_where_to_access_dataset", "value": "analytical_platform"},
+                    {
+                        "key": "dc_where_to_access_dataset",
+                        "value": "analytical_platform",
+                    },
                     {"key": "source_dataset_name", "value": ""},
                     {"key": "s3_location", "value": "s3://databucket/"},
                     {"key": "row_count", "value": 100},
@@ -503,7 +554,11 @@ class TestEntityParser():
                             },
                             "tags": {
                                 "tags": [
-                                    {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}
+                                    {
+                                        "tag": {
+                                            "urn": "urn:li:tag:dc_display_in_catalogue"
+                                        }
+                                    }
                                 ]
                             },
                         }
@@ -518,7 +573,11 @@ class TestEntityParser():
                             },
                             "tags": {
                                 "tags": [
-                                    {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue2"}}
+                                    {
+                                        "tag": {
+                                            "urn": "urn:li:tag:dc_display_in_catalogue2"
+                                        }
+                                    }
                                 ]
                             },
                         }
@@ -526,7 +585,9 @@ class TestEntityParser():
                 ],
             }
         }
-        result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
+        result = parser.parse_relations(
+            RelationshipType.PARENT, [relations["relationships"]]
+        )
         assert result == {
             RelationshipType.PARENT: [
                 EntitySummary(
@@ -639,7 +700,10 @@ class TestEntityParser():
             "ownership": {
                 "owners": [
                     {
-                        "owner": {"urn": "urn:li:corpuser:joe.bloggs", "properties": None},
+                        "owner": {
+                            "urn": "urn:li:corpuser:joe.bloggs",
+                            "properties": None,
+                        },
                         "ownershipType": {
                             "urn": "urn:li:ownershipType:__system__dataowner",
                             "type": "CUSTOM_OWNERSHIP_TYPE",
@@ -724,7 +788,10 @@ class TestEntityParser():
         }
         example_no_updated = {}
 
-        assert parser.parse_last_datajob_run_date(example_with_updated) == expected_timestamp
+        assert (
+            parser.parse_last_datajob_run_date(example_with_updated)
+            == expected_timestamp
+        )
         assert parser.parse_last_datajob_run_date(example_no_updated) is None
 
     @pytest.mark.parametrize(
@@ -742,55 +809,51 @@ class TestEntityParser():
             ),
         ],
     )
-    def test_get_refresh_period_from_cadet_tags(self, parser, tags, expected_refresh_period):
+    def test_get_refresh_period_from_cadet_tags(
+        self, parser, tags, expected_refresh_period
+    ):
         refresh_period = parser.get_refresh_period_from_cadet_tags(tags)
         assert refresh_period == expected_refresh_period
 
 
-class TestEntityParserFactory():
+class TestEntityParserFactory:
     @pytest.fixture
     def parser_factory(self):
         return EntityParserFactory()
 
     @pytest.mark.parametrize(
-            "entity_slug, expected_parser",
-            [
-                (
-                    {"entity": {"type": DatahubEntityType.DATASET.value}},
-                    TableParser
-                ),
-                (
-                    {
-                        "entity": {
-                            "type": DatahubEntityType.DATASET.value,
-                            "subTypes": {"typeNames": [DatahubSubtype.PUBLICATION_DATASET.value]}
-                        }
-                    },
-                    PublicationDatasetParser
-                ),
-                (
-                    {"entity": {"type": DatahubEntityType.CHART.value}},
-                    ChartParser
-                ),
-                (
-                    {"entity": {"type": DatahubEntityType.DASHBOARD.value}},
-                    DashboardParser
-                ),
-                (
-                    {"entity": {"type": DatahubEntityType.CONTAINER.value}},
-                    DatabaseParser
-                ),
-                (
-                    {
-                        "entity": {
-                            "type": DatahubEntityType.CONTAINER.value,
-                            "subTypes": {"typeNames": [DatahubSubtype.PUBLICATION_COLLECTION.value]}
-                        }
-                    },
-                    PublicationCollectionParser
-                ),
-            ],
+        "entity_slug, expected_parser",
+        [
+            ({"entity": {"type": DatahubEntityType.DATASET.value}}, TableParser),
+            (
+                {
+                    "entity": {
+                        "type": DatahubEntityType.DATASET.value,
+                        "subTypes": {
+                            "typeNames": [DatahubSubtype.PUBLICATION_DATASET.value]
+                        },
+                    }
+                },
+                PublicationDatasetParser,
+            ),
+            ({"entity": {"type": DatahubEntityType.CHART.value}}, ChartParser),
+            ({"entity": {"type": DatahubEntityType.DASHBOARD.value}}, DashboardParser),
+            ({"entity": {"type": DatahubEntityType.CONTAINER.value}}, DatabaseParser),
+            (
+                {
+                    "entity": {
+                        "type": DatahubEntityType.CONTAINER.value,
+                        "subTypes": {
+                            "typeNames": [DatahubSubtype.PUBLICATION_COLLECTION.value]
+                        },
+                    }
+                },
+                PublicationCollectionParser,
+            ),
+        ],
     )
-    def test_get_parser_for_entity_type(self, parser_factory, entity_slug, expected_parser):
+    def test_get_parser_for_entity_type(
+        self, parser_factory, entity_slug, expected_parser
+    ):
         parser = parser_factory.get_parser(entity_slug)
         assert isinstance(parser, expected_parser)

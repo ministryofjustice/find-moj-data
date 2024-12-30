@@ -38,7 +38,14 @@ from data_platform_catalogue.client.exceptions import (
     InvalidUser,
     ReferencedEntityMissing,
 )
-from data_platform_catalogue.client.parsers import ChartParser, DashboardParser, DatabaseParser, PublicationCollectionParser, PublicationDatasetParser, TableParser
+from data_platform_catalogue.client.parsers import (
+    ChartParser,
+    DashboardParser,
+    DatabaseParser,
+    PublicationCollectionParser,
+    PublicationDatasetParser,
+    TableParser,
+)
 from data_platform_catalogue.client.search.search_client import SearchClient
 from data_platform_catalogue.entities import (
     Chart,
@@ -233,7 +240,9 @@ class DataHubCatalogueClient:
 
     def get_table_details(self, urn) -> Table:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})["dataset"]
+            response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})[
+                "dataset"
+            ]
             table_object = TableParser().parse_to_entity_object(response, urn)
             return table_object
 
@@ -264,7 +273,9 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
                 "container"
             ]
-            publication_collection_object = PublicationCollectionParser().parse_to_entity_object(response, urn)
+            publication_collection_object = (
+                PublicationCollectionParser().parse_to_entity_object(response, urn)
+            )
             return publication_collection_object
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
@@ -273,7 +284,9 @@ class DataHubCatalogueClient:
             response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})[
                 "dataset"
             ]
-            publication_dataset_object = PublicationDatasetParser().parse_to_entity_object(response, urn)
+            publication_dataset_object = (
+                PublicationDatasetParser().parse_to_entity_object(response, urn)
+            )
             return publication_dataset_object
 
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
