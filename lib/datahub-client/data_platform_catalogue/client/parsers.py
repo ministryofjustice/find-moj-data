@@ -138,8 +138,7 @@ class EntityParser:
             refresh_schedule = ", ".join(relevant_refresh_schedules).capitalize()
             return refresh_schedule
 
-        if not relevant_refresh_schedules:
-            return ""
+        return ""
 
     def parse_properties(
         self, entity: dict[str, Any]
@@ -892,9 +891,6 @@ class GlossaryTermParser(EntityParser):
 
 
 class EntityParserFactory:
-    def __init__(self):
-        pass
-
     @staticmethod
     def get_parser(result: dict) -> EntityParser:
         entity = result["entity"]
