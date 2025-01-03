@@ -33,7 +33,7 @@ selenium = "~=4.27.1"
 flake8 = ">=6.1.0"
 pytest-django = "^4.9.0"
 pytest-cov = "^6.0.0"
-faker = "^33.1.0"
+faker = "^33.3.0"
 isort = "^5.13.2"
 
 [build-system]
