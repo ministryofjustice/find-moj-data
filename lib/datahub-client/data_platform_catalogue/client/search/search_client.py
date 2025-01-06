@@ -3,28 +3,13 @@ import logging
 from typing import Any, Sequence, Tuple
 
 from data_platform_catalogue.client.exceptions import CatalogueError
-from data_platform_catalogue.client.graphql_helpers import (
-    get_graphql_query,
-    parse_data_last_modified,
-    parse_data_owner,
-    parse_domain,
-    parse_glossary_terms,
-    parse_names,
-    parse_properties,
-    parse_tags,
-)
+from data_platform_catalogue.client.graphql_helpers import get_graphql_query
 from data_platform_catalogue.client.search.filters import map_filters
+from data_platform_catalogue.client.parsers import EntityParser, EntityParserFactory, GlossaryTermParser
 from data_platform_catalogue.entities import (
     ChartEntityMapping,
-    DashboardEntityMapping,
     DatabaseEntityMapping,
-    DatahubEntityType,
-    DatahubSubtype,
-    EntityRef,
     FindMoJdataEntityMapper,
-    GlossaryTermEntityMapping,
-    PublicationCollectionEntityMapping,
-    PublicationDatasetEntityMapping,
     TableEntityMapping,
 )
 from data_platform_catalogue.search_types import (
@@ -33,7 +18,6 @@ from data_platform_catalogue.search_types import (
     MultiSelectFilter,
     SearchFacets,
     SearchResponse,
-    SearchResult,
     SortOption,
 )
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
@@ -45,66 +29,12 @@ logger = logging.getLogger(__name__)
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
         self.graph = graph
+        self.entity_parser = EntityParser()
         self.search_query = get_graphql_query("search")
         self.facets_query = get_graphql_query("facets")
         self.list_domains_query = get_graphql_query("listDomains")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
-        self.datahub_types_to_fmd_type_and_parser_mapping = {
-            (
-                DatahubEntityType.DATASET.value,
-                DatahubSubtype.PUBLICATION_DATASET.value,
-            ): (
-                self._parse_dataset,
-                PublicationDatasetEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.METRIC.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.TABLE.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.MODEL.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.SEED.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.DATASET.value, DatahubSubtype.SOURCE.value): (
-                self._parse_dataset,
-                TableEntityMapping,
-            ),
-            (DatahubEntityType.CONTAINER.value, DatahubSubtype.DATABASE.value): (
-                self._parse_container,
-                DatabaseEntityMapping,
-            ),
-            (
-                DatahubEntityType.CONTAINER.value,
-                DatahubSubtype.PUBLICATION_COLLECTION.value,
-            ): (
-                self._parse_container,
-                PublicationCollectionEntityMapping,
-            ),
-            (
-                DatahubEntityType.DATASET.value,
-                DatahubSubtype.PUBLICATION_DATASET.value,
-            ): (
-                self._parse_container,
-                PublicationDatasetEntityMapping,
-            ),
-            (DatahubEntityType.CHART.value, None): (
-                self._parse_dataset,
-                ChartEntityMapping,
-            ),
-            (DatahubEntityType.DASHBOARD.value, None): (
-                self._parse_container,
-                DashboardEntityMapping,
-            ),
-        }
 
     def search(
         self,
@@ -172,23 +102,15 @@ class SearchClient:
     def _parse_search_results(self, response) -> Tuple[list, list]:
         page_results = []
         malformed_result_urns = []
-        for result in response["searchResults"]:
-            entity = result["entity"]
-            entity_type = entity["type"]
-            entity_urn = entity["urn"]
-            entity_subtype = (
-                entity.get("subTypes", {}).get("typeNames", [None])[0]
-                if entity.get("subTypes") is not None
-                else None
-            )
-            matched_fields = self._get_matched_fields(result=result)
+        parser_factory = EntityParserFactory()
 
+        for result in response["searchResults"]:
+            entity_urn = result["entity"]["urn"]
             try:
-                parser, fmd_type = self.datahub_types_to_fmd_type_and_parser_mapping[
-                    (entity_type, entity_subtype)
-                ]
-                parsed_result = parser(entity, matched_fields, fmd_type)
-                page_results.append(parsed_result)
+                parser = parser_factory.get_parser(result)
+                parsed_search_result = parser.parse(result)
+                page_results.append(parsed_search_result)
+
             except KeyError as k_e:
                 logger.exception(
                     f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}"
@@ -199,21 +121,6 @@ class SearchClient:
                 malformed_result_urns.append(entity_urn)
 
         return page_results, malformed_result_urns
-
-    @staticmethod
-    def _get_matched_fields(result: dict) -> dict:
-        fields = result.get("matchedFields", [])
-        matched_fields = {}
-        for field in fields:
-            name = field.get("name")
-            value = field.get("value")
-            if name == "customProperties" and value != "":
-                try:
-                    name, value = value.split("=")
-                except ValueError:
-                    continue
-            matched_fields[name] = value
-        return matched_fields
 
     def list_domains(
         self,
@@ -285,58 +192,6 @@ class SearchClient:
             list_domain_options.append(DomainOption(urn, name, total))
         return list_domain_options
 
-    def _parse_dataset(
-        self, entity: dict[str, Any], matches, result_type: FindMoJdataEntityMapper
-    ) -> SearchResult:
-        """
-        Map a dataset entity to a SearchResult
-        """
-        owner = parse_data_owner(entity)
-        properties, custom_properties = parse_properties(entity)
-        tags = parse_tags(entity)
-        terms = parse_glossary_terms(entity)
-        name, display_name, qualified_name = parse_names(entity, properties)
-        container = entity.get("container")
-        if container:
-            _container_name, container_display_name, _container_qualified_name = (
-                parse_names(container, container.get("properties") or {})
-            )
-        domain = parse_domain(entity)
-
-        metadata = {
-            "owner": owner.display_name,
-            "owner_email": owner.email,
-            "total_parents": entity.get("relationships", {}).get("total", 0),
-            "domain_name": domain.display_name,
-            "domain_id": domain.urn,
-        }
-        logger.debug(f"{metadata=}")
-
-        metadata.update(custom_properties.usage_restrictions.model_dump())
-        metadata.update(custom_properties.access_information.model_dump())
-        metadata.update(custom_properties.data_summary.model_dump())
-
-        modified = parse_data_last_modified(properties)
-
-        return SearchResult(
-            urn=entity["urn"],
-            result_type=result_type,
-            matches=matches,
-            name=name,
-            display_name=display_name,
-            fully_qualified_name=qualified_name,
-            parent_entity=(
-                EntityRef(urn=container.get("urn"), display_name=container_display_name)
-                if container
-                else None
-            ),
-            description=properties.get("description", ""),
-            metadata=metadata,
-            tags=tags,
-            glossary_terms=terms,
-            last_modified=modified,
-        )
-
     def _parse_facets(self, facets: list[dict[str, Any]]) -> SearchFacets:
         """
         Parse the facets and aggregate information from the query results
@@ -360,24 +215,6 @@ class SearchClient:
 
         return SearchFacets(results)
 
-    def _parse_glossary_term(self, entity) -> SearchResult:
-        properties, _ = parse_properties(entity)
-        metadata = {"parentNodes": entity["parentNodes"]["nodes"]}
-        name, display_name, qualified_name = parse_names(entity, properties)
-
-        return SearchResult(
-            urn=entity["urn"],
-            result_type=GlossaryTermEntityMapping,
-            matches={},
-            name=name,
-            display_name=display_name,
-            fully_qualified_name=qualified_name,
-            description=properties.get("description", ""),
-            metadata=metadata,
-            tags=[],
-            last_modified=None,
-        )
-
     def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
         "Get some number of glossary terms from DataHub"
         variables = {"count": count}
@@ -391,9 +228,10 @@ class SearchClient:
         page_results = []
         response = response["searchAcrossEntities"]
         logger.debug(json.dumps(response, indent=2))
+        parser = GlossaryTermParser()
 
         for result in response["searchResults"]:
-            page_results.append(self._parse_glossary_term(entity=result["entity"]))
+            page_results.append(parser.parse(entity=result["entity"]))
 
         return SearchResponse(
             total_results=response["total"], page_results=page_results
@@ -428,40 +266,3 @@ class SearchClient:
             for tag in tag_query_results["searchResults"]
         ]
         return tags_list
-
-    def _parse_container(
-        self, entity: dict[str, Any], matches, subtype: FindMoJdataEntityMapper
-    ) -> SearchResult:
-        """
-        Map a Container entity to a SearchResult
-        """
-        tags = parse_tags(entity)
-        terms = parse_glossary_terms(entity)
-        properties, custom_properties = parse_properties(entity)
-        modified = parse_data_last_modified(properties)
-        domain = parse_domain(entity)
-        owner = parse_data_owner(entity)
-        name, display_name, qualified_name = parse_names(entity, properties)
-
-        metadata = {
-            "owner": owner.display_name,
-            "owner_email": owner.email,
-            "domain_name": domain.display_name,
-            "domain_id": domain.urn,
-        }
-
-        metadata.update(custom_properties)
-
-        return SearchResult(
-            urn=entity["urn"],
-            result_type=subtype,
-            matches=matches,
-            name=name,
-            fully_qualified_name=qualified_name,
-            display_name=display_name,
-            description=properties.get("description", ""),
-            metadata=metadata,
-            tags=tags,
-            glossary_terms=terms,
-            last_modified=modified,
-        )
