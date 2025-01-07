@@ -430,9 +430,12 @@ class EntityParser:
                     if relation.get("entity", {}).get("properties") is not None
                     else relation.get("entity").get("name", "")
                 )
+                properties = relation.get("entity", {}).get("properties")
+                description_field = relation.get("entity").get("properties", {}).get("description", "")
                 description = (
-                    relation.get("entity").get("properties", {}).get("description", "")
-                    if relation.get("entity", {}).get("properties") is not None
+                    description_field
+                    if properties is not None
+                    and description_field is not None
                     else ""
                 )
                 tags = self.parse_tags(relation.get("entity"))
