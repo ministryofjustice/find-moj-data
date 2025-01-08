@@ -57,7 +57,12 @@ query getDatasetDetails($urn: String!) {
       typeNames
     }
     parent_container_relations: relationships(
-      input: { types: ["IsPartOf"], direction: OUTGOING, count: 10 }
+      input: {
+        types: ["IsPartOf"]
+        direction: OUTGOING
+        count: 10
+        includeSoftDelete: false
+      }
     ) {
       total
       relationships {

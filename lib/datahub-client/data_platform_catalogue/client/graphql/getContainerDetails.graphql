@@ -31,7 +31,15 @@ query getContainer($urn: String!) {
     subTypes {
       typeNames
     }
-    relationships(input: {types: ["IsPartOf"], direction:INCOMING start: 0, count: 500 }) {
+    relationships(
+      input: {
+        types: ["IsPartOf"]
+        direction: INCOMING
+        start: 0
+        count: 500
+        includeSoftDelete: false
+      }
+    ) {
       total
       relationships {
         entity {
@@ -44,7 +52,9 @@ query getContainer($urn: String!) {
             }
             tags {
               tags {
-                tag{urn}
+                tag {
+                  urn
+                }
               }
             }
             subTypes {
