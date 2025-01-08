@@ -431,7 +431,7 @@ class EntityParser:
                 properties = relation.get("entity", {}).get("properties")
                 if properties is not None:
                     description = properties.get("description") or ""
-                else:
+                elif properties is None:
                     description = ""
                 tags = self.parse_tags(relation.get("entity"))
                 related_entities.append(
