@@ -47,8 +47,6 @@ DATA_CUSTODIAN = "urn:li:ownershipType:data_custodian"
 
 
 class EntityParser:
-    def __init__(self):
-        pass
 
     def parse(self, search_response) -> SearchResult:
         """Parse graphql response to a SearchResult object"""
@@ -431,13 +429,10 @@ class EntityParser:
                     else relation.get("entity").get("name", "")
                 )
                 properties = relation.get("entity", {}).get("properties")
-                description_field = relation.get("entity").get("properties", {}).get("description", "")
-                description = (
-                    description_field
-                    if properties is not None
-                    and description_field is not None
-                    else ""
-                )
+                if properties is not None:
+                    description = properties.get("description") or ""
+                else:
+                    description = ""
                 tags = self.parse_tags(relation.get("entity"))
                 related_entities.append(
                     EntitySummary(
