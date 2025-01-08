@@ -6,7 +6,13 @@ query getChartDetails($urn: String!) {
       name
     }
     relationships(
-      input: { types: ["Contains"], direction: INCOMING, start: 0, count: 10 }
+      input: {
+        types: ["Contains"]
+        direction: INCOMING
+        start: 0
+        count: 10
+        includeSoftDelete: false
+      }
     ) {
       total
       relationships {

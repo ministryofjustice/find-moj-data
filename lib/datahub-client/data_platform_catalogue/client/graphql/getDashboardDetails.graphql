@@ -23,7 +23,13 @@ query getDashboard($urn: String!) {
       description
     }
     relationships(
-      input: { types: ["Contains"], direction: OUTGOING, start: 0, count: 500 }
+      input: {
+        types: ["Contains"]
+        direction: OUTGOING
+        start: 0
+        count: 500
+        includeSoftDelete: false
+      }
     ) {
       total
       relationships {
