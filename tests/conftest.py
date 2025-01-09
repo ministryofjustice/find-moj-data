@@ -972,7 +972,7 @@ def valid_domain():
     domains = SubjectAreaFetcher().fetch()
     return SubjectAreaTaxonomy(
         domains,
-    ).top_level_domains[0]
+    ).top_level_subject_areas[0]
 
 
 @pytest.fixture

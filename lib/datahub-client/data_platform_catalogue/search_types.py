@@ -52,7 +52,7 @@ class FacetOption:
 @dataclass
 class SubjectAreaOption:
     """
-    A representation of a domain and the number of associated entities
+    A representation of a subject area and the number of associated entities
     represented by total.
     """
 

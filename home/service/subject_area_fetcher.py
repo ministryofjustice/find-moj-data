@@ -29,5 +29,5 @@ class SubjectAreaFetcher(GenericService):
             cache.set(self.cache_key, result, timeout=self.cache_timeout_seconds)
 
         if self.filter_zero_entities:
-            result = [domain for domain in result if domain.total > 0]
+            result = [subject_area for subject_area in result if subject_area.total > 0]
         return result

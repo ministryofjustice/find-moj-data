@@ -12,15 +12,15 @@ class SubjectArea(NamedTuple):
 
 
 class SubjectAreaTaxonomy:
-    def __init__(self, domains: list[SubjectAreaOption]):
+    def __init__(self, subject_areas: list[SubjectAreaOption]):
         self.labels = {}
 
-        self.top_level_domains = [
-            SubjectArea(domain.urn, domain.name) for domain in domains
+        self.top_level_subject_areas = [
+            SubjectArea(domain.urn, domain.name) for domain in subject_areas
         ]
-        logger.info(f"{self.top_level_domains=}")
+        logger.info(f"{self.top_level_subject_areas=}")
 
-        for urn, label in self.top_level_domains:
+        for urn, label in self.top_level_subject_areas:
             self.labels[urn] = label
 
     def get_label(self, urn):
