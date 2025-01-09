@@ -6,8 +6,8 @@ from typing import Any
 
 from data_platform_catalogue.entities import (
     EntityRef,
-    GlossaryTermRef,
     FindMoJdataEntityMapper,
+    GlossaryTermRef,
     TagRef,
 )
 
@@ -50,7 +50,7 @@ class FacetOption:
 
 
 @dataclass
-class DomainOption:
+class SubjectAreaOption:
     """
     A representation of a domain and the number of associated entities
     represented by total.

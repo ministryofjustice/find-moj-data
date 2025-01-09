@@ -11,7 +11,7 @@ from data_platform_catalogue.entities import (
     PublicationDatasetEntityMapping,
     TableEntityMapping,
 )
-from data_platform_catalogue.search_types import DomainOption
+from data_platform_catalogue.search_types import SubjectAreaOption
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -31,10 +31,10 @@ from home.service.details_csv import (
     DatabaseDetailsCsvFormatter,
     DatasetDetailsCsvFormatter,
 )
-from home.service.domain_fetcher import DomainFetcher
 from home.service.glossary import GlossaryService
 from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
+from home.service.subject_area_fetcher import SubjectAreaFetcher
 
 type_details_map = {
     TableEntityMapping.url_formatted: DatasetDetailsService,
@@ -49,10 +49,10 @@ type_details_map = {
 @cache_control(max_age=300, private=True)
 def home_view(request):
     """
-    Displys only domains that have entities tagged for display in the catalog.
+    Displys only subject areas that have entities tagged for display in the catalog.
     """
-    domains: list[DomainOption] = DomainFetcher().fetch()
-    context = {"domains": domains, "h1_value": "Home"}
+    subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
+    context = {"domains": subject_areas, "h1_value": "Home"}
     return render(request, "home.html", context)
 
 
@@ -130,7 +130,7 @@ def metadata_specification_view(request):
 
 
 def cookies_view(request):
-    valid_domains = [
+    valid_subject_areas = [
         urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS
     ]
     referer = request.META.get("HTTP_REFERER")
@@ -139,7 +139,7 @@ def cookies_view(request):
         referer_domain = urlparse(referer).netloc
 
         # Validate this referer domain against declared valid domains
-        if referer_domain not in valid_domains:
+        if referer_domain not in valid_subject_areas:
             referer = "/"  # Set to home page if invalid
 
     context = {

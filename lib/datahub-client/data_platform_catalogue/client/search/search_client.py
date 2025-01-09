@@ -28,13 +28,13 @@ from data_platform_catalogue.entities import (
     TableEntityMapping,
 )
 from data_platform_catalogue.search_types import (
-    DomainOption,
     FacetOption,
     MultiSelectFilter,
     SearchFacets,
     SearchResponse,
     SearchResult,
     SortOption,
+    SubjectAreaOption,
 )
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
@@ -220,7 +220,7 @@ class SearchClient:
         query: str = "*",
         filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
-    ) -> list[DomainOption]:
+    ) -> list[SubjectAreaOption]:
         """
         Returns domains that can be used to filter the search results.
         """
@@ -272,8 +272,8 @@ class SearchClient:
 
     def _parse_list_domains(
         self, list_domains_result: list[dict[str, Any]]
-    ) -> list[DomainOption]:
-        list_domain_options: list[DomainOption] = []
+    ) -> list[SubjectAreaOption]:
+        list_domain_options: list[SubjectAreaOption] = []
 
         for domain in list_domains_result:
             urn = domain.get("urn", "")
@@ -282,7 +282,7 @@ class SearchClient:
             entities = domain.get("entities", {})
             total = entities.get("total", 0)
 
-            list_domain_options.append(DomainOption(urn, name, total))
+            list_domain_options.append(SubjectAreaOption(urn, name, total))
         return list_domain_options
 
     def _parse_dataset(

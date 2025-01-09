@@ -1,21 +1,23 @@
 import logging
 from typing import NamedTuple
 
-from data_platform_catalogue.search_types import DomainOption
+from data_platform_catalogue.search_types import SubjectAreaOption
 
 logger = logging.getLogger(__name__)
 
 
-class Domain(NamedTuple):
+class SubjectArea(NamedTuple):
     urn: str
     label: str
 
 
-class DomainModel:
-    def __init__(self, domains: list[DomainOption]):
+class SubjectAreaTaxonomy:
+    def __init__(self, domains: list[SubjectAreaOption]):
         self.labels = {}
 
-        self.top_level_domains = [Domain(domain.urn, domain.name) for domain in domains]
+        self.top_level_domains = [
+            SubjectArea(domain.urn, domain.name) for domain in domains
+        ]
         logger.info(f"{self.top_level_domains=}")
 
         for urn, label in self.top_level_domains:
