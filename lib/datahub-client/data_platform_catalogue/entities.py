@@ -208,7 +208,7 @@ class OwnerRef(BaseModel):
         examples=["John Doe", "Jane Smith"],
     )
     email: EmailStr = Field(
-        description="Contact email for the user", examples=["john.doe@justice.gov.uk"]
+        description="lorem@ipsum.com", examples=["john.doe@justice.gov.uk"]
     )
     urn: str = Field(
         description="Unique identifier for the user",

@@ -129,11 +129,11 @@ class TestCatalogueClientWithDatahub:
             domain=DomainRef(display_name="LAA", urn="LAA"),
             governance=Governance(
                 data_owner=OwnerRef(
-                    display_name="", email="Contact email for the user", urn=""
+                    display_name="", email="lorem@ipsum.com", urn=""
                 ),
                 data_stewards=[
                     OwnerRef(
-                        display_name="", email="Contact email for the user", urn=""
+                        display_name="", email="lorem@ipsum.com", urn=""
                     )
                 ],
             ),
@@ -197,11 +197,11 @@ class TestCatalogueClientWithDatahub:
             domain=DomainRef(display_name="LAA", urn="LAA"),
             governance=Governance(
                 data_owner=OwnerRef(
-                    display_name="", email="Contact email for the user", urn=""
+                    display_name="", email="lorem@ipsum.com", urn=""
                 ),
                 data_stewards=[
                     OwnerRef(
-                        display_name="", email="Contact email for the user", urn=""
+                        display_name="", email="lorem@ipsum.com", urn=""
                     )
                 ],
             ),
