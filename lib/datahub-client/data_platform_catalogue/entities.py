@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, EmailStr
 
@@ -207,7 +207,7 @@ class OwnerRef(BaseModel):
         description="The full name of the user as it should be displayed",
         examples=["John Doe", "Jane Smith"],
     )
-    email: EmailStr = Field(
+    email: EmailStr | Literal[""] = Field(
         description="lorem@ipsum.com", examples=["john.doe@justice.gov.uk"]
     )
     urn: str = Field(
