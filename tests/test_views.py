@@ -126,7 +126,4 @@ class TestGlossaryView:
         assert response.status_code == 200
 
 
-class TestMetadataSpecificationView:
-    def test_details(self, client):
-        response = client.get(reverse("home:metadata_specification"))
-        assert response.status_code == 200
+

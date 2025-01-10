@@ -199,11 +199,11 @@ class TestChartDetailsService:
             domain=DomainRef(urn="LAA", display_name="LAA"),
             governance=Governance(
                 data_owner=OwnerRef(
-                    display_name="", email="Contact email for the user", urn=""
+                    display_name="", email="lorem@ipsum.com", urn=""
                 ),
                 data_stewards=[
                     OwnerRef(
-                        display_name="", email="Contact email for the user", urn=""
+                        display_name="", email="lorem@ipsum.com", urn=""
                     )
                 ],
             ),

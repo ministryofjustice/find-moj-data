@@ -429,10 +429,10 @@ def generate_table_metadata(
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
+                display_name="", email="lorem@ipsum.com", urn=""
             ),
             data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
+                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
             ],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
@@ -490,10 +490,10 @@ def generate_chart_metadata(
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
+                display_name="", email="lorem@ipsum.com", urn=""
             ),
             data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
+                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
             ],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
@@ -547,10 +547,10 @@ def generate_database_metadata(
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
+                display_name="", email="lorem@ipsum.com", urn=""
             ),
             data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
+                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
             ],
             data_custodians=[
                 OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
@@ -608,10 +608,10 @@ def generate_dashboard_metadata(
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
+                display_name="", email="lorem@ipsum.com", urn=""
             ),
             data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
+                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
             ],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
@@ -667,10 +667,10 @@ def generate_publication_collection_metadata(
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
+                display_name="", email="lorem@ipsum.com", urn=""
             ),
             data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
+                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
             ],
             data_custodians=[
                 OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
@@ -715,10 +715,10 @@ def generate_publication_dataset_metadata(
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
             data_owner=OwnerRef(
-                display_name="", email="Contact email for the user", urn=""
+                display_name="", email="lorem@ipsum.com", urn=""
             ),
             data_stewards=[
-                OwnerRef(display_name="", email="Contact email for the user", urn="")
+                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
             ],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],

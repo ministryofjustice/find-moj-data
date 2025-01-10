@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 DATAHUB_DATE_FORMAT = "%Y%m%d"
 
@@ -207,7 +207,7 @@ class OwnerRef(BaseModel):
         description="The full name of the user as it should be displayed",
         examples=["John Doe", "Jane Smith"],
     )
-    email: str = Field(
+    email: EmailStr | Literal[""] = Field(
         description="Contact email for the user", examples=["john.doe@justice.gov.uk"]
     )
     urn: str = Field(
@@ -405,7 +405,7 @@ class FurtherInformation(BaseModel):
         default="",
         examples=["https://teams.microsoft.com/l/channel/123"],
     )
-    dc_team_email: str = Field(
+    dc_team_email: EmailStr | Literal[""] = Field(
         description=(
             "A shared email address for a team where they receive questions"
             " about the data. Unrealted to Microsoft Teams"

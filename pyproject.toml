@@ -25,6 +25,8 @@ psycopg-binary = "^3.2.3"
 django-debug-toolbar = "^4.4.6"
 redis = {extras = ["hiredis"], version = "^5.2.1"}
 notifications-python-client = "^10.0.1"
+pydantic = {extras = ["email"], version = "^2.10.5"}
+email-validator = "2.2.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
