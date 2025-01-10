@@ -1,9 +1,9 @@
+from importlib.resources import files
 import json
 import logging
 from typing import Any, Sequence, Tuple
 
 from data_platform_catalogue.client.exceptions import CatalogueError
-from data_platform_catalogue.client.graphql_helpers import get_graphql_query
 from data_platform_catalogue.client.search.filters import map_filters
 from data_platform_catalogue.client.parsers import EntityParser, EntityParserFactory, GlossaryTermParser
 from data_platform_catalogue.entities import (
@@ -25,6 +25,8 @@ from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
+GRAPHQL_FILES_PATH = "data_platform_catalogue.client.graphql"
+GRAPHQL_FILE_EXTENSION = ".graphql"
 
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
@@ -147,36 +149,6 @@ class SearchClient:
         response = response["listDomains"]
         return self._parse_list_domains(response.get("domains"))
 
-    def _get_data_collection_page_results(self, response, key_for_results: str):
-        """
-        for use by entities that hold collections of data, eg. container
-        """
-        page_results = []
-        for result in response[key_for_results]["searchResults"]:
-            entity = result["entity"]
-            entity_type = entity["type"]
-            matched_fields: dict = {}
-            if entity_type == "DATASET":
-                page_results.append(
-                    self._parse_dataset(entity, matched_fields, TableEntityMapping)
-                )
-            else:
-                raise ValueError(f"Unexpected entity type: {entity_type}")
-        return page_results
-
-    def _map_result_types(
-        self,
-        result_types: Sequence[FindMoJdataEntityMapper],
-    ) -> list[str]:
-        """
-        Map result types to Datahub EntityTypes
-        """
-        relevant_types = list(
-            {result_type.datahub_entity_type for result_type in result_types}
-        )
-
-        return relevant_types
-
     def _parse_list_domains(
         self, list_domains_result: list[dict[str, Any]]
     ) -> list[DomainOption]:
@@ -266,3 +238,15 @@ class SearchClient:
             for tag in tag_query_results["searchResults"]
         ]
         return tags_list
+
+
+def get_graphql_query(graphql_query_file_name: str) -> str:
+    query_text = (
+        files(GRAPHQL_FILES_PATH)
+        .joinpath(f"{graphql_query_file_name}{GRAPHQL_FILE_EXTENSION}")
+        .read_text()
+    )
+    if not query_text:
+        logger.error("No graphql query file found for %s", graphql_query_file_name)
+        raise CatalogueError(f"No graphql query file found for {graphql_query_file_name}")
+    return query_text
