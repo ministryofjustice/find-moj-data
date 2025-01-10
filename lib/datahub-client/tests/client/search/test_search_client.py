@@ -133,7 +133,7 @@ def test_one_search_result(mock_graph, searcher):
                 matches={},
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
@@ -220,7 +220,7 @@ def test_dataset_result(mock_graph, searcher):
                 matches={},
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
@@ -366,7 +366,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                 matches={},
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "HMPPS",
                     "domain_id": "urn:li:domain:3dc18e48-c062-4407-84a9-73e23f768023",
@@ -459,7 +459,7 @@ def test_full_page(mock_graph, searcher):
                 matches={},
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -486,7 +486,7 @@ def test_full_page(mock_graph, searcher):
                 matches={},
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -513,7 +513,7 @@ def test_full_page(mock_graph, searcher):
                 matches={},
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -591,7 +591,7 @@ def test_query_match(mock_graph, searcher):
                 },
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -958,7 +958,7 @@ def test_search_for_charts(mock_graph, searcher):
                 },
                 metadata={
                     "owner": "",
-                    "owner_email": "lorem@ipsum.com",
+                    "owner_email": "",
                     "total_parents": 0,
                     "domain_name": "",
                     "domain_id": "",
@@ -1122,7 +1122,7 @@ def test_tag_to_display(tags, result):
         matches={},
         metadata={
             "owner": "",
-            "owner_email": "lorem@ipsum.com",
+            "owner_email": "",
             "total_parents": 0,
             "parents": [],
             "domain_name": "",

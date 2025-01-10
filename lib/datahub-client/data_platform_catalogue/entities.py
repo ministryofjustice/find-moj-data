@@ -405,7 +405,7 @@ class FurtherInformation(BaseModel):
         default="",
         examples=["https://teams.microsoft.com/l/channel/123"],
     )
-    dc_team_email: EmailStr = Field(
+    dc_team_email: EmailStr | Literal[""] = Field(
         description=(
             "A shared email address for a team where they receive questions"
             " about the data. Unrealted to Microsoft Teams"
