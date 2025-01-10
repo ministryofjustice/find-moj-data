@@ -6,6 +6,7 @@ from typing import Literal, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 DATAHUB_DATE_FORMAT = "%Y%m%d"
+MAX_DATETIME = datetime.now()
 
 
 class RelationshipType(Enum):
@@ -543,16 +544,19 @@ class Entity(BaseModel):
         ],
     )
     metadata_last_ingested: Optional[datetime] = Field(
+        lt=MAX_DATETIME,
         description="When the metadata was last updated in the catalogue",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
     created: Optional[datetime] = Field(
+        lt=MAX_DATETIME,
         description="When the data entity was first created",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
     data_last_modified: Optional[datetime] = Field(
+        lt=MAX_DATETIME,
         description="When the data entity was last modified in the source system",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
@@ -653,6 +657,7 @@ class Table(Entity):
         ],
     )
     last_datajob_run_date: Optional[datetime] = Field(
+        lt=MAX_DATETIME,
         description="Indicates the time when the data were last refreshed (eg pipeline run with dbt).",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
