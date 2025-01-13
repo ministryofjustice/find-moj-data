@@ -35,7 +35,6 @@ ENV POETRY_NO_INTERACTION=1 \
 
 # Install python dependencies to a virtualenv
 COPY pyproject.toml poetry.lock ./
-COPY lib ./lib
 RUN pip install poetry==1.8.4
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
@@ -78,9 +77,10 @@ COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} core ./core
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} users ./users
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} feedback ./feedback
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} datahub_client ./datahub_client
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} home ./home
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} templates ./templates
-COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} lib ./lib
+
 
 # Run django commands
 RUN python manage.py collectstatic --noinput
