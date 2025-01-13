@@ -10,11 +10,8 @@ from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
 from datahub.metadata import schema_classes
 from datahub.metadata.schema_classes import ChangeTypeClass, DomainPropertiesClass
 
-from data_platform_catalogue.client.exceptions import (
-    ConnectivityError,
-    EntityDoesNotExist,
-)
-from data_platform_catalogue.client.parsers import (
+from datahub_client.client.exceptions import ConnectivityError, EntityDoesNotExist
+from datahub_client.client.parsers import (
     ChartParser,
     DashboardParser,
     DatabaseParser,
@@ -22,8 +19,8 @@ from data_platform_catalogue.client.parsers import (
     PublicationDatasetParser,
     TableParser,
 )
-from data_platform_catalogue.client.search.search_client import SearchClient
-from data_platform_catalogue.entities import (
+from datahub_client.client.search.search_client import SearchClient
+from datahub_client.entities import (
     Chart,
     ChartEntityMapping,
     CustomEntityProperties,
@@ -38,7 +35,7 @@ from data_platform_catalogue.entities import (
     Table,
     TableEntityMapping,
 )
-from data_platform_catalogue.search_types import (
+from datahub_client.search_types import (
     MultiSelectFilter,
     SearchResponse,
     SortOption,
@@ -108,22 +105,22 @@ class DataHubCatalogueClient:
         self.search_client = SearchClient(self.graph)
 
         self.database_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.client.graphql")
             .joinpath("getContainerDetails.graphql")
             .read_text()
         )
         self.dataset_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.client.graphql")
             .joinpath("getDatasetDetails.graphql")
             .read_text()
         )
         self.chart_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.client.graphql")
             .joinpath("getChartDetails.graphql")
             .read_text()
         )
         self.dashboard_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.client.graphql")
             .joinpath("getDashboardDetails.graphql")
             .read_text()
         )

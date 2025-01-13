@@ -1,11 +1,11 @@
 import pytest
-from data_platform_catalogue.entities import (
+
+from datahub_client.entities import (
     AccessInformation,
     Database,
     FurtherInformation,
     OwnerRef,
 )
-
 from tests.conftest import (
     generate_database_metadata,
     mock_get_database_details_response,

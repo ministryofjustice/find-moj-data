@@ -2,20 +2,20 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from data_platform_catalogue.client.search.search_client import SearchClient
-from data_platform_catalogue.entities import (
+from datahub_client.client.search.search_client import SearchClient
+from datahub_client.entities import (
     AccessInformation,
+    ChartEntityMapping,
+    DatabaseEntityMapping,
     DataSummary,
     EntityRef,
-    TableEntityMapping,
-    DatabaseEntityMapping,
-    ChartEntityMapping,
-    GlossaryTermEntityMapping,
     FurtherInformation,
+    GlossaryTermEntityMapping,
+    TableEntityMapping,
     TagRef,
     UsageRestrictions,
 )
-from data_platform_catalogue.search_types import (
+from datahub_client.search_types import (
     FacetOption,
     MultiSelectFilter,
     SearchFacets,

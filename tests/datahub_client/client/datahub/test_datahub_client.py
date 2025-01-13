@@ -3,9 +3,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
-from data_platform_catalogue.client.exceptions import EntityDoesNotExist
-from data_platform_catalogue.entities import (
+from datahub_client.client.datahub_client import DataHubCatalogueClient
+from datahub_client.client.exceptions import EntityDoesNotExist
+from datahub_client.entities import (
     AccessInformation,
     Audience,
     Chart,
@@ -346,7 +346,7 @@ class TestCatalogueClientWithDatahub:
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
@@ -429,7 +429,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
@@ -492,7 +492,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             chart = datahub_client.get_chart_details(urn)
@@ -572,7 +572,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             collection = datahub_client.get_publication_collection_details(urn)
@@ -702,7 +702,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             database = datahub_client.get_database_details(urn)
@@ -731,7 +731,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = False  # Entity does not exist
             with pytest.raises(EntityDoesNotExist):
@@ -749,7 +749,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)

@@ -1,5 +1,6 @@
 import pytest
-from data_platform_catalogue.entities import (
+
+from datahub_client.entities import (
     AccessInformation,
     Chart,
     CustomEntityProperties,
@@ -13,7 +14,6 @@ from data_platform_catalogue.entities import (
     OwnerRef,
     RelationshipType,
 )
-
 from home.service.details import (
     ChartDetailsService,
     DashboardDetailsService,
@@ -198,13 +198,9 @@ class TestChartDetailsService:
             external_url="https://www.test.com",
             domain=DomainRef(urn="LAA", display_name="LAA"),
             governance=Governance(
-                data_owner=OwnerRef(
-                    display_name="", email="lorem@ipsum.com", urn=""
-                ),
+                data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
                 data_stewards=[
-                    OwnerRef(
-                        display_name="", email="lorem@ipsum.com", urn=""
-                    )
+                    OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
                 ],
             ),
             platform=EntityRef(urn="", display_name="justice-data"),

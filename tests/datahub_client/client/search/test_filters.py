@@ -1,5 +1,5 @@
-from data_platform_catalogue.client.search.filters import map_filters
-from data_platform_catalogue.search_types import MultiSelectFilter
+from datahub_client.client.search.filters import map_filters
+from datahub_client.search_types import MultiSelectFilter
 
 
 def test_map_filters_with_defaults():

@@ -2,8 +2,13 @@ import csv
 import logging
 from urllib.parse import urlparse
 
-from data_platform_catalogue.client.exceptions import EntityDoesNotExist
-from data_platform_catalogue.entities import (
+from django.conf import settings
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render
+from django.views.decorators.cache import cache_control
+
+from datahub_client.client.exceptions import EntityDoesNotExist
+from datahub_client.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
     DatabaseEntityMapping,
@@ -11,12 +16,7 @@ from data_platform_catalogue.entities import (
     PublicationDatasetEntityMapping,
     TableEntityMapping,
 )
-from data_platform_catalogue.search_types import SubjectAreaOption
-from django.conf import settings
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render
-from django.views.decorators.cache import cache_control
-
+from datahub_client.search_types import SubjectAreaOption
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,

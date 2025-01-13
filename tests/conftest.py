@@ -3,8 +3,19 @@ from typing import Any, Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
-from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
-from data_platform_catalogue.entities import (
+from django.conf import settings
+from django.test import Client
+from faker import Faker
+from notifications_python_client.notifications import NotificationsAPIClient
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
+
+from datahub_client.client.datahub_client import DataHubCatalogueClient
+from datahub_client.entities import (
     Chart,
     Column,
     ColumnRef,
@@ -29,22 +40,7 @@ from data_platform_catalogue.entities import (
     TableEntityMapping,
     TagRef,
 )
-from data_platform_catalogue.search_types import (
-    SearchResponse,
-    SearchResult,
-    SubjectAreaOption,
-)
-from django.conf import settings
-from django.test import Client
-from faker import Faker
-from notifications_python_client.notifications import NotificationsAPIClient
-from selenium.webdriver import ChromeOptions
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.select import Select
-
+from datahub_client.search_types import SearchResponse, SearchResult, SubjectAreaOption
 from home.forms.search import SearchForm
 from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
 from home.service.details import DatabaseDetailsService
@@ -428,12 +424,8 @@ def generate_table_metadata(
         or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="lorem@ipsum.com", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
-            ],
+            data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
+            data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
         glossary_terms=[
@@ -489,12 +481,8 @@ def generate_chart_metadata(
         relationships=relations or {RelationshipType.PARENT: []},
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="lorem@ipsum.com", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
-            ],
+            data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
+            data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
         glossary_terms=[
@@ -546,12 +534,8 @@ def generate_database_metadata(
         },
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="lorem@ipsum.com", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
-            ],
+            data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
+            data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
             data_custodians=[
                 OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
             ],
@@ -607,12 +591,8 @@ def generate_dashboard_metadata(
         external_url="www.a-great-exmaple-dashboard.com",
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="lorem@ipsum.com", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
-            ],
+            data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
+            data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
         glossary_terms=[
@@ -666,12 +646,8 @@ def generate_publication_collection_metadata(
         },
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="lorem@ipsum.com", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
-            ],
+            data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
+            data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
             data_custodians=[
                 OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
             ],
@@ -714,12 +690,8 @@ def generate_publication_dataset_metadata(
         or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
         domain=DomainRef(display_name="LAA", urn="LAA"),
         governance=Governance(
-            data_owner=OwnerRef(
-                display_name="", email="lorem@ipsum.com", urn=""
-            ),
-            data_stewards=[
-                OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
-            ],
+            data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
+            data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
         glossary_terms=[

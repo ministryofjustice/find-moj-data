@@ -1,41 +1,42 @@
 import pytest
-from data_platform_catalogue.search_types import SearchResult
-from data_platform_catalogue.client.parsers import (
+
+from datahub_client.client.parsers import (
     DATA_CUSTODIAN,
+    ChartParser,
+    DashboardParser,
+    DatabaseParser,
+    DatasetParser,
     EntityParser,
     EntityParserFactory,
-    DatasetParser,
-    TableParser,
-    ChartParser,
-    DatabaseParser,
     PublicationCollectionParser,
     PublicationDatasetParser,
-    DashboardParser,
+    TableParser,
 )
-from data_platform_catalogue.entities import (
+from datahub_client.entities import (
     AccessInformation,
     Audience,
+    Chart,
+    Column,
     ColumnRef,
     CustomEntityProperties,
-    DataSummary,
+    Dashboard,
+    Database,
     DatahubEntityType,
     DatahubSubtype,
+    DataSummary,
+    EntityRef,
     EntitySummary,
     FurtherInformation,
-    OwnerRef,
-    RelationshipType,
-    TagRef,
     GlossaryTermRef,
-    Table,
-    Chart,
-    Database,
-    PublicationDataset,
-    Dashboard,
+    OwnerRef,
     PublicationCollection,
-    EntityRef,
-    Column,
+    PublicationDataset,
+    RelationshipType,
+    Table,
+    TagRef,
     UsageRestrictions,
 )
+from datahub_client.search_types import SearchResult
 
 
 @pytest.fixture

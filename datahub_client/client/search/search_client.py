@@ -1,18 +1,25 @@
-from importlib.resources import files
 import json
 import logging
+from importlib.resources import files
 from typing import Any, Sequence, Tuple
 
-from data_platform_catalogue.client.exceptions import CatalogueError
-from data_platform_catalogue.client.search.filters import map_filters
-from data_platform_catalogue.client.parsers import EntityParser, EntityParserFactory, GlossaryTermParser
-from data_platform_catalogue.entities import (
+from datahub.configuration.common import GraphError  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+
+from datahub_client.client.exceptions import CatalogueError
+from datahub_client.client.parsers import (
+    EntityParser,
+    EntityParserFactory,
+    GlossaryTermParser,
+)
+from datahub_client.client.search.filters import map_filters
+from datahub_client.entities import (
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
     TableEntityMapping,
 )
-from data_platform_catalogue.search_types import (
+from datahub_client.search_types import (
     FacetOption,
     MultiSelectFilter,
     SearchFacets,
@@ -20,13 +27,12 @@ from data_platform_catalogue.search_types import (
     SortOption,
     SubjectAreaOption,
 )
-from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 logger = logging.getLogger(__name__)
 
-GRAPHQL_FILES_PATH = "data_platform_catalogue.client.graphql"
+GRAPHQL_FILES_PATH = "datahub_client.client.graphql"
 GRAPHQL_FILE_EXTENSION = ".graphql"
+
 
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
@@ -248,5 +254,7 @@ def get_graphql_query(graphql_query_file_name: str) -> str:
     )
     if not query_text:
         logger.error("No graphql query file found for %s", graphql_query_file_name)
-        raise CatalogueError(f"No graphql query file found for {graphql_query_file_name}")
+        raise CatalogueError(
+            f"No graphql query file found for {graphql_query_file_name}"
+        )
     return query_text

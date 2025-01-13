@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from data_platform_catalogue.entities import (
+from datahub_client.entities import (
     EntityRef,
     FindMoJdataEntityMapper,
     GlossaryTermRef,

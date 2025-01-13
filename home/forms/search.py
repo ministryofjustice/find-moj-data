@@ -1,9 +1,10 @@
 from copy import deepcopy
 from urllib.parse import urlencode
 
-from data_platform_catalogue.entities import FindMoJdataEntityType
-from data_platform_catalogue.search_types import SubjectAreaOption
 from django import forms
+
+from datahub_client.entities import FindMoJdataEntityType
+from datahub_client.search_types import SubjectAreaOption
 
 from ..models.subject_area_taxonomy import SubjectArea
 from ..service.search_tag_fetcher import SearchTagFetcher
