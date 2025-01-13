@@ -12,7 +12,6 @@ import time
 from datetime import datetime
 
 import pytest
-
 from data_platform_catalogue.client.datahub_client import DataHubCatalogueClient
 from data_platform_catalogue.entities import (
     AccessInformation,
@@ -20,16 +19,13 @@ from data_platform_catalogue.entities import (
     Database,
     DomainRef,
     EntityRef,
-    TableEntityMapping,
     Governance,
     OwnerRef,
+    TableEntityMapping,
     TagRef,
     UsageRestrictions,
 )
-from data_platform_catalogue.search_types import (
-    DomainOption,
-    MultiSelectFilter,
-)
+from data_platform_catalogue.search_types import MultiSelectFilter, SubjectAreaOption
 
 jwt_token = os.environ.get("CATALOGUE_TOKEN")
 api_url = os.environ.get("CATALOGUE_URL", "")
@@ -42,7 +38,7 @@ def test_list_domains():
     response = client.list_domains()
     assert len(response) > 0
     domain = response[0]
-    assert isinstance(domain, DomainOption)
+    assert isinstance(domain, SubjectAreaOption)
     assert "urn:li:domain" in domain.urn
 
 

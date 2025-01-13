@@ -2,22 +2,24 @@ from copy import deepcopy
 from urllib.parse import urlencode
 
 from data_platform_catalogue.entities import FindMoJdataEntityType
-from data_platform_catalogue.search_types import DomainOption
+from data_platform_catalogue.search_types import SubjectAreaOption
 from django import forms
 
-from ..models.domain_model import Domain
-from ..service.domain_fetcher import DomainFetcher
+from ..models.subject_area_taxonomy import SubjectArea
 from ..service.search_tag_fetcher import SearchTagFetcher
+from ..service.subject_area_fetcher import SubjectAreaFetcher
 
 
-def get_domain_choices() -> list[Domain]:
-    """Make Domains API call to obtain domain choices"""
+def get_subject_area_choices() -> list[SubjectArea]:
+    """Make Domains API call to obtain subject area choices"""
     choices = [
-        Domain("", "All subject areas"),
+        SubjectArea("", "All subject areas"),
     ]
-    list_domain_options: list[DomainOption] = DomainFetcher().fetch()
-    domains: list[Domain] = [Domain(d.urn, d.name) for d in list_domain_options]
-    choices.extend(domains)
+    subject_area_options: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
+    subject_areas: list[SubjectArea] = [
+        SubjectArea(d.urn, d.name) for d in subject_area_options
+    ]
+    choices.extend(subject_areas)
     return choices
 
 
@@ -64,7 +66,7 @@ class SearchForm(forms.Form):
         ),
     )
     domain = forms.ChoiceField(
-        choices=get_domain_choices,
+        choices=get_subject_area_choices,
         required=False,
         widget=forms.Select(
             attrs={

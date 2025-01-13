@@ -30,9 +30,9 @@ from data_platform_catalogue.entities import (
     TagRef,
 )
 from data_platform_catalogue.search_types import (
-    DomainOption,
     SearchResponse,
     SearchResult,
+    SubjectAreaOption,
 )
 from django.conf import settings
 from django.test import Client
@@ -46,11 +46,11 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
 from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
+from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
 from home.service.details import DatabaseDetailsService
-from home.service.domain_fetcher import DomainFetcher
 from home.service.search import SearchService
 from home.service.search_tag_fetcher import SearchTagFetcher
+from home.service.subject_area_fetcher import SubjectAreaFetcher
 
 fake = Faker()
 
@@ -812,22 +812,22 @@ def mock_catalogue(
     mock_list_domains_response(
         mock_catalogue,
         domains=[
-            DomainOption(
+            SubjectAreaOption(
                 urn="urn:li:domain:prisons",
                 name="Prisons",
                 total=fake.random_int(min=1, max=100),
             ),
-            DomainOption(
+            SubjectAreaOption(
                 urn="urn:li:domain:courts",
                 name="Courts",
                 total=fake.random_int(min=1, max=100),
             ),
-            DomainOption(
+            SubjectAreaOption(
                 urn="urn:li:domain:finance",
                 name="Finance",
                 total=fake.random_int(min=1, max=100),
             ),
-            DomainOption(
+            SubjectAreaOption(
                 urn="urn:li:domain:hq",
                 name="HQ",
                 total=0,
@@ -959,7 +959,7 @@ def mock_get_publication_dataset_details_response(
 
 @pytest.fixture
 def list_domains(filter_zero_entities):
-    return DomainFetcher(filter_zero_entities).fetch()
+    return SubjectAreaFetcher(filter_zero_entities).fetch()
 
 
 @pytest.fixture
@@ -969,10 +969,10 @@ def search_tags():
 
 @pytest.fixture
 def valid_domain():
-    domains = DomainFetcher().fetch()
-    return DomainModel(
+    domains = SubjectAreaFetcher().fetch()
+    return SubjectAreaTaxonomy(
         domains,
-    ).top_level_domains[0]
+    ).top_level_subject_areas[0]
 
 
 @pytest.fixture

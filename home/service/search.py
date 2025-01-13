@@ -4,26 +4,26 @@ from typing import Any
 
 from data_platform_catalogue.entities import FindMoJdataEntityMapper, Mappers
 from data_platform_catalogue.search_types import (
-    DomainOption,
     MultiSelectFilter,
     SearchResponse,
     SortOption,
+    SubjectAreaOption,
 )
 from django.conf import settings
 from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
 from home.forms.search import SearchForm
-from home.models.domain_model import DomainModel
+from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
 
 from .base import GenericService
-from .domain_fetcher import DomainFetcher
+from .subject_area_fetcher import SubjectAreaFetcher
 
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
-        domains: list[DomainOption] = DomainFetcher().fetch()
-        self.domain_model = DomainModel(domains)
+        subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
+        self.subject_area_taxonomy = SubjectAreaTaxonomy(subject_areas)
         self.stemmer = PorterStemmer()
         self.form = form
         if self.form.is_bound:
@@ -79,7 +79,7 @@ class SearchService(GenericService):
             else "ascending"
         )
 
-        domain = form_data.get("domain", "")
+        subject_area = form_data.get("domain", "")
         tags = form_data.get("tags", "")
         where_to_access = self._build_custom_property_filter(
             "dc_where_to_access_dataset=", form_data.get("where_to_access", [])
@@ -87,8 +87,8 @@ class SearchService(GenericService):
         entity_types = self._build_entity_types(form_data.get("entity_types", []))
 
         filter_value = []
-        if domain:
-            filter_value.append(MultiSelectFilter("domains", [domain]))
+        if subject_area:
+            filter_value.append(MultiSelectFilter("domains", [subject_area]))
         if where_to_access:
             filter_value.append(MultiSelectFilter("customProperties", where_to_access))
         if tags:
@@ -122,13 +122,15 @@ class SearchService(GenericService):
 
     def _generate_remove_filter_hrefs(self) -> dict[str, dict[str, str]] | None:
         if self.form.is_bound:
-            domain = self.form.cleaned_data.get("domain", "")
+            subject_area = self.form.cleaned_data.get("domain", "")
             entity_types = self.form.cleaned_data.get("entity_types", [])
             where_to_access = self.form.cleaned_data.get("where_to_access", [])
             tags = self.form.cleaned_data.get("tags", [])
             remove_filter_hrefs = {}
-            if domain:
-                remove_filter_hrefs["Subject area"] = self._generate_domain_clear_href()
+            if subject_area:
+                remove_filter_hrefs["Subject area"] = (
+                    self._generate_subject_area_clear_href()
+                )
             if entity_types:
                 entity_types_clear_href = {}
                 for entity_type in entity_types:
@@ -161,17 +163,17 @@ class SearchService(GenericService):
 
         return remove_filter_hrefs
 
-    def _generate_domain_clear_href(
+    def _generate_subject_area_clear_href(
         self,
     ) -> dict[str, str]:
-        domain = self.form.cleaned_data.get("domain", "")
+        subject_area = self.form.cleaned_data.get("domain", "")
 
-        label = self.domain_model.get_label(domain)
+        label = self.subject_area_taxonomy.get_label(subject_area)
 
         return {
             label: (
                 self.form.encode_without_filter(
-                    filter_name="domain", filter_value=domain
+                    filter_name="domain", filter_value=subject_area
                 )
             )
         }
