@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from datahub_client.client.datahub_client import DataHubCatalogueClient
+from datahub_client.client import DataHubCatalogueClient
 
 
 class GenericService:

@@ -1,7 +1,7 @@
 import logging
 from typing import NamedTuple
 
-from datahub_client.search_types import SubjectAreaOption
+from datahub_client.search.search_types import SubjectAreaOption
 
 logger = logging.getLogger(__name__)
 

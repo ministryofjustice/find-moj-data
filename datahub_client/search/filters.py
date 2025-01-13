@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from datahub_client.search_types import MultiSelectFilter
+from datahub_client.search.search_types import MultiSelectFilter
 
 
 def map_filters(filters: Sequence[MultiSelectFilter] | None, entity_filters=[]):

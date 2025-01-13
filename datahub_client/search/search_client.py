@@ -6,20 +6,16 @@ from typing import Any, Sequence, Tuple
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
-from datahub_client.client.exceptions import CatalogueError
-from datahub_client.client.parsers import (
-    EntityParser,
-    EntityParserFactory,
-    GlossaryTermParser,
-)
-from datahub_client.client.search.filters import map_filters
 from datahub_client.entities import (
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
     TableEntityMapping,
 )
-from datahub_client.search_types import (
+from datahub_client.exceptions import CatalogueError
+from datahub_client.parsers import EntityParser, EntityParserFactory, GlossaryTermParser
+from datahub_client.search.filters import map_filters
+from datahub_client.search.search_types import (
     FacetOption,
     MultiSelectFilter,
     SearchFacets,
@@ -30,7 +26,7 @@ from datahub_client.search_types import (
 
 logger = logging.getLogger(__name__)
 
-GRAPHQL_FILES_PATH = "datahub_client.client.graphql"
+GRAPHQL_FILES_PATH = "datahub_client.graphql"
 GRAPHQL_FILE_EXTENSION = ".graphql"
 
 

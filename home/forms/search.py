@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from django import forms
 
 from datahub_client.entities import FindMoJdataEntityType
-from datahub_client.search_types import SubjectAreaOption
+from datahub_client.search.search_types import SubjectAreaOption
 
 from ..models.subject_area_taxonomy import SubjectArea
 from ..service.search_tag_fetcher import SearchTagFetcher

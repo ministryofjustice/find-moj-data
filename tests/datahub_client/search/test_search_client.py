@@ -2,7 +2,6 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from datahub_client.client.search.search_client import SearchClient
 from datahub_client.entities import (
     AccessInformation,
     ChartEntityMapping,
@@ -15,7 +14,8 @@ from datahub_client.entities import (
     TagRef,
     UsageRestrictions,
 )
-from datahub_client.search_types import (
+from datahub_client.search.search_client import SearchClient
+from datahub_client.search.search_types import (
     FacetOption,
     MultiSelectFilter,
     SearchFacets,

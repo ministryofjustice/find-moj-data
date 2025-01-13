@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from datahub_client.client.datahub_client import DataHubCatalogueClient
+from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
     Database,
     DomainRef,

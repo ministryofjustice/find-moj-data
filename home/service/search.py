@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
 from datahub_client.entities import FindMoJdataEntityMapper, Mappers
-from datahub_client.search_types import (
+from datahub_client.search.search_types import (
     MultiSelectFilter,
     SearchResponse,
     SortOption,

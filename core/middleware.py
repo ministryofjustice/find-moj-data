@@ -5,7 +5,7 @@ from django.core.exceptions import BadRequest
 from django.http import Http404
 from django.shortcuts import render
 
-from datahub_client.client.exceptions import ConnectivityError
+from datahub_client.exceptions import ConnectivityError
 
 logger = logging.getLogger(__name__)
 

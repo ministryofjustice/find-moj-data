@@ -7,7 +7,6 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 
-from datahub_client.client.exceptions import EntityDoesNotExist
 from datahub_client.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
@@ -16,7 +15,8 @@ from datahub_client.entities import (
     PublicationDatasetEntityMapping,
     TableEntityMapping,
 )
-from datahub_client.search_types import SubjectAreaOption
+from datahub_client.exceptions import EntityDoesNotExist
+from datahub_client.search.search_types import SubjectAreaOption
 from home.forms.search import SearchForm
 from home.service.details import (
     ChartDetailsService,

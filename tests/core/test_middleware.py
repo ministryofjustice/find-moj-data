@@ -4,7 +4,7 @@ from django.core.exceptions import BadRequest
 from django.http import Http404
 
 from core.middleware import CustomErrorMiddleware
-from datahub_client.client.exceptions import ConnectivityError
+from datahub_client.exceptions import ConnectivityError
 
 
 def test_middleware_renders_connectivity_response():

@@ -1,6 +1,6 @@
 from django.core.cache import cache
 
-from datahub_client.search_types import SubjectAreaOption
+from datahub_client.search.search_types import SubjectAreaOption
 
 from .base import GenericService
 

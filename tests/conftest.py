@@ -14,7 +14,7 @@ from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
-from datahub_client.client.datahub_client import DataHubCatalogueClient
+from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
     Chart,
     Column,
@@ -40,7 +40,11 @@ from datahub_client.entities import (
     TableEntityMapping,
     TagRef,
 )
-from datahub_client.search_types import SearchResponse, SearchResult, SubjectAreaOption
+from datahub_client.search.search_types import (
+    SearchResponse,
+    SearchResult,
+    SubjectAreaOption,
+)
 from home.forms.search import SearchForm
 from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
 from home.service.details import DatabaseDetailsService

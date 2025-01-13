@@ -1,17 +1,5 @@
 import pytest
 
-from datahub_client.client.parsers import (
-    DATA_CUSTODIAN,
-    ChartParser,
-    DashboardParser,
-    DatabaseParser,
-    DatasetParser,
-    EntityParser,
-    EntityParserFactory,
-    PublicationCollectionParser,
-    PublicationDatasetParser,
-    TableParser,
-)
 from datahub_client.entities import (
     AccessInformation,
     Audience,
@@ -36,7 +24,19 @@ from datahub_client.entities import (
     TagRef,
     UsageRestrictions,
 )
-from datahub_client.search_types import SearchResult
+from datahub_client.parsers import (
+    DATA_CUSTODIAN,
+    ChartParser,
+    DashboardParser,
+    DatabaseParser,
+    DatasetParser,
+    EntityParser,
+    EntityParserFactory,
+    PublicationCollectionParser,
+    PublicationDatasetParser,
+    TableParser,
+)
+from datahub_client.search.search_types import SearchResult
 
 
 @pytest.fixture
