@@ -64,15 +64,7 @@ query Search(
             ...ownershipFields
           }
           tags {
-            tags {
-              tag {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
+            ...globalTagsFields
           }
           glossaryTerms {
             terms {
@@ -134,15 +126,7 @@ query Search(
             }
           }
           tags {
-            tags {
-              tag {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
+            ...globalTagsFields
           }
           glossaryTerms {
             terms {
@@ -194,15 +178,7 @@ query Search(
             description
           }
           tags {
-            tags {
-              tag {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
+            ...globalTagsFields
           }
           glossaryTerms {
             terms {
@@ -254,15 +230,7 @@ query Search(
             }
           }
           tags {
-            tags {
-              tag {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
+            ...globalTagsFields
           }
           glossaryTerms {
             terms {
@@ -278,6 +246,21 @@ query Search(
         }
       }
     }
+  }
+}
+
+fragment globalTagsFields on GlobalTags {
+  tags {
+    tag {
+      urn
+      type
+      name
+      properties {
+        name
+        colorHex
+      }
+    }
+    associatedUrn
   }
 }
 

@@ -39,15 +39,7 @@ query getChartDetails($urn: String!) {
       }
     }
     tags {
-      tags {
-        tag {
-          urn
-          properties {
-            name
-            description
-          }
-        }
-      }
+      ...globalTagsFields
     }
     domain {
       domain {
@@ -77,6 +69,21 @@ query getChartDetails($urn: String!) {
       }
     }
     lastIngested
+  }
+}
+
+fragment globalTagsFields on GlobalTags {
+  tags {
+    tag {
+      urn
+      type
+      name
+      properties {
+        name
+        colorHex
+      }
+    }
+    associatedUrn
   }
 }
 

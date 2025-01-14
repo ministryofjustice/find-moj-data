@@ -725,3 +725,7 @@ class SubjectAreaTaxonomy:
     def get_top_level(cls, name):
         matches = [i for i in cls.TOP_LEVEL if i.display_name == name]
         return matches[0] if matches else None
+
+    @classmethod
+    def is_subject_area(cls, name):
+        return cls.get_top_level(name) is not None

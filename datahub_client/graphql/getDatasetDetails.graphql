@@ -113,15 +113,7 @@ query getDatasetDetails($urn: String!) {
       description
     }
     tags {
-      tags {
-        tag {
-          urn
-          properties {
-            name
-            description
-          }
-        }
-      }
+      ...globalTagsFields
     }
     lastIngested
     domain {
@@ -170,6 +162,21 @@ query getDatasetDetails($urn: String!) {
         }
       }
     }
+  }
+}
+
+fragment globalTagsFields on GlobalTags {
+  tags {
+    tag {
+      urn
+      type
+      name
+      properties {
+        name
+        colorHex
+      }
+    }
+    associatedUrn
   }
 }
 
