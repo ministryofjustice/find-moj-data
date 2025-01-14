@@ -21,7 +21,7 @@ from datahub_client.entities import (
 
 
 def test_entity_timestamps_in_future_validation():
-    future_timestamp = datetime.now() + timedelta(days=1)
+    future_timestamp = datetime.now() + timedelta(seconds=5)
     entity_data_with_timestamps_in_future = {
         "urn": "urn:li:chart:(justice-data,absconds)",
         "display_name": "Absconds",
