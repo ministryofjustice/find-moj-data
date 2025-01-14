@@ -25,7 +25,7 @@ from datahub.testing.compare_metadata_json import (
 )
 from datahub.utilities.urns.urn import Urn
 
-from tests.test_helpers.type_helpers import PytestConfig
+from .type_helpers import PytestConfig
 
 logger = logging.getLogger(__name__)
 

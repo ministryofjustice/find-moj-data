@@ -3,15 +3,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from data_platform_catalogue.client.datahub_client import (
-    DataHubCatalogueClient,
-    InvalidDomain,
-)
-from data_platform_catalogue.client.exceptions import (
-    EntityDoesNotExist,
-    ReferencedEntityMissing,
-)
-from data_platform_catalogue.entities import (
+from datahub_client.client import DataHubCatalogueClient
+from datahub_client.entities import (
     AccessInformation,
     Audience,
     Chart,
@@ -32,6 +25,7 @@ from data_platform_catalogue.entities import (
     TagRef,
     UsageRestrictions,
 )
+from datahub_client.exceptions import EntityDoesNotExist
 
 
 class TestCatalogueClientWithDatahub:
@@ -128,14 +122,8 @@ class TestCatalogueClientWithDatahub:
             },
             domain=DomainRef(display_name="LAA", urn="LAA"),
             governance=Governance(
-                data_owner=OwnerRef(
-                    display_name="", email="", urn=""
-                ),
-                data_stewards=[
-                    OwnerRef(
-                        display_name="", email="", urn=""
-                    )
-                ],
+                data_owner=OwnerRef(display_name="", email="", urn=""),
+                data_stewards=[OwnerRef(display_name="", email="", urn="")],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
             metadata_last_ingested=1710426920000,
@@ -196,14 +184,8 @@ class TestCatalogueClientWithDatahub:
             },
             domain=DomainRef(display_name="LAA", urn="LAA"),
             governance=Governance(
-                data_owner=OwnerRef(
-                    display_name="", email="", urn=""
-                ),
-                data_stewards=[
-                    OwnerRef(
-                        display_name="", email="", urn=""
-                    )
-                ],
+                data_owner=OwnerRef(display_name="", email="", urn=""),
+                data_stewards=[OwnerRef(display_name="", email="", urn="")],
             ),
             tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
             metadata_last_ingested=1710426920000,
@@ -364,7 +346,7 @@ class TestCatalogueClientWithDatahub:
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
@@ -447,7 +429,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
@@ -510,7 +492,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             chart = datahub_client.get_chart_details(urn)
@@ -590,7 +572,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             collection = datahub_client.get_publication_collection_details(urn)
@@ -720,7 +702,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             database = datahub_client.get_database_details(urn)
@@ -740,75 +722,6 @@ class TestCatalogueClientWithDatahub:
                 )
             ]
 
-    def test_upsert_table_and_database(
-        self,
-        datahub_client,
-        base_mock_graph,
-        database,
-        table,
-        tmp_path,
-        check_snapshot,
-        golden_file_in_db,
-    ):
-        """
-        Case where we create separate database and table
-        """
-        base_mock_graph.import_file(golden_file_in_db)
-        with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
-            mock_exists.return_value = True
-            fqn_db = datahub_client.upsert_database(database=database)
-            fqn_t = datahub_client.upsert_table(table=table)
-
-        fqn_db_out = "urn:li:container:my_database"
-        assert fqn_db == fqn_db_out
-
-        fqn_t_out = "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)"
-        assert fqn_t == fqn_t_out
-
-        output_file = Path(tmp_path / "test_upsert_table_and_database.json")
-        base_mock_graph.sink_to_file(output_file)
-        check_snapshot("test_upsert_table_and_database.json", output_file)
-
-    def test_upsert_table(
-        self,
-        datahub_client,
-        table,
-        base_mock_graph,
-        tmp_path,
-        check_snapshot,
-        golden_file_in_db,
-    ):
-        """
-        Case where we create a dataset via upsert_table method
-        """
-        mock_graph = base_mock_graph
-        mock_graph.import_file(golden_file_in_db)
-
-        with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
-            mock_exists.return_value = True
-            fqn = datahub_client.upsert_table(
-                table=table,
-            )
-        fqn_out = "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)"
-
-        assert fqn == fqn_out
-
-        output_file = Path(tmp_path / "test_upsert_table.json")
-        base_mock_graph.sink_to_file(output_file)
-        check_snapshot("test_upsert_table.json", output_file)
-
-    def test_domain_does_not_exist_error(self, datahub_client, database):
-        with pytest.raises(InvalidDomain):
-            datahub_client.upsert_database(database=database)
-
-    def test_database_not_exist_given_error(self, datahub_client, table, database):
-        with pytest.raises(ReferencedEntityMissing):
-            datahub_client.upsert_table(table=table)
-
     def test_get_custom_property_key_value_pairs(self, datahub_client, database):
         datahub_client._get_custom_property_key_value_pairs(database.custom_properties)
 
@@ -818,7 +731,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = False  # Entity does not exist
             with pytest.raises(EntityDoesNotExist):
@@ -836,7 +749,7 @@ class TestCatalogueClientWithDatahub:
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
         with patch(
-            "data_platform_catalogue.client.datahub_client.DataHubCatalogueClient.check_entity_exists_by_urn"
+            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
         ) as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)

@@ -3,24 +3,14 @@ import logging
 from importlib.resources import files
 from typing import Sequence
 
-from data_platform_catalogue.client.exceptions import (
-    AspectDoesNotExist,
-    ConnectivityError,
-    EntityDoesNotExist,
-    InvalidDomain,
-    InvalidUser,
-    ReferencedEntityMissing,
-)
-from data_platform_catalogue.client.parsers import (
-    ChartParser,
-    DashboardParser,
-    DatabaseParser,
-    PublicationCollectionParser,
-    PublicationDatasetParser,
-    TableParser,
-)
-from data_platform_catalogue.client.search.search_client import SearchClient
-from data_platform_catalogue.entities import (
+from datahub.configuration.common import ConfigurationError
+from datahub.emitter import mce_builder
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
+from datahub.metadata import schema_classes
+from datahub.metadata.schema_classes import ChangeTypeClass, DomainPropertiesClass
+
+from datahub_client.entities import (
     Chart,
     ChartEntityMapping,
     CustomEntityProperties,
@@ -35,37 +25,21 @@ from data_platform_catalogue.entities import (
     Table,
     TableEntityMapping,
 )
-from data_platform_catalogue.search_types import (
+from datahub_client.exceptions import ConnectivityError, EntityDoesNotExist
+from datahub_client.parsers import (
+    ChartParser,
+    DashboardParser,
+    DatabaseParser,
+    PublicationCollectionParser,
+    PublicationDatasetParser,
+    TableParser,
+)
+from datahub_client.search.search_client import SearchClient
+from datahub_client.search.search_types import (
     MultiSelectFilter,
     SearchResponse,
     SortOption,
     SubjectAreaOption,
-)
-from datahub.configuration.common import ConfigurationError
-from datahub.emitter import mce_builder
-from datahub.emitter.mcp import MetadataChangeProposalWrapper
-from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
-from datahub.ingestion.source.common.subtypes import (
-    DatasetContainerSubTypes,
-    DatasetSubTypes,
-)
-from datahub.metadata import schema_classes
-from datahub.metadata.com.linkedin.pegasus2avro.common import DataPlatformInstance
-from datahub.metadata.schema_classes import (
-    ChangeTypeClass,
-    ContainerClass,
-    ContainerPropertiesClass,
-    DatasetPropertiesClass,
-    DomainPropertiesClass,
-    DomainsClass,
-    OtherSchemaClass,
-    OwnerClass,
-    OwnershipClass,
-    OwnershipTypeClass,
-    SchemaFieldClass,
-    SchemaFieldDataTypeClass,
-    SchemaMetadataClass,
-    SubTypesClass,
 )
 
 logger = logging.getLogger(__name__)
@@ -131,22 +105,22 @@ class DataHubCatalogueClient:
         self.search_client = SearchClient(self.graph)
 
         self.database_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.graphql")
             .joinpath("getContainerDetails.graphql")
             .read_text()
         )
         self.dataset_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.graphql")
             .joinpath("getDatasetDetails.graphql")
             .read_text()
         )
         self.chart_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.graphql")
             .joinpath("getChartDetails.graphql")
             .read_text()
         )
         self.dashboard_query = (
-            files("data_platform_catalogue.client.graphql")
+            files("datahub_client.graphql")
             .joinpath("getDashboardDetails.graphql")
             .read_text()
         )
@@ -299,231 +273,6 @@ class DataHubCatalogueClient:
             return dashboard_object
 
         raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")
-
-    def upsert_table(self, table: Table) -> str:
-        """Define a table. Must belong to a domain."""
-        parent_relationships = table.relationships.get(RelationshipType.PARENT, [])
-        if not parent_relationships:
-            raise ValueError("A parent entity needs to be included in relationships")
-
-        parent_name = table.relationships[RelationshipType.PARENT][
-            0
-        ].entity_ref.display_name
-        fully_qualified_name = generate_fqn(
-            parent_name=parent_name, dataset_name=table.name
-        )
-
-        dataset_urn = mce_builder.make_dataset_urn(
-            platform=table.platform.display_name,
-            name=fully_qualified_name,
-            env="PROD",
-        )
-        # jscpd:ignore-start
-        dataset_properties = DatasetPropertiesClass(
-            name=table.name,
-            qualifiedName=fully_qualified_name,
-            description=table.description,
-            customProperties=self._get_custom_property_key_value_pairs(
-                table.custom_properties
-            ),
-        )
-
-        metadata_event = MetadataChangeProposalWrapper(
-            entityUrn=dataset_urn,
-            aspect=dataset_properties,
-        )
-        self.graph.emit(metadata_event)
-
-        dataset_schema_properties = SchemaMetadataClass(
-            schemaName=table.name,
-            platform=table.platform.urn,
-            version=1,
-            hash="",
-            platformSchema=OtherSchemaClass(rawSchema=""),
-            fields=[
-                SchemaFieldClass(
-                    fieldPath=f"{column.display_name}",
-                    type=SchemaFieldDataTypeClass(type=DATAHUB_DATA_TYPE_MAPPING[column.type]),  # type: ignore
-                    nativeDataType=column.type,
-                    description=column.description,
-                )
-                for column in table.column_details
-            ],
-        )
-
-        metadata_event = MetadataChangeProposalWrapper(
-            entityType="dataset",
-            changeType=ChangeTypeClass.UPSERT,
-            entityUrn=dataset_urn,
-            aspect=dataset_schema_properties,
-        )
-        self.graph.emit(metadata_event)
-
-        # set dataset type to table
-        metadata_event = MetadataChangeProposalWrapper(
-            entityUrn=dataset_urn,
-            aspect=SubTypesClass(typeNames=[DatasetSubTypes.TABLE]),
-        )
-
-        self.graph.emit(metadata_event)
-
-        if table.tags:
-            tags_to_add = mce_builder.make_global_tag_aspect_with_tag_list(
-                tags=[str(tag.display_name) for tag in table.tags]
-            )
-            event: MetadataChangeProposalWrapper = MetadataChangeProposalWrapper(
-                entityType="dataset",
-                changeType=ChangeTypeClass.UPSERT,
-                entityUrn=dataset_urn,
-                aspect=tags_to_add,
-            )
-            self.graph.emit(event)
-        # jscpd:ignore-end
-
-        database_urn = table.relationships[RelationshipType.PARENT][0].entity_ref.urn
-
-        database_exists = self.check_entity_exists_by_urn(urn=database_urn)
-
-        if not database_exists:
-            raise ReferencedEntityMissing(
-                f"Database referenced by urn {database_urn} does not exist"
-            )
-
-        # add dataset to database
-        metadata_event = MetadataChangeProposalWrapper(
-            entityUrn=dataset_urn,
-            aspect=ContainerClass(container=database_urn),
-        )
-
-        self.graph.emit(metadata_event)
-
-        # add domain to table - tables inherit the domain of parent database if not given
-        if table.domain:
-            domain_urn = self.graph.get_domain_urn_by_name(
-                domain_name=table.domain.display_name
-            )
-        else:
-            domain_aspect = self.graph.get_aspect(
-                entity_urn=database_urn, aspect_type=DomainsClass
-            )
-            if not domain_aspect:
-                raise AspectDoesNotExist(
-                    f"Aspect `domains` does not exist for entity with urn {database_urn}"
-                )
-            domain_urn = domain_aspect.domains[0]
-
-        domain_exists = self.check_entity_exists_by_urn(domain_urn)
-        if not domain_exists:
-            raise InvalidDomain(
-                f"{table.domain} does not exist in datahub - please align data to an existing domain"  # noqa: E501
-            )
-
-        if domain_urn is not None:
-            table_domain = DomainsClass(domains=[domain_urn])
-            metadata_event = MetadataChangeProposalWrapper(
-                entityType="dataset",
-                changeType=ChangeTypeClass.UPSERT,
-                entityUrn=dataset_urn,
-                aspect=table_domain,
-            )
-
-            self.graph.emit(metadata_event)
-
-        return dataset_urn
-
-    def upsert_chart(self, chart: Chart) -> str:
-        raise NotImplementedError
-
-    def upsert_database(self, database: Database):
-        """
-        Define a database. Must belong to a domain
-        """
-        name = database.name
-        description = database.description
-
-        database_urn = "urn:li:container:" + "".join(name.split())
-
-        domain = database.domain
-        domain_urn = self.graph.get_domain_urn_by_name(domain_name=domain.display_name)
-
-        # domains are to be controlled and limited so we dont want to create one
-        # when it doesn't exist
-        if not self.check_entity_exists_by_urn(domain_urn):
-            raise InvalidDomain(
-                f"{domain} does not exist in datahub - please align data to an existing domain"  # noqa: E501
-            )
-
-        database_domain = DomainsClass(domains=[domain_urn])  # type: ignore
-
-        metadata_event = MetadataChangeProposalWrapper(
-            entityType="container",
-            changeType=ChangeTypeClass.UPSERT,
-            entityUrn=database_urn,
-            aspect=database_domain,
-        )
-        self.graph.emit(metadata_event)
-        logger.info(f"Database {name} associated with domain {domain}")
-        database_properties = ContainerPropertiesClass(
-            customProperties=self._get_custom_property_key_value_pairs(
-                database.custom_properties
-            ),
-            description=description,
-            name=name,
-        )
-        metadata_event = MetadataChangeProposalWrapper(
-            entityType="container",
-            changeType=ChangeTypeClass.UPSERT,
-            entityUrn=database_urn,
-            aspect=database_properties,
-        )
-        self.graph.emit(metadata_event)
-        logger.info(f"Properties updated for Database {name} ")
-
-        # set platform
-        metadata_event = MetadataChangeProposalWrapper(
-            entityUrn=database_urn,
-            aspect=DataPlatformInstance(
-                platform=database.platform.urn,
-            ),
-        )
-        self.graph.emit(metadata_event)
-        logger.info(f"Platform updated for Database {name} ")
-
-        # container type update
-        metadata_event = MetadataChangeProposalWrapper(
-            entityUrn=database_urn,
-            aspect=SubTypesClass(typeNames=[DatasetContainerSubTypes.DATABASE]),
-        )
-        self.graph.emit(metadata_event)
-        logger.info(f"Type updated for Database {name} ")
-
-        if database.tags:
-            tags_to_add = mce_builder.make_global_tag_aspect_with_tag_list(
-                tags=[str(tag.display_name) for tag in database.tags]
-            )
-            event: MetadataChangeProposalWrapper = MetadataChangeProposalWrapper(
-                entityType="container",
-                changeType=ChangeTypeClass.UPSERT,
-                entityUrn=database_urn,
-                aspect=tags_to_add,
-            )
-            self.graph.emit(event)
-            logger.info(f"Tags updated for Database {name} ")
-
-        # Add or update owner
-        owner_urn = database.governance.data_owner.urn
-        if not self.check_entity_exists_by_urn(owner_urn):
-            raise InvalidUser(f"{owner_urn} does not exist in datahub")  # noqa: E501
-
-        owner = OwnerClass(owner=owner_urn, type=OwnershipTypeClass.TECHNICAL_OWNER)
-        ownership_to_add = OwnershipClass(owners=[owner])
-        event: MetadataChangeProposalWrapper = MetadataChangeProposalWrapper(
-            entityUrn=database_urn,
-            aspect=ownership_to_add,
-        )
-        self.graph.emit(event)
-
-        return database_urn
 
     def _get_custom_property_key_value_pairs(
         self,

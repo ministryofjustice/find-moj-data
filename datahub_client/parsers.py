@@ -1,42 +1,42 @@
-from collections import defaultdict
 import logging
+from collections import defaultdict
 from datetime import datetime
 from typing import Any, Tuple
 
-from data_platform_catalogue.entities import (
+from datahub_client.entities import (
+    AccessInformation,
+    Chart,
+    ChartEntityMapping,
+    Column,
     ColumnRef,
     CustomEntityProperties,
-    AccessInformation,
-    UsageRestrictions,
-    DataSummary,
-    TagRef,
-    FurtherInformation,
-    OwnerRef,
-    GlossaryTermRef,
-    DomainRef,
-    TableEntityMapping,
-    ChartEntityMapping,
-    DatabaseEntityMapping,
-    GlossaryTermEntityMapping,
-    DatahubEntityType,
-    EntityRef,
-    PublicationDatasetEntityMapping,
-    DashboardEntityMapping,
-    DatahubSubtype,
-    PublicationCollectionEntityMapping,
-    Entity,
-    Table,
-    Chart,
-    Database,
-    PublicationDataset,
     Dashboard,
-    PublicationCollection,
-    RelationshipType,
-    Governance,
-    Column,
+    DashboardEntityMapping,
+    Database,
+    DatabaseEntityMapping,
+    DatahubEntityType,
+    DatahubSubtype,
+    DataSummary,
+    DomainRef,
+    Entity,
+    EntityRef,
     EntitySummary,
+    FurtherInformation,
+    GlossaryTermEntityMapping,
+    GlossaryTermRef,
+    Governance,
+    OwnerRef,
+    PublicationCollection,
+    PublicationCollectionEntityMapping,
+    PublicationDataset,
+    PublicationDatasetEntityMapping,
+    RelationshipType,
+    Table,
+    TableEntityMapping,
+    TagRef,
+    UsageRestrictions,
 )
-from data_platform_catalogue.search_types import SearchResult
+from datahub_client.search.search_types import SearchResult
 
 logger = logging.getLogger(__name__)
 

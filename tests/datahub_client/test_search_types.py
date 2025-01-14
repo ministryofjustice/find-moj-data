@@ -1,4 +1,4 @@
-from data_platform_catalogue.search_types import SortOption
+from datahub_client.search.search_types import SortOption
 
 
 def test_format_sort_option():

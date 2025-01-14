@@ -1,6 +1,5 @@
-from data_platform_catalogue.entities import GlossaryTermEntityMapping
-from data_platform_catalogue.search_types import SearchResult
-
+from datahub_client.entities import GlossaryTermEntityMapping
+from datahub_client.search.search_types import SearchResult
 from home.service.glossary import GlossaryService
 
 

@@ -1,7 +1,10 @@
 import os
 from urllib.parse import urlsplit
 
-from data_platform_catalogue.entities import (
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.validators import URLValidator
+
+from datahub_client.entities import (
     DashboardEntityMapping,
     DatabaseEntityMapping,
     EntityRef,
@@ -9,8 +12,6 @@ from data_platform_catalogue.entities import (
     PublicationDatasetEntityMapping,
     RelationshipType,
 )
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.validators import URLValidator
 
 from ..urns import PlatformUrns
 from .base import GenericService

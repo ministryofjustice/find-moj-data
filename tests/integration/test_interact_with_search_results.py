@@ -1,6 +1,6 @@
 import pytest
-from data_platform_catalogue.entities import TableEntityMapping
 
+from datahub_client.entities import TableEntityMapping
 from tests.conftest import (
     generate_page,
     generate_table_metadata,

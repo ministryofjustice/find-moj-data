@@ -1,7 +1,7 @@
 import pytest
-from data_platform_catalogue.entities import DatabaseEntityMapping
-from data_platform_catalogue.search_types import SearchResult
 
+from datahub_client.entities import DatabaseEntityMapping
+from datahub_client.search.search_types import SearchResult
 from tests.conftest import mock_search_response
 
 

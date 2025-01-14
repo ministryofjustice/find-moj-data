@@ -6,55 +6,6 @@ on:
   workflow_call:
 
 jobs:
-  datahub-client-path-filter:
-    runs-on: ubuntu-latest
-    outputs:
-      datahub-client: ${{ steps.changes.outputs.datahub-client }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            datahub-client:
-              - 'lib/datahub-client/**'
-
-  datahub-client-tests:
-    name: Run datahub client tests
-    needs: datahub-client-path-filter
-    if: ${{ needs.datahub-client-path-filter.outputs.datahub-client == 'true' }}
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: lib/datahub-client
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        python-version:
-          - "3.10"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # v4.1.4
-
-      - name: Install poetry
-        run: pipx install poetry
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: poetry
-          cache-dependency-path: lib/datahub-client/poetry.lock
-
-      - name: Poetry install
-        run: |
-          poetry install
-
-      - name: Run tests
-        run: |
-          poetry run pytest
-
   python-tests:
     name: Python tests
     runs-on: ubuntu-latest

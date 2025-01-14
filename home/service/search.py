@@ -2,17 +2,17 @@ import re
 from copy import deepcopy
 from typing import Any
 
-from data_platform_catalogue.entities import FindMoJdataEntityMapper, Mappers
-from data_platform_catalogue.search_types import (
+from django.conf import settings
+from django.core.paginator import Paginator
+from nltk.stem import PorterStemmer
+
+from datahub_client.entities import FindMoJdataEntityMapper, Mappers
+from datahub_client.search.search_types import (
     MultiSelectFilter,
     SearchResponse,
     SortOption,
     SubjectAreaOption,
 )
-from django.conf import settings
-from django.core.paginator import Paginator
-from nltk.stem import PorterStemmer
-
 from home.forms.search import SearchForm
 from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
 
@@ -45,7 +45,7 @@ class SearchService(GenericService):
 
     @staticmethod
     def _build_entity_types(
-        entity_types: list[str]
+        entity_types: list[str],
     ) -> tuple[FindMoJdataEntityMapper, ...]:
         default_entities = tuple(
             Mapper for Mapper in Mappers if Mapper.datahub_type.value != "GLOSSARY_TERM"

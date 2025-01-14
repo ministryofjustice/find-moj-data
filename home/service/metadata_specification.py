@@ -1,4 +1,4 @@
-from data_platform_catalogue.entities import (
+from datahub_client.entities import (
     AccessInformation,
     Chart,
     Column,

@@ -4,8 +4,8 @@ from typing import Any, Dict
 import pytest
 from datahub.metadata.schema_classes import DomainPropertiesClass
 
-from tests.test_helpers.graph_helpers import MockDataHubGraph
-from tests.test_helpers.mce_helpers import check_golden_file
+from .test_helpers.graph_helpers import MockDataHubGraph
+from .test_helpers.mce_helpers import check_golden_file
 
 FROZEN_TIME = "2023-04-14 07:00:00"
 
