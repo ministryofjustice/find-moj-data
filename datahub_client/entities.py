@@ -3,7 +3,10 @@ from datetime import datetime
 from enum import Enum
 from typing import Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import AfterValidator, BaseModel, EmailStr, Field
+from typing_extensions import Annotated
+
+from .validators import check_timestamp_is_in_the_past
 
 DATAHUB_DATE_FORMAT = "%Y%m%d"
 
@@ -542,17 +545,23 @@ class Entity(BaseModel):
             ]
         ],
     )
-    metadata_last_ingested: Optional[datetime] = Field(
+    metadata_last_ingested: Annotated[
+        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
+    ] = Field(
         description="When the metadata was last updated in the catalogue",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
-    created: Optional[datetime] = Field(
+    created: Annotated[
+        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
+    ] = Field(
         description="When the data entity was first created",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
-    data_last_modified: Optional[datetime] = Field(
+    data_last_modified: Annotated[
+        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
+    ] = Field(
         description="When the data entity was last modified in the source system",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
@@ -652,7 +661,9 @@ class Table(Entity):
             ]
         ],
     )
-    last_datajob_run_date: Optional[datetime] = Field(
+    last_datajob_run_date: Annotated[
+        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
+    ] = Field(
         description="Indicates the time when the data were last refreshed (eg pipeline run with dbt).",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
@@ -681,11 +692,3 @@ class Dashboard(Entity):
         description="URL to view the dashboard",
         examples=["https://data.justice.gov.uk"],
     )
-
-
-# if __name__ == "__main__":
-#     import erdantic as erd
-
-#     erd.draw(Database, out="database.png")
-#     erd.draw(Table, out="table.png")
-#     erd.draw(Chart, out="chart.png")
