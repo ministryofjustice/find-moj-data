@@ -124,6 +124,3 @@ class TestGlossaryView:
     def test_details(self, client):
         response = client.get(reverse("home:glossary"))
         assert response.status_code == 200
-
-
-
