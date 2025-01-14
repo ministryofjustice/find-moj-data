@@ -1,6 +1,5 @@
 import json
 import logging
-from importlib.resources import files
 from typing import Any, Sequence, Tuple
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
@@ -13,6 +12,7 @@ from datahub_client.entities import (
     TableEntityMapping,
 )
 from datahub_client.exceptions import CatalogueError
+from datahub_client.graphql.loader import get_graphql_query
 from datahub_client.parsers import EntityParser, EntityParserFactory, GlossaryTermParser
 from datahub_client.search.filters import map_filters
 from datahub_client.search.search_types import (
@@ -25,9 +25,6 @@ from datahub_client.search.search_types import (
 )
 
 logger = logging.getLogger(__name__)
-
-GRAPHQL_FILES_PATH = "datahub_client.graphql"
-GRAPHQL_FILE_EXTENSION = ".graphql"
 
 
 class SearchClient:
@@ -240,17 +237,3 @@ class SearchClient:
             for tag in tag_query_results["searchResults"]
         ]
         return tags_list
-
-
-def get_graphql_query(graphql_query_file_name: str) -> str:
-    query_text = (
-        files(GRAPHQL_FILES_PATH)
-        .joinpath(f"{graphql_query_file_name}{GRAPHQL_FILE_EXTENSION}")
-        .read_text()
-    )
-    if not query_text:
-        logger.error("No graphql query file found for %s", graphql_query_file_name)
-        raise CatalogueError(
-            f"No graphql query file found for {graphql_query_file_name}"
-        )
-    return query_text
