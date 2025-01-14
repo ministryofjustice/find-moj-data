@@ -3,10 +3,21 @@ import logging
 from importlib.resources import files
 from typing import Any, Sequence, Tuple
 
+<<<<<<< HEAD:datahub_client/search/search_client.py
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
 
 from datahub_client.entities import (
+=======
+from data_platform_catalogue.client.exceptions import CatalogueError
+from data_platform_catalogue.client.parsers import (
+    EntityParser,
+    EntityParserFactory,
+    GlossaryTermParser,
+)
+from data_platform_catalogue.client.search.filters import map_filters
+from data_platform_catalogue.entities import (
+>>>>>>> b55a4f3 (Change timestamp validation to a callable via pydantic Annotated and add associated test. Apply code formatt cleanup in various modules.):lib/datahub-client/data_platform_catalogue/client/search/search_client.py
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,

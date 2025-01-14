@@ -1,6 +1,22 @@
 import pytest
+<<<<<<< HEAD:tests/datahub_client/test_parsers.py
 
 from datahub_client.entities import (
+=======
+from data_platform_catalogue.client.parsers import (
+    DATA_CUSTODIAN,
+    ChartParser,
+    DashboardParser,
+    DatabaseParser,
+    DatasetParser,
+    EntityParser,
+    EntityParserFactory,
+    PublicationCollectionParser,
+    PublicationDatasetParser,
+    TableParser,
+)
+from data_platform_catalogue.entities import (
+>>>>>>> b55a4f3 (Change timestamp validation to a callable via pydantic Annotated and add associated test. Apply code formatt cleanup in various modules.):lib/datahub-client/tests/client/test_parsers.py
     AccessInformation,
     Audience,
     Chart,
@@ -24,6 +40,7 @@ from datahub_client.entities import (
     TagRef,
     UsageRestrictions,
 )
+<<<<<<< HEAD:tests/datahub_client/test_parsers.py
 from datahub_client.parsers import (
     DATA_CUSTODIAN,
     ChartParser,
@@ -37,6 +54,9 @@ from datahub_client.parsers import (
     TableParser,
 )
 from datahub_client.search.search_types import SearchResult
+=======
+from data_platform_catalogue.search_types import SearchResult
+>>>>>>> b55a4f3 (Change timestamp validation to a callable via pydantic Annotated and add associated test. Apply code formatt cleanup in various modules.):lib/datahub-client/tests/client/test_parsers.py
 
 
 @pytest.fixture

@@ -1,8 +1,13 @@
 from unittest.mock import MagicMock
 
 import pytest
+<<<<<<< HEAD:tests/datahub_client/search/test_search_client.py
 
 from datahub_client.entities import (
+=======
+from data_platform_catalogue.client.search.search_client import SearchClient
+from data_platform_catalogue.entities import (
+>>>>>>> b55a4f3 (Change timestamp validation to a callable via pydantic Annotated and add associated test. Apply code formatt cleanup in various modules.):lib/datahub-client/tests/client/search/test_search_client.py
     AccessInformation,
     ChartEntityMapping,
     DatabaseEntityMapping,

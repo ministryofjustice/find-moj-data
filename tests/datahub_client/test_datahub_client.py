@@ -2,9 +2,21 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+<<<<<<< HEAD:tests/datahub_client/test_datahub_client.py
 
 from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
+=======
+from data_platform_catalogue.client.datahub_client import (
+    DataHubCatalogueClient,
+    InvalidDomain,
+)
+from data_platform_catalogue.client.exceptions import (
+    EntityDoesNotExist,
+    ReferencedEntityMissing,
+)
+from data_platform_catalogue.entities import (
+>>>>>>> b55a4f3 (Change timestamp validation to a callable via pydantic Annotated and add associated test. Apply code formatt cleanup in various modules.):lib/datahub-client/tests/client/datahub/test_datahub_client.py
     AccessInformation,
     Audience,
     Chart,
