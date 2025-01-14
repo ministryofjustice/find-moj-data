@@ -174,19 +174,6 @@ class DataHubCatalogueClient:
             sort=sort,
         )
 
-    def list_domains(
-        self,
-        query: str = "*",
-        filters: Sequence[MultiSelectFilter] | None = None,
-        count: int = 1000,
-    ) -> list[SubjectAreaOption]:
-        """
-        Returns a list of DomainOption objects
-        """
-        return self.search_client.list_domains(
-            query=query, filters=filters, count=count
-        )
-
     def list_subject_areas(
         self,
         query: str = "*",

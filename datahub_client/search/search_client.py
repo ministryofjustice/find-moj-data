@@ -34,7 +34,6 @@ class SearchClient:
         self.entity_parser = EntityParser()
         self.search_query = get_graphql_query("search")
         self.facets_query = get_graphql_query("facets")
-        self.list_domains_query = get_graphql_query("listDomains")
         self.list_subject_areas_query = get_graphql_query("listSubjectAreas")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
@@ -125,31 +124,6 @@ class SearchClient:
 
         return page_results, malformed_result_urns
 
-    def list_domains(
-        self,
-        query: str = "*",
-        filters: Sequence[MultiSelectFilter] | None = None,
-        count: int = 1000,
-    ) -> list[SubjectAreaOption]:
-        """
-        Returns domains that can be used to filter the search results.
-        """
-        formatted_filters = map_filters(filters)
-        formatted_filters = formatted_filters[0]["and"]
-        variables = {
-            "count": count,
-            "query": query,
-            "filters": formatted_filters,
-        }
-
-        try:
-            response = self.graph.execute_graphql(self.list_domains_query, variables)
-        except GraphError as e:
-            raise CatalogueError("Unable to execute list domains query") from e
-
-        response = response["listDomains"]
-        return self._parse_list_domains(response.get("domains"))
-
     def list_subject_areas(
         self,
         query: str = "*",
@@ -174,21 +148,6 @@ class SearchClient:
 
         response = response["aggregateAcrossEntities"]
         return self._parse_list_subject_areas(response["facets"])
-
-    def _parse_list_domains(
-        self, list_domains_result: list[dict[str, Any]]
-    ) -> list[SubjectAreaOption]:
-        list_domain_options: list[SubjectAreaOption] = []
-
-        for domain in list_domains_result:
-            urn = domain.get("urn", "")
-            properties = domain.get("properties", {})
-            name = properties.get("name", "")
-            entities = domain.get("entities", {})
-            total = entities.get("total", 0)
-
-            list_domain_options.append(SubjectAreaOption(urn, name, total))
-        return list_domain_options
 
     def _parse_list_subject_areas(
         self, facets: list[dict[str, Any]]
