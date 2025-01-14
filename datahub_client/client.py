@@ -187,6 +187,19 @@ class DataHubCatalogueClient:
             query=query, filters=filters, count=count
         )
 
+    def list_subject_areas(
+        self,
+        query: str = "*",
+        filters: Sequence[MultiSelectFilter] | None = None,
+        count: int = 1000,
+    ) -> list[SubjectAreaOption]:
+        """
+        Returns a list of DomainOption objects
+        """
+        return self.search_client.list_subject_areas(
+            query=query, filters=filters, count=count
+        )
+
     def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
         """Wraps the client's glossary terms query"""
         return self.search_client.get_glossary_terms(count)

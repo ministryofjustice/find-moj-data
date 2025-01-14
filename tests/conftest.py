@@ -860,6 +860,7 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
 
 def mock_list_domains_response(mock_catalogue, domains):
     mock_catalogue.list_domains.return_value = domains
+    mock_catalogue.list_subject_areas.return_value = domains
 
 
 def mock_get_tags_response(mock_catalogue):

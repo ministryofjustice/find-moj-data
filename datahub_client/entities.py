@@ -720,3 +720,8 @@ class SubjectAreaTaxonomy:
         SubjectArea.from_name("Property"),
         SubjectArea.from_name("Risk"),
     ]
+
+    @classmethod
+    def get_top_level(cls, name):
+        matches = [i for i in cls.TOP_LEVEL if i.display_name == name]
+        return matches[0] if matches else None

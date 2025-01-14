@@ -3,12 +3,13 @@ import logging
 from typing import Any, Sequence, Tuple
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph
 
 from datahub_client.entities import (
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
+    SubjectAreaTaxonomy,
     TableEntityMapping,
 )
 from datahub_client.exceptions import CatalogueError
@@ -34,6 +35,7 @@ class SearchClient:
         self.search_query = get_graphql_query("search")
         self.facets_query = get_graphql_query("facets")
         self.list_domains_query = get_graphql_query("listDomains")
+        self.list_subject_areas_query = get_graphql_query("listSubjectAreas")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
 
@@ -148,6 +150,31 @@ class SearchClient:
         response = response["listDomains"]
         return self._parse_list_domains(response.get("domains"))
 
+    def list_subject_areas(
+        self,
+        query: str = "*",
+        filters: Sequence[MultiSelectFilter] | None = None,
+        count: int = 1000,
+    ):
+
+        formatted_filters = map_filters(filters)
+        formatted_filters = formatted_filters[0]["and"]
+
+        variables = variables = {
+            "count": count,
+            "query": query,
+            "filters": formatted_filters,
+        }
+        try:
+            response = self.graph.execute_graphql(
+                self.list_subject_areas_query, variables
+            )
+        except GraphError as e:
+            raise CatalogueError("Unable to execute list domains query") from e
+
+        response = response["aggregateAcrossEntities"]
+        return self._parse_list_subject_areas(response["facets"])
+
     def _parse_list_domains(
         self, list_domains_result: list[dict[str, Any]]
     ) -> list[SubjectAreaOption]:
@@ -162,6 +189,30 @@ class SearchClient:
 
             list_domain_options.append(SubjectAreaOption(urn, name, total))
         return list_domain_options
+
+    def _parse_list_subject_areas(
+        self, facets: list[dict[str, Any]]
+    ) -> list[SubjectAreaOption]:
+        """
+        Iterate over all the tag values, and return values for those
+        that match the top level subject areas.
+        """
+        subject_areas: list[SubjectAreaOption] = []
+
+        for aggregation in facets[0]["aggregations"]:
+            count = aggregation["count"]
+            entity = aggregation["entity"]
+            properties = entity.get("properties") or {}
+            name = properties.get("name") or entity.get("name")
+            subject_area = SubjectAreaTaxonomy.get_top_level(name)
+            if not subject_area:
+                continue
+
+            subject_areas.append(
+                SubjectAreaOption(subject_area.domain_urn, name, count)
+            )
+
+        return sorted(subject_areas, key=lambda s: s.name)
 
     def _parse_facets(self, facets: list[dict[str, Any]]) -> SearchFacets:
         """
