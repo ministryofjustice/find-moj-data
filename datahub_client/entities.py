@@ -279,6 +279,10 @@ class TagRef(BaseModel):
     Reference to a tag
     """
 
+    @classmethod
+    def from_name(cls, name):
+        return cls(display_name=name, urn=f"urn:li:tag:{name}")
+
     display_name: str = Field(
         description="Human friendly tag name",
         examples=["PII"],
@@ -692,3 +696,36 @@ class Dashboard(Entity):
         description="URL to view the dashboard",
         examples=["https://data.justice.gov.uk"],
     )
+
+
+class SubjectArea(TagRef):
+    @property
+    def domain_urn(self):
+        return self.urn.replace(":tag:", ":domain:")
+
+
+class SubjectAreaTaxonomy:
+    TOP_LEVEL = [
+        SubjectArea.from_name("Bold"),
+        SubjectArea.from_name("Civil"),
+        SubjectArea.from_name("Courts"),
+        SubjectArea.from_name("Electronic monitoring"),
+        SubjectArea.from_name("Finance"),
+        SubjectArea.from_name("General"),
+        SubjectArea.from_name("Interventions"),
+        SubjectArea.from_name("OPG"),
+        SubjectArea.from_name("People"),
+        SubjectArea.from_name("Prison"),
+        SubjectArea.from_name("Probation"),
+        SubjectArea.from_name("Property"),
+        SubjectArea.from_name("Risk"),
+    ]
+
+    @classmethod
+    def get_top_level(cls, name):
+        matches = [i for i in cls.TOP_LEVEL if i.display_name == name]
+        return matches[0] if matches else None
+
+    @classmethod
+    def is_subject_area(cls, name):
+        return cls.get_top_level(name) is not None

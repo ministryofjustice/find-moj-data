@@ -88,7 +88,9 @@ class SearchService(GenericService):
 
         filter_value = []
         if subject_area:
-            filter_value.append(MultiSelectFilter("domains", [subject_area]))
+            filter_value.append(
+                MultiSelectFilter("tags", [subject_area.replace(":domain:", ":tag:")])
+            )
         if where_to_access:
             filter_value.append(MultiSelectFilter("customProperties", where_to_access))
         if tags:

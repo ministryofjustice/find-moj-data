@@ -1,18 +1,19 @@
 import json
 import logging
-from importlib.resources import files
 from typing import Any, Sequence, Tuple
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
-from datahub.ingestion.graph.client import DataHubGraph  # pylint: disable=E0611
+from datahub.ingestion.graph.client import DataHubGraph
 
 from datahub_client.entities import (
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
+    SubjectAreaTaxonomy,
     TableEntityMapping,
 )
 from datahub_client.exceptions import CatalogueError
+from datahub_client.graphql.loader import get_graphql_query
 from datahub_client.parsers import EntityParser, EntityParserFactory, GlossaryTermParser
 from datahub_client.search.filters import map_filters
 from datahub_client.search.search_types import (
@@ -26,9 +27,6 @@ from datahub_client.search.search_types import (
 
 logger = logging.getLogger(__name__)
 
-GRAPHQL_FILES_PATH = "datahub_client.graphql"
-GRAPHQL_FILE_EXTENSION = ".graphql"
-
 
 class SearchClient:
     def __init__(self, graph: DataHubGraph):
@@ -36,7 +34,7 @@ class SearchClient:
         self.entity_parser = EntityParser()
         self.search_query = get_graphql_query("search")
         self.facets_query = get_graphql_query("facets")
-        self.list_domains_query = get_graphql_query("listDomains")
+        self.list_subject_areas_query = get_graphql_query("listSubjectAreas")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
 
@@ -126,45 +124,53 @@ class SearchClient:
 
         return page_results, malformed_result_urns
 
-    def list_domains(
+    def list_subject_areas(
         self,
         query: str = "*",
         filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
-    ) -> list[SubjectAreaOption]:
-        """
-        Returns domains that can be used to filter the search results.
-        """
+    ):
+
         formatted_filters = map_filters(filters)
         formatted_filters = formatted_filters[0]["and"]
+
         variables = {
             "count": count,
             "query": query,
             "filters": formatted_filters,
         }
-
         try:
-            response = self.graph.execute_graphql(self.list_domains_query, variables)
+            response = self.graph.execute_graphql(
+                self.list_subject_areas_query, variables
+            )
         except GraphError as e:
             raise CatalogueError("Unable to execute list domains query") from e
 
-        response = response["listDomains"]
-        return self._parse_list_domains(response.get("domains"))
+        response = response["aggregateAcrossEntities"]
+        return self._parse_list_subject_areas(response["facets"])
 
-    def _parse_list_domains(
-        self, list_domains_result: list[dict[str, Any]]
+    def _parse_list_subject_areas(
+        self, facets: list[dict[str, Any]]
     ) -> list[SubjectAreaOption]:
-        list_domain_options: list[SubjectAreaOption] = []
+        """
+        Iterate over all the tag values, and return values for those
+        that match the top level subject areas.
+        """
+        subject_areas: list[SubjectAreaOption] = []
 
-        for domain in list_domains_result:
-            urn = domain.get("urn", "")
-            properties = domain.get("properties", {})
-            name = properties.get("name", "")
-            entities = domain.get("entities", {})
-            total = entities.get("total", 0)
+        for aggregation in facets[0]["aggregations"]:
+            count = aggregation["count"]
+            entity = aggregation["entity"]
+            name = EntityParser.parse_name(entity)
+            subject_area = SubjectAreaTaxonomy.get_top_level(name)
+            if not subject_area:
+                continue
 
-            list_domain_options.append(SubjectAreaOption(urn, name, total))
-        return list_domain_options
+            subject_areas.append(
+                SubjectAreaOption(subject_area.domain_urn, name, count)
+            )
+
+        return sorted(subject_areas, key=lambda s: s.name)
 
     def _parse_facets(self, facets: list[dict[str, Any]]) -> SearchFacets:
         """
@@ -240,17 +246,3 @@ class SearchClient:
             for tag in tag_query_results["searchResults"]
         ]
         return tags_list
-
-
-def get_graphql_query(graphql_query_file_name: str) -> str:
-    query_text = (
-        files(GRAPHQL_FILES_PATH)
-        .joinpath(f"{graphql_query_file_name}{GRAPHQL_FILE_EXTENSION}")
-        .read_text()
-    )
-    if not query_text:
-        logger.error("No graphql query file found for %s", graphql_query_file_name)
-        raise CatalogueError(
-            f"No graphql query file found for {graphql_query_file_name}"
-        )
-    return query_text

@@ -151,6 +151,7 @@ fragment globalTagsFields on GlobalTags {
     tag {
       urn
       type
+      name
       properties {
         name
         colorHex

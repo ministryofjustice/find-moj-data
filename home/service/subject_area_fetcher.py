@@ -25,7 +25,7 @@ class SubjectAreaFetcher(GenericService):
         """
         result = cache.get(self.cache_key)
         if not result:
-            result = self.client.list_domains()
+            result = self.client.list_subject_areas()
             result = sorted(result, key=lambda d: d.urn)
             cache.set(self.cache_key, result, timeout=self.cache_timeout_seconds)
 

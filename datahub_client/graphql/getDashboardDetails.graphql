@@ -10,6 +10,9 @@ query getDashboard($urn: String!) {
     ownership {
       ...ownershipFields
     }
+    tags {
+      ...globalTagsFields
+    }
     properties {
       name
       description
@@ -52,6 +55,21 @@ query getDashboard($urn: String!) {
         }
       }
     }
+  }
+}
+
+fragment globalTagsFields on GlobalTags {
+  tags {
+    tag {
+      urn
+      type
+      name
+      properties {
+        name
+        colorHex
+      }
+    }
+    associatedUrn
   }
 }
 

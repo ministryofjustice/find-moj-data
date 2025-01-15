@@ -1,6 +1,5 @@
 import json
 import logging
-from importlib.resources import files
 from typing import Sequence
 
 from datahub.configuration.common import ConfigurationError
@@ -26,6 +25,7 @@ from datahub_client.entities import (
     TableEntityMapping,
 )
 from datahub_client.exceptions import ConnectivityError, EntityDoesNotExist
+from datahub_client.graphql.loader import get_graphql_query
 from datahub_client.parsers import (
     ChartParser,
     DashboardParser,
@@ -104,26 +104,10 @@ class DataHubCatalogueClient:
 
         self.search_client = SearchClient(self.graph)
 
-        self.database_query = (
-            files("datahub_client.graphql")
-            .joinpath("getContainerDetails.graphql")
-            .read_text()
-        )
-        self.dataset_query = (
-            files("datahub_client.graphql")
-            .joinpath("getDatasetDetails.graphql")
-            .read_text()
-        )
-        self.chart_query = (
-            files("datahub_client.graphql")
-            .joinpath("getChartDetails.graphql")
-            .read_text()
-        )
-        self.dashboard_query = (
-            files("datahub_client.graphql")
-            .joinpath("getDashboardDetails.graphql")
-            .read_text()
-        )
+        self.database_query = get_graphql_query("getContainerDetails")
+        self.dataset_query = get_graphql_query("getDatasetDetails")
+        self.chart_query = get_graphql_query("getChartDetails")
+        self.dashboard_query = get_graphql_query("getDashboardDetails")
 
     def check_entity_exists_by_urn(self, urn: str | None):
         if urn is not None:
@@ -190,7 +174,7 @@ class DataHubCatalogueClient:
             sort=sort,
         )
 
-    def list_domains(
+    def list_subject_areas(
         self,
         query: str = "*",
         filters: Sequence[MultiSelectFilter] | None = None,
@@ -199,7 +183,7 @@ class DataHubCatalogueClient:
         """
         Returns a list of DomainOption objects
         """
-        return self.search_client.list_domains(
+        return self.search_client.list_subject_areas(
             query=query, filters=filters, count=count
         )
 

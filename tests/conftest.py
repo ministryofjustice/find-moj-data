@@ -785,7 +785,7 @@ def mock_catalogue(
     mock_search_response(
         mock_catalogue, page_results=generate_page(), total_results=100
     )
-    mock_list_domains_response(
+    mock_list_subject_areas_response(
         mock_catalogue,
         domains=[
             SubjectAreaOption(
@@ -858,8 +858,8 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
     mock_catalogue.search.return_value = search_response
 
 
-def mock_list_domains_response(mock_catalogue, domains):
-    mock_catalogue.list_domains.return_value = domains
+def mock_list_subject_areas_response(mock_catalogue, domains):
+    mock_catalogue.list_subject_areas.return_value = domains
 
 
 def mock_get_tags_response(mock_catalogue):
@@ -934,7 +934,7 @@ def mock_get_publication_dataset_details_response(
 
 
 @pytest.fixture
-def list_domains(filter_zero_entities):
+def subject_area_options(filter_zero_entities):
     return SubjectAreaFetcher(filter_zero_entities).fetch()
 
 

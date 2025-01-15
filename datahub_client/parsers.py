@@ -31,6 +31,7 @@ from datahub_client.entities import (
     PublicationDataset,
     PublicationDatasetEntityMapping,
     RelationshipType,
+    SubjectAreaTaxonomy,
     Table,
     TableEntityMapping,
     TagRef,
@@ -80,6 +81,15 @@ class EntityParser:
         return name, display_name, qualified_name
 
     @staticmethod
+    def parse_name(entity: dict[str, Any]) -> str:
+        """
+        Parse the name of an entity, falling back to
+        the legacy field if unavailable.
+        """
+        properties = entity.get("properties") or {}
+        return properties.get("name") or entity.get("name", "")
+
+    @staticmethod
     def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
         """
         Parse tag information into a list of TagRef objects for displaying
@@ -96,26 +106,30 @@ class EntityParser:
                     "name": tag.get("tag", {}).get("urn").replace("urn:li:tag:", "")
                 }
 
-            if properties:
+            name = properties.get("name", "")
+            if properties and not SubjectAreaTaxonomy.is_subject_area(name):
                 tags.append(
                     TagRef(
-                        display_name=properties.get("name", ""),
+                        display_name=name,
                         urn=tag.get("tag", {}).get("urn", ""),
                     )
                 )
         return tags
 
-    def parse_domain(self, entity: dict[str, Any]) -> DomainRef:
-        domain = entity.get("domain") or {}
-        inner_domain = domain.get("domain") or {}
-        domain_id = inner_domain.get("urn", "")
-        if inner_domain:
-            domain_properties, _ = self.parse_properties(inner_domain)
-            display_name = domain_properties.get("name", "")
-        else:
-            display_name = ""
+    def parse_subject_area(self, entity: dict[str, Any]) -> DomainRef:
+        outer_tags = entity.get("tags") or {}
+        for tag in outer_tags.get("tags", []):
+            tag_inner = tag["tag"]
+            properties = tag.get("properties") or {}
+            name = properties.get("name") or tag_inner.get("name")
+            # Since we are picking a single subject_area, only consider the top level for now
+            subject_area = SubjectAreaTaxonomy.get_top_level(name)
+            if subject_area is None:
+                continue
+            else:
+                return DomainRef(display_name=name, urn=subject_area.urn)
 
-        return DomainRef(display_name=display_name, urn=domain_id)
+        return DomainRef(display_name="", urn="")
 
     @staticmethod
     def get_refresh_period_from_cadet_tags(
@@ -505,7 +519,7 @@ class DatasetParser(EntityParser):
         properties, custom_properties = self.parse_properties(entity)
         tags = self.parse_tags(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
-        domain = self.parse_domain(entity)
+        domain = self.parse_subject_area(entity)
 
         container = entity.get("container")
         if container:
@@ -555,7 +569,7 @@ class DatasetParser(EntityParser):
         platform_name = response["platform"]["name"]
         properties, custom_properties = self.parse_properties(response)
         columns = self.parse_columns(response)
-        domain = self.parse_domain(response)
+        domain = self.parse_subject_area(response)
         owner = self.parse_data_owner(response)
         stewards = self.parse_stewards(response)
         custodians = self.parse_custodians(response)
@@ -628,7 +642,7 @@ class ChartParser(DatasetParser):
             name=name,
             display_name=display_name,
             fully_qualified_name=qualified_name,
-            domain=self.parse_domain(response),
+            domain=self.parse_subject_area(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_stewards=self.parse_stewards(response),
@@ -662,7 +676,7 @@ class ContainerParser(EntityParser):
         terms = self.parse_glossary_terms(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
         modified = self.parse_data_last_modified(properties)
-        domain = self.parse_domain(entity)
+        domain = self.parse_subject_area(entity)
 
         metadata = {
             "owner": owner.display_name,
@@ -715,7 +729,7 @@ class DatabaseParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships=relations_to_display,
-            domain=self.parse_domain(response),
+            domain=self.parse_subject_area(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_custodians=self.parse_custodians(response),
@@ -760,7 +774,7 @@ class PublicationCollectionParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships=relations_to_display,
-            domain=self.parse_domain(response),
+            domain=self.parse_subject_area(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_custodians=self.parse_custodians(response),
@@ -802,7 +816,7 @@ class PublicationDatasetParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships={**parent_relations_to_display},
-            domain=self.parse_domain(response),
+            domain=self.parse_subject_area(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_custodians=self.parse_custodians(response),
@@ -841,7 +855,7 @@ class DashboardParser(ContainerParser):
                     RelationshipType.CHILD, [response["relationships"]]
                 )
             ),
-            domain=self.parse_domain(response),
+            domain=self.parse_subject_area(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_stewards=self.parse_stewards(response),
