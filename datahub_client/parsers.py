@@ -81,6 +81,15 @@ class EntityParser:
         return name, display_name, qualified_name
 
     @staticmethod
+    def parse_name(entity: dict[str, Any]) -> str:
+        """
+        Parse the name of an entity, falling back to
+        the legacy field if unavailable.
+        """
+        properties = entity.get("properties") or {}
+        return properties.get("name") or entity.get("name", "")
+
+    @staticmethod
     def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
         """
         Parse tag information into a list of TagRef objects for displaying

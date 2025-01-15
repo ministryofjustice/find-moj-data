@@ -161,8 +161,7 @@ class SearchClient:
         for aggregation in facets[0]["aggregations"]:
             count = aggregation["count"]
             entity = aggregation["entity"]
-            properties = entity.get("properties") or {}
-            name = properties.get("name") or entity.get("name")
+            name = EntityParser.parse_name(entity)
             subject_area = SubjectAreaTaxonomy.get_top_level(name)
             if not subject_area:
                 continue
