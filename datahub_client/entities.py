@@ -698,27 +698,21 @@ class Dashboard(Entity):
     )
 
 
-class SubjectArea(TagRef):
-    @property
-    def domain_urn(self):
-        return self.urn.replace(":tag:", ":domain:")
-
-
 class SubjectAreaTaxonomy:
     TOP_LEVEL = [
-        SubjectArea.from_name("Bold"),
-        SubjectArea.from_name("Civil"),
-        SubjectArea.from_name("Courts"),
-        SubjectArea.from_name("Electronic monitoring"),
-        SubjectArea.from_name("Finance"),
-        SubjectArea.from_name("General"),
-        SubjectArea.from_name("Interventions"),
-        SubjectArea.from_name("OPG"),
-        SubjectArea.from_name("People"),
-        SubjectArea.from_name("Prison"),
-        SubjectArea.from_name("Probation"),
-        SubjectArea.from_name("Property"),
-        SubjectArea.from_name("Risk"),
+        TagRef.from_name("Bold"),
+        TagRef.from_name("Civil"),
+        TagRef.from_name("Courts"),
+        TagRef.from_name("Electronic monitoring"),
+        TagRef.from_name("Finance"),
+        TagRef.from_name("General"),
+        TagRef.from_name("Interventions"),
+        TagRef.from_name("OPG"),
+        TagRef.from_name("People"),
+        TagRef.from_name("Prison"),
+        TagRef.from_name("Probation"),
+        TagRef.from_name("Property"),
+        TagRef.from_name("Risk"),
     ]
 
     @classmethod

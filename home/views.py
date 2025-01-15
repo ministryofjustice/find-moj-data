@@ -58,7 +58,6 @@ def home_view(request):
 
 @cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
-
     try:
         service = type_details_map[result_type](urn)
     except KeyError as missing_result_type:

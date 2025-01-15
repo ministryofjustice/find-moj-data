@@ -166,9 +166,7 @@ class SearchClient:
             if not subject_area:
                 continue
 
-            subject_areas.append(
-                SubjectAreaOption(subject_area.domain_urn, name, count)
-            )
+            subject_areas.append(SubjectAreaOption(subject_area.urn, name, count))
 
         return sorted(subject_areas, key=lambda s: s.name)
 
