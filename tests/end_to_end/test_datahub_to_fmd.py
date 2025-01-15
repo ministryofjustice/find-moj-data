@@ -48,7 +48,7 @@ class TestDatahubToFindMoJdata:
     def navigate_to_table(self):
         self.selenium.get(f"{self.live_server_url}")
 
-        domain_list = self.selenium.find_element(By.ID, "domain-list")
+        domain_list = self.selenium.find_element(By.ID, "subject-area-list")
         domain_list.find_element(By.PARTIAL_LINK_TEXT, "Bold").click()
         self.selenium.find_element(By.CSS_SELECTOR, "input[value='TABLE']").click()
 

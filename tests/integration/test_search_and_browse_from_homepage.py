@@ -43,11 +43,11 @@ class TestSearchAndBrowseFromHomepage:
         self.verify_the_search_bar_has_value("nomis")
         self.verify_i_have_results()
 
-    def test_browse_to_domain(self):
+    def test_browse_to_subject_area(self):
         self.start_on_the_home_page()
-        self.click_on_domain("Prisons")
+        self.click_on_subject_area("Prisons")
         self.verify_i_am_on_the_search_page()
-        self.verify_domain_selected("Prisons")
+        self.verify_subject_area_selected("Prisons")
 
     def test_automated_accessibility_home(self):
         self.start_on_the_home_page()
@@ -85,9 +85,9 @@ class TestSearchAndBrowseFromHomepage:
 
         assert search_bar.get_attribute("value") == query
 
-    def click_on_domain(self, domain):
-        self.home_page.domain_link(domain).click()
+    def click_on_subject_area(self, subject_area):
+        self.home_page.subject_area_link(subject_area).click()
 
-    def verify_domain_selected(self, domain):
-        selected_domain = self.search_page.get_selected_domain().text
-        assert selected_domain == domain
+    def verify_subject_area_selected(self, subject_area):
+        selected_subject_area = self.search_page.get_selected_subject_area().text
+        assert selected_subject_area == subject_area

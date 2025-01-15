@@ -150,16 +150,21 @@ class HomePage(Page):
     def search_bar(self) -> WebElement:
         return self.selenium.find_element(By.NAME, "query")
 
-    def domain_link(self, domain) -> WebElement:
-        all_domains = self.selenium.find_elements(
-            By.CSS_SELECTOR, "ul#domain-list li a"
+    def subject_area_link(self, subject_area) -> WebElement:
+        all_subject_areas = self.selenium.find_elements(
+            By.CSS_SELECTOR, "ul#subject-area-list li a"
         )
-        all_domain_names = [d.text for d in all_domains]
+        all_subject_area_names = [d.text for d in all_subject_areas]
         result = next(
-            (d for d in all_domains if domain == d.text.split("(")[0].strip()), None
+            (
+                s
+                for s in all_subject_areas
+                if subject_area == s.text.split("(")[0].strip()
+            ),
+            None,
         )
         if not result:
-            raise Exception(f"{domain!r} not found in {all_domain_names!r}")
+            raise Exception(f"{subject_area!r} not found in {all_subject_area_names!r}")
         return result
 
 
@@ -226,23 +231,18 @@ class SearchPage(Page):
     def search_button(self) -> WebElement:
         return self.selenium.find_element(By.CLASS_NAME, "search-button")
 
-    def checked_domain_checkboxes(self) -> list[WebElement]:
-        return self.selenium.find_elements(
-            By.CSS_SELECTOR, "input:checked[name='domains']"
-        )
-
     def checked_sort_option(self) -> WebElement:
         return self.selenium.find_element(By.CSS_SELECTOR, "input:checked[name='sort']")
 
-    def domain_select(self) -> WebElement:
-        return Select(self.selenium.find_element(By.ID, "id_domain"))
+    def subject_area_select(self) -> WebElement:
+        return Select(self.selenium.find_element(By.ID, "id_subject_area"))
 
-    def select_domain(self, domain) -> WebElement:
-        select = self.domain_select()
-        return select.select_by_visible_text(domain)
+    def select_subject_area(self, subject_area) -> WebElement:
+        select = self.subject_area_select()
+        return select.select_by_visible_text(subject_area)
 
-    def get_selected_domain(self) -> WebElement:
-        select = self.domain_select()
+    def get_selected_subject_area(self) -> WebElement:
+        select = self.subject_area_select()
         return select.first_selected_option
 
     def get_all_filter_names(self) -> list:
@@ -775,24 +775,24 @@ def mock_catalogue(
     )
     mock_list_subject_areas_response(
         mock_catalogue,
-        domains=[
+        subject_areas=[
             SubjectAreaOption(
-                urn="urn:li:domain:prisons",
+                urn="urn:li:tag:prisons",
                 name="Prisons",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
-                urn="urn:li:domain:courts",
+                urn="urn:li:tag:courts",
                 name="Courts",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
-                urn="urn:li:domain:finance",
+                urn="urn:li:tag:finance",
                 name="Finance",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
-                urn="urn:li:domain:hq",
+                urn="urn:li:tag:hq",
                 name="HQ",
                 total=0,
             ),
@@ -846,8 +846,8 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
     mock_catalogue.search.return_value = search_response
 
 
-def mock_list_subject_areas_response(mock_catalogue, domains):
-    mock_catalogue.list_subject_areas.return_value = domains
+def mock_list_subject_areas_response(mock_catalogue, subject_areas):
+    mock_catalogue.list_subject_areas.return_value = subject_areas
 
 
 def mock_get_tags_response(mock_catalogue):
