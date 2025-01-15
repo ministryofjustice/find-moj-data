@@ -113,6 +113,7 @@ class EntityParser:
             tag_inner = tag["tag"]
             properties = tag.get("properties") or {}
             name = properties.get("name") or tag_inner.get("name")
+            # Since we are picking a single subject_area, only consider the top level for now
             subject_area = SubjectAreaTaxonomy.get_top_level(name)
             if subject_area is None:
                 continue
