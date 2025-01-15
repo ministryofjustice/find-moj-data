@@ -16,7 +16,8 @@ class SubjectAreaTaxonomy:
         self.labels = {}
 
         self.top_level_subject_areas = [
-            SubjectArea(domain.urn, domain.name) for domain in subject_areas
+            SubjectArea(subject_area.urn, subject_area.name)
+            for subject_area in subject_areas
         ]
         logger.info(f"{self.top_level_subject_areas=}")
 

@@ -7,13 +7,12 @@ from .base import GenericService
 
 class SubjectAreaFetcher(GenericService):
     """
-    DomainFetcher implementation to fetch domains with the total number of
-    associated entities from the backend.
+    Fetches subject areas with the total number of associated entities from the backend.
     """
 
     def __init__(self, filter_zero_entities: bool = True):
         self.client = self._get_catalogue_client()
-        self.cache_key = "list_domains"
+        self.cache_key = "list_subject_areas"
         self.cache_timeout_seconds = 300
         self.filter_zero_entities = filter_zero_entities
 
