@@ -134,7 +134,7 @@ class SearchClient:
         formatted_filters = map_filters(filters)
         formatted_filters = formatted_filters[0]["and"]
 
-        variables = variables = {
+        variables = {
             "count": count,
             "query": query,
             "filters": formatted_filters,
