@@ -52,7 +52,7 @@ def home_view(request):
     Displys only subject areas that have entities tagged for display in the catalog.
     """
     subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
-    context = {"domains": subject_areas, "h1_value": "Home"}
+    context = {"subject_areas": subject_areas, "h1_value": "Home"}
     return render(request, "home.html", context)
 
 
