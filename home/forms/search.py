@@ -136,7 +136,7 @@ class SearchForm(forms.Form):
         '?query=&entity_types=TABLE&sort=&clear_filter=False&clear_label=False'
 
         >>> form.encode_without_filter('entity_types', 'TABLE')
-        '?query=&domain=urn%3Ali%3Adomain%3Aprison&subdomain=&sort=&clear_filter=False&clear_label=False'
+        '?query=&domain=urn%3Ali%3Adomain%3Aprison&sort=&clear_filter=False&clear_label=False'
         """
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)

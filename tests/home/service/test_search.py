@@ -9,9 +9,6 @@ from home.forms.search import SearchForm
 from home.service.search import SearchService
 
 dev_env = True if os.environ.get("ENV") == "dev" else False
-run_for_dev = pytest.mark.skipif(
-    not dev_env, reason="only dev datahub has subdomains currently"
-)
 
 
 class TestSearchService:
