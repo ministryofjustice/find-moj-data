@@ -267,12 +267,12 @@ class SearchPage(Page):
 
     def selected_filter_tags(self) -> list[WebElement]:
         return self.selenium.find_elements(
-            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
+            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-filter-label']"
         )
 
     def selected_filter_tag(self, value) -> WebElement:
         for result in self.selenium.find_elements(
-            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
+            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-filter-label']"
         ):
             if result.text == value:
                 return result
@@ -932,19 +932,19 @@ def search_tags():
 
 
 @pytest.fixture
-def valid_domain():
-    domains = SubjectAreaFetcher().fetch()
+def valid_subject_area_choice():
+    subject_areas = SubjectAreaFetcher().fetch()
     return SubjectAreaTaxonomy(
-        domains,
+        subject_areas,
     ).top_level_subject_areas[0]
 
 
 @pytest.fixture
-def valid_form(valid_domain):
+def valid_form(valid_subject_area_choice):
     valid_form = SearchForm(
         data={
             "query": "test",
-            "domain": valid_domain.urn,
+            "subject_area": valid_subject_area_choice.urn,
             "entity_types": ["TABLE"],
             "where_to_access": ["analytical_platform"],
             "sort": "ascending",
@@ -953,6 +953,7 @@ def valid_form(valid_domain):
             "tags": ["tag-1"],
         }
     )
+
     assert valid_form.is_valid()
 
     return valid_form

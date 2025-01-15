@@ -46,7 +46,7 @@
           <h2 id="browse-by-subject-area" class="govuk-heading-l">Browse by subject area</h2>
           <ul id="subject-area-list" class="govuk-list govuk-list--bullet">
             {% for subject_area in subject_areas  %}
-              <li><a aria-label="Browse data for {{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})" href="{% url 'home:search' %}?domain={{subject_area.urn|urlencode:":"}}">{{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})</a></li>
+              <li><a aria-label="Browse data for {{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})" href="{% url 'home:search' %}?subject_area={{subject_area.urn|urlencode:":"}}">{{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})</a></li>
             {% endfor %}
           </ul>
         {% endif %}
