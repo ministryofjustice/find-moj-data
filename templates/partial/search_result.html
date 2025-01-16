@@ -21,8 +21,7 @@
         {% endif %}
         <ul class="govuk-list govuk-body">
           <li>
-            <span class="govuk-!-font-weight-bold">Subject area:</span>
-            <span>{{result.metadata.domain_name | default:'Not provided.'}}</span>
+            {% include 'partial/subject_area_list.html' with subject_areas=result.subject_areas %}
           </li>
           {% if result.result_type.name == "TABLE" %}
             <li>

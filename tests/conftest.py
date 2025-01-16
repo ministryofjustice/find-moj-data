@@ -414,7 +414,7 @@ def generate_table_metadata(
         description=description,
         relationships=relations
         or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(display_name="LAA", urn="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -471,7 +471,7 @@ def generate_chart_metadata(
         fully_qualified_name=f"Foo.{name}",
         description=description,
         relationships=relations or {RelationshipType.PARENT: []},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -524,7 +524,7 @@ def generate_database_metadata(
                 )
             ]
         },
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -581,7 +581,7 @@ def generate_dashboard_metadata(
             ]
         },
         external_url="www.a-great-exmaple-dashboard.com",
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -636,7 +636,7 @@ def generate_publication_collection_metadata(
                 )
             ]
         },
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -680,7 +680,7 @@ def generate_publication_dataset_metadata(
         description=description,
         relationships=relations
         or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],

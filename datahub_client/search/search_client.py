@@ -162,7 +162,7 @@ class SearchClient:
             count = aggregation["count"]
             entity = aggregation["entity"]
             name = EntityParser.parse_name(entity)
-            subject_area = SubjectAreaTaxonomy.get_top_level(name)
+            subject_area = SubjectAreaTaxonomy.get_by_name(name)
             if not subject_area:
                 continue
 

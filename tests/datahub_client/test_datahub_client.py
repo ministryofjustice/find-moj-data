@@ -13,7 +13,6 @@ from datahub_client.entities import (
     CustomEntityProperties,
     Database,
     DataSummary,
-    DomainRef,
     EntityRef,
     EntitySummary,
     FurtherInformation,
@@ -57,7 +56,7 @@ class TestCatalogueClientWithDatahub:
                     )
                 ],
             ),
-            domain=DomainRef(urn="LAA", display_name="LAA"),
+            subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
             relationships={
                 RelationshipType.CHILD: [
                     EntitySummary(
@@ -120,7 +119,7 @@ class TestCatalogueClientWithDatahub:
                     )
                 ]
             },
-            domain=DomainRef(display_name="LAA", urn="LAA"),
+            subject_areas=[],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
                 data_stewards=[OwnerRef(display_name="", email="", urn="")],
@@ -182,7 +181,7 @@ class TestCatalogueClientWithDatahub:
                     )
                 ]
             },
-            domain=DomainRef(display_name="LAA", urn="LAA"),
+            subject_areas=[],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
                 data_stewards=[OwnerRef(display_name="", email="", urn="")],
@@ -375,7 +374,7 @@ class TestCatalogueClientWithDatahub:
                     )
                 ],
             },
-            domain=DomainRef(display_name="", urn=""),
+            subject_areas=[],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
                 data_stewards=[],
@@ -444,7 +443,7 @@ class TestCatalogueClientWithDatahub:
                 RelationshipType.PARENT: [],
                 RelationshipType.DATA_LINEAGE: [],
             },
-            domain=DomainRef(display_name="", urn=""),
+            subject_areas=[],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
                 data_stewards=[],
@@ -504,7 +503,7 @@ class TestCatalogueClientWithDatahub:
             fully_qualified_name="Absconds",
             description="a test description",
             relationships={RelationshipType.PARENT: []},
-            domain=DomainRef(display_name="", urn=""),
+            subject_areas=[],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
                 data_stewards=[],
@@ -621,7 +620,7 @@ class TestCatalogueClientWithDatahub:
             fully_qualified_name="some publication",
             description="",
             relationships=expected_relationships,
-            domain=DomainRef(display_name="", urn=""),
+            subject_areas=[],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="", urn=""),
                 data_stewards=[],

@@ -86,8 +86,7 @@
               </li>
             {% endif %} -->
             <li>
-              <span class="govuk-!-font-weight-bold">Subject area</span>
-              {{entity.domain.display_name | default:'Not provided' }}
+              {% include 'partial/subject_area_list.html' with subject_areas=entity.subject_areas %}
             </li>
             {% switch 'display-result-tags' %}
               {% if entity.tags_to_display %}

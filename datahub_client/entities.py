@@ -526,9 +526,9 @@ class Entity(BaseModel):
             }
         ],
     )
-    domain: DomainRef = Field(
-        description="The domain this entity belongs to.",
-        examples=[DomainRef(display_name="HMPPS", urn="urn:li:domain:HMCTS")],
+    subject_areas: list[TagRef] = Field(
+        description="The subject areas this entity belongs to",
+        examples=[TagRef(display_name="Prisons", urn="urn:li:tag:Prisons")],
     )
     governance: Governance = Field(description="Information about governance")
     tags: list[TagRef] = Field(
@@ -716,10 +716,10 @@ class SubjectAreaTaxonomy:
     ]
 
     @classmethod
-    def get_top_level(cls, name):
+    def get_by_name(cls, name):
         matches = [i for i in cls.TOP_LEVEL if i.display_name == name]
         return matches[0] if matches else None
 
     @classmethod
     def is_subject_area(cls, name):
-        return cls.get_top_level(name) is not None
+        return cls.get_by_name(name) is not None
