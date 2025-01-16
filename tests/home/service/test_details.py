@@ -6,13 +6,13 @@ from datahub_client.entities import (
     CustomEntityProperties,
     Dashboard,
     Database,
-    DomainRef,
     EntityRef,
     EntitySummary,
     FurtherInformation,
     Governance,
     OwnerRef,
     RelationshipType,
+    TagRef,
 )
 from home.service.details import (
     ChartDetailsService,
@@ -196,7 +196,7 @@ class TestChartDetailsService:
             fully_qualified_name="test",
             description="test",
             external_url="https://www.test.com",
-            domain=DomainRef(urn="LAA", display_name="LAA"),
+            subject_areas=[TagRef(urn="LAA", display_name="LAA")],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
                 data_stewards=[

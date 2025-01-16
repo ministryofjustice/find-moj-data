@@ -15,10 +15,12 @@ class SearchTagFetcher(GenericService):
         and any applied filters. Values are cached for 5 seconds to avoid
         unnecessary queries.
         """
-        result = cache.get(self.cache_key)
+        result = cache.get(self.cache_key, version=2)
         if not result:
             result = self.client.get_tags()
 
-            cache.set(self.cache_key, result, timeout=self.cache_timeout_seconds)
+            cache.set(
+                self.cache_key, result, timeout=self.cache_timeout_seconds, version=2
+            )
 
         return result

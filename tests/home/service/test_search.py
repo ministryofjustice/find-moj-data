@@ -9,9 +9,6 @@ from home.forms.search import SearchForm
 from home.service.search import SearchService
 
 dev_env = True if os.environ.get("ENV") == "dev" else False
-run_for_dev = pytest.mark.skipif(
-    not dev_env, reason="only dev datahub has subdomains currently"
-)
 
 
 class TestSearchService:
@@ -31,9 +28,11 @@ class TestSearchService:
     def test_get_context_h1_value(self, search_context):
         assert search_context["h1_value"] == "Search MoJ data"
 
-    def test_get_context_remove_filter_hrefs(self, search_context, valid_domain):
+    def test_get_context_remove_filter_hrefs(
+        self, search_context, valid_subject_area_choice
+    ):
         assert search_context["remove_filter_hrefs"]["Subject area"] == {
-            valid_domain.label: (
+            valid_subject_area_choice.label: (
                 "?query=test&"
                 "where_to_access=analytical_platform&"
                 "entity_types=TABLE&"
@@ -47,7 +46,7 @@ class TestSearchService:
         assert search_context["remove_filter_hrefs"]["Where to access"] == {
             "analytical_platform": (
                 "?query=test&"
-                f"domain={quote(valid_domain.urn)}&"
+                f"subject_area={quote(valid_subject_area_choice.urn)}&"
                 "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
@@ -59,7 +58,7 @@ class TestSearchService:
         assert search_context["remove_filter_hrefs"]["Entity types"] == {
             "Table": (
                 "?query=test&"
-                f"domain={quote(valid_domain.urn)}&"
+                f"subject_area={quote(valid_subject_area_choice.urn)}&"
                 "where_to_access=analytical_platform&"
                 "sort=ascending&"
                 "clear_filter=False&"
@@ -71,7 +70,7 @@ class TestSearchService:
         assert search_context["remove_filter_hrefs"]["Tags"] == {
             "tag-1": (
                 "?query=test&"
-                f"domain={quote(valid_domain.urn)}&"
+                f"subject_area={quote(valid_subject_area_choice.urn)}&"
                 "where_to_access=analytical_platform&"
                 "entity_types=TABLE&"
                 "sort=ascending&"

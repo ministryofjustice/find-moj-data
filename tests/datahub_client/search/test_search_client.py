@@ -72,7 +72,7 @@ def test_no_search_results(mock_graph, searcher):
 
 
 def test_one_search_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_top_level("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
     assert subject_area
 
     datahub_response = {
@@ -136,8 +136,6 @@ def test_one_search_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "Prison",
-                    "domain_id": "urn:li:tag:Prison",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -148,6 +146,7 @@ def test_one_search_result(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
+                subject_areas=[TagRef(urn="urn:li:tag:Prison", display_name="Prison")],
                 last_modified=None,
                 created=None,
                 parent_entity=EntityRef(urn="urn:li:container:abc", display_name="abc"),
@@ -159,7 +158,7 @@ def test_one_search_result(mock_graph, searcher):
 
 
 def test_dataset_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_top_level("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
     assert subject_area
 
     datahub_response = {
@@ -223,8 +222,6 @@ def test_dataset_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "Prison",
-                    "domain_id": "urn:li:tag:Prison",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -235,6 +232,7 @@ def test_dataset_result(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
+                subject_areas=[TagRef(urn="urn:li:tag:Prison", display_name="Prison")],
                 last_modified=None,
                 created=None,
             )
@@ -281,7 +279,7 @@ def test_bad_entity_type(mock_graph, searcher):
 
 
 def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.TOP_LEVEL[0]
+    subject_area = SubjectAreaTaxonomy.ALL_SUBJECT_AREAS[0]
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -367,8 +365,6 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": subject_area.display_name,
-                    "domain_id": subject_area.urn,
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -379,6 +375,7 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
+                subject_areas=[subject_area],
                 last_modified=None,
                 created=None,
             )
@@ -460,8 +457,6 @@ def test_full_page(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "",
-                    "domain_id": "",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -487,8 +482,6 @@ def test_full_page(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "",
-                    "domain_id": "",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -514,8 +507,6 @@ def test_full_page(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "",
-                    "domain_id": "",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -592,8 +583,6 @@ def test_query_match(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "",
-                    "domain_id": "",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -669,8 +658,6 @@ def test_result_with_owner(mock_graph, searcher):
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
                     "total_parents": 0,
-                    "domain_name": "",
-                    "domain_id": "",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -702,7 +689,7 @@ def test_filter(searcher, mock_graph):
     }
     mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-    response = searcher.search(filters=[MultiSelectFilter("domains", ["Abc", "Def"])])
+    response = searcher.search(filters=[MultiSelectFilter("tags", ["Abc", "Def"])])
 
     assert response == SearchResponse(
         total_results=0,
@@ -959,8 +946,6 @@ def test_search_for_charts(mock_graph, searcher):
                     "owner": "",
                     "owner_email": "",
                     "total_parents": 0,
-                    "domain_name": "",
-                    "domain_id": "",
                     "dpia_required": None,
                     "dpia_location": "",
                     "dc_where_to_access_dataset": "",
@@ -982,7 +967,7 @@ def test_search_for_charts(mock_graph, searcher):
 
 
 def test_search_for_container(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_top_level("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
     assert subject_area
 
     datahub_response = {
@@ -1079,8 +1064,6 @@ def test_search_for_container(mock_graph, searcher):
                     "audience": "Internal",
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
-                    "domain_name": "Prison",
-                    "domain_id": "urn:li:tag:Prison",
                     "usage_restrictions": UsageRestrictions(
                         dpia_required=False,
                         dpia_location="",
@@ -1096,6 +1079,7 @@ def test_search_for_container(mock_graph, searcher):
                 tags=[
                     TagRef(display_name="test", urn="urn:li:tag:test"),
                 ],
+                subject_areas=[subject_area],
                 last_modified=None,
                 created=None,
             )
@@ -1128,8 +1112,6 @@ def test_tag_to_display(tags, result):
             "owner_email": "",
             "total_parents": 0,
             "parents": [],
-            "domain_name": "",
-            "domain_id": "",
             "dpia_required": None,
             "dpia_location": "",
             "dc_where_to_access_dataset": "",

@@ -23,7 +23,6 @@ from datahub_client.entities import (
     Dashboard,
     Database,
     DatabaseEntityMapping,
-    DomainRef,
     EntityRef,
     EntitySummary,
     FindMoJdataEntityMapper,
@@ -45,8 +44,7 @@ from datahub_client.search.search_types import (
     SearchResult,
     SubjectAreaOption,
 )
-from home.forms.search import SearchForm
-from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
+from home.forms.search import SearchForm, SubjectAreaChoice
 from home.service.details import DatabaseDetailsService
 from home.service.search import SearchService
 from home.service.search_tag_fetcher import SearchTagFetcher
@@ -150,16 +148,21 @@ class HomePage(Page):
     def search_bar(self) -> WebElement:
         return self.selenium.find_element(By.NAME, "query")
 
-    def domain_link(self, domain) -> WebElement:
-        all_domains = self.selenium.find_elements(
-            By.CSS_SELECTOR, "ul#domain-list li a"
+    def subject_area_link(self, subject_area) -> WebElement:
+        all_subject_areas = self.selenium.find_elements(
+            By.CSS_SELECTOR, "ul#subject-area-list li a"
         )
-        all_domain_names = [d.text for d in all_domains]
+        all_subject_area_names = [d.text for d in all_subject_areas]
         result = next(
-            (d for d in all_domains if domain == d.text.split("(")[0].strip()), None
+            (
+                s
+                for s in all_subject_areas
+                if subject_area == s.text.split("(")[0].strip()
+            ),
+            None,
         )
         if not result:
-            raise Exception(f"{domain!r} not found in {all_domain_names!r}")
+            raise Exception(f"{subject_area!r} not found in {all_subject_area_names!r}")
         return result
 
 
@@ -226,35 +229,18 @@ class SearchPage(Page):
     def search_button(self) -> WebElement:
         return self.selenium.find_element(By.CLASS_NAME, "search-button")
 
-    def checked_domain_checkboxes(self) -> list[WebElement]:
-        return self.selenium.find_elements(
-            By.CSS_SELECTOR, "input:checked[name='domains']"
-        )
-
     def checked_sort_option(self) -> WebElement:
         return self.selenium.find_element(By.CSS_SELECTOR, "input:checked[name='sort']")
 
-    def domain_select(self) -> WebElement:
-        return Select(self.selenium.find_element(By.ID, "id_domain"))
+    def subject_area_select(self) -> WebElement:
+        return Select(self.selenium.find_element(By.ID, "id_subject_area"))
 
-    def subdomain_select(self) -> WebElement:
-        return Select(self.selenium.find_element(By.ID, "id_subdomain"))
+    def select_subject_area(self, subject_area) -> WebElement:
+        select = self.subject_area_select()
+        return select.select_by_visible_text(subject_area)
 
-    def select_domain(self, domain) -> WebElement:
-        select = self.domain_select()
-        return select.select_by_visible_text(domain)
-
-    def select_subdomain(self, domain) -> WebElement:
-        select = self.subdomain_select()
-        print(f"Selecting subdomain {domain}")
-        return select.select_by_visible_text(domain)
-
-    def get_selected_domain(self) -> WebElement:
-        select = self.domain_select()
-        return select.first_selected_option
-
-    def get_selected_subdomain(self) -> WebElement:
-        select = self.subdomain_select()
+    def get_selected_subject_area(self) -> WebElement:
+        select = self.subject_area_select()
         return select.first_selected_option
 
     def get_all_filter_names(self) -> list:
@@ -279,12 +265,12 @@ class SearchPage(Page):
 
     def selected_filter_tags(self) -> list[WebElement]:
         return self.selenium.find_elements(
-            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
+            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-filter-label']"
         )
 
     def selected_filter_tag(self, value) -> WebElement:
         for result in self.selenium.find_elements(
-            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-domain-label']"
+            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-filter-label']"
         ):
             if result.text == value:
                 return result
@@ -426,7 +412,7 @@ def generate_table_metadata(
         description=description,
         relationships=relations
         or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(display_name="LAA", urn="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -483,7 +469,7 @@ def generate_chart_metadata(
         fully_qualified_name=f"Foo.{name}",
         description=description,
         relationships=relations or {RelationshipType.PARENT: []},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -536,7 +522,7 @@ def generate_database_metadata(
                 )
             ]
         },
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -593,7 +579,7 @@ def generate_dashboard_metadata(
             ]
         },
         external_url="www.a-great-exmaple-dashboard.com",
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -648,7 +634,7 @@ def generate_publication_collection_metadata(
                 )
             ]
         },
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -692,7 +678,7 @@ def generate_publication_dataset_metadata(
         description=description,
         relationships=relations
         or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
-        domain=DomainRef(display_name="LAA", urn="LAA"),
+        subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
@@ -787,24 +773,24 @@ def mock_catalogue(
     )
     mock_list_subject_areas_response(
         mock_catalogue,
-        domains=[
+        subject_areas=[
             SubjectAreaOption(
-                urn="urn:li:domain:prisons",
+                urn="urn:li:tag:prisons",
                 name="Prisons",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
-                urn="urn:li:domain:courts",
+                urn="urn:li:tag:courts",
                 name="Courts",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
-                urn="urn:li:domain:finance",
+                urn="urn:li:tag:finance",
                 name="Finance",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
-                urn="urn:li:domain:hq",
+                urn="urn:li:tag:hq",
                 name="HQ",
                 total=0,
             ),
@@ -858,8 +844,8 @@ def mock_search_response(mock_catalogue, total_results=0, page_results=()):
     mock_catalogue.search.return_value = search_response
 
 
-def mock_list_subject_areas_response(mock_catalogue, domains):
-    mock_catalogue.list_subject_areas.return_value = domains
+def mock_list_subject_areas_response(mock_catalogue, subject_areas):
+    mock_catalogue.list_subject_areas.return_value = subject_areas
 
 
 def mock_get_tags_response(mock_catalogue):
@@ -944,19 +930,17 @@ def search_tags():
 
 
 @pytest.fixture
-def valid_domain():
-    domains = SubjectAreaFetcher().fetch()
-    return SubjectAreaTaxonomy(
-        domains,
-    ).top_level_subject_areas[0]
+def valid_subject_area_choice():
+    subject_area = SubjectAreaFetcher().fetch()[0]
+    return SubjectAreaChoice(subject_area.urn, subject_area.name)
 
 
 @pytest.fixture
-def valid_form(valid_domain):
+def valid_form(valid_subject_area_choice):
     valid_form = SearchForm(
         data={
             "query": "test",
-            "domain": valid_domain.urn,
+            "subject_area": valid_subject_area_choice.urn,
             "entity_types": ["TABLE"],
             "where_to_access": ["analytical_platform"],
             "sort": "ascending",
@@ -965,6 +949,7 @@ def valid_form(valid_domain):
             "tags": ["tag-1"],
         }
     )
+
     assert valid_form.is_valid()
 
     return valid_form

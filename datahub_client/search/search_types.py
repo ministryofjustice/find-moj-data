@@ -72,6 +72,7 @@ class SearchResult:
     matches: dict[str, Any] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
     tags: list[TagRef] = field(default_factory=list)
+    subject_areas: list[TagRef] = field(default_factory=list)
     glossary_terms: list[GlossaryTermRef] = field(default_factory=list)
     last_modified: datetime | None = None
     created: datetime | None = None

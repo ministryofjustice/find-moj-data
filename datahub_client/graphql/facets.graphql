@@ -19,11 +19,6 @@ query Facets(
         value
         count
         entity {
-          ... on Domain {
-            properties {
-              name
-            }
-          }
           ... on Tag {
             properties {
               name

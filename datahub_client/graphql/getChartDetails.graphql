@@ -41,16 +41,6 @@ query getChartDetails($urn: String!) {
     tags {
       ...globalTagsFields
     }
-    domain {
-      domain {
-        urn
-        id
-        properties {
-          name
-          description
-        }
-      }
-    }
     ownership {
       ...ownershipFields
     }

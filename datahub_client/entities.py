@@ -262,18 +262,6 @@ class Governance(BaseModel):
     )
 
 
-class DomainRef(BaseModel):
-    """
-    Reference to a domain that entities belong to
-    """
-
-    display_name: str = Field(description="Display name", examples=["HMPPS"])
-    urn: str = Field(
-        description="The identifier of the domain.",
-        examples=["urn:li:domain:HMCTS"],
-    )
-
-
 class TagRef(BaseModel):
     """
     Reference to a tag
@@ -526,9 +514,9 @@ class Entity(BaseModel):
             }
         ],
     )
-    domain: DomainRef = Field(
-        description="The domain this entity belongs to.",
-        examples=[DomainRef(display_name="HMPPS", urn="urn:li:domain:HMCTS")],
+    subject_areas: list[TagRef] = Field(
+        description="The subject areas this entity belongs to",
+        examples=[TagRef(display_name="Prisons", urn="urn:li:tag:Prisons")],
     )
     governance: Governance = Field(description="Information about governance")
     tags: list[TagRef] = Field(
@@ -687,10 +675,6 @@ class Chart(Entity):
     )
 
 
-class Domain(Entity):
-    """Datahub domain"""
-
-
 class Dashboard(Entity):
     external_url: str = Field(
         description="URL to view the dashboard",
@@ -698,34 +682,28 @@ class Dashboard(Entity):
     )
 
 
-class SubjectArea(TagRef):
-    @property
-    def domain_urn(self):
-        return self.urn.replace(":tag:", ":domain:")
-
-
 class SubjectAreaTaxonomy:
-    TOP_LEVEL = [
-        SubjectArea.from_name("Bold"),
-        SubjectArea.from_name("Civil"),
-        SubjectArea.from_name("Courts"),
-        SubjectArea.from_name("Electronic monitoring"),
-        SubjectArea.from_name("Finance"),
-        SubjectArea.from_name("General"),
-        SubjectArea.from_name("Interventions"),
-        SubjectArea.from_name("OPG"),
-        SubjectArea.from_name("People"),
-        SubjectArea.from_name("Prison"),
-        SubjectArea.from_name("Probation"),
-        SubjectArea.from_name("Property"),
-        SubjectArea.from_name("Risk"),
+    ALL_SUBJECT_AREAS = [
+        TagRef.from_name("Bold"),
+        TagRef.from_name("Civil"),
+        TagRef.from_name("Courts"),
+        TagRef.from_name("Electronic monitoring"),
+        TagRef.from_name("Finance"),
+        TagRef.from_name("General"),
+        TagRef.from_name("Interventions"),
+        TagRef.from_name("OPG"),
+        TagRef.from_name("People"),
+        TagRef.from_name("Prison"),
+        TagRef.from_name("Probation"),
+        TagRef.from_name("Property"),
+        TagRef.from_name("Risk"),
     ]
 
     @classmethod
-    def get_top_level(cls, name):
-        matches = [i for i in cls.TOP_LEVEL if i.display_name == name]
+    def get_by_name(cls, name):
+        matches = [i for i in cls.ALL_SUBJECT_AREAS if i.display_name == name]
         return matches[0] if matches else None
 
     @classmethod
     def is_subject_area(cls, name):
-        return cls.get_top_level(name) is not None
+        return cls.get_by_name(name) is not None

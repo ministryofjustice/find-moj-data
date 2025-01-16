@@ -87,16 +87,6 @@ query Search(
               value
             }
           }
-          domain {
-            domain {
-              urn
-              id
-              properties {
-                name
-                description
-              }
-            }
-          }
         }
         ... on Dashboard {
           urn
@@ -113,16 +103,6 @@ query Search(
             customProperties {
               key
               value
-            }
-          }
-          domain {
-            domain {
-              urn
-              id
-              properties {
-                name
-                description
-              }
             }
           }
           tags {
@@ -191,16 +171,6 @@ query Search(
               }
             }
           }
-          domain {
-            domain {
-              urn
-              id
-              properties {
-                name
-                description
-              }
-            }
-          }
         }
         ... on Container {
           urn
@@ -217,16 +187,6 @@ query Search(
             customProperties {
               key
               value
-            }
-          }
-          domain {
-            domain {
-              urn
-              id
-              properties {
-                name
-                description
-              }
             }
           }
           tags {

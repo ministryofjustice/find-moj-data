@@ -1,4 +1,5 @@
 from copy import deepcopy
+from typing import NamedTuple
 from urllib.parse import urlencode
 
 from django import forms
@@ -6,20 +7,21 @@ from django import forms
 from datahub_client.entities import FindMoJdataEntityType
 from datahub_client.search.search_types import SubjectAreaOption
 
-from ..models.subject_area_taxonomy import SubjectArea
 from ..service.search_tag_fetcher import SearchTagFetcher
 from ..service.subject_area_fetcher import SubjectAreaFetcher
 
 
-def get_subject_area_choices() -> list[SubjectArea]:
-    """Make Domains API call to obtain subject area choices"""
+class SubjectAreaChoice(NamedTuple):
+    urn: str
+    label: str
+
+
+def get_subject_area_choices() -> list[SubjectAreaChoice]:
     choices = [
-        SubjectArea("", "All subject areas"),
+        SubjectAreaChoice("", "All subject areas"),
     ]
     subject_area_options: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
-    subject_areas: list[SubjectArea] = [
-        SubjectArea(d.urn, d.name) for d in subject_area_options
-    ]
+    subject_areas = [SubjectAreaChoice(d.urn, d.name) for d in subject_area_options]
     choices.extend(subject_areas)
     return choices
 
@@ -54,7 +56,7 @@ def get_tags():
 class SearchForm(forms.Form):
     """Django form to represent search page inputs"""
 
-    domain_translate = "Subject area"
+    subject_area_translate = "Subject area"
     select_filter_translate = (
         "selection will trigger the filter and refresh the search results"
     )
@@ -66,14 +68,14 @@ class SearchForm(forms.Form):
             attrs={"class": "govuk-input search-input", "type": "search"}
         ),
     )
-    domain = forms.ChoiceField(
+    subject_area = forms.ChoiceField(
         choices=get_subject_area_choices,
         required=False,
         widget=forms.Select(
             attrs={
                 "form": "searchform",
                 "class": "govuk-select",
-                "aria-label": f"{domain_translate} - {select_filter_translate}",
+                "aria-label": f"{subject_area_translate} - {select_filter_translate}",
                 "onchange": "document.getElementById('searchform').submit();",
             }
         ),
@@ -128,15 +130,15 @@ class SearchForm(forms.Form):
         The query string includes all submitted form parameters except
         the one identified by filter_name and filter_value.
 
-        >>> formdata = {'domain': 'urn:li:domain:prison', 'entity_types': ['TABLE']}
+        >>> formdata = {'subject_area': 'urn:li:tag:prison', 'entity_types': ['TABLE']}
         >>> form = SearchForm(formdata)
         >>> assert form.is_valid()
 
-        >>> form.encode_without_filter('domain', 'urn:li:domain:prison')
+        >>> form.encode_without_filter('subject_area', 'urn:li:tag:prison')
         '?query=&entity_types=TABLE&sort=&clear_filter=False&clear_label=False'
 
         >>> form.encode_without_filter('entity_types', 'TABLE')
-        '?query=&domain=urn%3Ali%3Adomain%3Aprison&subdomain=&sort=&clear_filter=False&clear_label=False'
+        '?query=&subject_area=urn%3Ali%3Asubject_area%3Aprison&sort=&clear_filter=False&clear_label=False'
         """
         # Deepcopy the cleaned data dict to avoid modifying it inplace
         query_params = deepcopy(self.cleaned_data)

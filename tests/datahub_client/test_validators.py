@@ -6,7 +6,6 @@ from datahub_client.entities import (
     AccessInformation,
     CustomEntityProperties,
     DataSummary,
-    DomainRef,
     Entity,
     EntityRef,
     EntitySummary,
@@ -45,7 +44,7 @@ def test_entity_timestamps_in_future_validation():
                 )
             ]
         },
-        "domain": DomainRef(display_name="HMPPS", urn="urn:li:domain:HMCTS"),
+        "subject_areas": TagRef(display_name="HMPPS", urn="urn:li:tag:HMCTS"),
         "governance": Governance(
             data_owner=OwnerRef(
                 display_name="John Doe",

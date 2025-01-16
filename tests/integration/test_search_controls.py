@@ -40,16 +40,16 @@ class TestSearchInteractions:
         self.verify_the_search_bar_has_value("nomis")
         self.verify_i_have_results()
 
-    def test_apply_domain_filters(self):
+    def test_apply_subject_area_filters(self):
         """
         Interacts with the filters on the left hand side
         """
-        domain = "Prisons"
+        subject_area = "Prisons"
         self.start_on_the_search_page()
-        self.select_domain(domain)
+        self.select_subject_area(subject_area)
         self.verify_i_am_on_the_search_page()
         self.verify_i_have_results()
-        self.verify_domain_selected(domain)
+        self.verify_subject_area_selected(subject_area)
 
     def test_pagination(self):
         """
@@ -84,16 +84,16 @@ class TestSearchInteractions:
         Search settings persist as the user continues to
         interact with the search page.
         """
-        domain = "Prisons"
+        subject_area = "Prisons"
         self.start_on_the_search_page()
-        self.select_domain(domain)
+        self.select_subject_area(subject_area)
         self.enter_a_query_and_submit("nomis")
         self.click_option("Ascending")
         self.click_on_the_search_button()
 
         self.verify_i_have_results()
         self.verify_the_search_bar_has_value("nomis")
-        self.verify_domain_selected(domain)
+        self.verify_subject_area_selected(subject_area)
         self.verify_sort_selected("Ascending")
 
     def test_adding_a_query_resets_pagination(self):
@@ -115,7 +115,7 @@ class TestSearchInteractions:
         self.start_on_the_search_page()
         self.click_next_page()
         self.verify_page("2")
-        self.select_domain("Prisons")
+        self.select_subject_area("Prisons")
         self.verify_page("1")
 
     def test_clear_single_filter(self):
@@ -123,29 +123,29 @@ class TestSearchInteractions:
         Users can clear a filter by clicking on it within the "selected filters"
         panel.
         """
-        domain = "Prisons"
+        subject_area = "Prisons"
         self.start_on_the_search_page()
-        self.select_domain(domain)
-        self.verify_domain_selected(domain)
-        self.click_clear_selected_filter(domain)
-        self.verify_unselected_domain()
+        self.select_subject_area(subject_area)
+        self.verify_subject_area_selected(subject_area)
+        self.click_clear_selected_filter(subject_area)
+        self.verify_unselected_subject_area()
 
     def test_clear_all_filters(self):
         """
         Users can click a button to clear all filters.
         """
-        domain = "Prisons"
+        subject_area = "Prisons"
 
         self.start_on_the_search_page()
 
         filters = self.search_page.get_all_filter_names()
-        self.select_domain(domain)
+        self.select_subject_area(subject_area)
         for filter in filters:
             self.click_option(filter)
-        self.verify_domain_selected(domain)
+        self.verify_subject_area_selected(subject_area)
         self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
-        self.verify_unselected_domain()
+        self.verify_unselected_subject_area()
         self.verfiy_unselected_checkbox_filters()
 
     def test_automated_accessibility_search(self):
@@ -195,8 +195,8 @@ class TestSearchInteractions:
         search_bar.send_keys(query)
         self.click_on_the_search_button()
 
-    def select_domain(self, domain):
-        self.search_page.select_domain(domain)
+    def select_subject_area(self, subject_area):
+        self.search_page.select_subject_area(subject_area)
 
     def click_option(self, sortby):
         self.search_page.sort_label(sortby).click()
@@ -212,17 +212,17 @@ class TestSearchInteractions:
 
         assert search_bar.get_attribute("value") == query
 
-    def verify_domain_selected(self, domain):
-        selected_domain = self.search_page.get_selected_domain().text
-        assert selected_domain == domain
+    def verify_subject_area_selected(self, subject_area):
+        selected_subject_area = self.search_page.get_selected_subject_area().text
+        assert selected_subject_area == subject_area
 
-    def verify_unselected_domain(self):
-        selected_domain = self.search_page.get_selected_domain().text
-        assert selected_domain == "All subject areas"
+    def verify_unselected_subject_area(self):
+        selected_subject_area = self.search_page.get_selected_subject_area().text
+        assert selected_subject_area == "All subject areas"
 
-    def verify_selected_filters_shown(self, domains):
+    def verify_selected_filters_shown(self, subject_areas):
         actual = {i.text for i in self.search_page.selected_filter_tags()}
-        expected = set(domains)
+        expected = set(subject_areas)
 
         assert actual == expected
 

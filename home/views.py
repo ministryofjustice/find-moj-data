@@ -52,13 +52,12 @@ def home_view(request):
     Displys only subject areas that have entities tagged for display in the catalog.
     """
     subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
-    context = {"domains": subject_areas, "h1_value": "Home"}
+    context = {"subject_areas": subject_areas, "h1_value": "Home"}
     return render(request, "home.html", context)
 
 
 @cache_control(max_age=300, private=True)
 def details_view(request, result_type, urn):
-
     try:
         service = type_details_map[result_type](urn)
     except KeyError as missing_result_type:

@@ -17,7 +17,6 @@ from datahub_client.entities import (
     DatahubEntityType,
     DatahubSubtype,
     DataSummary,
-    DomainRef,
     Entity,
     EntityRef,
     EntitySummary,
@@ -116,20 +115,21 @@ class EntityParser:
                 )
         return tags
 
-    def parse_subject_area(self, entity: dict[str, Any]) -> DomainRef:
+    def parse_subject_areas(self, entity: dict[str, Any]) -> list[TagRef]:
+        result = []
         outer_tags = entity.get("tags") or {}
         for tag in outer_tags.get("tags", []):
             tag_inner = tag["tag"]
             properties = tag.get("properties") or {}
             name = properties.get("name") or tag_inner.get("name")
-            # Since we are picking a single subject_area, only consider the top level for now
-            subject_area = SubjectAreaTaxonomy.get_top_level(name)
+
+            subject_area = SubjectAreaTaxonomy.get_by_name(name)
             if subject_area is None:
                 continue
             else:
-                return DomainRef(display_name=name, urn=subject_area.urn)
+                result.append(TagRef(display_name=name, urn=subject_area.urn))
 
-        return DomainRef(display_name="", urn="")
+        return result
 
     @staticmethod
     def get_refresh_period_from_cadet_tags(
@@ -519,7 +519,7 @@ class DatasetParser(EntityParser):
         properties, custom_properties = self.parse_properties(entity)
         tags = self.parse_tags(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
-        domain = self.parse_subject_area(entity)
+        subject_areas = self.parse_subject_areas(entity)
 
         container = entity.get("container")
         if container:
@@ -531,8 +531,6 @@ class DatasetParser(EntityParser):
             "owner": owner.display_name,
             "owner_email": owner.email,
             "total_parents": entity.get("relationships", {}).get("total", 0),
-            "domain_name": domain.display_name,
-            "domain_id": domain.urn,
         }
         logger.debug(f"{metadata=}")
 
@@ -557,6 +555,7 @@ class DatasetParser(EntityParser):
             description=properties.get("description", ""),
             metadata=metadata,
             tags=tags,
+            subject_areas=subject_areas,
             glossary_terms=self.parse_glossary_terms(entity),
             last_modified=modified,
         )
@@ -569,7 +568,7 @@ class DatasetParser(EntityParser):
         platform_name = response["platform"]["name"]
         properties, custom_properties = self.parse_properties(response)
         columns = self.parse_columns(response)
-        domain = self.parse_subject_area(response)
+        subject_areas = self.parse_subject_areas(response)
         owner = self.parse_data_owner(response)
         stewards = self.parse_stewards(response)
         custodians = self.parse_custodians(response)
@@ -600,7 +599,7 @@ class DatasetParser(EntityParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships={**lineage_relations, **parent_relations_to_display},
-            domain=domain,
+            subject_areas=subject_areas,
             governance=Governance(
                 data_owner=owner, data_stewards=stewards, data_custodians=custodians
             ),
@@ -642,7 +641,7 @@ class ChartParser(DatasetParser):
             name=name,
             display_name=display_name,
             fully_qualified_name=qualified_name,
-            domain=self.parse_subject_area(response),
+            subject_areas=self.parse_subject_areas(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_stewards=self.parse_stewards(response),
@@ -676,18 +675,16 @@ class ContainerParser(EntityParser):
         terms = self.parse_glossary_terms(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
         modified = self.parse_data_last_modified(properties)
-        domain = self.parse_subject_area(entity)
+        subject_areas = self.parse_subject_areas(entity)
 
         metadata = {
             "owner": owner.display_name,
             "owner_email": owner.email,
-            "domain_name": domain.display_name,
-            "domain_id": domain.urn,
         }
 
         metadata.update(custom_properties)
 
-        result = SearchResult(
+        search_result = SearchResult(
             urn=entity["urn"],
             result_type=self.mapper,
             matches=matched_fields,
@@ -697,13 +694,14 @@ class ContainerParser(EntityParser):
             description=properties.get("description", ""),
             metadata=metadata,
             tags=self.parse_tags(entity),
+            subject_areas=subject_areas,
             glossary_terms=terms,
             last_modified=modified,
         )
 
-        logger.info(f"{result=}")
+        logger.info(f"{search_result=}")
 
-        return result
+        return search_result
 
 
 class DatabaseParser(ContainerParser):
@@ -729,7 +727,7 @@ class DatabaseParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships=relations_to_display,
-            domain=self.parse_subject_area(response),
+            subject_areas=self.parse_subject_areas(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_custodians=self.parse_custodians(response),
@@ -774,7 +772,7 @@ class PublicationCollectionParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships=relations_to_display,
-            domain=self.parse_subject_area(response),
+            subject_areas=self.parse_subject_areas(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_custodians=self.parse_custodians(response),
@@ -816,7 +814,7 @@ class PublicationDatasetParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships={**parent_relations_to_display},
-            domain=self.parse_subject_area(response),
+            subject_areas=self.parse_subject_areas(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_custodians=self.parse_custodians(response),
@@ -855,7 +853,7 @@ class DashboardParser(ContainerParser):
                     RelationshipType.CHILD, [response["relationships"]]
                 )
             ),
-            domain=self.parse_subject_area(response),
+            subject_areas=self.parse_subject_areas(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
                 data_stewards=self.parse_stewards(response),

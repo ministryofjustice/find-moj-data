@@ -70,9 +70,6 @@ query getContainer($urn: String!) {
     parentContainers {
       ...parentContainersFields
     }
-    domain {
-      ...entityDomain
-    }
     dataPlatformInstance {
       ...dataPlatformInstanceFields
     }
@@ -212,34 +209,6 @@ fragment parentContainerFields on Container {
   }
   subTypes {
     typeNames
-  }
-}
-
-fragment entityDomain on DomainAssociation {
-  domain {
-    urn
-    type
-    properties {
-      name
-    }
-    parentDomains {
-      ...parentDomainsFields
-    }
-  }
-  associatedUrn
-}
-
-fragment parentDomainsFields on ParentDomainsResult {
-  count
-  domains {
-    urn
-    type
-    ... on Domain {
-      properties {
-        name
-        description
-      }
-    }
   }
 }
 
