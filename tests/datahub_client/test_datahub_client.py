@@ -312,7 +312,6 @@ class TestCatalogueClientWithDatahub:
                     ]
                 },
                 "lastIngested": 1709619407814,
-                "domain": None,
                 "provider": "LAA",
                 "schemaMetadata": {
                     "fields": [

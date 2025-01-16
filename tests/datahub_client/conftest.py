@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Any, Dict
 
 import pytest
-from datahub.metadata.schema_classes import DomainPropertiesClass
 
 from .test_helpers.graph_helpers import MockDataHubGraph
 from .test_helpers.mce_helpers import check_golden_file
@@ -12,13 +11,7 @@ FROZEN_TIME = "2023-04-14 07:00:00"
 
 @pytest.fixture
 def base_entity_metadata():
-    return {
-        "urn:li:domain:LAA": {
-            "domainProperties": DomainPropertiesClass(
-                name="LAA", description="Legal Aid Authority"
-            )
-        }
-    }
+    return {}
 
 
 @pytest.fixture

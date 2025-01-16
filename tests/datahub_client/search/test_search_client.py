@@ -689,7 +689,7 @@ def test_filter(searcher, mock_graph):
     }
     mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-    response = searcher.search(filters=[MultiSelectFilter("domains", ["Abc", "Def"])])
+    response = searcher.search(filters=[MultiSelectFilter("tags", ["Abc", "Def"])])
 
     assert response == SearchResponse(
         total_results=0,
@@ -1112,8 +1112,6 @@ def test_tag_to_display(tags, result):
             "owner_email": "",
             "total_parents": 0,
             "parents": [],
-            "domain_name": "",
-            "domain_id": "",
             "dpia_required": None,
             "dpia_location": "",
             "dc_where_to_access_dataset": "",

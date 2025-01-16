@@ -23,7 +23,6 @@ from datahub_client.entities import (
     Dashboard,
     Database,
     DatabaseEntityMapping,
-    DomainRef,
     EntityRef,
     EntitySummary,
     FindMoJdataEntityMapper,
