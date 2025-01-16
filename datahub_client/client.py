@@ -147,9 +147,6 @@ class DataHubCatalogueClient:
         filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
     ) -> list[SubjectAreaOption]:
-        """
-        Returns a list of DomainOption objects
-        """
         return self.search_client.list_subject_areas(
             query=query, filters=filters, count=count
         )

@@ -675,10 +675,6 @@ class Chart(Entity):
     )
 
 
-class Domain(Entity):
-    """Datahub domain"""
-
-
 class Dashboard(Entity):
     external_url: str = Field(
         description="URL to view the dashboard",
