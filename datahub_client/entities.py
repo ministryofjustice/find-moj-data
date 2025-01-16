@@ -683,7 +683,7 @@ class Dashboard(Entity):
 
 
 class SubjectAreaTaxonomy:
-    TOP_LEVEL = [
+    ALL_SUBJECT_AREAS = [
         TagRef.from_name("Bold"),
         TagRef.from_name("Civil"),
         TagRef.from_name("Courts"),
@@ -701,7 +701,7 @@ class SubjectAreaTaxonomy:
 
     @classmethod
     def get_by_name(cls, name):
-        matches = [i for i in cls.TOP_LEVEL if i.display_name == name]
+        matches = [i for i in cls.ALL_SUBJECT_AREAS if i.display_name == name]
         return matches[0] if matches else None
 
     @classmethod

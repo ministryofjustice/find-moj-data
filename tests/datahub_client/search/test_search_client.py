@@ -279,7 +279,7 @@ def test_bad_entity_type(mock_graph, searcher):
 
 
 def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.TOP_LEVEL[0]
+    subject_area = SubjectAreaTaxonomy.ALL_SUBJECT_AREAS[0]
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
