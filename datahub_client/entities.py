@@ -262,18 +262,6 @@ class Governance(BaseModel):
     )
 
 
-class DomainRef(BaseModel):
-    """
-    Reference to a domain that entities belong to
-    """
-
-    display_name: str = Field(description="Display name", examples=["HMPPS"])
-    urn: str = Field(
-        description="The identifier of the domain.",
-        examples=["urn:li:domain:HMCTS"],
-    )
-
-
 class TagRef(BaseModel):
     """
     Reference to a tag
