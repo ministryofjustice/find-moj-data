@@ -241,7 +241,6 @@ class SearchService(GenericService):
         return {
             "id": "ID",
             "urn": "URN",
-            "domains": "Subject area",
             "title": "Title",
             "name": "Name",
             "description": "Description",
