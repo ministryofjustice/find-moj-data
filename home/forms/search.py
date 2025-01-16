@@ -1,4 +1,5 @@
 from copy import deepcopy
+from typing import NamedTuple
 from urllib.parse import urlencode
 
 from django import forms
@@ -6,19 +7,21 @@ from django import forms
 from datahub_client.entities import FindMoJdataEntityType
 from datahub_client.search.search_types import SubjectAreaOption
 
-from ..models.subject_area_taxonomy import SubjectArea
 from ..service.search_tag_fetcher import SearchTagFetcher
 from ..service.subject_area_fetcher import SubjectAreaFetcher
 
 
-def get_subject_area_choices() -> list[SubjectArea]:
+class SubjectAreaChoice(NamedTuple):
+    urn: str
+    label: str
+
+
+def get_subject_area_choices() -> list[SubjectAreaChoice]:
     choices = [
-        SubjectArea("", "All subject areas"),
+        SubjectAreaChoice("", "All subject areas"),
     ]
     subject_area_options: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
-    subject_areas: list[SubjectArea] = [
-        SubjectArea(d.urn, d.name) for d in subject_area_options
-    ]
+    subject_areas = [SubjectAreaChoice(d.urn, d.name) for d in subject_area_options]
     choices.extend(subject_areas)
     return choices
 

@@ -44,8 +44,7 @@ from datahub_client.search.search_types import (
     SearchResult,
     SubjectAreaOption,
 )
-from home.forms.search import SearchForm
-from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
+from home.forms.search import SearchForm, SubjectAreaChoice
 from home.service.details import DatabaseDetailsService
 from home.service.search import SearchService
 from home.service.search_tag_fetcher import SearchTagFetcher
@@ -932,10 +931,8 @@ def search_tags():
 
 @pytest.fixture
 def valid_subject_area_choice():
-    subject_areas = SubjectAreaFetcher().fetch()
-    return SubjectAreaTaxonomy(
-        subject_areas,
-    ).top_level_subject_areas[0]
+    subject_area = SubjectAreaFetcher().fetch()[0]
+    return SubjectAreaChoice(subject_area.urn, subject_area.name)
 
 
 @pytest.fixture

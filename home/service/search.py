@@ -14,7 +14,6 @@ from datahub_client.search.search_types import (
     SubjectAreaOption,
 )
 from home.forms.search import SearchForm
-from home.models.subject_area_taxonomy import SubjectAreaTaxonomy
 
 from .base import GenericService
 from .subject_area_fetcher import SubjectAreaFetcher
@@ -23,7 +22,11 @@ from .subject_area_fetcher import SubjectAreaFetcher
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
         subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher().fetch()
-        self.subject_area_taxonomy = SubjectAreaTaxonomy(subject_areas)
+
+        self.subject_area_labels = {}
+        for subject_area in subject_areas:
+            self.subject_area_labels[subject_area.urn] = subject_area.name
+
         self.stemmer = PorterStemmer()
         self.form = form
         if self.form.is_bound:
@@ -168,7 +171,7 @@ class SearchService(GenericService):
     ) -> dict[str, str]:
         subject_area = self.form.cleaned_data.get("subject_area", "")
 
-        label = self.subject_area_taxonomy.get_label(subject_area)
+        label = self.subject_area_labels.get(subject_area, subject_area)
 
         return {
             label: (
