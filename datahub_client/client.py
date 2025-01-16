@@ -3,11 +3,8 @@ import logging
 from typing import Sequence
 
 from datahub.configuration.common import ConfigurationError
-from datahub.emitter import mce_builder
-from datahub.emitter.mcp import MetadataChangeProposalWrapper
 from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
 from datahub.metadata import schema_classes
-from datahub.metadata.schema_classes import ChangeTypeClass, DomainPropertiesClass
 
 from datahub_client.entities import (
     Chart,
@@ -116,36 +113,6 @@ class DataHubCatalogueClient:
             exists = False
 
         return exists
-
-    def create_domain(
-        self, domain: str, description: str = "", parent_domain: str | None = None
-    ) -> str:
-        """Create a Domain, a logical collection of entities
-
-        Args:
-            domain (str): name of the new Domain
-            description (str, optional): Description of the new Domain. Defaults to "".
-            parent_domain (str | None, optional): Declared child relationship to existing Domains.
-              Defaults to None.
-
-        Returns:
-            str: urn of the created Domain
-        """  # noqa: E501
-        domain_properties = DomainPropertiesClass(
-            name=domain, description=description, parentDomain=parent_domain
-        )
-
-        domain_urn = mce_builder.make_domain_urn(domain=domain)
-
-        metadata_event = MetadataChangeProposalWrapper(
-            entityType="domain",
-            changeType=ChangeTypeClass.UPSERT,
-            entityUrn=domain_urn,
-            aspect=domain_properties,
-        )
-        self.graph.emit(metadata_event)
-
-        return domain_urn
 
     def search(
         self,
