@@ -7,16 +7,6 @@ query getDatasetDetails($urn: String!) {
       typeNames
     }
     name # Deprecated - prefer properties.name
-    domain {
-      domain {
-        urn
-        id
-        properties {
-          name
-          description
-        }
-      }
-    }
     downstream_lineage_relations: lineage(
       input: { direction: DOWNSTREAM, start: 0, count: 10 }
     ) {
@@ -116,16 +106,6 @@ query getDatasetDetails($urn: String!) {
       ...globalTagsFields
     }
     lastIngested
-    domain {
-      domain {
-        urn
-        id
-        properties {
-          name
-          description
-        }
-      }
-    }
     schemaMetadata {
       fields {
         fieldPath
