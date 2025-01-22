@@ -23,7 +23,7 @@ def test_middleware_renders_bad_request_response():
     get_response = MagicMock()
     request = MagicMock()
     middleware = CustomErrorMiddleware(get_response)
-    error = BadRequest()
+    error = BadRequest("test")
     response = middleware.process_exception(request, error)
 
     assert response
