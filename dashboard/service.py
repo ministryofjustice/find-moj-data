@@ -32,7 +32,7 @@ def generate_embed_url_for_anonymous_user() -> str | None:
         response = quicksight_client.generate_embed_url_for_anonymous_user(
             AwsAccountId=settings.QUICKSIGHT_ACCOUNT_ID,
             Namespace=settings.QUICKSIGHT_NAMESPACE,
-            AuthorizedResourceArns=settings.QUICKSIGHT_METADATA_DASHBOARD_ARN,
+            AuthorizedResourceArns=[settings.QUICKSIGHT_METADATA_DASHBOARD_ARN],
             ExperienceConfiguration={
                 "Dashboard": {
                     "InitialDashboardId": settings.QUICKSIGHT_METADATA_DASHBOARD_ID
