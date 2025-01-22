@@ -18,6 +18,7 @@ spec:
       labels:
         app: find-moj-data
     spec:
+      serviceAccountName: find-moj-data-quicksight
       containers:
         - name: find-moj-data
           image: ${IMAGE_PATH}
