@@ -31,6 +31,11 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
+      quicksight_account_id: ${{ secrets.QUICKSIGHT_ACCOUNT_ID }}
+      quicksight_namespace: ${{ secrets.QUICKSIGHT_NAMESPACE }}
+      quicksight_metadata_dashboard_arn: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ARN }}
+      quicksight_metadata_dashboard_id: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ID }}
+      quicksight_role_arn: ${{ secrets.QUICKSIGHT_ROLE_ARN }}
 
   deploy-preprod:
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
@@ -49,6 +54,11 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
+      quicksight_account_id: ${{ secrets.QUICKSIGHT_ACCOUNT_ID }}
+      quicksight_namespace: ${{ secrets.QUICKSIGHT_NAMESPACE }}
+      quicksight_metadata_dashboard_arn: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ARN }}
+      quicksight_metadata_dashboard_id: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ID }}
+      quicksight_role_arn: ${{ secrets.QUICKSIGHT_ROLE_ARN }}
 
   notify-preprod-success:
     needs: deploy-preprod
@@ -93,6 +103,11 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
+      quicksight_account_id: ${{ secrets.QUICKSIGHT_ACCOUNT_ID }}
+      quicksight_namespace: ${{ secrets.QUICKSIGHT_NAMESPACE }}
+      quicksight_metadata_dashboard_arn: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ARN }}
+      quicksight_metadata_dashboard_id: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ID }}
+      quicksight_role_arn: ${{ secrets.QUICKSIGHT_ROLE_ARN }}
 
   post-deploy:
     name: "Post-deploy admin"
