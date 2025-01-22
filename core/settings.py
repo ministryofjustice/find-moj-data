@@ -41,6 +41,7 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.humanize",
     "home.apps.HomeConfig",
     "feedback.apps.FeedbackConfig",
+    "dashboard.apps.DashboardConfig",
     "django_prometheus",
     "users",
     "waffle",
@@ -292,3 +293,10 @@ NOTIFY_DATA_CATALOGUE_TEMPLATE_ID = os.environ.get("NOTIFY_DATA_CATALOGUE_TEMPLA
 
 # Data Catalogue Email
 DATA_CATALOGUE_EMAIL = os.environ.get("DATA_CATALOGUE_EMAIL")
+
+# Quicksight vars
+QUICKSIGHT_ACCOUNT_ID = os.environ.get("QUICKSIGHT_ACCOUNT_ID")
+QUICKSIGHT_NAMESPACE = os.environ.get("QUICKSIGHT_NAMESPACE")
+QUICKSIGHT_METADATA_DASHBOARD_ARN = os.environ.get("QUICKSIGHT_METADATA_DASHBOARD_ARN")
+QUICKSIGHT_METADATA_DASHBOARD_ID = os.environ.get("QUICKSIGHT_METADATA_DASHBOARD_ID")
+QUICKSIGHT_ROLE_ARN = os.environ.get("QUICKSIGHT_IAM_ROLE_ARN")

@@ -29,10 +29,14 @@ class CustomErrorMiddleware:
                 status=500,
             )
         elif isinstance(exception, BadRequest):
+            if exception.args[0] == "Error generating QuickSight embedded URL":
+                msg = "Error generating QuickSight embedded URL"
+            else:
+                msg = "Bad request"
             return render(
                 request,
                 "400.html",
-                context={"h1_value": "Bad request"},
+                context={"h1_value": msg},
                 status=400,
             )
         elif isinstance(exception, Http404):
