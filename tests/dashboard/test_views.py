@@ -20,7 +20,7 @@ def test_metadata_quality_dashboard_success(mock_generate_url, rf):
 
     assert response.status_code == 200
     assert "Metadata quality dashboard" in response.content.decode()
-    assert "http://example.com" in response.content.decode()
+    assert 'src="http://example.com"' in response.content.decode()
 
 
 @mock.patch("dashboard.views.generate_embed_url_for_anonymous_user")
