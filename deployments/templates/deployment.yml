@@ -101,6 +101,16 @@ spec:
               value: "${NOTIFY_DATA_CATALOGUE_TEMPLATE_ID}"
             - name: DATA_CATALOGUE_EMAIL
               value: "${DATA_CATALOGUE_EMAIL}"
+            - name: QUICKSIGHT_ACCOUNT_ID
+              value: "${QUICKSIGHT_ACCOUNT_ID}"
+            - name: QUICKSIGHT_NAMESPACE
+              value: "${QUICKSIGHT_NAMESPACE}"
+            - name: QUICKSIGHT_METADATA_DASHBOARD_ARN
+              value: "${QUICKSIGHT_METADATA_DASHBOARD_ARN}"
+            - name: QUICKSIGHT_METADATA_DASHBOARD_ID
+              value: "${QUICKSIGHT_METADATA_DASHBOARD_ID}"
+            - name: QUICKSIGHT_ROLE_ARN
+              value: "${QUICKSIGHT_ROLE_ARN}"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
