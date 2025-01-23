@@ -19,14 +19,14 @@
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Ask a question</h2>
   <ul id="contact_channels" class="govuk-list">
-    {% if further_information.dc_slack_channel_url %}
+    {% if further_information.dc_slack_channel_url and further_information.dc_slack_channel_name %}
       <li id="contact_channels_slack">
-      <a href="{{ further_information.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Slack (opens in new tab)</a>
+      <a href="{{ further_information.dc_slack_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{further_information.dc_slack_channel_name}} on Slack (opens in new tab)</a>
       </li>
     {% endif %}
-    {% if further_information.dc_teams_channel_url %}
+    {% if further_information.dc_teams_channel_url and further_information.dc_teams_channel_name %}
       <li id="contact_channels_ms_teams">
-      <a href="{{ further_information.dc_teams_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">MS Teams (opens in new tab)</a>
+      <a href="{{ further_information.dc_teams_channel_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{further_information.dc_teams_channel_name}} on MS Teams (opens in new tab)</a>
       </li>
     {% endif %}
     {% if further_information.dc_team_email %}
