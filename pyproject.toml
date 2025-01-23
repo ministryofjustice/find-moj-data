@@ -32,12 +32,12 @@ deepdiff = "^8.1.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
-pre-commit = "^4.0.1"
-selenium = "~=4.27.1"
+pre-commit = "^4.1.0"
+selenium = "~=4.28.1"
 flake8 = ">=6.1.0"
 pytest-django = "^4.9.0"
 pytest-cov = "^6.0.0"
-faker = "^33.3.1"
+faker = "^34.0.2"
 isort = "^5.13.2"
 freezegun = "^1.5.1"
 
