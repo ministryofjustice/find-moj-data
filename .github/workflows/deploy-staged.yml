@@ -1,4 +1,4 @@
-name: Staged deploy to Test, Preprod, and Prod
+name: Staged deploy to Preprod, and Prod
 
 on:
   push:
@@ -14,32 +14,9 @@ jobs:
     secrets:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
 
-  deploy-test:
-    uses: "./.github/workflows/reusable-push-and-deploy.yml"
-    needs: build
-    with:
-      env: "test"
-    secrets:
-      kube_namespace: ${{ secrets.KUBE_NAMESPACE }}
-      kube_cert: ${{ secrets.KUBE_CERT }}
-      kube_cluster: ${{ secrets.KUBE_CLUSTER }}
-      kube_token: ${{ secrets.KUBE_TOKEN }}
-      ecr_role_to_assume: ${{ secrets.TEST_ECR_ROLE_TO_ASSUME }}
-      secret_key: ${{ secrets.SECRET_KEY }}
-      catalogue_token: ${{ secrets.CATALOGUE_TOKEN }}
-      slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
-      azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-      notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
-      limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
-      quicksight_account_id: ${{ secrets.QUICKSIGHT_ACCOUNT_ID }}
-      quicksight_namespace: ${{ secrets.QUICKSIGHT_NAMESPACE }}
-      quicksight_metadata_dashboard_arn: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ARN }}
-      quicksight_metadata_dashboard_id: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ID }}
-      quicksight_role_arn: ${{ secrets.QUICKSIGHT_ROLE_ARN }}
-
   deploy-preprod:
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
-    needs: deploy-test
+    needs: build
     with:
       env: "preprod"
     secrets:

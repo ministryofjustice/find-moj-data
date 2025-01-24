@@ -3,7 +3,7 @@ name: Notify Deployment Status
 on:
   workflow_run:
     workflows:
-      ["Deploy to Dev from branch", "Staged deploy to Test, Preprod, and Prod"]
+      ["Deploy to Dev from branch", "Staged deploy to Preprod, and Prod"]
     types: [completed]
 
 jobs:
@@ -39,7 +39,7 @@ jobs:
   on-prod-deploy-success:
     name: Prod Deploy Success
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Staged deploy to Test, Preprod, and Prod'
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Staged deploy to Preprod, and Prod'
     steps:
       # Notify Slack - ask-data-catalogue
       - uses: ravsamhq/notify-slack-action@v2
