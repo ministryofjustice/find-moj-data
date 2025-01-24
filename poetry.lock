@@ -2974,8 +2974,8 @@ name = "selenium"
 version = "4.28.1"
 description = "Official Python bindings for Selenium WebDriver"
 optional = false
-groups = ["dev"]
 python-versions = ">=3.9"
+groups = ["dev"]
 files = [
     {file = "selenium-4.28.1-py3-none-any.whl", hash = "sha256:4238847e45e24e4472cfcf3554427512c7aab9443396435b1623ef406fff1cc1"},
     {file = "selenium-4.28.1.tar.gz", hash = "sha256:0072d08670d7ec32db901bd0107695a330cecac9f196e3afb3fa8163026e022a"},
@@ -3523,4 +3523,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "cff853c52adb4d9a00bf230e7f4f96f3dc91cdfde5b003980575d3054f8aef64"
+content-hash = "b1632484a683d90e8007bbfb268698c7151125f8ad9d774e8a6e4153dc3dd997"
