@@ -1,138 +1,127 @@
 // Based on https://github.com/alphagov/govuk_publishing_components/blob/main/app/assets/stylesheets/govuk_publishing_components/components/_cards.scss
 
-.app-cards__heading {
-    @include govuk-responsive-margin(6, "bottom");
+
+.app-cards__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-column-gap: govuk-spacing(6); // Use deprecated grid-column-gap for Grade C browser support
+  column-gap: govuk-spacing(6);
+ }
+
+.app-cards__list--one-column {
+  .app-cards__list-item {
+    &:first-child {
+      border-top: 0;
+
+      .app-cards__list-item-wrapper {
+        padding-top: 0;
+      }
+    }
+  }
+}
+
+.app-cards__list-item {
+  border-top: 1px solid $govuk-border-colour;
+  padding: govuk-spacing(1) 0 govuk-spacing(4) 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.app-cards__list-item-wrapper {
+  // this wrapper ensures that the clickable area of the card only
+  // covers the area of the card containing text so in a grid of cards
+  // there is space above and below each link
+  padding: 19px 0 4px;
+  position: relative;
+}
+
+.app-cards__sub-heading {
+  margin: 0 govuk-spacing(6) govuk-spacing(2) 0;
+
+  // Ensure card content width is constrained to two thirds on desktop
+  @include govuk-media-query($from: "desktop") {
+    max-width: 66.6667%;
+  }
+}
+
+.app-cards__link {
+  // Make the entire list item area clickable
+  &::after {
+    bottom: 0;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
+  &::before {
+    $dimension: 7px;
+    $width: 3px;
+
+    border-right: $width solid $govuk-brand-colour;
+    border-top: $width solid $govuk-brand-colour;
+    content: "";
+    display: block;
+    height: $dimension;
+    position: absolute;
+    right: govuk-spacing(1);
+    top: 50%;
+    margin-top: 5px;
+    transform: rotate(45deg);
+    width: $dimension;
+  }
+
+  &:hover {
+    &::before {
+      border-color: $govuk-link-hover-colour;
+    }
+  }
+
+  &:focus {
+    &::before {
+      border-color: $govuk-focus-text-colour;
+    }
+  }
+}
+
+.app-cards__description {
+  margin: 0 govuk-spacing(6) 0 0;
+
+  // Ensure card content width is constrained to two thirds on desktop
+  @include govuk-media-query($from: "desktop") {
+    max-width: 66.6667%;
+  }
+}
+
+@include govuk-media-query($media-type: print) {
   .app-cards__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-column-gap: govuk-spacing(6); // Use deprecated grid-column-gap for Grade C browser support
-    column-gap: govuk-spacing(6);
-  }
-
-  .app-cards__list--one-column {
-    .app-cards__list-item {
-      &:first-child {
-        border-top: 0;
-
-        .app-cards__list-item-wrapper {
-          padding-top: 0;
-        }
-      }
-    }
-  }
-
-  .app-cards__heading--underline + .app-cards__list {
-    border-top: 1px solid $govuk-border-colour;
-
-    .app-cards__list-item {
-      &:first-child {
-        .app-cards__list-item-wrapper {
-          padding-top: 19px;
-        }
-      }
-    }
+    display: block;
   }
 
   .app-cards__list-item {
-    border-top: 1px solid $govuk-border-colour;
-    padding: govuk-spacing(1) 0 govuk-spacing(4) 0;
+    padding: 0;
   }
 
   .app-cards__list-item-wrapper {
-    // this wrapper ensures that the clickable area of the card only
-    // covers the area of the card containing text so in a grid of cards
-    // there is space above and below each link
-    padding: 19px 0 4px;
-    position: relative;
-  }
-
-  .app-cards__sub-heading {
-    margin: 0 govuk-spacing(6) govuk-spacing(2) 0;
-
-    // Ensure card content width is constrained to two thirds on desktop
-    @include govuk-media-query($from: "desktop") {
-      max-width: 66.6667%;
-    }
-  }
-
-  .app-cards__link {
-    // Make the entire list item area clickable
-    &::after {
-      bottom: 0;
-      content: "";
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-
-    &::before {
-      $dimension: 7px;
-      $width: 3px;
-
-      border-right: $width solid $govuk-brand-colour;
-      border-top: $width solid $govuk-brand-colour;
-      content: "";
-      display: block;
-      height: $dimension;
-      position: absolute;
-      right: govuk-spacing(1);
-      top: 50%;
-      margin-top: 5px;
-      transform: rotate(45deg);
-      width: $dimension;
-    }
-
-    &:hover {
-      &::before {
-        border-color: $govuk-link-hover-colour;
-      }
-    }
-
-    &:focus {
-      &::before {
-        border-color: $govuk-focus-text-colour;
-      }
-    }
+    padding: 5mm 0;
   }
 
   .app-cards__description {
-    margin: 0 govuk-spacing(6) 0 0;
-
-    // Ensure card content width is constrained to two thirds on desktop
-    @include govuk-media-query($from: "desktop") {
-      max-width: 66.6667%;
-    }
+    margin: 0;
   }
 
-  @include govuk-media-query($media-type: print) {
-    .app-cards__list {
-      display: block;
+  .app-cards__link {
+    &::before {
+      display: none;
     }
 
-    .app-cards__list-item {
-      padding: 0;
-    }
-
-    .app-cards__list-item-wrapper {
-      padding: 5mm 0;
-    }
-
-    .app-cards__description {
-      margin: 0;
-    }
-
-    .app-cards__link {
-      &::before {
-        display: none;
-      }
-
-      &::after {
-        position: static;
-      }
+    &::after {
+      position: static;
     }
   }
+}
