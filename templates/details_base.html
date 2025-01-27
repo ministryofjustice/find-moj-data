@@ -33,10 +33,12 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">{{h1_value}}
-        <strong class="govuk-tag govuk-!-margin-left-2">
-          {{entity_type}}
-        </strong>
+      <h1 class="govuk-heading-l app-heading-with-tag"><span>{{h1_value}}</span>
+        <span class="app-heading-with-tag__tag">
+          <strong class="govuk-tag">
+            {{entity_type}}
+          </strong>
+        </span>
       </h1>
     </div>
   </div>
