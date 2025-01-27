@@ -1,9 +1,9 @@
 from unittest import mock
 
 import pytest
-from django.core.exceptions import BadRequest
 from django.test import RequestFactory
 
+from dashboard.exceptions import QuicksightException
 from dashboard.views import metadata_quality_dashboard
 
 
@@ -27,6 +27,6 @@ def test_metadata_quality_dashboard_success(mock_generate_url, rf):
 def test_metadata_quality_dashboard_failure(mock_generate_url, rf):
     mock_generate_url.return_value = None
     request = rf.get("/dashboard/")
-    with pytest.raises(BadRequest) as excinfo:
+    with pytest.raises(QuicksightException) as excinfo:
         metadata_quality_dashboard(request)
     assert str(excinfo.value) == "Error generating QuickSight embedded URL"
