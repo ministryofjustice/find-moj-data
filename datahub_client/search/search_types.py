@@ -58,6 +58,7 @@ class SubjectAreaOption:
 
     urn: str
     name: str
+    description: str
     total: int
 
 

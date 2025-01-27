@@ -1,0 +1,35 @@
+.app-card-grid__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  column-gap: govuk-spacing(2);
+
+  @include govuk-media-query($from: "tablet") {
+    grid-auto-rows: 1fr; // Set all rows to same fractional height of the complete grid
+    grid-template-columns: 1fr 1fr; // Note that browsers that don't support CSS grid display the component as one column on all breakpoints
+  }
+
+  @include govuk-media-query($from: "desktop") {
+    grid-auto-rows: 1fr; // Set all rows to same fractional height of the complete grid
+    grid-template-columns: 1fr 1fr 1fr; // Note that browsers that don't support CSS grid display the component as one column on all breakpoints
+  }
+ }
+
+.app-card-grid__list-item {
+  padding: govuk-spacing(1) 0 govuk-spacing(4) 0;
+}
+
+.app-card-grid__sub-heading {
+  margin: 0 0 govuk-spacing(1) 0;
+  max-width: 100%;
+}
+
+.app-card-grid__description {
+  margin: 0;
+
+  // Ensure card content width is constrained to two thirds on desktop
+  @include govuk-media-query($from: "desktop") {
+    max-width: 66.6667%;
+  }
+}

@@ -17,6 +17,7 @@ query listSubjectAreas(
             name
             properties {
               name
+              description
             }
           }
         }
