@@ -79,12 +79,12 @@
                 {{entity.custom_properties.audience}}
               </li>
             {% endif %}
-            <!-- {% if entity.last_datajob_run_date %}
+            {% if entity.last_datajob_run_date %}
               <li>
                 <span class="govuk-!-font-weight-bold">Data last updated:</span>
                 {{entity.last_datajob_run_date|date:"d M Y"}}
               </li>
-            {% endif %} -->
+            {% endif %}
             <li>
               {% include 'partial/subject_area_list.html' with subject_areas=entity.subject_areas %}
             </li>
