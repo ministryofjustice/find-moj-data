@@ -162,11 +162,14 @@ class SearchClient:
             count = aggregation["count"]
             entity = aggregation["entity"]
             name = EntityParser.parse_name(entity)
+            description = EntityParser.parse_description(entity)
             subject_area = SubjectAreaTaxonomy.get_by_name(name)
             if not subject_area:
                 continue
 
-            subject_areas.append(SubjectAreaOption(subject_area.urn, name, count))
+            subject_areas.append(
+                SubjectAreaOption(subject_area.urn, name, description, count)
+            )
 
         return sorted(subject_areas, key=lambda s: s.name)
 

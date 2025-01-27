@@ -22,8 +22,14 @@
 
 .app-card-grid__sub-heading {
   margin: 0 0 govuk-spacing(1) 0;
+  max-width: 100%;
 }
 
 .app-card-grid__description {
   margin: 0;
+
+  // Ensure card content width is constrained to two thirds on desktop
+  @include govuk-media-query($from: "desktop") {
+    max-width: 66.6667%;
+  }
 }
