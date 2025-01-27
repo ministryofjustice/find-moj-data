@@ -1,0 +1,27 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="app-card-grid">
+    <h2 id="browse-by-subject-area" class="govuk-heading-l">Browse by subject area</h2>
+    <ul id="subject-area-list" class="app-card-grid__list">
+      {% for subject_area in subject_areas  %}
+      <li class="app-card-grid__list-item">
+          <h3 class="app-card-grid__sub-heading govuk-heading-s"><a class="govuk-link app-card-grid__link" aria-label="Browse data for {{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})" href="{% url 'home:search' %}?subject_area={{subject_area.urn|urlencode:':'}}">{{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})</a></h3>
+          <p class="govuk-body app-card-grid__description">{% lorem 5 w %}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    </div>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-l govuk-!-margin-top-4">Help us grow</h2>
+    <p class="govuk-body-m">Find MoJ data is a new service with a growing catalogue of data. You can help us improve the service by:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#adding-to-find-moj-data">adding a new data source</a></li>
+      <li><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#contact-us">telling us about data you would like to see</a></li>
+      <li><a href="https://find-moj-data.service.justice.gov.uk/feedback/">giving us feedback</a></li>
+    </ul>
+  </div>
+</div>

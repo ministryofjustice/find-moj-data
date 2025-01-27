@@ -1,23 +1,25 @@
-<div class="govuk-grid-column-two-thirds govuk-!-static-margin-bottom-6">
-  <div class="app-cards">
-  <h2 id="browse-by-subject-area" class="govuk-heading-l">Browse by subject area</h2>
-  <ul id="subject-area-list" class="app-cards__list app-cards__list--one-column">
-    {% for subject_area in subject_areas  %}
-    <li class="app-cards__list-item">
-      <div class="app-cards__list-item-wrapper">
-        <h3 class="app-cards__subheading govuk-heading-s"><a class="govuk-link app-cards__link" aria-label="Browse data for {{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})" href="{% url 'home:search' %}?subject_area={{subject_area.urn|urlencode:":"}}">{{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})</a></h3>
-        <p class="govuk-body app-cards__description">{% lorem 5 w %}</p>
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds govuk-!-static-margin-bottom-6">
+    <div class="app-cards">
+    <h2 id="browse-by-subject-area" class="govuk-heading-l">Browse by subject area</h2>
+    <ul id="subject-area-list" class="app-cards__list app-cards__list--one-column">
+      {% for subject_area in subject_areas  %}
+      <li class="app-cards__list-item">
+        <div class="app-cards__list-item-wrapper">
+          <h3 class="app-cards__sub-heading govuk-heading-s"><a class="govuk-link app-cards__link" aria-label="Browse data for {{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})" href="{% url 'home:search' %}?subject_area={{subject_area.urn|urlencode:':'}}">{{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})</a></h3>
+          <p class="govuk-body app-cards__description">{% lorem 5 w %}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    </div>
   </div>
-</div>
-<div class="govuk-grid-column-one-third">
-  <h2 class="govuk-heading-l">Help us grow</h2>
-  <ul class="govuk-list govuk-!-font-weight-bold">
-    <li class="govuk-!-margin-bottom-4"><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#adding-to-find-moj-data">Add a new data source</a></li>
-    <li class="govuk-!-margin-bottom-4"><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#contact-us">Suggest data you would like to see</a></li>
-      <li class="govuk-!-margin-bottom-4"><a href="https://find-moj-data.service.justice.gov.uk/feedback/">Give us feedback</a></li>
-  </ul>
+  <div class="govuk-grid-column-one-third">
+    <h2 class="govuk-heading-l">Help us grow</h2>
+    <ul class="govuk-list govuk-!-font-weight-bold">
+      <li class="govuk-!-margin-bottom-4"><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#adding-to-find-moj-data">Add a new data source</a></li>
+      <li class="govuk-!-margin-bottom-4"><a href="https://user-guide.find-moj-data.service.justice.gov.uk/#contact-us">Suggest data you would like to see</a></li>
+        <li class="govuk-!-margin-bottom-4"><a href="https://find-moj-data.service.justice.gov.uk/feedback/">Give us feedback</a></li>
+    </ul>
+  </div>
 </div>
