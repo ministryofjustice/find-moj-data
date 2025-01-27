@@ -5,6 +5,7 @@ from django.core.exceptions import BadRequest
 from django.http import Http404
 from django.shortcuts import render
 
+from dashboard.exceptions import QuicksightException
 from datahub_client.exceptions import ConnectivityError
 
 logger = logging.getLogger(__name__)
@@ -29,14 +30,10 @@ class CustomErrorMiddleware:
                 status=500,
             )
         elif isinstance(exception, BadRequest):
-            if exception.args[0] == "Error generating QuickSight embedded URL":
-                msg = "Error generating QuickSight embedded URL"
-            else:
-                msg = "Bad request"
             return render(
                 request,
                 "400.html",
-                context={"h1_value": msg},
+                context={"h1_value": "Bad request"},
                 status=400,
             )
         elif isinstance(exception, Http404):
@@ -46,7 +43,13 @@ class CustomErrorMiddleware:
                 context={"h1_value": "Asset does not exist"},
                 status=404,
             )
-
+        elif isinstance(exception, QuicksightException):
+            return render(
+                request,
+                "500.html",
+                context={"h1_value": "Error generating QuickSight embedded URL"},
+                status=500,
+            )
         elif isinstance(exception, Exception):
             return render(
                 request,
