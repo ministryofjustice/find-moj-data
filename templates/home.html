@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load waffle_tags %}
 
 {% block main %}
   <main class="main-wrapper-with-masthead" id="main-content" role="main">
@@ -43,7 +44,11 @@
     <div class="govuk-main-wrapper govuk-main-wrapper--l">
       <div class="govuk-width-container app-width-container">
         <div class="govuk-grid-row">
+          {% flag "home_variant_b" %}
           {% include 'partial/home/subject_area_list.html' %}
+          {% else %}
+          {% include 'partial/home/old_design.html' %}
+          {% endflag %}
         </div>
       </div>
     </div>
