@@ -777,21 +777,25 @@ def mock_catalogue(
             SubjectAreaOption(
                 urn="urn:li:tag:prisons",
                 name="Prisons",
+                description="prisons",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
                 urn="urn:li:tag:courts",
                 name="Courts",
+                description="courts and tribunals",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
                 urn="urn:li:tag:finance",
                 name="Finance",
+                description="money and contracts",
                 total=fake.random_int(min=1, max=100),
             ),
             SubjectAreaOption(
                 urn="urn:li:tag:hq",
                 name="HQ",
+                description="heads and quarters",
                 total=0,
             ),
         ],

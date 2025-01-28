@@ -3,6 +3,7 @@ from django.urls import reverse
 from waffle.testutils import override_switch
 
 
+@pytest.mark.django_db
 class TestHomePage:
     def test_renders_200_with_headers(self, client):
         response = client.get(reverse("home:home"))

@@ -89,6 +89,11 @@ class EntityParser:
         return properties.get("name") or entity.get("name", "")
 
     @staticmethod
+    def parse_description(entity: dict[str, Any]) -> str:
+        properties = entity.get("properties") or {}
+        return properties.get("description") or ""
+
+    @staticmethod
     def parse_tags(entity: dict[str, Any]) -> list[TagRef]:
         """
         Parse tag information into a list of TagRef objects for displaying
