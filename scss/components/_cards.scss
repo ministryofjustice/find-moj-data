@@ -6,8 +6,6 @@
   padding: 0;
   margin: 0;
   display: grid;
-  grid-column-gap: govuk-spacing(6); // Use deprecated grid-column-gap for Grade C browser support
-  column-gap: govuk-spacing(6);
  }
 
 .app-cards__list--one-column {
@@ -16,7 +14,7 @@
       border-top: 0;
 
       .app-cards__list-item-wrapper {
-        padding-top: 0;
+        margin-top: -15px;
       }
     }
   }
@@ -27,7 +25,7 @@
   padding: govuk-spacing(1) 0 govuk-spacing(4) 0;
 
   &:first-child {
-    padding-top: 0;
+    margin-top: -5px;
   }
 }
 
@@ -35,7 +33,7 @@
   // this wrapper ensures that the clickable area of the card only
   // covers the area of the card containing text so in a grid of cards
   // there is space above and below each link
-  padding: 19px 0 4px;
+  padding: 15px 0 0px;
   position: relative;
 }
 
