@@ -5,7 +5,7 @@
     <ul id="subject-area-list" class="app-card-grid__list">
       {% for subject_area in subject_areas  %}
       <li class="app-card-grid__list-item">
-          <h3 class="app-card-grid__sub-heading govuk-heading-s"><a class="govuk-link app-card-grid__link" aria-label="Browse data for {{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})" href="{% url 'home:search' %}?subject_area={{subject_area.urn|urlencode:':'}}">{{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})</a></h3>
+          <h3 class="app-card-grid__sub-heading govuk-heading-s"><a class="govuk-link app-card-grid__link" aria-label="Browse data for {{subject_area.name}} ({{subject_area.total}} result{{ subject_area.total|pluralize }})" href="{% url 'home:search' %}?subject_area={{subject_area.urn|urlencode:':'}}">{{subject_area.name}} ({{subject_area.total}})</a></h3>
           <p class="govuk-body app-card-grid__description">{{subject_area.description}}</p>
       </li>
       {% endfor %}
