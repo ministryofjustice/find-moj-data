@@ -114,9 +114,19 @@ Mappers = [
 ]
 
 
-class Audience(Enum):
-    INTERNAL = "Internal"
-    PUBLISHED = "Published"
+class Classification(Enum):
+    """Enumeration representing the security classification of the data.
+    Attributes:
+        OFFICIAL (str): Represents data classified as "Official".
+        OFFICIAL_SENSITIVE (str): Represents data classified as "Official-Sensitive".
+    Notes:
+        This enumeration replaces the Audience entity.
+        - "Published" becomes "Official".
+        - "Internal" becomes "Official-Sensitive".
+    """
+
+    OFFICIAL = "Official"
+    OFFICIAL_SENSITIVE = "Official-Sensitive"
 
 
 class EntityRef(BaseModel):
@@ -445,9 +455,9 @@ class CustomEntityProperties(BaseModel):
         description="Routes to further information about the data",
         default_factory=FurtherInformation,
     )
-    audience: Audience = Field(
+    classification: Classification = Field(
         description="If the data is published or not",
-        default="Internal",
+        default="Official-Sensitive",
     )
 
     class Config:
