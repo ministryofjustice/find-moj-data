@@ -191,7 +191,9 @@ class EntityParser:
         cadet_refresh_period = self.get_refresh_period_from_cadet_tags(tags)
         if cadet_refresh_period:
             data_summary.refresh_period = cadet_refresh_period
-        audience = custom_properties_dict.get("audience", "Internal")
+        classification = custom_properties_dict.get(
+            "classification", "Official-Sensitive"
+        )
 
         further_information = FurtherInformation.model_validate(custom_properties_dict)
 
@@ -200,7 +202,7 @@ class EntityParser:
             usage_restrictions=usage_restrictions,
             data_summary=data_summary,
             further_information=further_information,
-            audience=audience,
+            classification=classification,
         )
 
         return properties, custom_properties

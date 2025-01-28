@@ -73,10 +73,10 @@
                 <span class="govuk-!-font-weight-bold">Refresh period:</span>
                 {{entity.custom_properties.data_summary.refresh_period | default:'Not provided' }}
               </li>
-            {% if entity.custom_properties.audience %}
+            {% if entity.custom_properties.classification %}
               <li>
-                <span class="govuk-!-font-weight-bold">Audience:</span>
-                {{entity.custom_properties.audience}}
+                <span class="govuk-!-font-weight-bold">Classification:</span>
+                {{entity.custom_properties.classification}}
               </li>
             {% endif %}
             <!-- {% if entity.last_datajob_run_date %}

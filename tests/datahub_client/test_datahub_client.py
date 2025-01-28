@@ -6,8 +6,8 @@ import pytest
 from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
     AccessInformation,
-    Audience,
     Chart,
+    Classification,
     Column,
     ColumnRef,
     CustomEntityProperties,
@@ -463,7 +463,7 @@ class TestCatalogueClientWithDatahub:
                 ),
                 data_summary=DataSummary(),
                 further_information=FurtherInformation(),
-                audience=Audience.INTERNAL,
+                classification=Classification.OFFICIAL_SENSITIVE,
             ),
             column_details=[],
         )
@@ -523,7 +523,7 @@ class TestCatalogueClientWithDatahub:
                 ),
                 data_summary=DataSummary(),
                 further_information=FurtherInformation(),
-                audience=Audience.INTERNAL,
+                classification=Classification.OFFICIAL_SENSITIVE,
             ),
             external_url="https://data.justice.gov.uk/prisons/public-protection/absconds",
         )
@@ -609,7 +609,7 @@ class TestCatalogueClientWithDatahub:
                 dc_teams_channel_url="",
                 dc_team_email="",
             ),
-            audience="Internal",
+            classification=Classification.OFFICIAL_SENSITIVE,
         )
 
         expected = PublicationCollection(

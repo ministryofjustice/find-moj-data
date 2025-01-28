@@ -1,126 +1,126 @@
 [
-{
-    "entityType": "dataset",
-    "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
-    "changeType": "UPSERT",
-    "aspectName": "datasetProperties",
-    "aspect": {
-        "json": {
-            "customProperties": {
-                "dpia_required": "True",
-                "dpia_location": "",
-                "dc_where_to_access_dataset": "",
-                "source_dataset_name": "",
-                "s3_location": "",
-                "dc_access_requirements": "",
-                "row_count": "5",
-                "refresh_period": "",
-                "dc_slack_channel_name": "test-channel",
-                "dc_slack_channel_url": "test-url",
-                "dc_teams_channel_name": "",
-                "dc_teams_channel_url": "",
-                "dc_team_email": "",
-                "audience": "Internal"
-            },
-            "name": "Dataset",
-            "qualifiedName": "database.Dataset",
-            "description": "Dataset",
-            "tags": []
+    {
+        "entityType": "dataset",
+        "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
+        "changeType": "UPSERT",
+        "aspectName": "datasetProperties",
+        "aspect": {
+            "json": {
+                "customProperties": {
+                    "dpia_required": "True",
+                    "dpia_location": "",
+                    "dc_where_to_access_dataset": "",
+                    "source_dataset_name": "",
+                    "s3_location": "",
+                    "dc_access_requirements": "",
+                    "row_count": "5",
+                    "refresh_period": "",
+                    "dc_slack_channel_name": "test-channel",
+                    "dc_slack_channel_url": "test-url",
+                    "dc_teams_channel_name": "",
+                    "dc_teams_channel_url": "",
+                    "dc_team_email": "",
+                    "classification": "Official-Sensitive"
+                },
+                "name": "Dataset",
+                "qualifiedName": "database.Dataset",
+                "description": "Dataset",
+                "tags": []
+            }
         }
-    }
-},
-{
-    "entityType": "dataset",
-    "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
-    "changeType": "UPSERT",
-    "aspectName": "schemaMetadata",
-    "aspect": {
-        "json": {
-            "schemaName": "Dataset",
-            "platform": "urn:li:dataPlatform:athena",
-            "version": 1,
-            "created": {
-                "time": 0,
-                "actor": "urn:li:corpuser:unknown"
-            },
-            "lastModified": {
-                "time": 0,
-                "actor": "urn:li:corpuser:unknown"
-            },
-            "hash": "",
-            "platformSchema": {
-                "com.linkedin.schema.OtherSchema": {
-                    "rawSchema": ""
-                }
-            },
-            "fields": [
-                {
-                    "fieldPath": "urn",
-                    "nullable": false,
-                    "description": "The primary identifier for the dataset entity.",
-                    "type": {
+    },
+    {
+        "entityType": "dataset",
+        "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
+        "changeType": "UPSERT",
+        "aspectName": "schemaMetadata",
+        "aspect": {
+            "json": {
+                "schemaName": "Dataset",
+                "platform": "urn:li:dataPlatform:athena",
+                "version": 1,
+                "created": {
+                    "time": 0,
+                    "actor": "urn:li:corpuser:unknown"
+                },
+                "lastModified": {
+                    "time": 0,
+                    "actor": "urn:li:corpuser:unknown"
+                },
+                "hash": "",
+                "platformSchema": {
+                    "com.linkedin.schema.OtherSchema": {
+                        "rawSchema": ""
+                    }
+                },
+                "fields": [
+                    {
+                        "fieldPath": "urn",
+                        "nullable": false,
+                        "description": "The primary identifier for the dataset entity.",
                         "type": {
-                            "com.linkedin.schema.StringType": {}
-                        }
-                    },
-                    "nativeDataType": "string",
-                    "recursive": false,
-                    "isPartOfKey": false
-                }
-            ]
+                            "type": {
+                                "com.linkedin.schema.StringType": {}
+                            }
+                        },
+                        "nativeDataType": "string",
+                        "recursive": false,
+                        "isPartOfKey": false
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "entityType": "dataset",
+        "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
+        "changeType": "UPSERT",
+        "aspectName": "subTypes",
+        "aspect": {
+            "json": {
+                "typeNames": [
+                    "Table"
+                ]
+            }
+        }
+    },
+    {
+        "entityType": "dataset",
+        "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
+        "changeType": "UPSERT",
+        "aspectName": "container",
+        "aspect": {
+            "json": {
+                "container": "urn:li:container:my_database"
+            }
+        }
+    },
+    {
+        "entityType": "dataset",
+        "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
+        "changeType": "UPSERT",
+        "aspectName": "globalTags",
+        "aspect": {
+            "json": {
+                "tags": [
+                    {
+                        "tag": "urn:li:tag:some-tag"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "entityType": "dataset",
+        "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
+        "changeType": "UPSERT",
+        "aspectName": "domains",
+        "aspect": {
+            "json": {
+                "domains": [
+                    "urn:li:domain:LAA"
+                ]
+            }
         }
     }
-},
-{
-    "entityType": "dataset",
-    "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
-    "changeType": "UPSERT",
-    "aspectName": "subTypes",
-    "aspect": {
-        "json": {
-            "typeNames": [
-                "Table"
-            ]
-        }
-    }
-},
-{
-    "entityType": "dataset",
-    "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
-    "changeType": "UPSERT",
-    "aspectName": "container",
-    "aspect": {
-        "json": {
-            "container": "urn:li:container:my_database"
-        }
-    }
-},
-{
-    "entityType": "dataset",
-    "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
-    "changeType": "UPSERT",
-    "aspectName": "globalTags",
-    "aspect": {
-        "json": {
-            "tags": [
-                {
-                    "tag": "urn:li:tag:some-tag"
-                }
-            ]
-        }
-    }
-},
-{
-    "entityType": "dataset",
-    "entityUrn": "urn:li:dataset:(urn:li:dataPlatform:athena,database.Dataset,PROD)",
-    "changeType": "UPSERT",
-    "aspectName": "domains",
-    "aspect": {
-        "json": {
-            "domains": [
-                "urn:li:domain:LAA"
-            ]
-        }
-    }
-}
 ]

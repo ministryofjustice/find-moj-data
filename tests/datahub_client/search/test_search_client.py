@@ -1061,7 +1061,7 @@ def test_search_for_container(mock_graph, searcher):
                     "name": "test_db",
                 },
                 metadata={
-                    "audience": "Internal",
+                    "classification": "Official-Sensitive",
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
                     "usage_restrictions": UsageRestrictions(
