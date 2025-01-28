@@ -14,7 +14,7 @@
       border-top: 0;
 
       .app-cards__list-item-wrapper {
-        margin-top: -19px;
+        margin-top: -15px;
       }
     }
   }
@@ -33,7 +33,7 @@
   // this wrapper ensures that the clickable area of the card only
   // covers the area of the card containing text so in a grid of cards
   // there is space above and below each link
-  padding: 19px 0 4px;
+  padding: 15px 0 0px;
   position: relative;
 }
 
