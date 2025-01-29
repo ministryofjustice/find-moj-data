@@ -1,7 +1,0 @@
-<span class="govuk-!-font-weight-bold">Subject area{{subject_areas|length|pluralize}}:</span>
-{% for subject_area in subject_areas %}
-{{ subject_area.display_name }}{% if not forloop.last %}, {% endif %}
-{% endfor %}
-{% if not subject_areas %}
-Not provided.
-{% endif %}

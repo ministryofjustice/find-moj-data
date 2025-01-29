@@ -1,0 +1,95 @@
+{% load humanize %}
+{% load lookup %}
+{% load waffle_tags %}
+<dl class="app-metadata-list" id="metadata-property-list">
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Entity type
+    </dt>
+    <dd class="app-metadata-list__value">
+      <strong class="govuk-tag">
+        {{ entity_type }}
+      </strong>
+    </dd>
+  </div>
+
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Subject area{{entity.subject_areas|length|pluralize}}
+    </dt>
+    <dd class="app-metadata-list__value">
+      {% for subject_area in entity.subject_areas %}
+      {{ subject_area.display_name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+      {% if not entity.subject_areas %}
+      Not provided
+      {% endif %}
+    </dd>
+  </div>
+
+  {% if entity.created %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Data first created
+    </dt>
+    <dd class="app-metadata-list__value">
+    {{entity.created | date:"jS F Y"}} ({{entity.created|naturaltime}})
+    </dd>
+  </div>
+  {% endif %}
+
+  {% if entity.data_last_modified and entity.platform.urn != PlatformUrns.CADET %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Data last updated
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{entity.data_last_modified | date:"jS F Y"}}
+    </dd>
+  </div>
+  {% elif entity.last_datajob_run_date %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Data last updated
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{entity.last_datajob_run_date|date:"jS F Y"}}
+    </dd>
+  </div>
+  {% endif %}
+
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Refresh period
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{entity.custom_properties.data_summary.refresh_period | default:'Not provided' }}
+    </dd>
+  </div>
+
+  {% if entity.custom_properties.security_classification %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Security classification
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{entity.custom_properties.security_classification}}
+    </dd>
+  </div>
+  {% endif %}
+
+  {% switch 'display-result-tags' %}
+  {% if entity.tags_to_display %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Tags
+    </dt>
+    <dd class="app-metadata-list__value">
+      {% for tag in entity.tags_to_display %}
+      <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </dd>
+  </div>
+  {% endif %}
+  {% endswitch %}
+</dl>
