@@ -114,7 +114,7 @@ Mappers = [
 ]
 
 
-class Classification(Enum):
+class SecurityClassification(Enum):
     """Enumeration representing the security classification of the data.
     Attributes:
         OFFICIAL (str): Represents data classified as "Official".
@@ -455,7 +455,7 @@ class CustomEntityProperties(BaseModel):
         description="Routes to further information about the data",
         default_factory=FurtherInformation,
     )
-    classification: Classification = Field(
+    security_classification: SecurityClassification = Field(
         description="If the data is published or not",
         default="Official-Sensitive",
     )

@@ -11,7 +11,7 @@ repos:
         exclude: tf$|j2$
 
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 25.1.0
     hooks:
       - id: black
         name: black formatting
@@ -46,7 +46,7 @@ repos:
         exclude: package.lock.json
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
+    rev: 6.0.0
     hooks:
       - id: isort
         name: isort (python)

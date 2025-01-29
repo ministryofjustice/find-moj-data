@@ -7,7 +7,6 @@ from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
     AccessInformation,
     Chart,
-    Classification,
     Column,
     ColumnRef,
     CustomEntityProperties,
@@ -20,6 +19,7 @@ from datahub_client.entities import (
     OwnerRef,
     PublicationCollection,
     RelationshipType,
+    SecurityClassification,
     Table,
     TagRef,
     UsageRestrictions,
@@ -463,7 +463,7 @@ class TestCatalogueClientWithDatahub:
                 ),
                 data_summary=DataSummary(),
                 further_information=FurtherInformation(),
-                classification=Classification.OFFICIAL_SENSITIVE,
+                security_classification=SecurityClassification.OFFICIAL_SENSITIVE,
             ),
             column_details=[],
         )
@@ -523,7 +523,7 @@ class TestCatalogueClientWithDatahub:
                 ),
                 data_summary=DataSummary(),
                 further_information=FurtherInformation(),
-                classification=Classification.OFFICIAL_SENSITIVE,
+                security_classification=SecurityClassification.OFFICIAL_SENSITIVE,
             ),
             external_url="https://data.justice.gov.uk/prisons/public-protection/absconds",
         )
@@ -609,7 +609,7 @@ class TestCatalogueClientWithDatahub:
                 dc_teams_channel_url="",
                 dc_team_email="",
             ),
-            classification=Classification.OFFICIAL_SENSITIVE,
+            security_classification=SecurityClassification.OFFICIAL_SENSITIVE,
         )
 
         expected = PublicationCollection(

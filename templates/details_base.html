@@ -73,10 +73,10 @@
                 <span class="govuk-!-font-weight-bold">Refresh period:</span>
                 {{entity.custom_properties.data_summary.refresh_period | default:'Not provided' }}
               </li>
-            {% if entity.custom_properties.classification %}
+            {% if entity.custom_properties.security_classification %}
               <li>
-                <span class="govuk-!-font-weight-bold">Classification:</span>
-                {{entity.custom_properties.classification}}
+                <span class="govuk-!-font-weight-bold">Security classification:</span>
+                {{entity.custom_properties.security_classification}}
               </li>
             {% endif %}
             {% if entity.last_datajob_run_date %}
