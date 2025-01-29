@@ -3,6 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Literal, Optional
 
+import waffle
 from pydantic import AfterValidator, BaseModel, EmailStr, Field
 from typing_extensions import Annotated
 
@@ -693,7 +694,7 @@ class Dashboard(Entity):
 
 
 class SubjectAreaTaxonomy:
-    ALL_SUBJECT_AREAS = [
+    ALL_SUBJECT_AREAS_OLD = [
         TagRef.from_name("Bold"),
         TagRef.from_name("Civil"),
         TagRef.from_name("Courts"),
@@ -709,9 +710,24 @@ class SubjectAreaTaxonomy:
         TagRef.from_name("Risk"),
     ]
 
+    ALL_SUBJECT_AREAS = [
+        TagRef.from_name("Prisons and probation"),
+        TagRef.from_name("Courts and tribunals"),
+        TagRef.from_name("Corporate"),
+        TagRef.from_name("Office of the Public Guardian"),
+        TagRef.from_name("Legal aid"),
+        TagRef.from_name("Crime and policing"),
+        TagRef.from_name("Reference data"),
+    ]
+
     @classmethod
     def get_by_name(cls, name):
-        matches = [i for i in cls.ALL_SUBJECT_AREAS if i.display_name == name]
+        subject_areas = (
+            cls.ALL_SUBJECT_AREAS
+            if waffle.switch_is_active("new_subject_areas")
+            else cls.ALL_SUBJECT_AREAS_OLD
+        )
+        matches = [i for i in subject_areas if i.display_name == name]
         return matches[0] if matches else None
 
     @classmethod
