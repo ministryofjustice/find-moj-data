@@ -16,6 +16,7 @@ $govuk-new-typography-scale: true;
 @import "./components/table";
 @import "./components/cards";
 @import "./components/card-grid";
+@import "./components/metadata-list";
 
 .js-required {
   display: none;

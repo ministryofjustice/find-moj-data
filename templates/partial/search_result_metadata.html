@@ -1,0 +1,65 @@
+{% load waffle_tags %}
+{% load lookup %}
+<dl class="app-metadata-list">
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Entity type
+    </dt>
+    <dd class="app-metadata-list__value">
+      <strong class="govuk-tag">
+        {{ result.result_type.find_moj_data_type.value }}
+      </strong>
+    </dd>
+  </div>
+
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Subject area{{result.subject_areas|length|pluralize}}
+    </dt>
+    <dd class="app-metadata-list__value">
+      {% for subject_area in result.subject_areas %}
+      {{ subject_area.display_name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+      {% if not result.subject_areas %}
+      Not provided
+      {% endif %}
+    </dd>
+  </div>
+
+  {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Database
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{result.parent_entity.display_name}}
+    </dd>
+  </div>
+  {% endif %}
+
+  {% switch 'display-result-tags' %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Tags
+    </dt>
+    <dd class="app-metadata-list__value">
+      {% for tag in result.tags_to_display %}
+      <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </dd>
+  </div>
+  {% endswitch %}
+
+  {% with match_reasons=result.matches|lookup:readable_match_reasons|join:", " %}
+  {% if match_reasons %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Matched fields
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{ match_reasons }}
+    </dd>
+  </div>
+  {% endif %}
+  {% endwith %}
+</dl>
