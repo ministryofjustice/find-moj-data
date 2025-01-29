@@ -27,6 +27,7 @@ from datahub_client.entities import (
 from datahub_client.exceptions import EntityDoesNotExist
 
 
+@pytest.mark.django_db
 class TestCatalogueClientWithDatahub:
     """
     Test that the contract with DataHubGraph has not changed, using a mock.

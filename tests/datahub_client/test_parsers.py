@@ -120,6 +120,7 @@ def mock_graphql_search_result(mock_dataset_graphql_entity):
     return {"entity": mock_dataset_graphql_entity, "matchedFields": []}
 
 
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     "parser, entity_object_type",
     [
