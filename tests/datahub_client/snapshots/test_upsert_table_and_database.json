@@ -33,7 +33,7 @@
                     "dc_teams_channel_name": "",
                     "dc_teams_channel_url": "",
                     "dc_team_email": "",
-                    "classification": "Official-Sensitive"
+                    "security_classification": "Official-Sensitive"
                 },
                 "name": "my_database",
                 "description": "little test db"
@@ -120,7 +120,7 @@
                     "dc_teams_channel_name": "",
                     "dc_teams_channel_url": "",
                     "dc_team_email": "",
-                    "classification": "Official-Sensitive"
+                    "security_classification": "Official-Sensitive"
                 },
                 "name": "Dataset",
                 "qualifiedName": "database.Dataset",

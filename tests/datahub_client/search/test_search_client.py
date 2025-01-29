@@ -736,7 +736,7 @@ def test_search_results_with_facets(searcher, mock_graph):
                     "displayName": "Glossary Term",
                     "aggregations": [
                         {
-                            "value": "urn:li:glossaryTerm:Classification.Sensitive",
+                            "value": "urn:li:glossaryTerm:SecurityClassification.Sensitive",
                             "count": 1,
                             "entity": {"properties": {"name": "Sensitive"}},
                         },
@@ -778,7 +778,7 @@ def test_search_results_with_facets(searcher, mock_graph):
             {
                 "glossaryTerms": [
                     FacetOption(
-                        value="urn:li:glossaryTerm:Classification.Sensitive",
+                        value="urn:li:glossaryTerm:SecurityClassification.Sensitive",
                         label="Sensitive",
                         count=1,
                     ),
@@ -1061,7 +1061,7 @@ def test_search_for_container(mock_graph, searcher):
                     "name": "test_db",
                 },
                 metadata={
-                    "classification": "Official-Sensitive",
+                    "security_classification": "Official-Sensitive",
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
                     "usage_restrictions": UsageRestrictions(

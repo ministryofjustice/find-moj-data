@@ -3,7 +3,6 @@ import pytest
 from datahub_client.entities import (
     AccessInformation,
     Chart,
-    Classification,
     Column,
     ColumnRef,
     CustomEntityProperties,
@@ -20,6 +19,7 @@ from datahub_client.entities import (
     PublicationCollection,
     PublicationDataset,
     RelationshipType,
+    SecurityClassification,
     Table,
     TagRef,
     UsageRestrictions,
@@ -55,7 +55,7 @@ def mock_dataset_graphql_entity():
                 {"key": "source_dataset_name", "value": ""},
                 {"key": "s3_location", "value": "s3://databucket/"},
                 {"key": "row_count", "value": 100},
-                {"key": "classification", "value": "Official-Sensitive"},
+                {"key": "security_classification", "value": "Official-Sensitive"},
                 {"key": "refresh_period", "value": "Weekly"},
             ],
         },
@@ -415,7 +415,7 @@ class TestEntityParser:
                     {"key": "s3_location", "value": "s3://databucket/"},
                     {"key": "row_count", "value": 100},
                     {"key": "Not_IN", "value": "dddd"},
-                    {"key": "classification", "value": "Official-Sensitive"},
+                    {"key": "security_classification", "value": "Official-Sensitive"},
                     {"key": "refresh_period", "value": "Weekly"},
                 ],
                 "name": "test",
@@ -445,7 +445,7 @@ class TestEntityParser:
             further_information=FurtherInformation(
                 dc_slack_channel_name="test-channel", dc_slack_channel_url="test-url"
             ),
-            classification=Classification.OFFICIAL_SENSITIVE,
+            security_classification=SecurityClassification.OFFICIAL_SENSITIVE,
         )
 
     def test_parse_properties_with_none_values(self, parser):
@@ -463,7 +463,7 @@ class TestEntityParser:
                     {"key": "s3_location", "value": "s3://databucket/"},
                     {"key": "row_count", "value": 100},
                     {"key": "Not_IN", "value": "dddd"},
-                    {"key": "classification", "value": "Official-Sensitive"},
+                    {"key": "security_classification", "value": "Official-Sensitive"},
                 ],
                 "name": "test",
                 "description": None,
@@ -492,7 +492,7 @@ class TestEntityParser:
             ),
             data_summary=DataSummary(row_count=100),
             further_information=FurtherInformation(),
-            classification=Classification.OFFICIAL_SENSITIVE,
+            security_classification=SecurityClassification.OFFICIAL_SENSITIVE,
         )
 
     def test_parse_columns_with_empty_fields(self, parser):
