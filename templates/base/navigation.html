@@ -32,9 +32,6 @@
 
         <ul class="moj-header__navigation-list">
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="{% url 'feedback:feedback' %}">Feedback</a>
-          </li>
-          <li class="moj-header__navigation-item">
             <a class="moj-header__navigation-link" href="{% url 'azure_auth:logout' %}">Sign out</a>
           </li>
         </ul>
@@ -44,8 +41,19 @@
     </div>
   </div>
 </header>
-</div>
 
+<div class="govuk-phase-banner">
+  <div class="govuk-width-container">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">
+        Beta
+      </strong>
+      <span class="govuk-phase-banner__text">
+        This is a new service. Help us improve it and <a class="govuk-link" href="{% url 'feedback:feedback' %}" rel="noreferrer noopener" target="_blank">give your feedback (opens in new tab)</a>.
+      </span>
+    </p>
+  </div>
+</div>
 
 <div class="moj-primary-navigation">
 
