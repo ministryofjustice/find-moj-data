@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from .forms import FeedbackForm, IssueForm
-from .service import send_notifications
+from .service import send_feedback_notification, send_notifications
 
 log = logging.getLogger(__name__)
 
@@ -13,7 +13,16 @@ def feedback_form_view(request) -> HttpResponse:
     if request.method == "POST":
         form = FeedbackForm(request.POST)
         if form.is_valid():
-            form.save()
+            feedback = form.save()
+
+            user_email = None if request.user.is_anonymous else request.user.email
+            verbose_satisfaction_rating = dict(feedback.SATISFACTION_RATINGS).get(
+                feedback.satisfaction_rating, feedback.satisfaction_rating
+            )
+            send_feedback_notification(
+                user_email, verbose_satisfaction_rating, feedback.how_can_we_improve
+            )
+
             return redirect("feedback:thanks")
         else:
             log.error(f"Unexpected invalid feedback form submission: {form.errors}")

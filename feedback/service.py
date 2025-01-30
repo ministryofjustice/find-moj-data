@@ -22,6 +22,30 @@ def send_notifications(issue: Issue, send_email_to_reporter: bool) -> None:
         t.start()
 
 
+def send_feedback_notification(
+    user_email: str | None, satisfaction_rating: str, how_can_we_improve: str
+) -> None:
+    if settings.NOTIFY_ENABLED:
+        client = get_notify_api_client()
+        personalisation = {
+            "userEmail": user_email or "",
+            "satisfactionRating": satisfaction_rating,
+            "howCanWeImprove": how_can_we_improve,
+        }
+
+        t = threading.Thread(
+            target=notify,
+            kwargs={
+                "personalisation": personalisation,
+                "template_id": settings.NOTIFY_FEEDBACK_TEMPLATE_ID,
+                "email_address": settings.DATA_CATALOGUE_EMAIL,
+                "client": client,
+                "reference": None,
+            },
+        )
+        t.start()
+
+
 def send(
     issue: Issue, client: NotificationsAPIClient, send_email_to_reporter: bool
 ) -> None:
