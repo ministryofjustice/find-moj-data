@@ -270,7 +270,7 @@ class PublicationDatasetDetailsService(GenericService):
             "platform_name": friendly_platform_name(
                 self.publication_dataset_metadata.platform.display_name
             ),
-            "parent_type": DatabaseEntityMapping.url_formatted,
+            "parent_type": PublicationCollectionEntityMapping.url_formatted,
             "h1_value": self.publication_dataset_metadata.name,
             # noqa: E501
             "is_access_requirements_a_url": is_access_requirements_a_url(
