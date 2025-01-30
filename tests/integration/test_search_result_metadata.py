@@ -31,7 +31,7 @@ class TestSearchResultMetadata:
 
         self.selenium.get(f"{self.live_server_url}/search")
 
-        assert "Matched fields:" not in self.selenium.page_source
+        assert "Matched fields" not in self.selenium.page_source
 
     def test_matched_fields_shown(self, mock_catalogue):
         result = SearchResult(
@@ -46,4 +46,4 @@ class TestSearchResultMetadata:
 
         self.selenium.get(f"{self.live_server_url}/search?query=bla")
 
-        assert "Matched fields:" in self.selenium.page_source
+        assert "Matched fields" in self.selenium.page_source
