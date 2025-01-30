@@ -30,6 +30,7 @@ from datahub_client.entities import (
     PublicationDataset,
     PublicationDatasetEntityMapping,
     RelationshipType,
+    SecurityClassification,
     SubjectAreaTaxonomy,
     Table,
     TableEntityMapping,
@@ -192,7 +193,7 @@ class EntityParser:
         if cadet_refresh_period:
             data_summary.refresh_period = cadet_refresh_period
         security_classification = custom_properties_dict.get(
-            "security_classification", "Official-Sensitive"
+            "security_classification", SecurityClassification.OFFICIAL_SENSITIVE.value
         )
 
         further_information = FurtherInformation.model_validate(custom_properties_dict)
