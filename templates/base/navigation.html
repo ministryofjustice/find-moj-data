@@ -54,7 +54,7 @@
           {% url 'home:home' as home_url %}
           {% url 'home:search' as search_url %}
           <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="{% url 'home:home' %}" {% if request.path == home_url %}aria-current="page"{% endif %}>
+            <a class="moj-primary-navigation__link skip-underlined-current" href="{% url 'home:home' %}" {% if request.path == home_url %}aria-current="page"{% endif %}>
               Home
             </a>
           </li>

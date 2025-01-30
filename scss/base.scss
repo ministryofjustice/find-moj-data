@@ -79,3 +79,10 @@ code {
 .app-card-grid__description {
   max-width: 90%;
 }
+
+// This hides the blue underline on the "Home" link when we are on that page,
+// as it clashes with the blue of the masthead components and its inverse
+// phase banner.
+.skip-underlined-current.moj-primary-navigation__link[aria-current]:before {
+  display: none;
+}
