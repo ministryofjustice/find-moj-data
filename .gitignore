@@ -177,4 +177,3 @@ coverage
 # generated translation files
 *.mo
 
-lib/datahub-client/.vscode
