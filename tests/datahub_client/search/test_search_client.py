@@ -10,6 +10,7 @@ from datahub_client.entities import (
     EntityRef,
     FurtherInformation,
     GlossaryTermEntityMapping,
+    SecurityClassification,
     SubjectAreaTaxonomy,
     TableEntityMapping,
     TagRef,
@@ -1065,7 +1066,7 @@ def test_search_for_container(mock_graph, searcher):
                     "name": "test_db",
                 },
                 metadata={
-                    "security_classification": "Official-Sensitive",
+                    "security_classification": SecurityClassification.OFFICIAL_SENSITIVE.value,  # noqa E501
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
                     "usage_restrictions": UsageRestrictions(

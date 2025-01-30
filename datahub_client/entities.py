@@ -118,15 +118,16 @@ Mappers = [
 class SecurityClassification(Enum):
     """Enumeration representing the security classification of the data.
     Attributes:
-        OFFICIAL (str): Represents data classified as "Official".
+        OFFICIAL (str): Represents data classified as "Official",
+        with the addition of a handling instruction of "For public release".
         OFFICIAL_SENSITIVE (str): Represents data classified as "Official-Sensitive".
     Notes:
         This enumeration replaces the Audience entity.
-        - "Published" becomes "Official".
+        - "Published" becomes "Official - For public release".
         - "Internal" becomes "Official-Sensitive".
     """
 
-    OFFICIAL = "Official"
+    OFFICIAL = "Official - For public release"
     OFFICIAL_SENSITIVE = "Official-Sensitive"
 
 
