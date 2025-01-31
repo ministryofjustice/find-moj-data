@@ -72,3 +72,9 @@ code {
 .govuk-tag {
   max-width: 180px
 }
+
+// This is to display our subject areas and descriptions homepage grid
+// with better spacing, as the default was too tight
+.app-card-grid__description {
+  max-width: 90%;
+}
