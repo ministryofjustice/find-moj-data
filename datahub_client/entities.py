@@ -714,7 +714,7 @@ class SubjectAreaTaxonomy:
     ALL_SUBJECT_AREAS = [
         TagRef.from_name("Prisons and probation"),
         TagRef.from_name("Courts and tribunals"),
-        TagRef.from_name("Corporate"),
+        TagRef.from_name("Corporate operations"),
         TagRef.from_name("Office of the Public Guardian"),
         TagRef.from_name("Legal aid"),
         TagRef.from_name("Crime and policing"),
