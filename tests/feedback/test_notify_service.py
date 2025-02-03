@@ -1,7 +1,7 @@
 import pytest
 
 from feedback.models import Issue
-from feedback.service import send
+from feedback.service import send, send_feedback_notification
 
 
 @pytest.mark.django_db
@@ -95,3 +95,27 @@ def test_entity_url_encoding(reporter):
     issue = Issue.objects.create(**data)
     assert issue
     assert issue.encoded_entity_url == encoded_entity_url
+
+
+@pytest.mark.django_db
+def test_send_feedback_notification(mock_notifications_client, settings):
+    settings.NOTIFY_ENABLED = True
+    settings.DATA_CATALOGUE_EMAIL = "team@foo.com"
+    settings.NOTIFY_FEEDBACK_TEMPLATE_ID = "abc"
+
+    send_feedback_notification(
+        user_email="foo@bar.com",
+        satisfaction_rating="ok",
+        how_can_we_improve="more data",
+    )
+
+    mock_notifications_client.send_email_notification.assert_called_once_with(
+        email_address="team@foo.com",
+        template_id="abc",
+        personalisation={
+            "userEmail": "foo@bar.com",
+            "satisfactionRating": "ok",
+            "howCanWeImprove": "more data",
+        },
+        reference=None,
+    )

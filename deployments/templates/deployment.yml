@@ -100,6 +100,8 @@ spec:
               value: "${NOTIFY_SENDER_TEMPLATE_ID}"
             - name: NOTIFY_DATA_CATALOGUE_TEMPLATE_ID
               value: "${NOTIFY_DATA_CATALOGUE_TEMPLATE_ID}"
+            - name: NOTIFY_FEEDBACK_TEMPLATE_ID
+              value: "${NOTIFY_FEEDBACK_TEMPLATE_ID}"
             - name: DATA_CATALOGUE_EMAIL
               value: "${DATA_CATALOGUE_EMAIL}"
             - name: QUICKSIGHT_ACCOUNT_ID
