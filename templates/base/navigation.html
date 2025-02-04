@@ -32,9 +32,6 @@
 
         <ul class="moj-header__navigation-list">
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="{% url 'feedback:feedback' %}">Feedback</a>
-          </li>
-          <li class="moj-header__navigation-item">
             <a class="moj-header__navigation-link" href="{% url 'azure_auth:logout' %}">Sign out</a>
           </li>
         </ul>
@@ -44,8 +41,6 @@
     </div>
   </div>
 </header>
-</div>
-
 
 <div class="moj-primary-navigation">
 
@@ -59,7 +54,7 @@
           {% url 'home:home' as home_url %}
           {% url 'home:search' as search_url %}
           <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="{% url 'home:home' %}" {% if request.path == home_url %}aria-current="page"{% endif %}>
+            <a class="moj-primary-navigation__link skip-underlined-current" href="{% url 'home:home' %}" {% if request.path == home_url %}aria-current="page"{% endif %}>
               Home
             </a>
           </li>
@@ -91,3 +86,18 @@
   </div>
 
 </div>
+
+{% if request.path != home_url %}
+<div class="govuk-width-container">
+  <div class="govuk-phase-banner" role="region" aria-label="New service information">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">
+        Beta
+      </strong>
+      <span class="govuk-phase-banner__text">
+        This is a new service. Help us improve it and <a class="govuk-link" href="{% url 'feedback:feedback' %}" rel="noreferrer noopener" target="_blank">give your feedback (opens in new tab)</a>.
+      </span>
+    </p>
+  </div>
+</div>
+{% endif %}

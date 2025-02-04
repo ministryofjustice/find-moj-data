@@ -8,3 +8,10 @@
 .app-summary-card .app-summary-card__footer  {
     margin-bottom: 0;
 }
+
+.govuk-main-wrapper > .app-details-title {
+    // By default, govuk-main-wrapper adds size 4 padding above the title.
+    // We're condensing this so that more is visible on the details pages
+    // without scrolling.
+    margin-top: govuk-spacing(-2);
+}

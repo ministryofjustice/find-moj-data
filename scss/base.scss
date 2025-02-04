@@ -10,7 +10,8 @@ $govuk-new-typography-scale: true;
 @import "node_modules/govuk-frontend/dist/govuk/index";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "./components/search";
-@import "./components/masthead";
+@import "node_modules/@x-govuk/govuk-prototype-components/x-govuk/components/masthead/masthead";
+@import "node_modules/@x-govuk/govuk-prototype-components/x-govuk/components/masthead/masthead";
 @import "./glossary";
 @import "./details";
 @import "./components/table";
@@ -77,4 +78,11 @@ code {
 // with better spacing, as the default was too tight
 .app-card-grid__description {
   max-width: 90%;
+}
+
+// This hides the blue underline on the "Home" link when we are on that page,
+// as it clashes with the blue of the masthead components and its inverse
+// phase banner.
+.skip-underlined-current.moj-primary-navigation__link[aria-current]:before {
+  display: none;
 }
