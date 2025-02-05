@@ -1,9 +1,22 @@
 from itertools import groupby
 from sys import maxsize
 
+from django.core.paginator import Paginator
+
+from datahub_client.entities import (
+    ChartEntityMapping,
+    DashboardEntityMapping,
+    DatabaseEntityMapping,
+    PublicationCollectionEntityMapping,
+    PublicationDatasetEntityMapping,
+    TableEntityMapping,
+)
+from datahub_client.search.search_types import MultiSelectFilter, SearchResponse
+
 from .base import GenericService
 
 GLOSSARY_ORDERING = [
+    "Electronic monitoring",
     "Key concepts",
     "Technical terms",
     "Data governance terms",
@@ -59,3 +72,62 @@ class GlossaryService(GenericService):
         context = {"results": sorted_total_results, "h1_value": "Glossary"}
 
         return context
+
+
+class GlossaryTermService(GenericService):
+    def __init__(
+        self, page, urn="urn:li:glossaryTerm:f4c5006b-2953-4524-9e18-9bbb964e15d4"
+    ):
+        self.urn = urn
+        self.client = self._get_catalogue_client()
+        self.glossary_term = self.client.get_glossary_term_details(urn)
+        self.page = page
+        self.results = self._get_results(self.page)
+        self.paginator = Paginator(list(range(self.results.total_results)), 20)
+
+    def _get_results(self, page) -> SearchResponse:
+        """
+        Fetch entities linked to the glossary term
+        """
+        return self.client.search(
+            count=20,
+            page=str(int(page) - 1),
+            result_types=[
+                TableEntityMapping,
+                ChartEntityMapping,
+                DatabaseEntityMapping,
+                DashboardEntityMapping,
+                PublicationDatasetEntityMapping,
+                PublicationCollectionEntityMapping,
+            ],
+            filters=[MultiSelectFilter("glossaryTerms", [self.urn])],
+        )
+
+    @property
+    def context(self):
+        return {
+            "h1_value": "Test",
+            "glossary_term": self.glossary_term,
+            "malformed_result_urns": [],
+            "results": self.results.page_results,
+            "highlighted_results": self.results.page_results,
+            "page_obj": self.paginator.get_page(self.page),
+            "page_range": self.paginator.get_elided_page_range(  # type: ignore
+                self.page, on_each_side=2, on_ends=1
+            ),
+            "paginator": self.paginator,
+            "results_per_page": 20,
+            "total_results_str": str(self.results.total_results),
+            "total_results": self.results.total_results,
+            "readable_match_reasons": {
+                "id": "ID",
+                "urn": "URN",
+                "title": "Title",
+                "name": "Name",
+                "description": "Description",
+                "fieldPaths": "Column name",
+                "fieldDescriptions": "Column description",
+                "dc_where_to_access_dataset": "Available on",
+                "qualifiedName": "Qualified name",
+            },
+        }

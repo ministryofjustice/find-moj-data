@@ -1,0 +1,10 @@
+query getGlossaryTerm($urn: String!) {
+  glossaryTerm(urn: $urn) {
+    urn
+    name
+    properties {
+        name
+        description
+    }
+  }
+}

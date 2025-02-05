@@ -59,7 +59,7 @@
     </dt>
     <dd class="app-metadata-list__value">
       {% for term in result.glossary_terms %}
-      <a aria-label="link to glossary term {{ term }}" href="#">{{ term.display_name }}</a>{% if not forloop.last %}, {% endif %}
+      <a aria-label="link to glossary term {{ term }}" href="{% url 'home:glossary_term' urn=term.urn %}">{{ term.display_name }}</a>{% if not forloop.last %}, {% endif %}
       {% endfor %}
     </dd>
   </div>
