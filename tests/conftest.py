@@ -113,8 +113,8 @@ class DetailsPage(Page):
     def contact_channels_not_provided(self):
         return self.selenium.find_element(By.ID, "contact_channels_not_provided")
 
-    # def data_owner_or_custodian(self):
-    #     return self.selenium.find_element(By.ID, "data_owner")
+    def data_owner_or_custodian(self):
+        return self.selenium.find_element(By.ID, "data_owner")
 
 
 class DatabaseDetailsPage(DetailsPage):
