@@ -58,6 +58,7 @@
         <ul class="moj-primary-navigation__list">
           {% url 'home:home' as home_url %}
           {% url 'home:search' as search_url %}
+          {% url 'userguide:userguide_index' as userguide_url %}
           <li class="moj-primary-navigation__item">
             <a class="moj-primary-navigation__link" href="{% url 'home:home' %}" {% if request.path == home_url %}aria-current="page"{% endif %}>
               Home
@@ -69,12 +70,12 @@
             </a>
           </li>
           <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="https://user-guide.find-moj-data.service.justice.gov.uk">
+            <a class="moj-primary-navigation__link" href="{% url 'userguide:userguide_index' %}" {% if request.path == userguide_url %}aria-current="page"{% endif %}>
               User guide
             </a>
           </li>
           <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="https://user-guide.find-moj-data.service.justice.gov.uk/#contact-us">
+            <a class="moj-primary-navigation__link" href="https://user-guide.find-moj-data.service.justice.gov.uk/index.html#contact-us">
               Contact us
             </a>
           </li>

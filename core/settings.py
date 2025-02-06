@@ -42,6 +42,7 @@ INSTALLED_APPS: list[str] = [
     "home.apps.HomeConfig",
     "feedback.apps.FeedbackConfig",
     "dashboard.apps.DashboardConfig",
+    "userguide.apps.UserguideConfig",
     "django_prometheus",
     "users",
     "waffle",

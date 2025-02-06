@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter">
+        <h1 class="govuk-heading-l">User guide</h1>
+    </div>
+</div>
+<div class="govuk-width-container app-width-container"></div>
+<div class="govuk-main-wrapper">
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <ul>
+            {% for header, header_slug, subheaders in sidebar %}
+            <li class="term-group">
+                <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="{% url 'userguide:userguide_detail' slug=header_slug %}">{{ header }}</a>
+            </li>
+                {% if subheaders %}
+                    <ul>
+                        {% for subheader in subheaders %}
+                            <li class="term">
+                                <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ subheader|slugify|lower }}">{{ subheader }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="govuk-grid-column-two-thirds" style="border-left: 2px solid #b1b4b6;">
+        {{ content|safe }}
+    </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
