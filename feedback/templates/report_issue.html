@@ -2,13 +2,21 @@
 {% load static %}
 
 {% block breadcrumbs %}
-<a href="{{ entity_url }}" class="govuk-back-link">Back</a>
+ <a href="javascript:history.back()" class="govuk-back-link">Back</a>
 {% endblock breadcrumbs %}
-
 {% block content %}
-<div class="govuk-grid-row">
+
+<div class="govuk-grid-row  govuk-!-margin-top-0">
+
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-l">{{h1_value}}</h1>
+    <h1 class="govuk-heading-l app-report-issue-header">{{h1_value}}</h1>
+    <p class="govuk-body govuk-!-margin-bottom-6">
+    {% if technical_contact %}
+      The issue will be sent to the technical contact.
+    {% else %}
+      The issue will be sent to the data catalogue team.
+    {% endif %}
+  </p>
   </div>
 
   <div class="govuk-grid-column-two-thirds">
