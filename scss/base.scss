@@ -86,3 +86,13 @@ code {
 .skip-underlined-current.moj-primary-navigation__link[aria-current]:before {
   display: none;
 }
+
+// Workaround for compiled markdown not following design system markup.
+ol {
+  @extend .govuk-list;
+  @extend .govuk-list--number;
+}
+
+li {
+  @extend .govuk-body;
+}
