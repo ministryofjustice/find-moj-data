@@ -95,6 +95,7 @@ def report_issue_view(request) -> HttpResponse:
 
         form = IssueForm()
 
+    technical_contact = True if request.session.get("data_custodian_email") else False
     return render(
         request,
         "report_issue.html",
@@ -103,5 +104,6 @@ def report_issue_view(request) -> HttpResponse:
             "form": form,
             "entity_name": entity_name,
             "entity_url": entity_url,
+            "technical_contact": technical_contact,
         },
     )
