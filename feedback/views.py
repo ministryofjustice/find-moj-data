@@ -74,6 +74,7 @@ def report_issue_view(request) -> HttpResponse:
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
+            entity_url = request.session["entity_url"]
             return render(
                 request,
                 "report_issue.html",
@@ -81,6 +82,7 @@ def report_issue_view(request) -> HttpResponse:
                     "h1_value": "Report an issue with %s"
                     % (request.session.get("entity_name")),
                     "form": form,
+                    "entity_url": entity_url,
                 },
             )
     else:
