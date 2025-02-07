@@ -9,8 +9,8 @@
         {% else %}
           {{ access_requirements }}
         {% endif %}
-      {% elif governance.data_custodians or governance.data_owner.email %}
-        Contact the data custodian to request access.
+      <!-- {% elif governance.data_custodians or governance.data_owner.email %}
+        Contact the data custodian to request access. -->
       {% else %}
         Not provided.
       {% endif %}
