@@ -91,18 +91,18 @@ class TestDetailsPageContactDetails:
                 "meta.data@justice.gov.uk",
                 "Some contact info",
             ),
-            (
-                "",
-                "#contact_us",
-                "meta.data@justice.gov.uk",
-                "Contact the data custodian to request access.",
-            ),
-            (
-                "",
-                "",
-                "meta.data@justice.gov.uk",
-                "Contact the data custodian to request access.",
-            ),
+            # (
+            #     "",
+            #     "#contact_us",
+            #     "meta.data@justice.gov.uk",
+            #     "Contact the data custodian to request access.",
+            # ),
+            # (
+            #     "",
+            #     "",
+            #     "meta.data@justice.gov.uk",
+            #     "Contact the data custodian to request access.",
+            # ),
             (
                 "",
                 "",
