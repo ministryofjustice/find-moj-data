@@ -15,15 +15,7 @@ from datahub_client.search.search_types import MultiSelectFilter, SearchResponse
 
 from .base import GenericService
 
-GLOSSARY_ORDERING = [
-    "Electronic monitoring",
-    "Key concepts",
-    "Technical terms",
-    "Data governance terms",
-    "Data protection terms",
-    "Other technical terms",
-    "Data sources",
-]
+GLOSSARY_ORDERING = ["Electronic monitoring"]
 
 
 class GlossaryService(GenericService):
@@ -35,6 +27,12 @@ class GlossaryService(GenericService):
     def _get_context(self):
         """Returns a glossary context which is grouped by parent term"""
         glossary_search_results = self.client.get_glossary_terms()
+
+        def include_term(result):
+            parents = result.metadata.get("parentNodes", [])
+            if not parents:
+                return False
+            return parents[0]["properties"]["name"] in GLOSSARY_ORDERING
 
         def sorter(result):
             first_parent = result.metadata.get("parentNodes", [])
@@ -55,7 +53,11 @@ class GlossaryService(GenericService):
             if not first_parent:
                 return "Unsorted"
 
-        page_results_copy = sorted(glossary_search_results.page_results, key=sorter)
+        page_results_copy = [
+            i for i in glossary_search_results.page_results if include_term(i)
+        ]
+        page_results_copy.sort(key=sorter)
+
         sorted_total_results = [
             {"name": key, "members": list(group)}
             for key, group in groupby(page_results_copy, key=grouper)
