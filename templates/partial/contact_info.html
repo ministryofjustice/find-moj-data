@@ -9,8 +9,10 @@
         {% else %}
           {{ access_requirements }}
         {% endif %}
-      {% elif governance.data_custodians or governance.data_owner.email %}
-        Contact the data custodian to request access.
+        {% comment %}
+         {% elif governance.data_custodians or governance.data_owner.email %}
+         Contact the data custodian to request access.
+        {% endcomment %}
       {% else %}
         Not provided.
       {% endif %}
@@ -36,16 +38,17 @@
     {% endif %}
 
     {% if not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email %}
-      {% if governance.data_custodians or governance.data_owner.email %}
+      <!-- {% if governance.data_custodians or governance.data_owner.email %}
       <li id="contact_channels_data_owner">Contact the data custodian with questions.</li>
       {% else %}
       <li id="contact_channels_not_provided">Not provided.</li>
-      {% endif %}
+      {% endif %} -->
+      <li id="contact_channels_not_provided">Not provided.</li>
     {% endif %}
   </ul>
 </div>
 
-{% if governance.data_custodians and governance.data_custodians.0.email %}
+<!-- {% if governance.data_custodians and governance.data_custodians.0.email %}
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Data custodian (technical contact)</h2>
   <p id="data_owner" class="govuk-body">
@@ -65,7 +68,7 @@
     {% endif %}
   </p>
 </div>
-{% endif %}
+{% endif %} -->
 
 {% if NOTIFY_ENABLED and entity_name %}
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
