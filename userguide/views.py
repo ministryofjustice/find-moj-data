@@ -46,19 +46,22 @@ class CustomClassProcessor(Treeprocessor):
 
     def run(self, root):
         for element in root.iter():
-            # if element.tag == "p":
-            #     element.set("class", "custom-paragraph")
-            if element.tag == "h1":
-                element.set("class", "govuk-heading-l")
-                element.set("id", self.generate_id(element.text))
-            elif element.tag == "h2":
-                element.set("class", "govuk-heading-m")
-                element.set("id", self.generate_id(element.text))
-            elif element.tag == "h3":
-                element.set("class", "govuk-heading-s")
-                element.set("id", self.generate_id(element.text))
-            elif element.tag == "ul":
-                element.set("class", "govuk-list govuk-list--bullet")
+            tag_class_map = {
+                "h1": "govuk-heading-xl",
+                "h2": "govuk-heading-l",
+                "h3": "govuk-heading-m",
+                "ul": "govuk-list govuk-list--bullet",
+                "table": "govuk-table",
+                "thead": "govuk-table__header",
+                "tr": "govuk-table__row",
+                "td": "govuk-table__cell govuk-body-s",
+                "tbody": "govuk-table__body",
+            }
+
+            if element.tag in tag_class_map:
+                element.set("class", tag_class_map[element.tag])
+                if element.tag in ["h1", "h2", "h3"]:
+                    element.set("id", self.generate_id(element.text))
 
 
 class CustomClassExtension(Extension):
@@ -107,7 +110,14 @@ def userguide_view(request, slug="Overview"):
     original_header = sidebar_items.slug_to_header.get(slug, slug)
     content = get_markdown_content(original_header)
     html_output = markdown.markdown(
-        content, extensions=["attr_list", CustomClassExtension()]
+        content,
+        extensions=[
+            "fenced_code",
+            "codehilite",
+            "attr_list",
+            CustomClassExtension(),
+            "tables",
+        ],
     )
     return render(
         request,

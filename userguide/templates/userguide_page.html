@@ -19,7 +19,7 @@
                     <ul>
                         {% for subheader in subheaders %}
                             <li class="term">
-                                <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ subheader|slugify|lower }}">{{ subheader }}</a>
+                                <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="{% url 'userguide:userguide_detail' slug=header_slug %}#{{ subheader|slugify|lower }}">{{ subheader }}</a>
                             </li>
                         {% endfor %}
                     </ul>

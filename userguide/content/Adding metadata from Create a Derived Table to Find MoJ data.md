@@ -73,7 +73,7 @@ The user ID is visible in the URL of a user page in Datahub, e.g.
 
 [Speak to Find MoJ data team](/index.html#contact-us) if you would like us to manually add a set of users without them logging in.
 
-### Full example `dbt_project.yml` file
+### Full example dbt_project.yml file
 
 ```yaml
 models:
