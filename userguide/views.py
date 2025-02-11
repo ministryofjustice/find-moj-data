@@ -94,8 +94,8 @@ def make_side_bar_items():
 
 
 def get_markdown_content(filename):
-    file_path = os.path.join(DOCS_DIR, filename + ".md")
-    if not os.path.exists(file_path):
+    file_path = os.path.normpath(os.path.join(DOCS_DIR, filename + ".md"))
+    if not file_path.startswith(DOCS_DIR):
         raise Http404("Page not found")
     with open(file_path, "r", encoding="utf-8") as f:
         return f.read()
