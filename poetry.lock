@@ -859,13 +859,13 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-azure-auth"
-version = "2.2.0"
+version = "2.3.0"
 description = "A simple Django app for user authentication with Azure Active Directory/Entra ID."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "django_azure_auth-2.2.0-py3-none-any.whl", hash = "sha256:1ad39841047ca778bb2b1b9de890297613752c7f53d094d67d7a3559cdf2ac32"},
-    {file = "django_azure_auth-2.2.0.tar.gz", hash = "sha256:2c6185ebcea1be42a84232b47e06bbce24d423bbb33628b48c6f7b46baa177fd"},
+    {file = "django_azure_auth-2.3.0-py3-none-any.whl", hash = "sha256:dacbd4875b5a92bd0e6b43203a4f099ef68214d9f0bc0641dd6ece26392e4b18"},
+    {file = "django_azure_auth-2.3.0.tar.gz", hash = "sha256:a0a716617f02b759d6ababa0d2bc8bec78ce17f621e902bd0aa82227a9eb25ee"},
 ]
 
 [package.dependencies]
@@ -3392,4 +3392,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "3e34cff2538876055bb1ab13965dc644f2c8503e640d161860eda9f2da730edf"
+content-hash = "cab691dc366298a13eaa135fa158f763479ee81d94c613c82992adec3404044e"
