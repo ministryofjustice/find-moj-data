@@ -158,7 +158,7 @@ class ChartDetailsService(GenericService):
         self.chart_metadata = self.client.get_chart_details(urn)
         self.parent_entity = _parse_parent(self.chart_metadata.relationships or {})
         self.context = self._get_context()
-        self.template = "details_chart.html"
+        self.template = "details_public_domain_data.html"
 
     def _get_context(self):
         return {
@@ -259,7 +259,7 @@ class PublicationDatasetDetailsService(GenericService):
         relationships = self.publication_dataset_metadata.relationships or {}
         self.parent_entity = _parse_parent(relationships)
         self.context = self._get_context()
-        self.template = "details_publication_dataset.html"
+        self.template = "details_public_domain_data.html"
 
     def _get_context(self):
 

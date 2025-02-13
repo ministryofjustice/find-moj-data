@@ -32,26 +32,13 @@
             {% endfor %}
           </tbody>
         </table>
-        <form action="{% url 'home:details_csv' result_type='dashboard' urn=entity.urn %}">
-          <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-            Download chart descriptions (CSV format)
-          </button>
-        </form>
+        {% include "partial/download_button.html" with entity_type='dashboard' title="chart descriptions" %}
       {% else %}
         <h2 class="govuk-heading-m">Dashboard content</h2>
         <p class="govuk-body">This dashboard is missing chart information.</p>
       {% endif %}
     </div>
   </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h2 class="govuk-heading-s govuk-!-margin-top-3">
-        Access this data
-      </h2>
-      <div class="govuk-body">
-        <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ platform_name }}</a> (opens in new tab)
-      </div>
-    </div>
-  </div>
+  {% include "partial/access_data.html" %}
 
 {% endblock extra_details %}

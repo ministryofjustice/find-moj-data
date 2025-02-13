@@ -7,11 +7,8 @@
     <div class="govuk-grid-column-full">
       {% if entity.column_details %}
         <div class="govuk-heading-m">Table schema</div>
-        <form action="{% url 'home:details_csv' result_type='table' urn=entity.urn %}">
-          <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-            Download table schema (CSV format)
-          </button>
-        </form>
+        {% include "partial/download_button.html" with entity_type='database' title="table descriptions" %}
+
         <table class="govuk-table app-table-responsive">
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
