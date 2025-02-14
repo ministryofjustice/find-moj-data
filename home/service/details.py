@@ -12,7 +12,6 @@ from datahub_client.entities import (
     PublicationDatasetEntityMapping,
     RelationshipType,
 )
-from datahub_client.parsers import extract_year_timestamp
 
 from ..urns import PlatformUrns
 from .base import GenericService
@@ -233,7 +232,7 @@ class PublicationCollectionDetailsService(GenericService):
             ),
             "publications": sorted(
                 self.entities_in_container,
-                key=lambda d: extract_year_timestamp(d.entity_ref.display_name),
+                key=lambda d: d.data_last_modified,
                 reverse=True,
             ),
             "h1_value": self.publication_collection_metadata.name,

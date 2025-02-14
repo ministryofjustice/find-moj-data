@@ -376,6 +376,13 @@ class EntitySummary(BaseModel):
     entity_type: str = Field(
         description="indicates the type of entity that is summarised"
     )
+    data_last_modified: Annotated[
+        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
+    ] = Field(
+        description="When the data entity was last modified in the source system",
+        default=None,
+        examples=[datetime(2011, 10, 2, 3, 0, 0)],
+    )
     tags: list[TagRef] = Field(description="Any tags associated with the entity")
 
 

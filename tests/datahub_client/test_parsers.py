@@ -1,4 +1,3 @@
-from datetime import datetime
 import pytest
 
 from datahub_client.entities import (
@@ -36,7 +35,6 @@ from datahub_client.parsers import (
     PublicationCollectionParser,
     PublicationDatasetParser,
     TableParser,
-    extract_year_timestamp,
 )
 from datahub_client.search.search_types import SearchResult
 
@@ -866,51 +864,3 @@ class TestEntityParserFactory:
     ):
         parser = parser_factory.get_parser(entity_slug)
         assert isinstance(parser, expected_parser)
-
-
-def get_timestamp(year, month, day):
-    """Helper function to create timestamps for comparison"""
-    return int(datetime(year, month, day).timestamp())
-
-
-class TestTimestampParser:
-    @pytest.mark.parametrize("text, expected", [
-        # Working cases
-        (
-            "Ad-Hoc IIRMS Publication, March 2024",
-            get_timestamp(2024, 1, 1)
-        ),
-        (
-            "Changes to the Ministry of Justice Official Statistics Publication Schedule May 2013",
-            get_timestamp(2013, 1, 1)
-        ),
-        (
-            "Report from January 15, 2024 shows...",
-            get_timestamp(2024, 1, 1)
-        ),
-        (
-            "Data from 2024-02-14 indicates...",
-            get_timestamp(2024, 1, 1)
-        ),
-        # Failing cases
-        (
-            "No date information here",
-            -2208988800  # Jan 1, 1900 timestamp
-        ),
-        (
-            None,
-            -2208988800  # Jan 1, 1900 timestamp
-        ),
-        (
-            "",
-            -2208988800  # Jan 1, 1900 timestamp
-        ),
-    ])
-    def test_extract_year_timestamp(self, text, expected):
-        result = extract_year_timestamp(text)
-        assert result == expected, f"Failed for input: {text}"
-
-    def test_invalid_input(self):
-        # Test with invalid input type
-        result = extract_year_timestamp(123)
-        assert result == -2208988800, "Should return default timestamp for invalid input type"

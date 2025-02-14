@@ -1,7 +1,6 @@
 import logging
 from collections import defaultdict
 from datetime import datetime
-import re
 from typing import Any, Tuple
 
 from datahub_client.entities import (
@@ -463,6 +462,7 @@ class EntityParser:
                         description=description,
                         entity_type=entity_type,
                         tags=tags,
+                        data_last_modified=self.parse_data_last_modified(properties),
                     )
                 )
 
@@ -934,29 +934,3 @@ class EntityParserFactory:
                 return PublicationCollectionParser()
             else:
                 return DatabaseParser()
-
-
-def extract_year_timestamp(text):
-    """
-    Find the first 4-digit year in text and return its timestamp.
-    Returns Jan 1, 1900 timestamp if no year found.
-
-    Args:
-        text (str): Input text to search for year
-
-    Returns:
-        int: Unix timestamp for January 1st of found year, or Jan 1, 1900 if none found
-    """
-    DEFAULT_TIMESTAMP = -2208988800  # Jan 1, 1900
-
-    if not text or not isinstance(text, str):
-        return DEFAULT_TIMESTAMP
-
-    # Find first 4-digit number between 1900 and 2100
-    match = re.search(r'(?:19|20)\d{2}', text)
-
-    if match:
-        year = int(match.group(0))
-        return int(datetime(year, 1, 1).timestamp())
-
-    return DEFAULT_TIMESTAMP
