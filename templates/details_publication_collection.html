@@ -7,7 +7,7 @@
     <div class="govuk-grid-column-full">
       {% if publications %}
         <div class="govuk-heading-m">Publication collection content</div>
-          {% include "partial/details_aggregator_generic.html" with items=publications title="Publication collection content" name_column="Publication" description_column="Description" %}
+          {% include "partial/details_container.html" with items=publications title="Publication collection content" name_column="Publication" description_column="Description" %}
       {% else %}
         <h2 class="govuk-heading-m">Publication Collection content</h2>
         <p class="govuk-body">This Publication Collection is missing Publications information.</p>

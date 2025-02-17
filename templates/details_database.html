@@ -7,7 +7,7 @@
       {% if tables %}
       <div class="govuk-heading-m">Database content</div>
         {% include "partial/download_button.html" with entity_type='database' title="table descriptions" %}
-        {% include "partial/details_aggregator_generic.html" with items=tables title="Database content" name_column="Table name" description_column="Description" %}
+        {% include "partial/details_container.html" with items=tables title="Database content" name_column="Table name" description_column="Description" %}
       {% else %}
         <h2 class="govuk-heading-m">Database content</h2>
         <p class="govuk-body">This database is missing table information.</p>
