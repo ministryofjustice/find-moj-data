@@ -7,39 +7,7 @@
       {% if tables %}
       <div class="govuk-heading-m">Database content</div>
         {% include "partial/download_button.html" with entity_type='database' title="table descriptions" %}
-        
-        <table class="govuk-table app-table-responsive">
-          <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header app-custom-class">Table name</th>
-              <th scope="col" class="govuk-table__header app-custom-class">Description</th>
-            </tr>
-          </thead>
-          <tbody class="govuk-table__body app-table-responsive__body">
-            {% for table in tables %}
-              {% with table_type=table.entity_type|lower %}
-                <tr class="govuk-table__row app-table-responsive__row">
-                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Table name:</span><a href="{% url 'home:details' result_type=table_type urn=table.entity_ref.urn %}" class="govuk-link">{{table.entity_ref.display_name}}</a></td>
-                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Description:</span>
-                  {% if table.description %}
-                    {% if table.description|length > 200 %}
-                    <div>
-                      {{ table.description|markdown:3|truncatewords_html:25 }}
-                    </div>
-                    {% else %}
-                    <div>
-                      {{ table.description|markdown:3 }}
-                    </div>
-                    {% endif %}
-                  {% else %}
-                  <p class="govuk-visually-hidden">A description for {{table.entity_ref.display_name}} does not exist</p>
-                  {% endif %}
-                  </td>
-                </tr>
-              {% endwith %}
-            {% endfor %}
-          </tbody>
-        </table>
+        {% include "partial/details_aggregator_generic.html" with items=tables title="Database content" name_column="Table name" description_column="Description" %}
       {% else %}
         <h2 class="govuk-heading-m">Database content</h2>
         <p class="govuk-body">This database is missing table information.</p>
