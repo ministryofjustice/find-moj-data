@@ -232,7 +232,8 @@ class PublicationCollectionDetailsService(GenericService):
             ),
             "publications": sorted(
                 self.entities_in_container,
-                key=lambda d: d.entity_ref.display_name,
+                key=lambda d: d.data_last_modified,
+                reverse=True,
             ),
             "h1_value": self.publication_collection_metadata.name,
             "is_access_requirements_a_url": is_access_requirements_a_url(
