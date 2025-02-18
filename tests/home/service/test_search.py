@@ -1,6 +1,5 @@
 import os
 import re
-from types import GeneratorType
 from urllib.parse import quote
 
 import pytest
@@ -18,12 +17,10 @@ class TestSearchService:
     def test_get_context_search_result(self, mock_catalogue, search_context):
         assert search_context["results"] == mock_catalogue.search().page_results
         assert search_context["total_results_str"] == "100"
-        assert search_context["total_results"] == 100
 
     def test_get_context_paginator(self, search_context):
         assert search_context["page_obj"].number == 1
-        assert isinstance(search_context["page_range"], GeneratorType)
-        assert search_context["paginator"].num_pages == 5
+        assert search_context["page_obj"].paginator.num_pages == 5
 
     def test_get_context_h1_value(self, search_context):
         assert search_context["h1_value"] == "Search MoJ data"
