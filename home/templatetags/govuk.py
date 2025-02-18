@@ -28,7 +28,7 @@ def pagination(page_obj, urlpattern, **url_kwargs):
         page_obj.number, on_each_side=2, on_ends=1
     ):
         if page_number == paginator.ELLIPSIS:
-            numbers.append({"is_elipses": True})
+            numbers.append({"is_ellipses": True})
         else:
             numbers.append(
                 {

@@ -10,7 +10,7 @@
     {% endif %}
     <ul class="govuk-pagination__list">
         {% for p in page_numbers %}
-            {% if p.is_elipses %}
+            {% if p.is_ellipses %}
                 <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
             {% else %}
                 {% if page_obj.number == p.number %}
