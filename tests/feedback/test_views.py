@@ -17,7 +17,7 @@ class TestFeedbackView:
             reverse("feedback:feedback"), data={"satisfaction_rating": 5}
         )
         assert response.status_code == 302
-        assert response.url == "http://localhost/my_entity"
+        assert response.url == "/feedback/thanks"
 
     def test_thankyou_renders(self, client):
         response = client.get(reverse("feedback:thanks"), data={})
