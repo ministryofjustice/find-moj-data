@@ -1,5 +1,6 @@
 import logging
 
+from django.core.validators import MinValueValidator
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -12,6 +13,9 @@ log = logging.getLogger(__name__)
 def feedback_form_view(request) -> HttpResponse:
     if request.method == "POST":
         form = FeedbackForm(request.POST)
+        form.fields['satisfaction_rating'].validators = [
+            MinValueValidator(1, message='Please enter a valid bid')
+        ]
         if form.is_valid():
             feedback = form.save()
 
@@ -34,7 +38,7 @@ def feedback_form_view(request) -> HttpResponse:
         request,
         "feedback.html",
         {
-            "h1_value": "Give feedback on Find MOJ data",
+            "h1_value": "Give feedback on Find MoJ data",
             "form": form,
         },
     )
@@ -70,7 +74,7 @@ def report_issue_view(request) -> HttpResponse:
                 send_email_to_reporter=form.cleaned_data["send_email_to_reporter"],
             )
 
-            return redirect("feedback:thanks")
+            return redirect(request.session.get("entity_url"))
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
