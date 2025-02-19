@@ -34,11 +34,11 @@
 {% block content %}
   {% if messages %}
     <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-      <!-- <div class="govuk-notification-banner__header">
+      <div class="govuk-notification-banner__header">
         <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-          Success
+          Feedback submitted
         </h2>
-      </div> -->
+      </div>
       <div class="govuk-notification-banner__content">
         {% for message in messages %}
           {{ message }}
