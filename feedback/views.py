@@ -14,9 +14,6 @@ log = logging.getLogger(__name__)
 def feedback_form_view(request) -> HttpResponse:
     if request.method == "POST":
         form = FeedbackForm(request.POST)
-        form.fields['satisfaction_rating'].validators = [
-            MinValueValidator(1, message='Please enter a valid bid')
-        ]
         if form.is_valid():
             feedback = form.save()
 
@@ -75,7 +72,7 @@ def report_issue_view(request) -> HttpResponse:
                 send_email_to_reporter=form.cleaned_data["send_email_to_reporter"],
             )
             messages.add_message(
-                request, messages.SUCCESS, "Thank you for reporting the issue."
+                request, messages.SUCCESS, "Feedback submitted successfully"
             )
             return redirect(request.session.get("entity_url"))
 
