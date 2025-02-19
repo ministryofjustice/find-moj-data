@@ -1,6 +1,7 @@
 import logging
 
 from django.core.validators import MinValueValidator
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -73,7 +74,9 @@ def report_issue_view(request) -> HttpResponse:
                 issue=issue,
                 send_email_to_reporter=form.cleaned_data["send_email_to_reporter"],
             )
-
+            messages.add_message(
+                request, messages.SUCCESS, "Thank you for reporting the issue."
+            )
             return redirect(request.session.get("entity_url"))
 
         else:
