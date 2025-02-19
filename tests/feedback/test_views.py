@@ -77,4 +77,4 @@ class TestReportIssueView:
             },
         )
         assert response.status_code == 302
-        assert response.url == reverse("feedback:thanks")
+        assert response.url == "http://localhost/my_entity"
