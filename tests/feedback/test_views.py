@@ -1,5 +1,4 @@
 
-import os
 import pytest
 from django.urls import reverse
 
@@ -71,8 +70,6 @@ class TestReportIssueView:
             },
         )
         assert response.status_code == 200
-        if not os.environ.get("ALLOWED_HOSTS"):
-            os.environ["ALLOWED_HOSTS"] = "localhost"
         response = client.post(
             reverse("feedback:report-issue"),
             data={
