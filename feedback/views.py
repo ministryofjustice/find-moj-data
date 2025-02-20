@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
+from core.settings import ALLOWED_HOSTS
+
 from .forms import FeedbackForm, IssueForm
 from .service import send_feedback_notification, send_notifications
 
@@ -61,8 +63,8 @@ def report_issue_view(request) -> HttpResponse:
 
             if not url_has_allowed_host_and_scheme(
                 url=issue.entity_url,
-                allowed_hosts=None,
-                require_https=True,
+                allowed_hosts=ALLOWED_HOSTS,
+                require_https=False,
             ):
                 log.error(f"Invalid entity URL: {issue.entity_url}")
                 return HttpResponse(status=400)
