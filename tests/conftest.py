@@ -736,8 +736,6 @@ def generate_page(page_size=20, result_type: FindMoJdataEntityMapper | None = No
 
 @pytest.fixture(autouse=True)
 def client():
-    if not os.environ.get("ALLOWED_HOSTS"):
-        os.environ["ALLOWED_HOSTS"] = "localhost"
     client = Client()
     return client
 
