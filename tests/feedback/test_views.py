@@ -73,6 +73,7 @@ class TestReportIssueView:
             data={
                 "reason": "Other",
                 "additional_info": "This is some additional information.",
+                "entity_url": "http://localhost/my_entity",
                 "send_email_to_reporter": "Yes",
             },
         )
