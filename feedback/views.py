@@ -61,11 +61,12 @@ def report_issue_view(request) -> HttpResponse:
             issue.entity_url = request.POST["entity_url"]
             issue.data_custodian_email = request.POST["data_custodian_email"]
 
-            if not url_has_allowed_host_and_scheme(
+            is_valid_url = url_has_allowed_host_and_scheme(
                 url=issue.entity_url,
                 allowed_hosts=ALLOWED_HOSTS,
                 require_https=False,
-            ):
+            )
+            if not is_valid_url:
                 log.error(f"Invalid entity URL: {issue.entity_url}")
                 return HttpResponse(status=400)
 
@@ -84,7 +85,10 @@ def report_issue_view(request) -> HttpResponse:
             messages.add_message(
                 request, messages.SUCCESS, "Feedback submitted successfully"
             )
-            return redirect(issue.entity_url)
+            if is_valid_url:
+                return redirect(issue.entity_url)
+            else:
+                return redirect('/')
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
