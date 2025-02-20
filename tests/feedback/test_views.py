@@ -15,7 +15,7 @@ class TestFeedbackView:
     def test_valid_form_redirects(self, client):
         response = client.post(
             reverse("feedback:feedback"),
-            data={"satisfaction_rating": "5", "how_can_we_improve": "a" * 10},
+            data={"satisfaction_rating": 5},
         )
         assert response.status_code == 302
         assert response.url == "/feedback/thanks"
