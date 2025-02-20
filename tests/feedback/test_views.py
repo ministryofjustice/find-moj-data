@@ -61,8 +61,8 @@ class TestReportIssueView:
         )
         assert response.status_code == 200
 
+    @pytest.mark.django_db
     def test_valid_form_redirects(self, client, settings):
-        settings.ALLOWED_HOSTS = ["localhost"]
         response = client.get(
             reverse("feedback:report-issue"),
             data={
@@ -76,6 +76,7 @@ class TestReportIssueView:
             data={
                 "reason": "Other",
                 "additional_info": "This is some additional information.",
+                "entity_name": "my_entity",
                 "entity_url": "http://localhost/my_entity",
                 "send_email_to_reporter": "Yes",
             },
