@@ -69,6 +69,7 @@ class TestReportIssueView:
             data={
                 "entity_name": "my_entity",
                 "entity_url": "http://localhost/my_entity",
+                "data_custodian_email": "data.owner@justice.gov.uk",
             },
         )
         assert response.status_code == 200
@@ -79,6 +80,7 @@ class TestReportIssueView:
                 "additional_info": "This is some additional information.",
                 "entity_name": "my_entity",
                 "entity_url": "http://localhost/my_entity",
+                "data_custodian_email": "data.owner@justice.gov.uk",
                 "send_email_to_reporter": "Yes",
             },
         )
