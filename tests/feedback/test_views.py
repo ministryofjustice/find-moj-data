@@ -63,6 +63,7 @@ class TestReportIssueView:
 
     @pytest.mark.django_db
     def test_valid_form_redirects(self, client, settings):
+        settings.ALLOWED_HOSTS = ["localhost", "testserver"]
         response = client.get(
             reverse("feedback:report-issue"),
             data={
