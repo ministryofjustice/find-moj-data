@@ -1,6 +1,6 @@
 import logging
 
-from django.core.validators import MinValueValidator
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -59,6 +59,14 @@ def report_issue_view(request) -> HttpResponse:
             issue.entity_url = request.session.get("entity_url")
             issue.data_custodian_email = request.session.get("data_custodian_email")
 
+            if not url_has_allowed_host_and_scheme(
+                url=issue.entity_url,
+                allowed_hosts=None,
+                require_https=True,
+            ):
+                log.error(f"Invalid entity URL: {issue.entity_url}")
+                return HttpResponse(status=400)
+
             # in production, there should always be a signed in user,
             # but this may not be the case in local development/unit tests
             if not request.user.is_anonymous:
@@ -74,7 +82,7 @@ def report_issue_view(request) -> HttpResponse:
             messages.add_message(
                 request, messages.SUCCESS, "Feedback submitted successfully"
             )
-            return redirect(request.session.get("entity_url"))
+            return redirect(issue.entity_url)
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
