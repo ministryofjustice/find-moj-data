@@ -1,3 +1,4 @@
+
 import pytest
 from django.urls import reverse
 
@@ -14,10 +15,11 @@ class TestFeedbackView:
 
     def test_valid_form_redirects(self, client):
         response = client.post(
-            reverse("feedback:feedback"), data={"satisfaction_rating": 5}
+            reverse("feedback:feedback"),
+            data={"satisfaction_rating": 5},
         )
         assert response.status_code == 302
-        assert response.url == reverse("feedback:thanks")
+        assert response.url == "/feedback/thanks"
 
     def test_thankyou_renders(self, client):
         response = client.get(reverse("feedback:thanks"), data={})
@@ -65,6 +67,7 @@ class TestReportIssueView:
             data={
                 "entity_name": "my_entity",
                 "entity_url": "http://localhost/my_entity",
+                "data_custodian_email": "data.owner@justice.gov.uk",
             },
         )
         assert response.status_code == 200
@@ -73,8 +76,11 @@ class TestReportIssueView:
             data={
                 "reason": "Other",
                 "additional_info": "This is some additional information.",
+                "entity_name": "my_entity",
+                "entity_url": "http://localhost/my_entity",
+                "data_custodian_email": "data.owner@justice.gov.uk",
                 "send_email_to_reporter": "Yes",
             },
         )
         assert response.status_code == 302
-        assert response.url == reverse("feedback:thanks")
+        assert response.url == "http://localhost/my_entity"

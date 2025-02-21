@@ -52,6 +52,8 @@ jobs:
 
       - name: Run unit tests with coverage
         id: fast-tests
+        env:
+          DJANGO_ALLOWED_HOSTS: "localhost testserver"
         run: TESTING=True poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
       - name: Set up chromedriver

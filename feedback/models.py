@@ -16,13 +16,15 @@ class Feedback(models.Model):
 
     satisfaction_rating = models.IntegerField(
         choices=SATISFACTION_RATINGS,
-        verbose_name="Satisfaction survey",
+        verbose_name="How satisfied are you with this service?",
         null=False,
         blank=False,
     )
 
     how_can_we_improve = models.TextField(
-        verbose_name="How can we improve this service?", null=False, blank=True
+        verbose_name="How can we improve this service? (optional)",
+        null=False,
+        blank=True,
     )
 
 

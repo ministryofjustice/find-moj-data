@@ -6,6 +6,7 @@
 {% load page_title %}
 {% load format_timesince %}
 
+
 {% block title %}
   {% with details_title=h1_value|add:" - "|add:entity_type %}
     {{details_title|render_title}}
@@ -31,6 +32,20 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
+  {% if messages %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Feedback submitted
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
   <div class="govuk-grid-row app-header-negative-padding">
     <div class="govuk-grid-column-full">
       <span class="govuk-caption-l">{{entity_type}}</span>

@@ -1,7 +1,11 @@
 import logging
 
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+
+from core.settings import ALLOWED_HOSTS
 
 from .forms import FeedbackForm, IssueForm
 from .service import send_feedback_notification, send_notifications
@@ -34,7 +38,7 @@ def feedback_form_view(request) -> HttpResponse:
         request,
         "feedback.html",
         {
-            "h1_value": "Give feedback on Find MOJ data",
+            "h1_value": "Give feedback on Find MoJ data",
             "form": form,
         },
     )
@@ -57,6 +61,15 @@ def report_issue_view(request) -> HttpResponse:
             issue.entity_url = request.session.get("entity_url")
             issue.data_custodian_email = request.session.get("data_custodian_email")
 
+            is_valid_url = url_has_allowed_host_and_scheme(
+                url=issue.entity_url,
+                allowed_hosts=ALLOWED_HOSTS,
+                require_https=False,
+            )
+            if not is_valid_url:
+                log.error(f"Invalid entity URL: {issue.entity_url}")
+                return HttpResponse(status=400)
+
             # in production, there should always be a signed in user,
             # but this may not be the case in local development/unit tests
             if not request.user.is_anonymous:
@@ -69,8 +82,13 @@ def report_issue_view(request) -> HttpResponse:
                 issue=issue,
                 send_email_to_reporter=form.cleaned_data["send_email_to_reporter"],
             )
-
-            return redirect("feedback:thanks")
+            messages.add_message(
+                request, messages.SUCCESS, "Feedback submitted successfully"
+            )
+            if is_valid_url:
+                return redirect(issue.entity_url)
+            else:
+                return redirect('/')
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
