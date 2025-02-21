@@ -57,9 +57,9 @@ def report_issue_view(request) -> HttpResponse:
         form = IssueForm(request.POST)
         if form.is_valid():
             issue = form.save(commit=False)
-            issue.entity_name = request.POST["entity_name"]
-            issue.entity_url = request.POST["entity_url"]
-            issue.data_custodian_email = request.POST["data_custodian_email"]
+            issue.entity_name = request.session.get("entity_name")
+            issue.entity_url = request.session.get("entity_url")
+            issue.data_custodian_email = request.session.get("data_custodian_email")
 
             is_valid_url = url_has_allowed_host_and_scheme(
                 url=issue.entity_url,
