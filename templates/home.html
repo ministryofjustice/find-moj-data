@@ -53,15 +53,7 @@
     </div>
     <div class="govuk-main-wrapper">
       <div class="govuk-width-container app-width-container">
-        {% flag "home_variant_a" %}
-          {% include 'partial/home/subject_area_grid.html' %}
-        {% else %}
-          {% flag "home_variant_b" %}
-          {% include 'partial/home/subject_area_list.html' %}
-          {% else %}
-          {% include 'partial/home/old_design.html' %}
-          {% endflag %}
-        {% endflag %}
+        {% include 'partial/home/subject_area_grid.html' %}
       </div>
     </div>
   </main>
