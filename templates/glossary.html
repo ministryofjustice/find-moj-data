@@ -4,51 +4,58 @@
 
 {% block content %}
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
+        <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-l">{{h1_value}}</h1>
-        </div>
-        <div class="govuk-grid-column-three-quarters">
-            <div role="search" class="app-search govuk-form-group govuk-!-margin-bottom-8 js-required">
-                <label for="filter-input" class="govuk-label govuk-visually-hidden-focusable">Filter this page (the content will be updated as you type)</label>
-                <input class="govuk-input" id="filter-input" type="search" placeholder="Filter this page">
-            </div>
         </div>
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
-            <a href="#glossary-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to glossary content</a>
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-3">On this page</h2>
             <ul class="govuk-list">
                 {% for parent_term in results %}
-                    <li class="term-group">
-                        <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ parent_term }}">
-                            <strong>{{ parent_term.name }}</strong>
+                    <li class="govuk-!-margin-bottom-3">
+                        <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" data-action="clear-filter" href="#{{ parent_term.name }}">
+                            {{ parent_term.name }}
                         </a></div>
-                        {% for member in parent_term.members %}
-                            <div data-term="{{member.name|upper}}" class="term"><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#{{ member.name }}">
-                                {{ member.name }}
-                            </a></div>
-                        {%endfor%}
-                        <br>
                     </li>
                 {%endfor%}
             </ul>
+            <div class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-4"><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="#top">Back to top</a></div>
         </div>
-        <div class="govuk-grid-column-three-quarters govuk-!-padding-left-4" id="glossary-content">
-            {% for parent_term in results %}
+        <div class="govuk-grid-column-three-quarters">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Search</h2>
+            <div role="search" class="app-search govuk-form-group govuk-!-margin-bottom-6 js-required">
+                <label for="filter-input" class="govuk-label govuk-visually-hidden-focusable">Search this page (the content will be updated as you type)</label>
+                <input class="govuk-input" id="filter-input" type="search">
+            </div>
+            <div class="govuk-!-display-none" id="no-results-panel">
+                <h2 class="govuk-heading-m">No terms found</h2>
+                <p class="govuk-body">There are no terms in the glossary matching your search query.</p>
+            </div>
+            <div id="glossary-content">
+                {% for parent_term in results %}
                 <div class="term-group">
-                    <h2 class="govuk-heading-l" id="{{ parent_term }}">{{ parent_term.name }}</h2>
-                    <p class="govuk-body-l">{{ parent_term.description }}</p>
+                    <h2 class="govuk-heading-m" id="{{ parent_term.name }}">{{ parent_term.name }}</h2>
+                    <div class="govuk-body">{{ parent_term.description }}</div>
                     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
                     {% for member in parent_term.members %}
-                        <div data-term="{{member.name|upper}}" class="term">
-                            <h3 class="govuk-heading-m" id="{{ member.name }}">{{ member.name }}</h3>
-                            <p class="govuk-body">{{ member.description|markdown:3 }}</p>
+                        <div data-term="{{member.name|upper}}" class="term govuk-!-margin-bottom-5">
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-3" id="{{ member.name }}">
+                                {% if parent_term.has_entities %}
+                                    <a href="{% url 'home:glossary_term' urn=member.urn %}">{{ member.name }}</a>
+                                {% else %}
+                                    {{ member.name }}
+                                {% endif %}
+                            </h3>
+                            <div class="govuk-body">{{ member.description|markdown:3 }}</div>
                         </div>
                     {%endfor%}
                     <br>
                 </div>
-            {%endfor%}
+                {%endfor%}
+            </div>
+            <div class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="#top">Back to top</a>
         </div>
     </div>
 
