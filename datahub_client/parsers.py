@@ -252,7 +252,7 @@ class EntityParser:
         Return the time when the data was last updated in the source system
         (not Datahub)
         """
-        modified = (properties.get("lastModified") or {}).get("time")
+        modified = (properties.get("lastModified") or {}).get("time", 0)
         return None if modified == 0 else modified
 
     def _parse_owner_object(self, owner: dict) -> OwnerRef:
