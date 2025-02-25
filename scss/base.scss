@@ -87,12 +87,12 @@ code {
 }
 
 // Workaround for compiled markdown not following design system markup.
-ul {
+.markdown-container ul {
   @extend .govuk-list;
   @extend .govuk-list--bullet;
 }
 
-ol {
+.markdown-container ol {
   @extend .govuk-list;
   @extend .govuk-list--number;
 }
