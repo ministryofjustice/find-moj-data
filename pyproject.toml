@@ -34,7 +34,7 @@ boto3 = "^1.36.26"
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
 pre-commit = "^4.1.0"
-selenium = "~=4.28.1"
+selenium = "~=4.29.0"
 flake8 = ">=6.1.0"
 pytest-django = "^4.10.0"
 pytest-cov = "^6.0.0"
