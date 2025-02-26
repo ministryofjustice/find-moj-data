@@ -5,6 +5,10 @@
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
+      {% comment %} All tables should be accessible via the AP {% endcomment %}
+      {% if entity.custom_properties.security_classification == "Official-Sensitive" %}
+        {% include "partial/access_ap_data.html" with access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_requirements_a_url=is_access_requirements_a_url entity_name=entity.name %}
+      {% endif %}
       {% if entity.column_details %}
         <div class="govuk-heading-m">Table schema</div>
         {% include "partial/download_button.html" with entity_type='database' title="table descriptions" %}
@@ -50,7 +54,7 @@
         <h2 class="govuk-heading-m">Lineage</h2>
         <div class="govuk-body-m" >
           See where this data came from and how it is used in other tables.
-        </div class="govuk-body-m">
+        </div>
         <div class="govuk-body">
           <a href="{{lineage_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">
             View lineage in DataHub (opens in new tab)

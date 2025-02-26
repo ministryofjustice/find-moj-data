@@ -53,12 +53,12 @@ class TestDetailsPageContactDetails:
         [
             (
                 "https://place-to-get-your-access.com",
-                "Select this link for access information (opens in new tab)",
+                "Learn how to access this data in the Analytical Platform (opens in new tab)",
             ),
-            (
-                "To access these data you need to seek permission from the data custodian by email",
-                "To access these data you need to seek permission from the data custodian by email",
-            ),
+            # ( commented out as we're hiding references to data custodians for now
+            #     "To access these data you need to seek permission from the data custodian by email",
+            #     "To access these data you need to seek permission from the data custodian by email",
+            # ),
         ],
     )
     def test_access_requirements_content(
@@ -70,11 +70,12 @@ class TestDetailsPageContactDetails:
         1 - a sole link given is rendered as a hyperlink with standard link text
         2 - some other specific free text held in the access_requirements custom property is
         shown as given
-        3 - where no access_requirements custom property exists default to the standrd line
+        3 - where no access_requirements custom property exists default to the standard line
         """
         database.custom_properties.access_information = AccessInformation(
             dc_access_requirements=access_reqs
         )
+        database.custom_properties.security_classification = "Official-Sensitive"
         mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
@@ -107,7 +108,7 @@ class TestDetailsPageContactDetails:
                 "",
                 "",
                 "",
-                "Not provided.",
+                "Learn how to access this data in the Analytical Platform (opens in new tab)",
             ),
         ],
     )
@@ -120,6 +121,7 @@ class TestDetailsPageContactDetails:
         custodian,
         expected_text,
     ):
+        database.custom_properties.security_classification = "Official-Sensitive"
         if access_reqs:
             database.custom_properties.access_information = AccessInformation(
                 dc_access_requirements=access_reqs

@@ -184,6 +184,9 @@ class EntityParser:
             )
 
         properties.pop("customProperties", None)
+        # Some urls come in with a trailing newline
+        if custom_properties_dict.get("dc_access_requirements"):
+            custom_properties_dict["dc_access_requirements"] = custom_properties_dict.get("dc_access_requirements", "").rstrip()
         access_information = AccessInformation.model_validate(custom_properties_dict)
         usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
         data_summary = DataSummary.model_validate(custom_properties_dict)
@@ -462,7 +465,7 @@ class EntityParser:
                         description=description,
                         entity_type=entity_type,
                         tags=tags,
-                        data_last_modified=self.parse_data_last_modified(properties),
+                        data_last_modified=self.parse_data_last_modified(properties) if properties else None,
                     )
                 )
 
