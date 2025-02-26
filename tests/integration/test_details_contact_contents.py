@@ -75,6 +75,7 @@ class TestDetailsPageContactDetails:
         database.custom_properties.access_information = AccessInformation(
             dc_access_requirements=access_reqs
         )
+        database.custom_properties.security_classification = "Official-Sensitive"
         mock_get_database_details_response(mock_catalogue, database)
 
         self.start_on_the_details_page()
@@ -120,6 +121,7 @@ class TestDetailsPageContactDetails:
         custodian,
         expected_text,
     ):
+        database.custom_properties.security_classification = "Official-Sensitive"
         if access_reqs:
             database.custom_properties.access_information = AccessInformation(
                 dc_access_requirements=access_reqs
