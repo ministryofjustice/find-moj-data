@@ -8,7 +8,11 @@ export const init = () => {
   document.querySelectorAll("[data-action='clear-filter']").forEach(el => {
     el.addEventListener("click", clearFilter);
     return true;
-  })
+  });
+
+  window.addEventListener("scroll", debounce(highlightCurrentTermGroup, 100));
+  window.addEventListener("resize", debounce(highlightCurrentTermGroup, 100));
+  highlightCurrentTermGroup();
 };
 
 const clearFilter = () => {
@@ -59,6 +63,8 @@ const updateResults = () => {
   } else {
     noResultsPanel.classList.remove("govuk-!-display-none");
   }
+
+  highlightCurrentTermGroup();
 };
 
 const debounce = (callback, wait) => {
@@ -70,4 +76,43 @@ const debounce = (callback, wait) => {
       callback(...args);
     }, wait);
   };
+}
+
+const highlightCurrentTermGroup = () => {
+  const termGroups = Array.from(document.querySelectorAll("#glossary-content .term-group"))
+    .filter(elem => !elem.classList.contains("govuk-!-display-none"));;
+
+  const closeEnough = 20;
+  let selectedTermGroup;
+
+  if(termGroups.length === 0) {
+    // If none of the term groups are visible, do nothing.
+    selectedTermGroup = null;
+  } else if (Math.abs(window.innerHeight + window.scrollY - document.documentElement.offsetHeight) < closeEnough) {
+    // If we are scrolled almost to the bottom of the page, select the last group, even if
+    // the previous group is still on screen
+    selectedTermGroup = termGroups[termGroups.length - 1];
+  } else {
+    // Pick the first section such that
+    // 1. the top of the section is in view or above the top of the viewport
+    // 2. AND the bottom 20px of the section is in view or below the bottom of the viewport
+    for(const termGroup of termGroups) {
+      const rect = termGroup.getBoundingClientRect();
+      if(
+        rect.top <= window.innerHeight && rect.bottom > closeEnough
+      ) {
+        selectedTermGroup = termGroup;
+        break;
+      }
+    }
+  }
+
+  document.querySelectorAll(".glossary-nav-link").forEach(link => {
+    if(selectedTermGroup !== null && link.dataset.name == selectedTermGroup.dataset.name) {
+      link.classList.add("govuk-!-font-weight-bold");
+    } else {
+      link.classList.remove("govuk-!-font-weight-bold");
+    }
+  })
+
 }

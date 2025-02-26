@@ -14,7 +14,7 @@
             <ul class="govuk-list">
                 {% for parent_term in results %}
                     <li class="govuk-!-margin-bottom-3">
-                        <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" data-action="clear-filter" href="#{{ parent_term.name }}">
+                        <div><a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline glossary-nav-link" data-name="{{parent_term.name}}" data-action="clear-filter" href="#{{ parent_term.name }}">
                             {{ parent_term.name }}
                         </a></div>
                     </li>
@@ -34,7 +34,7 @@
             </div>
             <div id="glossary-content">
                 {% for parent_term in results %}
-                <div class="term-group">
+                <div class="term-group" data-name="{{ parent_term.name }}">
                     <h2 class="govuk-heading-m" id="{{ parent_term.name }}">{{ parent_term.name }}</h2>
                     <div class="govuk-body">{{ parent_term.description }}</div>
                     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
