@@ -5,25 +5,8 @@
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      {% if entity.custom_properties.security_classification == "Official-Sensitive"%}
-      <div class="govuk-body govuk-!-padding-top-7 govuk-!-padding-bottom-7">
-        <h2 class="govuk-heading-m">Access this data</h2>
-        <p id="request_access" class="govuk-body"></p>
-          {% if entity.custom_properties.access_information.dc_access_requirements %}
-        {% if is_access_requirements_a_url %}
-          <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity.name }}'})" href="{{ entity.custom_properties.access_information.dc_access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Learn how to access this data in the Analytical Platform (opens in new tab)</a>
-        {% else %}
-          {{ entity.custom_properties.access_information.dc_access_requirements }}
-        {% endif %}
-        {% comment %}
-        {% elif entity.governance.data_custodians or entity.governance.data_owner.email %}
-        Contact the data custodian to request access.
-        {% endcomment %}
-          {% else %}
-        Not provided.
-          {% endif %}
-        </p>
-      </div>
+      {% if entity.custom_properties.security_classification == "Official-Sensitive" %}
+        {% include "partial/access_ap_data.html" with access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_requirements_a_url=is_access_requirements_a_url entity_name=entity.name %}
       {% endif %}
       {% if entity.column_details %}
         <div class="govuk-heading-m">Table schema</div>

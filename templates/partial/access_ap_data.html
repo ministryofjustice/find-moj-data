@@ -1,0 +1,14 @@
+<div class="govuk-!-padding-top-7 govuk-!-padding-bottom-7">
+    <h2 class="govuk-heading-m">Access this data</h2>
+    <p id="request_access" class="govuk-body"></p>
+      {% if access_requirements and is_access_requirements_a_url %}
+        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Learn how to access this data in the Analytical Platform (opens in new tab)</a>
+        {% comment %}
+        {% elif entity.governance.data_custodians or entity.governance.data_owner.email %}
+        Contact the data custodian to request access.
+        {% endcomment %}
+      {% else %}
+        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="https://user-guidance.analytical-platform.service.justice.gov.uk/tools/create-a-derived-table/database-access/#database-access" class="govuk-link" rel="noreferrer noopener" target="_blank">Learn how to access this data in the Analytical Platform (opens in new tab)</a>
+      {% endif %}
+    </p>
+  </div>
