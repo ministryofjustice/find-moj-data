@@ -5,6 +5,7 @@
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
+      {% comment %} All tables should be accessible via the AP {% endcomment %}
       {% if entity.custom_properties.security_classification == "Official-Sensitive" %}
         {% include "partial/access_ap_data.html" with access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_requirements_a_url=is_access_requirements_a_url entity_name=entity.name %}
       {% endif %}
