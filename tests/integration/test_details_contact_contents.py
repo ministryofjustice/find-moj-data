@@ -108,7 +108,7 @@ class TestDetailsPageContactDetails:
                 "",
                 "",
                 "",
-                "Not provided.",
+                "Learn how to access this data in the Analytical Platform (opens in new tab)",
             ),
         ],
     )
