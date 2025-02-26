@@ -15,6 +15,7 @@ from datahub_client.entities import (
     DatabaseEntityMapping,
     EntitySummary,
     FindMoJdataEntityMapper,
+    GlossaryTermRef,
     PublicationCollection,
     PublicationDataset,
     RelationshipType,
@@ -27,6 +28,7 @@ from datahub_client.parsers import (
     ChartParser,
     DashboardParser,
     DatabaseParser,
+    GlossaryTermParser,
     PublicationCollectionParser,
     PublicationDatasetParser,
     TableParser,
@@ -105,6 +107,7 @@ class DataHubCatalogueClient:
         self.dataset_query = get_graphql_query("getDatasetDetails")
         self.chart_query = get_graphql_query("getChartDetails")
         self.dashboard_query = get_graphql_query("getDashboardDetails")
+        self.glossary_term_query = get_graphql_query("getGlossaryTermDetails")
 
     def check_entity_exists_by_urn(self, urn: str | None):
         if urn is not None:
@@ -221,6 +224,16 @@ class DataHubCatalogueClient:
             return dashboard_object
 
         raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")
+
+    def get_glossary_term_details(self, urn: str) -> GlossaryTermRef:
+        if self.check_entity_exists_by_urn(urn):
+            response = self.graph.execute_graphql(
+                self.glossary_term_query, {"urn": urn}
+            )
+            glossary_term = GlossaryTermParser().parse_to_entity_object(response, urn)
+            return glossary_term
+
+        raise EntityDoesNotExist(f"Glossary term with urn: {urn} does not exist")
 
     def _get_custom_property_key_value_pairs(
         self,

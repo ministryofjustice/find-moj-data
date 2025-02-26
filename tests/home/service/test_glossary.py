@@ -10,20 +10,20 @@ class TestGlossaryService:
             "h1_value": "Glossary",
             "results": [
                 {
-                    "name": "Data protection terms",
+                    "name": "Data sources",
                     "members": [
                         SearchResult(
                             urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
                             result_type=GlossaryTermEntityMapping,
-                            name="IAO",
-                            description="Information asset owner.\n",
+                            name="NOMIS",
+                            description="NOMIS",
                             matches={},
                             metadata={
                                 "parentNodes": [
                                     {
                                         "properties": {
-                                            "name": "Data protection terms",
-                                            "description": "Data protection terms",
+                                            "name": "Data sources",
+                                            "description": "Data sources",
                                         }
                                     }
                                 ]
@@ -34,15 +34,15 @@ class TestGlossaryService:
                         SearchResult(
                             urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
                             result_type=GlossaryTermEntityMapping,
-                            name="Other term",
-                            description="Term description to test groupings work",
+                            name="XHIBIT",
+                            description="XHIBIT",
                             matches={},
                             metadata={
                                 "parentNodes": [
                                     {
                                         "properties": {
-                                            "name": "Data protection terms",
-                                            "description": "Data protection terms",
+                                            "name": "Data sources",
+                                            "description": "Data sources",
                                         }
                                     }
                                 ]
@@ -51,25 +51,36 @@ class TestGlossaryService:
                             last_modified=None,
                         ),
                     ],
-                    "description": "Data protection terms",
+                    "description": "Data sources",
+                    "has_entities": False,
                 },
                 {
-                    "name": "Unsorted",
+                    "name": "Other technical terms",
                     "members": [
                         SearchResult(
                             urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
                             result_type=GlossaryTermEntityMapping,
-                            name="Security classification",
-                            description="Only data that is 'official'",
+                            name="Asset",
+                            description="Asset",
                             matches={},
-                            metadata={"parentNodes": []},
+                            metadata={
+                                "parentNodes": [
+                                    {
+                                        "properties": {
+                                            "description": "Other technical terms",
+                                            "name": "Other technical terms",
+                                        },
+                                    },
+                                ],
+                            },
                             tags=[],
                             last_modified=None,
                         )
                     ],
-                    "description": "",
+                    "description": "Other technical terms",
+                    "has_entities": False,
                 },
             ],
         }
 
-        assert expected_context == glossary_context.context
+        assert glossary_context.context == expected_context

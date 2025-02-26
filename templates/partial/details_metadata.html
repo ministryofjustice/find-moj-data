@@ -92,4 +92,17 @@
   </div>
   {% endif %}
   {% endswitch %}
+
+  {% if entity.glossary_terms %}
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Glossary terms
+    </dt>
+    <dd class="app-metadata-list__value">
+      {% for term in entity.glossary_terms %}
+      <a aria-label="definition for glossary term {{ term }}" href="{% url 'home:glossary_term' urn=term.urn %}">{{ term.display_name }}</a>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </dd>
+  </div>
+  {% endif %}
 </dl>

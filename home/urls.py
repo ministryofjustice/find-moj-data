@@ -8,6 +8,12 @@ urlpatterns = [
     path("", views.home_view, name="home"),
     path("search", views.search_view, name="search"),
     path("glossary", views.glossary_view, name="glossary"),
+    path("glossary/<str:urn>", views.glossary_term_view, name="glossary_term"),
+    path(
+        "glossary/<str:urn>/pagination/<str:page>",
+        views.glossary_term_view,
+        name="glossary_term_pagination",
+    ),
     path(
         "metadata_specification",
         views.metadata_specification_view,

@@ -122,6 +122,10 @@ class TestChartView:
 
 
 class TestGlossaryView:
-    def test_details(self, client):
+    def test_list(self, client):
         response = client.get(reverse("home:glossary"))
+        assert response.status_code == 200
+
+    def test_details(self, client):
+        response = client.get(reverse("home:glossary_term", kwargs={"urn": "fake"}))
         assert response.status_code == 200

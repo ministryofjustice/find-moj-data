@@ -41,6 +41,9 @@ query getChartDetails($urn: String!) {
     tags {
       ...globalTagsFields
     }
+    glossaryTerms {
+      ...glossaryTermFields
+    }
     ownership {
       ...ownershipFields
     }
@@ -100,6 +103,19 @@ fragment ownershipFields on Ownership {
       type
       info {
         name
+      }
+    }
+  }
+}
+
+fragment glossaryTermFields on GlossaryTerms {
+  terms {
+    term {
+      urn
+      type
+      properties {
+        name
+        description
       }
     }
   }

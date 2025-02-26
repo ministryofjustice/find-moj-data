@@ -5,6 +5,10 @@
     overflow-wrap: break-word;
 }
 
+// Remove extra margin from markdown rendered paragraph
+// at the bottom of the card.
+.app-summary-card > p:last-child {margin-bottom: 0};
+
 .app-summary-card .app-summary-card__footer  {
     margin-bottom: 0;
 }
