@@ -462,7 +462,7 @@ class EntityParser:
                         description=description,
                         entity_type=entity_type,
                         tags=tags,
-                        data_last_modified=self.parse_data_last_modified(properties),
+                        data_last_modified=self.parse_data_last_modified(properties) if properties else None,
                     )
                 )
 
