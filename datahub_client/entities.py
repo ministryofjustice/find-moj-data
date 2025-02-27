@@ -741,3 +741,18 @@ class SubjectAreaTaxonomy:
     @classmethod
     def is_subject_area(cls, name):
         return cls.get_by_name(name) is not None
+
+
+ALL_FILTERABLE_TAGS = [
+    TagRef.from_name("Civil courts"),
+    TagRef.from_name("Criminal courts"),
+    TagRef.from_name("Electronic monitoring"),
+    TagRef.from_name("Employees"),
+    TagRef.from_name("Family courts"),
+    TagRef.from_name("Finance"),
+    TagRef.from_name("Prison"),
+    TagRef.from_name("Probation"),
+    TagRef.from_name("Property"),
+    TagRef.from_name("Risk"),
+    TagRef.from_name("Reoffending"),
+]
