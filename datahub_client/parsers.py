@@ -890,8 +890,14 @@ class GlossaryTermParser(EntityParser):
         super().__init__()
         self.mapper = GlossaryTermEntityMapping
 
-    def parse_to_entity_object(self):
-        pass
+    def parse_to_entity_object(self, response, urn):
+        entity = response["glossaryTerm"]
+        properties, _ = self.parse_properties(entity)
+        name, display_name, qualified_name = self.parse_names(entity, properties)
+        description = self.parse_description(entity)
+        return GlossaryTermRef(
+            display_name=display_name, urn=urn, description=description
+        )
 
     def parse(self, entity) -> SearchResult:
         properties, _ = self.parse_properties(entity)
