@@ -121,7 +121,7 @@ class GlossaryTermService(GenericService):
     @property
     def context(self):
         return {
-            "h1_value": "Test",
+            "h1_value": f"{self.glossary_term.display_name} - Glossary term",
             "glossary_term": self.glossary_term,
             "malformed_result_urns": [],
             "results": self.results.page_results,
