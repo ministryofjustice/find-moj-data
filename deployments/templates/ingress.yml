@@ -5,6 +5,7 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/set-identifier: find-moj-data-ingress-${ENV}-${NAMESPACE}-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
+    nginx.ingress.kubernetes.io/whitelist-source-range: "86.156.217.186/32"
     nginx.ingress.kubernetes.io/limit-whitelist: ${LIMIT_WHITELIST}
     nginx.ingress.kubernetes.io/limit-rps: "200"
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
