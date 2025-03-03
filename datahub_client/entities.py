@@ -596,9 +596,7 @@ class Entity(BaseModel):
 
     def model_post_init(self, __context):
         self.tags_to_display = [
-            tag.display_name
-            for tag in self.tags
-            if not tag.display_name.startswith("dc_")
+            tag.display_name for tag in self.tags if tag in ALL_FILTERABLE_TAGS
         ]
 
 
