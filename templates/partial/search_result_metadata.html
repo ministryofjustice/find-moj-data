@@ -58,9 +58,7 @@
       Glossary terms
     </dt>
     <dd class="app-metadata-list__value">
-      {% for term in result.glossary_terms %}
-      <a aria-label="definition for glossary term {{ term }}" href="{% url 'home:glossary_term' urn=term.urn %}">{{ term.display_name }}</a>{% if not forloop.last %}, {% endif %}
-      {% endfor %}
+      {% include "partial/glossary_terms.html" with glossary_terms=result.glossary_terms %}
     </dd>
   </div>
   {% endif %}
