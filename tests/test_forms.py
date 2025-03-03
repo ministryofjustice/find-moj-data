@@ -20,11 +20,11 @@ class TestSearchForm:
         ) == (
             "?query=test&"
             "where_to_access=analytical_platform&"
+            "tags=Risk&"
             "entity_types=TABLE&"
             "sort=ascending&"
             "clear_filter=False&"
-            "clear_label=False&"
-            "tags=tag-1"
+            "clear_label=False"
         )
 
     def test_form_encode_without_filter_for_two_filters(self):
