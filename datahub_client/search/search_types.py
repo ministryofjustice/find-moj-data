@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from datahub_client.entities import (
+    ALL_FILTERABLE_TAGS,
     EntityRef,
     FindMoJdataEntityMapper,
     GlossaryTermRef,
@@ -82,9 +83,7 @@ class SearchResult:
 
     def __post_init__(self):
         self.tags_to_display = [
-            tag.display_name
-            for tag in self.tags
-            if not tag.display_name.startswith("dc_")
+            tag.display_name for tag in self.tags if tag in ALL_FILTERABLE_TAGS
         ]
 
 

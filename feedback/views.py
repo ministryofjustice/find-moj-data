@@ -1,9 +1,9 @@
 import logging
 
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from core.settings import ALLOWED_HOSTS
 
@@ -88,7 +88,7 @@ def report_issue_view(request) -> HttpResponse:
             if is_valid_url:
                 return redirect(issue.entity_url)
             else:
-                return redirect('/')
+                return redirect("/")
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")

@@ -1097,10 +1097,9 @@ def test_search_for_container(mock_graph, searcher):
 @pytest.mark.parametrize(
     "tags, result",
     [
-        (["test0-tag", "dc_dc"], ["test0-tag"]),
-        (["dc_test0-tag", "dc_dc"], []),
-        (["dbt_dc", "dc_dc"], ["dbt_dc"]),
-        (["dbt:dc_", "tagger"], ["dbt:dc_", "tagger"]),
+        (["Electronic monitoring"], ["Electronic monitoring"]),
+        (["Invalid Tag", "Prison", "Probation"], ["Prison", "Probation"]),
+        (["Risk", "Reoffending"], ["Risk", "Reoffending"]),
     ],
 )
 def test_tag_to_display(tags, result):
@@ -1124,7 +1123,7 @@ def test_tag_to_display(tags, result):
             "s3_location": "",
             "row_count": "",
         },
-        tags=[TagRef(display_name=t, urn=f"urn:tag:{t}") for t in tags],
+        tags=[TagRef(display_name=t, urn=f"urn:li:tag:{t}") for t in tags],
         last_modified=None,
         created=None,
     )

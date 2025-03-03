@@ -960,7 +960,7 @@ def valid_form(valid_subject_area_choice):
             "sort": "ascending",
             "clear_filter": False,
             "clear_label": False,
-            "tags": ["tag-1"],
+            "tags": ["Risk"],
         }
     )
 
