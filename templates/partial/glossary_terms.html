@@ -1,3 +1,4 @@
+{% load markdown %}
 {% for term in glossary_terms %}
 <details class="govuk-details govuk-!-margin-bottom-1">
   <summary class="govuk-details__summary">
@@ -6,8 +7,8 @@
     </span>
   </summary>
   <div class="govuk-details__text">
-    <p>{% lorem %}</p>
-    <p><a  href="{% url 'home:glossary_term' urn=term.urn %}">Glossary page for {{ term.display_name }}</a></p>
+    <div class="markdown-container">{{term.description|markdown}}</p>
+    <p class="govuk-body"><a  href="{% url 'home:glossary_term' urn=term.urn %}">Glossary page for {{ term.display_name }}</a></p>
   </div>
 </details>
 {% endfor %}
