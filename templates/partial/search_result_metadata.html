@@ -26,17 +26,6 @@
     </dd>
   </div>
 
-  {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
-  <div class="app-metadata-list__row">
-    <dt class="app-metadata-list__key">
-      Database
-    </dt>
-    <dd class="app-metadata-list__value">
-      {{result.parent_entity.display_name}}
-    </dd>
-  </div>
-  {% endif %}
-
   {% switch 'display-result-tags' %}
   {% if result.tags_to_display %}
   <div class="app-metadata-list__row">
@@ -52,13 +41,13 @@
   {% endif %}
   {% endswitch %}
 
-  {% if result.glossary_terms %}
+  {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
   <div class="app-metadata-list__row">
     <dt class="app-metadata-list__key">
-      Glossary terms
+      Database
     </dt>
     <dd class="app-metadata-list__value">
-      {% include "partial/glossary_terms.html" with glossary_terms=result.glossary_terms %}
+      {{result.parent_entity.display_name}}
     </dd>
   </div>
   {% endif %}
