@@ -32,9 +32,21 @@
         {% block breadcrumbs %}
         {% endblock breadcrumbs %}
 
-        <main class="govuk-main-wrapper" id="main-content" role="main">
-          {% block content %}
-          {% endblock content %}
+        <main id="main-content" role="main">
+          <div class="govuk-phase-banner">
+            <p class="govuk-phase-banner__content">
+              <strong class="govuk-tag govuk-phase-banner__content__tag">
+                Private beta
+              </strong>
+              <span class="govuk-phase-banner__text">
+                This is a new service. Help us improve it and <a class="govuk-link" href="{% url 'feedback:feedback' %}" rel="noreferrer noopener" target="_blank">give your feedback (opens in new tab)</a>.
+              </span>
+            </p>
+          </div>
+          <div class="govuk-main-wrapper">
+            {% block content %}
+            {% endblock content %}
+          </div>
         </main>
       </div>
     {% endblock main %}
