@@ -4,10 +4,9 @@ from urllib.parse import urlencode
 
 from django import forms
 
-from datahub_client.entities import FindMoJdataEntityType
+from datahub_client.entities import ALL_FILTERABLE_TAGS, FindMoJdataEntityType
 from datahub_client.search.search_types import SubjectAreaOption
 
-from ..service.search_tag_fetcher import SearchTagFetcher
 from ..service.subject_area_fetcher import SubjectAreaFetcher
 
 
@@ -49,7 +48,7 @@ def get_entity_types():
 
 
 def get_tags():
-    tags = SearchTagFetcher().fetch()
+    tags = [(tag.display_name, tag.display_name) for tag in ALL_FILTERABLE_TAGS]
     return tags
 
 
@@ -91,6 +90,17 @@ class SearchForm(forms.Form):
             }
         ),
     )
+    tags = forms.MultipleChoiceField(
+        choices=get_tags,
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "govuk-checkboxes__input",
+                "form": "searchform",
+                "onchange": "document.getElementById('searchform').submit();",
+            }
+        ),
+    )
     entity_types = forms.MultipleChoiceField(
         choices=get_entity_types,
         required=False,
@@ -115,8 +125,6 @@ class SearchForm(forms.Form):
     )
     clear_filter = forms.BooleanField(initial=False, required=False)
     clear_label = forms.BooleanField(initial=False, required=False)
-
-    tags = forms.MultipleChoiceField(choices=get_tags, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -11,13 +11,16 @@
           {% endwith %}
         </h3>
         {% if result.description %}
-          <div class="govuk-body-m">
+          <div class="govuk-body-m govuk-!-margin-bottom-3">
             {{ result.description|truncate_snippet:300|markdown:3 }}
           </div>
         {% endif %}
         {% include 'partial/search_result_metadata.html' %}
+        {% if result.glossary_terms %}
+          {% include 'partial/glossary_terms.html' %}
+        {% endif %}
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
       </div>
     </div>
-  {%endfor%}
+  {% endfor %}
 </div>

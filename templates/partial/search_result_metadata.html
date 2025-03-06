@@ -26,19 +26,8 @@
     </dd>
   </div>
 
-  {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
-  <div class="app-metadata-list__row">
-    <dt class="app-metadata-list__key">
-      Database
-    </dt>
-    <dd class="app-metadata-list__value">
-      {{result.parent_entity.display_name}}
-    </dd>
-  </div>
-  {% endif %}
-
   {% switch 'display-result-tags' %}
-  {% if result.tags.to_display %}
+  {% if result.tags_to_display %}
   <div class="app-metadata-list__row">
     <dt class="app-metadata-list__key">
       Tags
@@ -52,15 +41,13 @@
   {% endif %}
   {% endswitch %}
 
-  {% if result.glossary_terms %}
+  {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
   <div class="app-metadata-list__row">
     <dt class="app-metadata-list__key">
-      Glossary terms
+      Database
     </dt>
     <dd class="app-metadata-list__value">
-      {% for term in result.glossary_terms %}
-      <a aria-label="definition for glossary term {{ term }}" href="{% url 'home:glossary_term' urn=term.urn %}">{{ term.display_name }}</a>{% if not forloop.last %}, {% endif %}
-      {% endfor %}
+      {{result.parent_entity.display_name}}
     </dd>
   </div>
   {% endif %}
