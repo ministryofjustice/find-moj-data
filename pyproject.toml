@@ -38,7 +38,7 @@ selenium = "~=4.29.0"
 flake8 = ">=6.1.0"
 pytest-django = "^4.10.0"
 pytest-cov = "^6.0.0"
-faker = "^36.1.1"
+faker = "^36.2.2"
 isort = "^6.0.1"
 freezegun = "^1.5.1"
 
