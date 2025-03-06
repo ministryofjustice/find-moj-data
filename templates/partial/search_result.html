@@ -11,7 +11,7 @@
           {% endwith %}
         </h3>
         {% if result.description %}
-          <div class="govuk-body-m">
+          <div class="govuk-body-m govuk-!-margin-bottom-3">
             {{ result.description|truncate_snippet:300|markdown:3 }}
           </div>
         {% endif %}
