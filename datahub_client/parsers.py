@@ -8,6 +8,8 @@ from datahub_client.entities import (
     Chart,
     ChartEntityMapping,
     Column,
+    ColumnAssertion,
+    ColumnAssertionType,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
@@ -35,7 +37,7 @@ from datahub_client.entities import (
     Table,
     TableEntityMapping,
     TagRef,
-    UsageRestrictions,
+    UsageRestrictions, ColumnAssertionLevel,
 )
 from datahub_client.search.search_types import SearchResult
 
@@ -45,6 +47,38 @@ PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
 DATA_OWNER = "urn:li:ownershipType:__system__dataowner"
 DATA_STEWARD = "urn:li:ownershipType:__system__data_steward"
 DATA_CUSTODIAN = "urn:li:ownershipType:data_custodian"
+
+
+def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
+    assertions_map = {}
+    if assertions.get("total", 0) > 0:
+        for assertion in assertions.get("assertions", []):
+            display_name = assertion["info"]["datasetAssertion"]["nativeType"]
+            if display_name.startswith("column_completeness_"):
+                assertion_type = ColumnAssertionType.COMPLETENESS
+                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[0]
+                assertion_level = assertion_level.split("_property")[0]
+            elif display_name.startswith("consistency"):
+                assertion_type = ColumnAssertionType.CONSISTENCY
+                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[0]
+                assertion_level = assertion_level.split("_property")[0]
+            else:
+                continue
+            try:
+                result = assertion["runEvents"][0]["result"]["type"]
+            except KeyError:
+                continue
+
+            for parameter in assertion.get(assertion["info"]["datasetAssertion"]["nativeParameters"], []):
+                if parameter["key"] == "column_name":
+                    column_name = parameter["value"]
+                    assertions_map.setdefault(column_name, []).append(ColumnAssertion(
+                                                column_name=column_name,
+                                                type=assertion_type,
+                                                level=assertion_level,
+                                                result=result))
+
+    return assertions_map
 
 
 class EntityParser:
@@ -353,6 +387,8 @@ class EntityParser:
                 )
             )
 
+        all_column_assertions = parse_assertions(entity.get("columnAssertions", {}))
+
         for field in schema_metadata.get("fields", ()):
             foreign_keys_for_field = foreign_keys[field["fieldPath"]]
 
@@ -362,6 +398,7 @@ class EntityParser:
             is_primary_key = field["fieldPath"] in primary_keys
             field_path = field["fieldPath"]
             display_name = field_path.split(".")[-1]
+            column_assertions = all_column_assertions.get(display_name, [])
 
             result.append(
                 Column(
@@ -372,6 +409,7 @@ class EntityParser:
                     nullable=field["nullable"],
                     is_primary_key=is_primary_key,
                     foreign_keys=foreign_keys_for_field,
+                    column_assertion=column_assertions,
                 )
             )
 
