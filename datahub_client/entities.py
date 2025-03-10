@@ -115,6 +115,31 @@ Mappers = [
 ]
 
 
+class ColumnAssertionType(Enum):
+    COMPLETENESS = "Completeness"
+    CONSISTENCY = "Consistency"
+    NA = "N/A"
+
+
+class ColumnAssertionLevel(Enum):
+    RED = "red"
+    AMBER = "amber"
+    GREEN = "green"
+    NA = "N/A"
+
+
+class ColumnAssertionResult(Enum):
+    SUCCESS = "SUCCESS"
+    FAILURE = "FAILURE"
+    NA = "N/A"
+
+
+class ColumnAssertion(BaseModel):
+    type: ColumnAssertionType
+    level: ColumnAssertionLevel
+    # last_run: Optional[datetime]
+    result: ColumnAssertionResult
+
 class SecurityClassification(Enum):
     """Enumeration representing the security classification of the data.
     Attributes:
@@ -210,6 +235,10 @@ class Column(BaseModel):
     )
     foreign_keys: list[ColumnRef] = Field(
         description="References to columns in other tables", default_factory=list
+    )
+    assertions: list[ColumnAssertion] = Field(
+        default_factory=list,
+        description="List of Assertions associated with this column",
     )
 
 
@@ -666,7 +695,14 @@ class Table(Entity):
                     description="unique ID for custody",
                     nullable=False,
                     is_primary_key=True,
-                ),
+                    assertions=[
+                        ColumnAssertion(
+                            level=ColumnAssertionLevel.GREEN,
+                            type=ColumnAssertionType.COMPLETENESS,
+                            result=ColumnAssertionResult.SUCCESS
+                        )
+                    ]
+                )
             ]
         ],
     )
