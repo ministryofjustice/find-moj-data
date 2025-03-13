@@ -9,6 +9,7 @@
       {% if entity.custom_properties.security_classification == "Official-Sensitive" %}
         {% include "partial/access_ap_data.html" with access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_requirements_a_url=is_access_requirements_a_url entity_name=entity.name %}
       {% endif %}
+      
       {% if entity.column_details %}
         <div class="govuk-heading-m">Table schema</div>
         {% include "partial/download_button.html" with entity_type='table' title="table descriptions" %}
@@ -22,12 +23,17 @@
               {% switch 'show_is_nullable_in_table_details_column' %}
                 <th scope="col" class="govuk-table__header">Is nullable</th>
               {% endswitch %}
+              <th scope="col" class="govuk-table__header">Completeness</th>
+              <th scope="col" class="govuk-table__header">Accuracy</th>
+              <th scope="col" class="govuk-table__header">Uniqueness</th>
+              <th scope="col" class="govuk-table__header">Consistency</th>
+              <th scope="col" class="govuk-table__header">Validity</th>
             </tr>
           </thead>
           <tbody class="govuk-table__body app-table-responsive__body">
             {% for column in entity.column_details %}
               <tr class="govuk-table__row app-table-responsive__row">
-                <td class="govuk-table__cell"><span class="app-table-responsive__heading">Column name:</span>{{column.display_name}}</td>
+                <td class="govuk-table__cell"><span class="app-table-responsive__heading">Column name:</span>{{ column.display_name }}</td>
                 <td class="govuk-table__cell column-description"><span class="app-table-responsive__heading">Description:</span>
                 {% if column.description %}
                 <div>
@@ -41,6 +47,36 @@
                 {% switch 'show_is_nullable_in_table_details_column' %}
                   <td class="govuk-table__cell"><span class="app-table-responsive__heading">Is nullable:</span>{{column.nullable|yesno:"Yes,No,"}}</td>
                 {% endswitch %}
+                <td class="govuk-table__cell">
+                  <span class="app-table-responsive__heading">Completeness:</span>
+                  <span class="govuk-tag {% if column.completeness %}{{ column.completeness|lower }}{% else %}na{% endif %}">
+                    {{ column.completeness|default:"N/A" }}
+                  </span>
+                </td>
+                <td class="govuk-table__cell">
+                  <span class="app-table-responsive__heading">Accuracy:</span>
+                  <span class="govuk-tag {% if column.accuracy %}{{ column.accuracy|lower }}{% else %}na{% endif %}">
+                    {{ column.accuracy|default:"N/A" }}
+                  </span>
+                </td>
+                <td class="govuk-table__cell">
+                  <span class="app-table-responsive__heading">Uniqueness:</span>
+                  <span class="govuk-tag {% if column.uniqueness %}{{ column.uniqueness|lower }}{% else %}na{% endif %}">
+                    {{ column.uniqueness|default:"N/A" }}
+                  </span>
+                </td>
+                <td class="govuk-table__cell">
+                  <span class="app-table-responsive__heading">Consistency:</span>
+                  <span class="govuk-tag {% if column.consistency %}{{ column.consistency|lower }}{% else %}na{% endif %}">
+                    {{ column.consistency|default:"N/A" }}
+                  </span>
+                </td>
+                <td class="govuk-table__cell">
+                  <span class="app-table-responsive__heading">Validity:</span>
+                  <span class="govuk-tag {% if column.validity %}{{ column.validity|lower }}{% else %}na{% endif %}">
+                    {{ column.validity|default:"N/A" }}
+                  </span>
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -50,6 +86,7 @@
         <h2 class="govuk-heading-m">Table schema</h2>
         <p class="govuk-body">The schema for this table is not available.</p>
       {% endif %}
+      
       {% if has_lineage %}
         <h2 class="govuk-heading-m">Lineage</h2>
         <div class="govuk-body-m" >
@@ -61,5 +98,38 @@
           </a>
         </div>
       {% endif %}
+      
     </div>
+  </div>
+
+  <style>
+    /* GOV.UK style status colors */
+    .govuk-tag {
+      display: inline-block;
+      padding: 5px 10px;
+      font-weight: bold;
+      border-radius: 3px;
+    }
+
+    .good {
+      background-color: #d8ebe6; /* Light green */
+      color: #00703c; /* Dark green */
+    }
+    
+    .acceptable {
+      background-color: #fff1d2; /* Light amber */
+      color: #ffbf47; /* Dark amber */
+    }
+    
+    .poor {
+      background-color: #f3d3d3; /* Light red */
+      color: #d4351c; /* Dark red */
+    }
+    
+    .na {
+      background-color: #f3f2f1; /* Light gray */
+      color: #505a5f; /* Dark gray */
+    }
+  </style>
+
 {% endblock extra_details %}
