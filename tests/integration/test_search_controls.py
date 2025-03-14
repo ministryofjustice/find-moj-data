@@ -1,4 +1,5 @@
 import re
+import time
 
 import pytest
 
@@ -36,6 +37,7 @@ class TestSearchInteractions:
         """
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("nomis")
+        time.sleep(0.01)
         self.verify_i_am_on_the_search_page()
         self.verify_the_search_bar_has_value("nomis")
         self.verify_i_have_results()
@@ -105,6 +107,7 @@ class TestSearchInteractions:
         self.click_next_page()
         self.verify_page("2")
         self.enter_a_query_and_submit("nomis")
+        time.sleep(0.01)
         self.verify_page("1")
 
     def test_adding_a_filter_resets_pagination(self):
@@ -142,6 +145,7 @@ class TestSearchInteractions:
         self.select_subject_area(subject_area)
         for filter in filters:
             self.click_option(filter)
+            time.sleep(0.01)
         self.verify_subject_area_selected(subject_area)
         self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
