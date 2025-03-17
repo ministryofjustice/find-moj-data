@@ -28,8 +28,8 @@ notifications-python-client = "^10.0.1"
 pydantic = { extras = ["email"], version = "^2.10.6" }
 email-validator = "2.2.0"
 acryl-datahub = { extras = ["datahub-rest"], version = "^0.12.1.3" }
-deepdiff = "^8.2.0"
-boto3 = "^1.37.8"
+deepdiff = "^8.3.0"
+boto3 = "^1.37.11"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
@@ -38,7 +38,7 @@ selenium = "~=4.29.0"
 flake8 = ">=6.1.0"
 pytest-django = "^4.10.0"
 pytest-cov = "^6.0.0"
-faker = "^36.2.2"
+faker = "^37.0.0"
 isort = "^6.0.1"
 freezegun = "^1.5.1"
 
