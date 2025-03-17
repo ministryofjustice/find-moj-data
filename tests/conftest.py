@@ -1,4 +1,4 @@
-import os
+import time
 from random import choice
 from typing import Any, Generator
 from unittest.mock import MagicMock, patch
@@ -13,7 +13,9 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.ui import WebDriverWait
 
 from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
@@ -93,6 +95,16 @@ class Page:
 
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
+
+    def wait_for_element_to_be_visible(
+        self, locator_type: str, element: str, wait: float = 0.1
+    ):
+        WebDriverWait(self.selenium, wait).until(
+            EC.visibility_of_element_located((locator_type, element))
+        )
+
+    def sleep(self, seconds: float):
+        time.sleep(seconds)
 
 
 class DetailsPage(Page):
@@ -262,6 +274,7 @@ class SearchPage(Page):
         return selected_filters
 
     def sort_label(self, name) -> WebElement:
+        # self.wait_for_element_to_be_visible(By.XPATH, f"//label[ text() = '{name}' ]")
         return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
 
     def selected_filter_tags(self) -> list[WebElement]:
