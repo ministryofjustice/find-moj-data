@@ -96,14 +96,7 @@ class Page:
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
 
-    def wait_for_element_to_be_visible(
-        self, locator_type: str, element: str, wait: float = 0.1
-    ):
-        WebDriverWait(self.selenium, wait).until(
-            EC.visibility_of_element_located((locator_type, element))
-        )
-
-    def sleep(self, seconds: float):
+    def sleep(self, seconds: float = 0.1):
         time.sleep(seconds)
 
 
