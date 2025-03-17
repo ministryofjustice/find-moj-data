@@ -1,7 +1,7 @@
 import re
-import time
 
 import pytest
+from selenium.webdriver.common.by import By
 
 from .helpers import check_for_accessibility_issues
 
@@ -37,7 +37,6 @@ class TestSearchInteractions:
         """
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("nomis")
-        time.sleep(0.01)
         self.verify_i_am_on_the_search_page()
         self.verify_the_search_bar_has_value("nomis")
         self.verify_i_have_results()
@@ -107,7 +106,6 @@ class TestSearchInteractions:
         self.click_next_page()
         self.verify_page("2")
         self.enter_a_query_and_submit("nomis")
-        time.sleep(0.01)
         self.verify_page("1")
 
     def test_adding_a_filter_resets_pagination(self):
@@ -145,7 +143,7 @@ class TestSearchInteractions:
         self.select_subject_area(subject_area)
         for filter in filters:
             self.click_option(filter)
-            time.sleep(0.01)
+            self.search_page.sleep(0.01)
         self.verify_subject_area_selected(subject_area)
         self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
@@ -198,6 +196,7 @@ class TestSearchInteractions:
         search_bar = self.search_page.search_bar()
         search_bar.send_keys(query)
         self.click_on_the_search_button()
+        self.search_page.wait_for_element_to_be_visible(By.ID, "result-count")
 
     def select_subject_area(self, subject_area):
         self.search_page.select_subject_area(subject_area)
