@@ -274,7 +274,6 @@ class SearchPage(Page):
         return selected_filters
 
     def sort_label(self, name) -> WebElement:
-        # self.wait_for_element_to_be_visible(By.XPATH, f"//label[ text() = '{name}' ]")
         return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
 
     def selected_filter_tags(self) -> list[WebElement]:
