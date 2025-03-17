@@ -1,6 +1,5 @@
-import time
-
 import pytest
+from selenium.webdriver.common.by import By
 
 from datahub_client.entities import TableEntityMapping
 from tests.conftest import (
@@ -172,7 +171,7 @@ class TestInteractWithSearchResults:
         search_bar = self.search_page.search_bar()
         search_bar.send_keys(query)
         self.click_on_the_search_button()
-        time.sleep(0.01)
+        self.search_page.wait_for_element_to_be_visible(By.ID, "result-count")
 
     def verify_sort_selected(self, expected):
         value = self.search_page.checked_sort_option().get_attribute("value") or ""
