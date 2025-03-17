@@ -1,4 +1,4 @@
-import os
+import time
 from random import choice
 from typing import Any, Generator
 from unittest.mock import MagicMock, patch
@@ -93,6 +93,9 @@ class Page:
 
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
+
+    def sleep(self, seconds: float = 0.1):
+        time.sleep(seconds)
 
 
 class DetailsPage(Page):

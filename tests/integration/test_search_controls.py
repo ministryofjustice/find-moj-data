@@ -142,6 +142,7 @@ class TestSearchInteractions:
         self.select_subject_area(subject_area)
         for filter in filters:
             self.click_option(filter)
+            self.search_page.sleep()
         self.verify_subject_area_selected(subject_area)
         self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
@@ -194,6 +195,7 @@ class TestSearchInteractions:
         search_bar = self.search_page.search_bar()
         search_bar.send_keys(query)
         self.click_on_the_search_button()
+        self.search_page.sleep()
 
     def select_subject_area(self, subject_area):
         self.search_page.select_subject_area(subject_area)
