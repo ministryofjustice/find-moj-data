@@ -395,21 +395,7 @@ class EntityParser:
             is_primary_key = field["fieldPath"] in primary_keys
             field_path = field["fieldPath"]
             display_name = field_path.split(".")[-1]
-            column_assertions = all_column_assertions.get(display_name, {})
-
-            PRIORITY_ORDER = ["green", "amber", "red"]
-            level_to_description_map = {"green": "good", "amber": "acceptable", "red": "poor"}
-            quality_dict = {metric.value: "na" for metric in ColumnAssertionType}
-
-            # Iterate through assertions and update dictionary
-            for metric, levels in column_assertions.items():
-                quality_dict[metric.value] = "poor" if levels else "na"
-                for level in PRIORITY_ORDER:
-                    if level in levels and levels[level] == "SUCCESS":
-                        quality_dict[metric.value] = level_to_description_map[level]
-                        break
-
-            quality_metrics = ColumnQualityMetrics(**quality_dict)
+            quality_metrics = self.form_column_quality_metrics(all_column_assertions, display_name)
 
             result.append(
                 Column(
@@ -426,6 +412,21 @@ class EntityParser:
 
         # Sort primary keys first, then sort alphabetically
         return sorted(result, key=lambda c: (0 if c.is_primary_key else 1, c.name))
+
+    def form_column_quality_metrics(self, all_column_assertions, display_name):
+        column_assertions = all_column_assertions.get(display_name, {})
+        PRIORITY_ORDER = ["green", "amber", "red"]
+        level_to_description_map = {"green": "good", "amber": "acceptable", "red": "poor"}
+        quality_dict = {metric.value: "na" for metric in ColumnAssertionType}
+        # Iterate through assertions and update dictionary
+        for metric, levels in column_assertions.items():
+            quality_dict[metric.value] = "poor" if levels else "na"
+            for level in PRIORITY_ORDER:
+                if level in levels and levels[level] == "SUCCESS":
+                    quality_dict[metric.value] = level_to_description_map[level]
+                    break
+        quality_metrics = ColumnQualityMetrics(**quality_dict)
+        return quality_metrics
 
     def _parse_owners_by_type(
         self,

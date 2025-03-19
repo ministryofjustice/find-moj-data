@@ -139,7 +139,6 @@ class ColumnAssertionResult(Enum):
 class ColumnAssertion(BaseModel):
     type: ColumnAssertionType
     level: ColumnAssertionLevel
-    # last_run: Optional[datetime]
     result: ColumnAssertionResult
 
 

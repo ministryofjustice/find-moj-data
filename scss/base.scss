@@ -96,3 +96,33 @@ code {
   @extend .govuk-list;
   @extend .govuk-list--number;
 }
+
+/* Custom GOV.UK style status tags */
+.govuk-tag-status {
+  display: inline-block;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-radius: 3px;
+  background-color: #e0e0e0; /* Default light gray */
+  color: #333; /* Default dark text */
+}
+
+.govuk-tag-status.good {
+  background-color: #d8ebe6; /* Light green */
+  color: #00703c; /* Dark green */
+}
+
+.govuk-tag-status.acceptable {
+  background-color: #fff1d2; /* Light amber */
+  color: #ffbf47; /* Dark amber */
+}
+
+.govuk-tag-status.poor {
+  background-color: #f3d3d3; /* Light red */
+  color: #d4351c; /* Dark red */
+}
+
+.govuk-tag-status.na {
+  background-color: #f3f2f1; /* Light gray */
+  color: #505a5f; /* Dark gray */
+}
