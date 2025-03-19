@@ -116,16 +116,18 @@ Mappers = [
 
 
 class ColumnAssertionType(Enum):
-    COMPLETENESS = "Completeness"
-    CONSISTENCY = "Consistency"
-    NA = "N/A"
+    COMPLETENESS = "completeness"
+    CONSISTENCY = "consistency"
+    VALIDITY = "validity"
+    ACCURACY = "accuracy"
+    UNIQUENESS = "uniqueness"
 
 
 class ColumnAssertionLevel(Enum):
-    RED = "red"
-    AMBER = "amber"
-    GREEN = "green"
-    NA = "N/A"
+    RED = "poor"
+    AMBER = "acceptable"
+    GREEN = "good"
+    NA = "na"
 
 
 class ColumnAssertionResult(Enum):
@@ -139,6 +141,15 @@ class ColumnAssertion(BaseModel):
     level: ColumnAssertionLevel
     # last_run: Optional[datetime]
     result: ColumnAssertionResult
+
+
+class ColumnQualityMetrics(BaseModel):
+    completeness: str = Field(default="na", description="Completeness level")
+    consistency: str = Field(default="na", description="Consistency level")
+    accuracy: str = Field(default="na", description="Accuracy level")
+    uniqueness: str = Field(default="na", description="Uniqueness level")
+    validity: str = Field(default="na", description="Validity level")
+
 
 class SecurityClassification(Enum):
     """Enumeration representing the security classification of the data.
@@ -236,8 +247,7 @@ class Column(BaseModel):
     foreign_keys: list[ColumnRef] = Field(
         description="References to columns in other tables", default_factory=list
     )
-    assertions: list[ColumnAssertion] = Field(
-        default_factory=list,
+    quality_metrics: ColumnQualityMetrics = Field(
         description="List of Assertions associated with this column",
     )
 
@@ -695,13 +705,7 @@ class Table(Entity):
                     description="unique ID for custody",
                     nullable=False,
                     is_primary_key=True,
-                    assertions=[
-                        ColumnAssertion(
-                            level=ColumnAssertionLevel.GREEN,
-                            type=ColumnAssertionType.COMPLETENESS,
-                            result=ColumnAssertionResult.SUCCESS
-                        )
-                    ]
+                    quality_metrics=ColumnQualityMetrics()
                 )
             ]
         ],

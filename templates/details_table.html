@@ -23,11 +23,13 @@
               {% switch 'show_is_nullable_in_table_details_column' %}
                 <th scope="col" class="govuk-table__header">Is nullable</th>
               {% endswitch %}
-              <th scope="col" class="govuk-table__header">Completeness</th>
-              <th scope="col" class="govuk-table__header">Accuracy</th>
-              <th scope="col" class="govuk-table__header">Uniqueness</th>
-              <th scope="col" class="govuk-table__header">Consistency</th>
-              <th scope="col" class="govuk-table__header">Validity</th>
+              {% if entity.name == "all_assets" %}
+                <th scope="col" class="govuk-table__header">Completeness</th>
+                <th scope="col" class="govuk-table__header">Accuracy</th>
+                <th scope="col" class="govuk-table__header">Uniqueness</th>
+                <th scope="col" class="govuk-table__header">Consistency</th>
+                <th scope="col" class="govuk-table__header">Validity</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody class="govuk-table__body app-table-responsive__body">
@@ -47,36 +49,7 @@
                 {% switch 'show_is_nullable_in_table_details_column' %}
                   <td class="govuk-table__cell"><span class="app-table-responsive__heading">Is nullable:</span>{{column.nullable|yesno:"Yes,No,"}}</td>
                 {% endswitch %}
-                <td class="govuk-table__cell">
-                  <span class="app-table-responsive__heading">Completeness:</span>
-                  <span class="govuk-tag {% if column.completeness %}{{ column.completeness|lower }}{% else %}na{% endif %}">
-                    {{ column.completeness|default:"N/A" }}
-                  </span>
-                </td>
-                <td class="govuk-table__cell">
-                  <span class="app-table-responsive__heading">Accuracy:</span>
-                  <span class="govuk-tag {% if column.accuracy %}{{ column.accuracy|lower }}{% else %}na{% endif %}">
-                    {{ column.accuracy|default:"N/A" }}
-                  </span>
-                </td>
-                <td class="govuk-table__cell">
-                  <span class="app-table-responsive__heading">Uniqueness:</span>
-                  <span class="govuk-tag {% if column.uniqueness %}{{ column.uniqueness|lower }}{% else %}na{% endif %}">
-                    {{ column.uniqueness|default:"N/A" }}
-                  </span>
-                </td>
-                <td class="govuk-table__cell">
-                  <span class="app-table-responsive__heading">Consistency:</span>
-                  <span class="govuk-tag {% if column.consistency %}{{ column.consistency|lower }}{% else %}na{% endif %}">
-                    {{ column.consistency|default:"N/A" }}
-                  </span>
-                </td>
-                <td class="govuk-table__cell">
-                  <span class="app-table-responsive__heading">Validity:</span>
-                  <span class="govuk-tag {% if column.validity %}{{ column.validity|lower }}{% else %}na{% endif %}">
-                    {{ column.validity|default:"N/A" }}
-                  </span>
-                </td>
+                {% include "partial/_specific_table_metrics.html" %}
               </tr>
             {% endfor %}
           </tbody>
@@ -109,6 +82,8 @@
       padding: 5px 10px;
       font-weight: bold;
       border-radius: 3px;
+      background-color: #e0e0e0; /* Default light gray */
+      color: #333; /* Default dark text */
     }
 
     .good {
@@ -130,6 +105,5 @@
       background-color: #f3f2f1; /* Light gray */
       color: #505a5f; /* Dark gray */
     }
-  </style>
-
+</style>
 {% endblock extra_details %}

@@ -37,7 +37,7 @@ from datahub_client.entities import (
     Table,
     TableEntityMapping,
     TagRef,
-    UsageRestrictions, ColumnAssertionLevel,
+    UsageRestrictions, ColumnQualityMetrics,
 )
 from datahub_client.search.search_types import SearchResult
 
@@ -56,27 +56,28 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
             display_name = assertion["info"]["datasetAssertion"]["nativeType"]
             if display_name.startswith("column_completeness_"):
                 assertion_type = ColumnAssertionType.COMPLETENESS
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[0]
+                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             elif display_name.startswith("consistency"):
                 assertion_type = ColumnAssertionType.CONSISTENCY
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[0]
+                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("consistency_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             else:
                 continue
             try:
-                result = assertion["runEvents"][0]["result"]["type"]
-            except KeyError:
+                result = assertion["runEvents"]["runEvents"][0]["result"]["type"]
+            except KeyError as ke:
+                logger.info(f"Skipping assertion, with KeyError {ke=}")
+                continue
+            except IndexError as ie:
+                logger.info(f"Skipping assertion, with IndexError {ie=}")
+                logger.info(assertion)
                 continue
 
-            for parameter in assertion.get(assertion["info"]["datasetAssertion"]["nativeParameters"], []):
+            for parameter in assertion["info"]["datasetAssertion"]["nativeParameters"]:
                 if parameter["key"] == "column_name":
                     column_name = parameter["value"]
-                    assertions_map.setdefault(column_name, []).append(ColumnAssertion(
-                                                column_name=column_name,
-                                                type=assertion_type,
-                                                level=assertion_level,
-                                                result=result))
+                    assertions_map.setdefault(column_name, {}).setdefault(assertion_type, {})[assertion_level] = result
 
     return assertions_map
 
@@ -387,18 +388,28 @@ class EntityParser:
                 )
             )
 
-        all_column_assertions = parse_assertions(entity.get("columnAssertions", {}))
-
+        all_column_assertions = parse_assertions(entity.get("assertions", {}))
         for field in schema_metadata.get("fields", ()):
             foreign_keys_for_field = foreign_keys[field["fieldPath"]]
 
-            # Work out if the field is primary.
-            # This is an oversimplification: in the case of a composite
-            # primary key, we report that each component field is primary.
             is_primary_key = field["fieldPath"] in primary_keys
             field_path = field["fieldPath"]
             display_name = field_path.split(".")[-1]
-            column_assertions = all_column_assertions.get(display_name, [])
+            column_assertions = all_column_assertions.get(display_name, {})
+
+            PRIORITY_ORDER = ["green", "amber", "red"]
+            level_to_description_map = {"green": "good", "amber": "acceptable", "red": "poor"}
+            quality_dict = {metric.value: "na" for metric in ColumnAssertionType}
+
+            # Iterate through assertions and update dictionary
+            for metric, levels in column_assertions.items():
+                quality_dict[metric.value] = "poor" if levels else "na"
+                for level in PRIORITY_ORDER:
+                    if level in levels and levels[level] == "SUCCESS":
+                        quality_dict[metric.value] = level_to_description_map[level]
+                        break
+
+            quality_metrics = ColumnQualityMetrics(**quality_dict)
 
             result.append(
                 Column(
@@ -409,7 +420,7 @@ class EntityParser:
                     nullable=field["nullable"],
                     is_primary_key=is_primary_key,
                     foreign_keys=foreign_keys_for_field,
-                    column_assertion=column_assertions,
+                    quality_metrics=quality_metrics,
                 )
             )
 

@@ -22,7 +22,7 @@ from datahub_client.entities import (
     SecurityClassification,
     Table,
     TagRef,
-    UsageRestrictions,
+    UsageRestrictions, ColumnQualityMetrics,
 )
 from datahub_client.exceptions import EntityDoesNotExist
 
@@ -393,6 +393,7 @@ class TestCatalogueClientWithDatahub:
                     description="The primary identifier for the dataset entity.",
                     nullable=False,
                     is_primary_key=True,
+                    quality_metrics=ColumnQualityMetrics(),
                     foreign_keys=[
                         ColumnRef(
                             name="urn",
