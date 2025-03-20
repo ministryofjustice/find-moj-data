@@ -762,7 +762,7 @@ class SubjectAreaTaxonomy:
         TagRef.from_name("Office of the Public Guardian"),
         TagRef.from_name("Legal aid"),
         TagRef.from_name("Crime and policing"),
-        TagRef.from_name("Reference data"),
+        TagRef.from_name("Miscellaneous"),
     ]
 
     @classmethod
