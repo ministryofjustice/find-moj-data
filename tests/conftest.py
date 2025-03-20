@@ -38,7 +38,7 @@ from datahub_client.entities import (
     RelationshipType,
     Table,
     TableEntityMapping,
-    TagRef,
+    TagRef, ColumnQualityMetrics,
 )
 from datahub_client.search.search_types import (
     SearchResponse,
@@ -439,6 +439,7 @@ def generate_table_metadata(
                 description=column_description,
                 nullable=False,
                 is_primary_key=True,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[
                     ColumnRef(
                         name="urn",
