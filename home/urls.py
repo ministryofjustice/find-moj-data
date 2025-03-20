@@ -31,4 +31,5 @@ urlpatterns = [
     ),
     path("pagination/<str:page>", views.search_view, name="pagination"),
     path("cookies", views.cookies_view, name="cookies"),
+    path("accessibility_statement", views.accessibility_statement_view, name="accessibility_statement"),
 ]
