@@ -46,6 +46,17 @@ def generate_cache_configuration() -> dict[str, Any]:
 
 
 def before_send(event: Event, hint: Hint) -> Event | None:
+    """Helper function to inspect and filter errors before they are sent to Sentry.
+    In this case, we are filtering out Http404 errors that are raised when a requested
+    entity does not exist.
+
+    Args:
+        event (Event): Sentry event
+        hint (Hint): Sentry hint containing exception information
+
+    Returns:
+        Event | None: Returns the event if it is not an Http404 error, otherwise None
+    """
     if "exc_info" in hint:
         exc_type, exc_value, tb = hint["exc_info"]
         if isinstance(exc_value, Http404) and "does not exist" in exc_value.args[0]:
