@@ -3,7 +3,11 @@ import logging
 from urllib.parse import urlparse
 
 from django.conf import settings
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseBadRequest,
+)
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 
