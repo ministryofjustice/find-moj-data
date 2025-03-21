@@ -2,6 +2,9 @@ import json
 import os
 from typing import Any
 
+from django.http import Http404
+from sentry_sdk.types import Event, Hint
+
 
 def generate_cache_configuration() -> dict[str, Any]:
     """
@@ -40,3 +43,11 @@ def generate_cache_configuration() -> dict[str, Any]:
         cache["LOCATION"] = location
 
     return {"default": cache}
+
+
+def before_send(event: Event, hint: Hint) -> Event | None:
+    if "exc_info" in hint:
+        exc_type, exc_value, tb = hint["exc_info"]
+        if isinstance(exc_value, Http404) and "does not exist" in exc_value.args[0]:
+            return None
+    return event
