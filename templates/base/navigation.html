@@ -40,8 +40,8 @@
       <a class="moj-header__link" href="{% url 'home:home' %}">
         <span class="moj-header__link--organisation-name">Ministry of Justice</span>
         <span class="moj-header__link--service-name">Find MoJ data</span>
-        
-        {% if ENV == "dev" or ENV is None %}
+      </a>
+      {% if ENV == "dev" or ENV is None %}
           &nbsp;<strong class="govuk-tag govuk-tag--yellow">Development</strong>
         {% endif %}
         {% if ENV == "test" %}
@@ -50,7 +50,6 @@
         {% if ENV == "preprod" %}
           &nbsp;<strong class="govuk-tag govuk-tag--blue">{{ ENV|title }}</strong>
         {% endif %}
-      </a>
     </div>
     <div class="moj-header__content">
 
