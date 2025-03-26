@@ -661,11 +661,11 @@ class Database(Entity):
 
 
 class Schema(Entity):
-    """For source system databases"""
+    """For source system database schemas"""
 
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
-        examples=["urn:li:container:my_database"],
+        examples=["urn:li:container:my_schema"],
     )
 
 
