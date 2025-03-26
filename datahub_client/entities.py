@@ -36,6 +36,7 @@ class DatahubSubtype(Enum):
     SEED = "Seed"
     SOURCE = "Source"
     DATABASE = "Database"
+    SCHEMA = "Schema"
 
 
 class FindMoJdataEntityType(Enum):
@@ -82,7 +83,10 @@ GlossaryTermEntityMapping = FindMoJdataEntityMapper(
 DatabaseEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.DATABASE,
     DatahubEntityType.CONTAINER,
-    [DatahubSubtype.DATABASE.value],
+    [
+        DatahubSubtype.DATABASE.value,
+        DatahubSubtype.SCHEMA.value,
+    ],
     "database",
 )
 
