@@ -3,7 +3,10 @@
     <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-heading-s govuk-!-margin-top-3">Access this data</h2>
       <div class="govuk-body">
-        <a href="{{ entity.external_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">{{ platform_name }}</a> (opens in new tab)
+        <a href="{{ entity.external_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">
+          {{ platform_name }} <span class="govuk-visually-hidden">(opens in a new tab)</span>
+          <small aria-hidden="true">(opens in new tab)</small>
+        </a>
       </div>
     </div>
   </div>
