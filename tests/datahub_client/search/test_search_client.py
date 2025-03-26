@@ -74,7 +74,7 @@ def test_no_search_results(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_one_search_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     assert subject_area
 
     datahub_response = {
@@ -161,7 +161,7 @@ def test_one_search_result(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_dataset_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     assert subject_area
 
     datahub_response = {
@@ -283,7 +283,7 @@ def test_bad_entity_type(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -972,7 +972,7 @@ def test_search_for_charts(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_search_for_container(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     assert subject_area
 
     datahub_response = {
