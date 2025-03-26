@@ -773,8 +773,7 @@ class SubjectAreaTaxonomy:
 
     @classmethod
     def get_by_name(cls, name):
-        subject_areas = cls.ALL_SUBJECT_AREAS
-        matches = [i for i in subject_areas if i.display_name == name]
+        matches = [i for i in cls.ALL_SUBJECT_AREAS if i.display_name == name]
         return matches[0] if matches else None
 
     @classmethod
