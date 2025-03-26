@@ -89,7 +89,7 @@ def details_view_csv(request, result_type, urn) -> HttpResponse:
     # In case there are any quotes in the filename, remove them in order to
     # not to break the header.
     unsavoury_characters = str.maketrans({'"': ""})
-    filename = urn.translate(unsavoury_characters) + ".csv"
+    filename = csv_formatter.filename().translate(unsavoury_characters)
 
     response = HttpResponse(
         content_type="text/csv",
