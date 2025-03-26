@@ -739,22 +739,6 @@ class Dashboard(Entity):
 
 
 class SubjectAreaTaxonomy:
-    ALL_SUBJECT_AREAS_OLD = [
-        TagRef.from_name("Bold"),
-        TagRef.from_name("Civil"),
-        TagRef.from_name("Courts"),
-        TagRef.from_name("Electronic monitoring"),
-        TagRef.from_name("Finance"),
-        TagRef.from_name("General"),
-        TagRef.from_name("Interventions"),
-        TagRef.from_name("OPG"),
-        TagRef.from_name("People"),
-        TagRef.from_name("Prison"),
-        TagRef.from_name("Probation"),
-        TagRef.from_name("Property"),
-        TagRef.from_name("Risk"),
-    ]
-
     ALL_SUBJECT_AREAS = [
         TagRef.from_name("Prisons and probation"),
         TagRef.from_name("Courts and tribunals"),
@@ -767,11 +751,7 @@ class SubjectAreaTaxonomy:
 
     @classmethod
     def get_by_name(cls, name):
-        subject_areas = (
-            cls.ALL_SUBJECT_AREAS
-            if waffle.switch_is_active("new_subject_areas")
-            else cls.ALL_SUBJECT_AREAS_OLD
-        )
+        subject_areas = cls.ALL_SUBJECT_AREAS
         matches = [i for i in subject_areas if i.display_name == name]
         return matches[0] if matches else None
 
