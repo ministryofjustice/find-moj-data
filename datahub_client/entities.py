@@ -3,7 +3,6 @@ from datetime import datetime
 from enum import Enum
 from typing import Literal, Optional
 
-import waffle
 from pydantic import AfterValidator, BaseModel, EmailStr, Field
 from typing_extensions import Annotated
 
@@ -47,6 +46,7 @@ class FindMoJdataEntityType(Enum):
     DASHBOARD = "Dashboard"
     PUBLICATION_DATASET = "Publication dataset"
     PUBLICATION_COLLECTION = "Publication collection"
+    SCHEMA = "Schema"
 
 
 @dataclass
@@ -85,9 +85,17 @@ DatabaseEntityMapping = FindMoJdataEntityMapper(
     DatahubEntityType.CONTAINER,
     [
         DatahubSubtype.DATABASE.value,
-        DatahubSubtype.SCHEMA.value,
     ],
     "database",
+)
+
+SchemaEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.SCHEMA,
+    DatahubEntityType.CONTAINER,
+    [
+        DatahubSubtype.SCHEMA.value,
+    ],
+    "schema",
 )
 
 DashboardEntityMapping = FindMoJdataEntityMapper(
@@ -113,6 +121,7 @@ Mappers = [
     ChartEntityMapping,
     GlossaryTermEntityMapping,
     DatabaseEntityMapping,
+    SchemaEntityMapping,
     DashboardEntityMapping,
     PublicationDatasetEntityMapping,
     PublicationCollectionEntityMapping,
@@ -643,6 +652,15 @@ class Entity(BaseModel):
 
 
 class Database(Entity):
+    """For source system databases"""
+
+    urn: str | None = Field(
+        description="Unique identifier for the entity. Relates to Datahub's urn",
+        examples=["urn:li:container:my_database"],
+    )
+
+
+class Schema(Entity):
     """For source system databases"""
 
     urn: str | None = Field(

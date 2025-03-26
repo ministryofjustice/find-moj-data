@@ -16,6 +16,8 @@ from datahub_client.entities import (
     DashboardEntityMapping,
     Database,
     DatabaseEntityMapping,
+    Schema,
+    SchemaEntityMapping,
     DatahubEntityType,
     DatahubSubtype,
     DataSummary,
@@ -814,6 +816,48 @@ class DatabaseParser(ContainerParser):
         )
 
 
+class SchemaParser(ContainerParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = SchemaEntityMapping
+
+    def parse_to_entity_object(self, response, urn):
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        child_relations = self.parse_relations(
+            relationship_type=RelationshipType.CHILD,
+            relations_list=[response["relationships"]],
+            entity_type_of_relations="TABLE",
+        )
+        relations_to_display = self.list_relations_to_display(child_relations)
+
+        return Schema(
+            urn=urn,
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships=relations_to_display,
+            subject_areas=self.parse_subject_areas(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_custodians=self.parse_custodians(response),
+                data_stewards=self.parse_stewards(response),
+            ),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            custom_properties=custom_properties,
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+        )
+
+
 class PublicationCollectionParser(ContainerParser):
     def __init__(self):
         super().__init__()
@@ -997,5 +1041,7 @@ class EntityParserFactory:
         if entity_type == DatahubEntityType.CONTAINER.value:
             if entity_subtype == DatahubSubtype.PUBLICATION_COLLECTION.value:
                 return PublicationCollectionParser()
+            if entity_subtype == DatahubSubtype.SCHEMA.value:
+                return SchemaParser()
             else:
                 return DatabaseParser()
