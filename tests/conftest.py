@@ -19,6 +19,7 @@ from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
     Chart,
     Column,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
@@ -38,7 +39,7 @@ from datahub_client.entities import (
     RelationshipType,
     Table,
     TableEntityMapping,
-    TagRef, ColumnQualityMetrics,
+    TagRef,
 )
 from datahub_client.search.search_types import (
     SearchResponse,

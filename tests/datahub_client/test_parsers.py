@@ -4,6 +4,8 @@ from datahub_client.entities import (
     AccessInformation,
     Chart,
     Column,
+    ColumnAssertionType,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
@@ -23,7 +25,7 @@ from datahub_client.entities import (
     SecurityClassification,
     Table,
     TagRef,
-    UsageRestrictions, ColumnAssertionType, ColumnQualityMetrics,
+    UsageRestrictions,
 )
 from datahub_client.parsers import (
     DATA_CUSTODIAN,
@@ -36,7 +38,8 @@ from datahub_client.parsers import (
     EntityParserFactory,
     PublicationCollectionParser,
     PublicationDatasetParser,
-    TableParser, parse_assertions,
+    TableParser,
+    parse_assertions,
 )
 from datahub_client.search.search_types import SearchResult
 
@@ -154,8 +157,6 @@ class TestParsers:
         assert table.urn == urn
 
 
-
-
 class TestEntityParser:
     @pytest.fixture
     def parser(self):
@@ -169,32 +170,38 @@ class TestEntityParser:
                     "info": {
                         "datasetAssertion": {
                             "nativeType": "column_completeness_green_property",
-                            "nativeParameters": [{"key": "column_name", "value": "col1"}]
+                            "nativeParameters": [
+                                {"key": "column_name", "value": "col1"}
+                            ],
                         }
                     },
-                    "runEvents": {
-                        "runEvents": [{"result": {"type": "SUCCESS"}}]
-                    }
+                    "runEvents": {"runEvents": [{"result": {"type": "SUCCESS"}}]},
                 },
                 {
                     "info": {
                         "datasetAssertion": {
                             "nativeType": "consistency_amber_property",
-                            "nativeParameters": [{"key": "column_name", "value": "col2"}]
+                            "nativeParameters": [
+                                {"key": "column_name", "value": "col2"}
+                            ],
                         }
                     },
-                    "runEvents": {
-                        "runEvents": [{"result": {"type": "FAILED"}}]
-                    }
-                }
-            ]
+                    "runEvents": {"runEvents": [{"result": {"type": "FAILED"}}]},
+                },
+            ],
         }
 
         parsed_assertions = parse_assertions(assertions_input)
         assert "col1" in parsed_assertions
         assert "col2" in parsed_assertions
-        assert parsed_assertions["col1"][ColumnAssertionType.COMPLETENESS]["green"] == "SUCCESS"
-        assert parsed_assertions["col2"][ColumnAssertionType.CONSISTENCY]["amber"] == "FAILED"
+        assert (
+            parsed_assertions["col1"][ColumnAssertionType.COMPLETENESS]["green"]
+            == "SUCCESS"
+        )
+        assert (
+            parsed_assertions["col2"][ColumnAssertionType.CONSISTENCY]["amber"]
+            == "FAILED"
+        )
 
     def test_parse_columns_with_assertions(self, parser):
         entity = {
@@ -232,9 +239,7 @@ class TestEntityParser:
                                 ],
                             }
                         },
-                        "runEvents": {
-                            "runEvents": [{"result": {"type": "SUCCESS"}}]
-                        },
+                        "runEvents": {"runEvents": [{"result": {"type": "SUCCESS"}}]},
                     },
                     {
                         "info": {
@@ -245,16 +250,13 @@ class TestEntityParser:
                                 ],
                             }
                         },
-                        "runEvents": {
-                            "runEvents": [{"result": {"type": "FAILED"}}]
-                        },
+                        "runEvents": {"runEvents": [{"result": {"type": "FAILED"}}]},
                     },
                 ],
             },
         }
 
         columns = parser.parse_columns(entity)
-
 
         assert len(columns) == 2
         assert columns[0].name == "col1"

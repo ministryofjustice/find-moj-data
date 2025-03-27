@@ -726,7 +726,7 @@ class Table(Entity):
                     description="unique ID for custody",
                     nullable=False,
                     is_primary_key=True,
-                    quality_metrics=ColumnQualityMetrics()
+                    quality_metrics=ColumnQualityMetrics(),
                 )
             ]
         ],

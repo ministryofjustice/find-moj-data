@@ -66,7 +66,8 @@ class TestTableView:
         )
         assert response.status_code == 200
         assert (
-            response.headers["Content-Disposition"] == 'attachment; filename="fake.csv"'
+            response.headers["Content-Disposition"]
+            == 'attachment; filename="Foo.example_table.csv"'
         )
         assert response.content == (
             b"name,display_name,type,description\r\n"
@@ -85,7 +86,8 @@ class TestDatabaseView:
         )
         assert response.status_code == 200
         assert (
-            response.headers["Content-Disposition"] == 'attachment; filename="fake.csv"'
+            response.headers["Content-Disposition"]
+            == 'attachment; filename="Foo.example_database.csv"'
         )
         assert response.content == (
             b"urn,display_name,description\r\n"
@@ -104,7 +106,8 @@ class TestDashboardView:
         )
         assert response.status_code == 200
         assert (
-            response.headers["Content-Disposition"] == 'attachment; filename="fake.csv"'
+            response.headers["Content-Disposition"]
+            == 'attachment; filename="Foo.example_dashboard.csv"'
         )
         assert response.content == (
             b"urn,display_name,description\r\n"
