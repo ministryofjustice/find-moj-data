@@ -10,6 +10,7 @@ from datahub_client.entities import (
     Column,
     ColumnAssertion,
     ColumnAssertionType,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
@@ -37,7 +38,7 @@ from datahub_client.entities import (
     Table,
     TableEntityMapping,
     TagRef,
-    UsageRestrictions, ColumnQualityMetrics,
+    UsageRestrictions,
 )
 from datahub_client.search.search_types import SearchResult
 
@@ -56,11 +57,15 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
             display_name = assertion["info"]["datasetAssertion"]["nativeType"]
             if display_name.startswith("column_completeness_"):
                 assertion_type = ColumnAssertionType.COMPLETENESS
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[1]
+                assertion_level = assertion["info"]["datasetAssertion"][
+                    "nativeType"
+                ].split("column_completeness_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             elif display_name.startswith("consistency"):
                 assertion_type = ColumnAssertionType.CONSISTENCY
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("consistency_")[1]
+                assertion_level = assertion["info"]["datasetAssertion"][
+                    "nativeType"
+                ].split("consistency_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             else:
                 continue
@@ -77,7 +82,9 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
             for parameter in assertion["info"]["datasetAssertion"]["nativeParameters"]:
                 if parameter["key"] == "column_name":
                     column_name = parameter["value"]
-                    assertions_map.setdefault(column_name, {}).setdefault(assertion_type, {})[assertion_level] = result
+                    assertions_map.setdefault(column_name, {}).setdefault(
+                        assertion_type, {}
+                    )[assertion_level] = result
 
     return assertions_map
 
@@ -395,7 +402,9 @@ class EntityParser:
             is_primary_key = field["fieldPath"] in primary_keys
             field_path = field["fieldPath"]
             display_name = field_path.split(".")[-1]
-            quality_metrics = self.form_column_quality_metrics(all_column_assertions, display_name)
+            quality_metrics = self.form_column_quality_metrics(
+                all_column_assertions, display_name
+            )
 
             result.append(
                 Column(
@@ -416,7 +425,11 @@ class EntityParser:
     def form_column_quality_metrics(self, all_column_assertions, display_name):
         column_assertions = all_column_assertions.get(display_name, {})
         PRIORITY_ORDER = ["green", "amber", "red"]
-        level_to_description_map = {"green": "good", "amber": "acceptable", "red": "poor"}
+        level_to_description_map = {
+            "green": "good",
+            "amber": "acceptable",
+            "red": "poor",
+        }
         quality_dict = {metric.value: "na" for metric in ColumnAssertionType}
         # Iterate through assertions and update dictionary
         for metric, levels in column_assertions.items():
