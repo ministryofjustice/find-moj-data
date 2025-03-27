@@ -8,6 +8,7 @@ from datahub.ingestion.graph.client import DataHubGraph
 from datahub_client.entities import (
     ChartEntityMapping,
     DatabaseEntityMapping,
+    SchemaEntityMapping,
     FindMoJdataEntityMapper,
     SubjectAreaTaxonomy,
     TableEntityMapping,
@@ -47,6 +48,7 @@ class SearchClient:
             TableEntityMapping,
             ChartEntityMapping,
             DatabaseEntityMapping,
+            SchemaEntityMapping,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,

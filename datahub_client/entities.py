@@ -3,7 +3,6 @@ from datetime import datetime
 from enum import Enum
 from typing import Literal, Optional
 
-import waffle
 from pydantic import AfterValidator, BaseModel, EmailStr, Field
 from typing_extensions import Annotated
 
@@ -36,6 +35,7 @@ class DatahubSubtype(Enum):
     SEED = "Seed"
     SOURCE = "Source"
     DATABASE = "Database"
+    SCHEMA = "Schema"
 
 
 class FindMoJdataEntityType(Enum):
@@ -46,6 +46,7 @@ class FindMoJdataEntityType(Enum):
     DASHBOARD = "Dashboard"
     PUBLICATION_DATASET = "Publication dataset"
     PUBLICATION_COLLECTION = "Publication collection"
+    SCHEMA = "Schema"
 
 
 @dataclass
@@ -82,8 +83,19 @@ GlossaryTermEntityMapping = FindMoJdataEntityMapper(
 DatabaseEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.DATABASE,
     DatahubEntityType.CONTAINER,
-    [DatahubSubtype.DATABASE.value],
+    [
+        DatahubSubtype.DATABASE.value,
+    ],
     "database",
+)
+
+SchemaEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.SCHEMA,
+    DatahubEntityType.CONTAINER,
+    [
+        DatahubSubtype.SCHEMA.value,
+    ],
+    "schema",
 )
 
 DashboardEntityMapping = FindMoJdataEntityMapper(
@@ -109,6 +121,7 @@ Mappers = [
     ChartEntityMapping,
     GlossaryTermEntityMapping,
     DatabaseEntityMapping,
+    SchemaEntityMapping,
     DashboardEntityMapping,
     PublicationDatasetEntityMapping,
     PublicationCollectionEntityMapping,
@@ -647,6 +660,15 @@ class Database(Entity):
     )
 
 
+class Schema(Entity):
+    """For source system database schemas"""
+
+    urn: str | None = Field(
+        description="Unique identifier for the entity. Relates to Datahub's urn",
+        examples=["urn:li:container:my_schema"],
+    )
+
+
 class PublicationCollection(Entity):
     """For source system publication collections"""
 
@@ -739,22 +761,6 @@ class Dashboard(Entity):
 
 
 class SubjectAreaTaxonomy:
-    ALL_SUBJECT_AREAS_OLD = [
-        TagRef.from_name("Bold"),
-        TagRef.from_name("Civil"),
-        TagRef.from_name("Courts"),
-        TagRef.from_name("Electronic monitoring"),
-        TagRef.from_name("Finance"),
-        TagRef.from_name("General"),
-        TagRef.from_name("Interventions"),
-        TagRef.from_name("OPG"),
-        TagRef.from_name("People"),
-        TagRef.from_name("Prison"),
-        TagRef.from_name("Probation"),
-        TagRef.from_name("Property"),
-        TagRef.from_name("Risk"),
-    ]
-
     ALL_SUBJECT_AREAS = [
         TagRef.from_name("Prisons and probation"),
         TagRef.from_name("Courts and tribunals"),
@@ -767,12 +773,7 @@ class SubjectAreaTaxonomy:
 
     @classmethod
     def get_by_name(cls, name):
-        subject_areas = (
-            cls.ALL_SUBJECT_AREAS
-            if waffle.switch_is_active("new_subject_areas")
-            else cls.ALL_SUBJECT_AREAS_OLD
-        )
-        matches = [i for i in subject_areas if i.display_name == name]
+        matches = [i for i in cls.ALL_SUBJECT_AREAS if i.display_name == name]
         return matches[0] if matches else None
 
     @classmethod

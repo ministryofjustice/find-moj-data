@@ -12,7 +12,9 @@ from datahub_client.entities import (
     CustomEntityProperties,
     Dashboard,
     Database,
+    Schema,
     DatabaseEntityMapping,
+    SchemaEntityMapping,
     EntitySummary,
     FindMoJdataEntityMapper,
     GlossaryTermRef,
@@ -28,6 +30,7 @@ from datahub_client.parsers import (
     ChartParser,
     DashboardParser,
     DatabaseParser,
+    SchemaParser,
     GlossaryTermParser,
     PublicationCollectionParser,
     PublicationDatasetParser,
@@ -126,6 +129,7 @@ class DataHubCatalogueClient:
             TableEntityMapping,
             ChartEntityMapping,
             DatabaseEntityMapping,
+            SchemaEntityMapping,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,
@@ -191,6 +195,17 @@ class DataHubCatalogueClient:
             return database_object
 
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
+
+    def get_schema_details(self, urn: str) -> Schema:
+        if self.check_entity_exists_by_urn(urn):
+            response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
+                "container"
+            ]
+            database_object = SchemaParser().parse_to_entity_object(response, urn)
+            return database_object
+
+        raise EntityDoesNotExist(f"Schema with urn: {urn} does not exist")
+
 
     def get_publication_collection_details(self, urn: str) -> PublicationCollection:
         if self.check_entity_exists_by_urn(urn):

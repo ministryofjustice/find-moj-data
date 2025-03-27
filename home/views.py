@@ -15,6 +15,7 @@ from datahub_client.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
     DatabaseEntityMapping,
+    SchemaEntityMapping,
     PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
     TableEntityMapping,
@@ -26,6 +27,7 @@ from home.service.details import (
     ChartDetailsService,
     DashboardDetailsService,
     DatabaseDetailsService,
+    SchemaDetailsService,
     DatasetDetailsService,
     PublicationCollectionDetailsService,
     PublicationDatasetDetailsService,
@@ -43,6 +45,7 @@ from home.service.subject_area_fetcher import SubjectAreaFetcher
 type_details_map = {
     TableEntityMapping.url_formatted: DatasetDetailsService,
     DatabaseEntityMapping.url_formatted: DatabaseDetailsService,
+    SchemaEntityMapping.url_formatted: SchemaDetailsService,
     ChartEntityMapping.url_formatted: ChartDetailsService,
     DashboardEntityMapping.url_formatted: DashboardDetailsService,
     PublicationCollectionEntityMapping.url_formatted: PublicationCollectionDetailsService,
@@ -80,6 +83,8 @@ def details_view_csv(request, result_type, urn) -> HttpResponse:
             csv_formatter = DatasetDetailsCsvFormatter(DatasetDetailsService(urn))
         case DatabaseEntityMapping.url_formatted:
             csv_formatter = DatabaseDetailsCsvFormatter(DatabaseDetailsService(urn))
+        case SchemaEntityMapping.url_formatted:
+            csv_formatter = DatabaseDetailsCsvFormatter(SchemaDetailsService(urn))
         case DashboardEntityMapping.url_formatted:
             csv_formatter = DashboardDetailsCsvFormatter(DashboardDetailsService(urn))
         case _:
