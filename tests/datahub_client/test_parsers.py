@@ -8,6 +8,7 @@ from datahub_client.entities import (
     CustomEntityProperties,
     Dashboard,
     Database,
+    Schema,
     DatahubEntityType,
     DatahubSubtype,
     DataSummary,
@@ -29,6 +30,7 @@ from datahub_client.parsers import (
     ChartParser,
     DashboardParser,
     DatabaseParser,
+    SchemaParser,
     DatasetParser,
     EntityParser,
     EntityParserFactory,
@@ -131,6 +133,7 @@ def mock_graphql_search_result(mock_dataset_graphql_entity):
         (TableParser(), Table),
         (ChartParser(), Chart),
         (DatabaseParser(), Database),
+        (SchemaParser(), Schema),
         (PublicationCollectionParser(), PublicationCollection),
         (PublicationDatasetParser(), PublicationDataset),
         (DashboardParser(), Dashboard),
@@ -965,6 +968,17 @@ class TestEntityParserFactory:
                     }
                 },
                 PublicationCollectionParser,
+            ),
+            (
+                {
+                    "entity": {
+                        "type": DatahubEntityType.CONTAINER.value,
+                        "subTypes": {
+                            "typeNames": [DatahubSubtype.SCHEMA.value]
+                        },
+                    }
+                },
+                SchemaParser,
             ),
         ],
     )
