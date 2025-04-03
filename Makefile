@@ -55,7 +55,6 @@ setup_waffle_switches:
 	python manage.py waffle_switch search-sort-radio-buttons off --create # create switch with default setting
 	python manage.py waffle_switch display-result-tags on --create # create display tags switch with default off
 	python manage.py waffle_switch show_is_nullable_in_table_details_column off --create # create isnullable column switch with default off
-	python manage.py waffle_switch new_subject_areas on --create # remove this once deployed
 
 # Run the application
 run:

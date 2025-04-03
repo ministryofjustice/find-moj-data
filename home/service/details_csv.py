@@ -9,6 +9,12 @@ class DatasetDetailsCsvFormatter:
     def __init__(self, details_service: DatasetDetailsService):
         self.details_service = details_service
 
+    def filename(self):
+        return (
+            self.details_service.table_metadata.display_name
+            or self.details_service.table_metadata.name
+        ) + ".csv"
+
     def data(self):
         return [
             (
@@ -33,6 +39,12 @@ class DatabaseDetailsCsvFormatter:
     def __init__(self, details_service: DatabaseDetailsService):
         self.details_service = details_service
 
+    def filename(self):
+        return (
+            self.details_service.database_metadata.display_name
+            or self.details_service.database_metadata.name
+        ) + ".csv"
+
     def data(self):
         return [
             (
@@ -54,6 +66,12 @@ class DatabaseDetailsCsvFormatter:
 class DashboardDetailsCsvFormatter:
     def __init__(self, details_service: DashboardDetailsService):
         self.details_service = details_service
+
+    def filename(self):
+        return (
+            self.details_service.dashboard_metadata.display_name
+            or self.details_service.dashboard_metadata.name
+        ) + ".csv"
 
     def data(self):
         return [

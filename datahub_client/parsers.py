@@ -8,12 +8,17 @@ from datahub_client.entities import (
     Chart,
     ChartEntityMapping,
     Column,
+    ColumnAssertion,
+    ColumnAssertionType,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
     DashboardEntityMapping,
     Database,
     DatabaseEntityMapping,
+    Schema,
+    SchemaEntityMapping,
     DatahubEntityType,
     DatahubSubtype,
     DataSummary,
@@ -45,6 +50,45 @@ PROPERTIES_EMPTY_STRING_FIELDS = ("description", "externalUrl")
 DATA_OWNER = "urn:li:ownershipType:__system__dataowner"
 DATA_STEWARD = "urn:li:ownershipType:__system__data_steward"
 DATA_CUSTODIAN = "urn:li:ownershipType:data_custodian"
+
+
+def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
+    assertions_map = {}
+    if assertions.get("total", 0) > 0:
+        for assertion in assertions.get("assertions", []):
+            display_name = assertion["info"]["datasetAssertion"]["nativeType"]
+            if display_name.startswith("column_completeness_"):
+                assertion_type = ColumnAssertionType.COMPLETENESS
+                assertion_level = assertion["info"]["datasetAssertion"][
+                    "nativeType"
+                ].split("column_completeness_")[1]
+                assertion_level = assertion_level.split("_property")[0]
+            elif display_name.startswith("consistency"):
+                assertion_type = ColumnAssertionType.CONSISTENCY
+                assertion_level = assertion["info"]["datasetAssertion"][
+                    "nativeType"
+                ].split("consistency_")[1]
+                assertion_level = assertion_level.split("_property")[0]
+            else:
+                continue
+            try:
+                result = assertion["runEvents"]["runEvents"][0]["result"]["type"]
+            except KeyError as ke:
+                logger.info(f"Skipping assertion, with KeyError {ke=}")
+                continue
+            except IndexError as ie:
+                logger.info(f"Skipping assertion, with IndexError {ie=}")
+                logger.info(assertion)
+                continue
+
+            for parameter in assertion["info"]["datasetAssertion"]["nativeParameters"]:
+                if parameter["key"] == "column_name":
+                    column_name = parameter["value"]
+                    assertions_map.setdefault(column_name, {}).setdefault(
+                        assertion_type, {}
+                    )[assertion_level] = result
+
+    return assertions_map
 
 
 class EntityParser:
@@ -353,15 +397,16 @@ class EntityParser:
                 )
             )
 
+        all_column_assertions = parse_assertions(entity.get("assertions", {}))
         for field in schema_metadata.get("fields", ()):
             foreign_keys_for_field = foreign_keys[field["fieldPath"]]
 
-            # Work out if the field is primary.
-            # This is an oversimplification: in the case of a composite
-            # primary key, we report that each component field is primary.
             is_primary_key = field["fieldPath"] in primary_keys
             field_path = field["fieldPath"]
             display_name = field_path.split(".")[-1]
+            quality_metrics = self.form_column_quality_metrics(
+                all_column_assertions, display_name
+            )
 
             result.append(
                 Column(
@@ -372,11 +417,31 @@ class EntityParser:
                     nullable=field["nullable"],
                     is_primary_key=is_primary_key,
                     foreign_keys=foreign_keys_for_field,
+                    quality_metrics=quality_metrics,
                 )
             )
 
         # Sort primary keys first, then sort alphabetically
         return sorted(result, key=lambda c: (0 if c.is_primary_key else 1, c.name))
+
+    def form_column_quality_metrics(self, all_column_assertions, display_name):
+        column_assertions = all_column_assertions.get(display_name, {})
+        PRIORITY_ORDER = ["green", "amber", "red"]
+        level_to_description_map = {
+            "green": "good",
+            "amber": "acceptable",
+            "red": "poor",
+        }
+        quality_dict = {metric.value: "na" for metric in ColumnAssertionType}
+        # Iterate through assertions and update dictionary
+        for metric, levels in column_assertions.items():
+            quality_dict[metric.value] = "poor" if levels else "na"
+            for level in PRIORITY_ORDER:
+                if level in levels and levels[level] == "SUCCESS":
+                    quality_dict[metric.value] = level_to_description_map[level]
+                    break
+        quality_metrics = ColumnQualityMetrics(**quality_dict)
+        return quality_metrics
 
     def _parse_owners_by_type(
         self,
@@ -764,6 +829,48 @@ class DatabaseParser(ContainerParser):
         )
 
 
+class SchemaParser(ContainerParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = SchemaEntityMapping
+
+    def parse_to_entity_object(self, response, urn):
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        child_relations = self.parse_relations(
+            relationship_type=RelationshipType.CHILD,
+            relations_list=[response["relationships"]],
+            entity_type_of_relations="TABLE",
+        )
+        relations_to_display = self.list_relations_to_display(child_relations)
+
+        return Schema(
+            urn=urn,
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships=relations_to_display,
+            subject_areas=self.parse_subject_areas(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_custodians=self.parse_custodians(response),
+                data_stewards=self.parse_stewards(response),
+            ),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            custom_properties=custom_properties,
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+        )
+
+
 class PublicationCollectionParser(ContainerParser):
     def __init__(self):
         super().__init__()
@@ -947,5 +1054,7 @@ class EntityParserFactory:
         if entity_type == DatahubEntityType.CONTAINER.value:
             if entity_subtype == DatahubSubtype.PUBLICATION_COLLECTION.value:
                 return PublicationCollectionParser()
+            if entity_subtype == DatahubSubtype.SCHEMA.value:
+                return SchemaParser()
             else:
                 return DatabaseParser()

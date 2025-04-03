@@ -9,6 +9,7 @@
       {% if entity.custom_properties.security_classification == "Official-Sensitive" %}
         {% include "partial/access_ap_data.html" with access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_requirements_a_url=is_access_requirements_a_url entity_name=entity.name %}
       {% endif %}
+
       {% if entity.column_details %}
         <div class="govuk-heading-m">Table schema</div>
         {% include "partial/download_button.html" with entity_type='table' title="table descriptions" %}
@@ -22,12 +23,19 @@
               {% switch 'show_is_nullable_in_table_details_column' %}
                 <th scope="col" class="govuk-table__header">Is nullable</th>
               {% endswitch %}
+              {% if entity.name == "all_assets" %}
+                <th scope="col" class="govuk-table__header">Completeness</th>
+                <th scope="col" class="govuk-table__header">Accuracy</th>
+                <th scope="col" class="govuk-table__header">Uniqueness</th>
+                <th scope="col" class="govuk-table__header">Consistency</th>
+                <th scope="col" class="govuk-table__header">Validity</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody class="govuk-table__body app-table-responsive__body">
             {% for column in entity.column_details %}
               <tr class="govuk-table__row app-table-responsive__row">
-                <td class="govuk-table__cell"><span class="app-table-responsive__heading">Column name:</span>{{column.display_name}}</td>
+                <td class="govuk-table__cell"><span class="app-table-responsive__heading">Column name:</span>{{ column.display_name }}</td>
                 <td class="govuk-table__cell column-description"><span class="app-table-responsive__heading">Description:</span>
                 {% if column.description %}
                 <div>
@@ -41,6 +49,7 @@
                 {% switch 'show_is_nullable_in_table_details_column' %}
                   <td class="govuk-table__cell"><span class="app-table-responsive__heading">Is nullable:</span>{{column.nullable|yesno:"Yes,No,"}}</td>
                 {% endswitch %}
+                {% include "partial/_specific_table_metrics.html" %}
               </tr>
             {% endfor %}
           </tbody>
@@ -50,6 +59,7 @@
         <h2 class="govuk-heading-m">Table schema</h2>
         <p class="govuk-body">The schema for this table is not available.</p>
       {% endif %}
+
       {% if has_lineage %}
         <h2 class="govuk-heading-m">Lineage</h2>
         <div class="govuk-body-m" >
@@ -61,5 +71,7 @@
           </a>
         </div>
       {% endif %}
+
     </div>
+  </div>
 {% endblock extra_details %}

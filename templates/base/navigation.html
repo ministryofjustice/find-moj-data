@@ -37,20 +37,19 @@
 
       </svg>
 
-      <a class="moj-header__link moj-header__link--organisation-name" href="{% url 'home:home' %}">Ministry of Justice</a>
-
-      <span class="moj-header__link moj-header__link--service-name">
-        <a href="{% url 'home:home' %}">Find MoJ data</a>
-        {% if ENV == "dev" or ENV is None %}&nbsp;
-        <strong class="govuk-tag govuk-tag--yellow">Development</strong>
+      <a class="moj-header__link" href="{% url 'home:home' %}">
+        <span class="moj-header__link--organisation-name">Ministry of Justice</span>
+        <span class="moj-header__link--service-name">Find MoJ data</span>
+      </a>
+      {% if ENV == "dev" or ENV is None %}
+          &nbsp;<strong class="govuk-tag govuk-tag--yellow">Development</strong>
         {% endif %}
-        {% if ENV == "test" %}&nbsp;
-        <strong class="govuk-tag govuk-tag--green">{{ ENV|title }}</strong>
+        {% if ENV == "test" %}
+          &nbsp;<strong class="govuk-tag govuk-tag--green">{{ ENV|title }}</strong>
         {% endif %}
-        {% if ENV == "preprod" %}&nbsp;
-          <strong class="govuk-tag govuk-tag--blue">{{ ENV|title }}</strong>
+        {% if ENV == "preprod" %}
+          &nbsp;<strong class="govuk-tag govuk-tag--blue">{{ ENV|title }}</strong>
         {% endif %}
-      </span>
     </div>
     <div class="moj-header__content">
 

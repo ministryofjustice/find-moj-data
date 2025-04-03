@@ -19,6 +19,7 @@ from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
     Chart,
     Column,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
@@ -439,6 +440,7 @@ def generate_table_metadata(
                 description=column_description,
                 nullable=False,
                 is_primary_key=True,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[
                     ColumnRef(
                         name="urn",

@@ -1,6 +1,11 @@
 from unittest.mock import MagicMock
 
-from datahub_client.entities import Column, EntityRef, EntitySummary
+from datahub_client.entities import (
+    Column,
+    ColumnQualityMetrics,
+    EntityRef,
+    EntitySummary,
+)
 from home.service.details import (
     DashboardDetailsService,
     DatabaseDetailsService,
@@ -23,6 +28,7 @@ def test_dataset_details_csv_formatter(example_table):
             description="an example",
             nullable=False,
             is_primary_key=True,
+            quality_metrics=ColumnQualityMetrics(),
         ),
         Column(
             name="bar",
@@ -31,6 +37,7 @@ def test_dataset_details_csv_formatter(example_table):
             description="another example",
             nullable=True,
             is_primary_key=False,
+            quality_metrics=ColumnQualityMetrics(),
         ),
     ]
     details_service.table_metadata = example_table

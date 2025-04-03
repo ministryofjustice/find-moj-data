@@ -6,7 +6,7 @@ from socket import gaierror, gethostbyname, gethostname
 import sentry_sdk
 from dotenv import load_dotenv
 
-from .helpers import generate_cache_configuration
+from .helpers import before_send, generate_cache_configuration
 
 TRUTHY_VALUES = ["True", "true", "T", "1"]
 
@@ -225,6 +225,7 @@ if not TESTING:
     PROFILES_SAMPLE_RATE = float(os.environ.get("PROFILES_SAMPLE_RATE", 0.0))
 
     sentry_sdk.init(
+        before_send=before_send,
         dsn=os.environ.get(
             "SENTRY_DSN_WORKAROUND"
         ),  # Datahub overwrites with this variable unless it is renamed,
