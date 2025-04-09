@@ -10,12 +10,15 @@ from datahub_client.entities import (
     Column,
     ColumnAssertion,
     ColumnAssertionType,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
     DashboardEntityMapping,
     Database,
     DatabaseEntityMapping,
+    Schema,
+    SchemaEntityMapping,
     DatahubEntityType,
     DatahubSubtype,
     DataSummary,
@@ -37,7 +40,7 @@ from datahub_client.entities import (
     Table,
     TableEntityMapping,
     TagRef,
-    UsageRestrictions, ColumnQualityMetrics,
+    UsageRestrictions,
 )
 from datahub_client.search.search_types import SearchResult
 
@@ -56,11 +59,15 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
             display_name = assertion["info"]["datasetAssertion"]["nativeType"]
             if display_name.startswith("column_completeness_"):
                 assertion_type = ColumnAssertionType.COMPLETENESS
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[1]
+                assertion_level = assertion["info"]["datasetAssertion"][
+                    "nativeType"
+                ].split("column_completeness_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             elif display_name.startswith("consistency"):
                 assertion_type = ColumnAssertionType.CONSISTENCY
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("consistency_")[1]
+                assertion_level = assertion["info"]["datasetAssertion"][
+                    "nativeType"
+                ].split("consistency_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             else:
                 continue
@@ -77,7 +84,9 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
             for parameter in assertion["info"]["datasetAssertion"]["nativeParameters"]:
                 if parameter["key"] == "column_name":
                     column_name = parameter["value"]
-                    assertions_map.setdefault(column_name, {}).setdefault(assertion_type, {})[assertion_level] = result
+                    assertions_map.setdefault(column_name, {}).setdefault(
+                        assertion_type, {}
+                    )[assertion_level] = result
 
     return assertions_map
 
@@ -395,7 +404,9 @@ class EntityParser:
             is_primary_key = field["fieldPath"] in primary_keys
             field_path = field["fieldPath"]
             display_name = field_path.split(".")[-1]
-            quality_metrics = self.form_column_quality_metrics(all_column_assertions, display_name)
+            quality_metrics = self.form_column_quality_metrics(
+                all_column_assertions, display_name
+            )
 
             result.append(
                 Column(
@@ -416,7 +427,11 @@ class EntityParser:
     def form_column_quality_metrics(self, all_column_assertions, display_name):
         column_assertions = all_column_assertions.get(display_name, {})
         PRIORITY_ORDER = ["green", "amber", "red"]
-        level_to_description_map = {"green": "good", "amber": "acceptable", "red": "poor"}
+        level_to_description_map = {
+            "green": "good",
+            "amber": "acceptable",
+            "red": "poor",
+        }
         quality_dict = {metric.value: "na" for metric in ColumnAssertionType}
         # Iterate through assertions and update dictionary
         for metric, levels in column_assertions.items():
@@ -814,6 +829,48 @@ class DatabaseParser(ContainerParser):
         )
 
 
+class SchemaParser(ContainerParser):
+    def __init__(self):
+        super().__init__()
+        self.mapper = SchemaEntityMapping
+
+    def parse_to_entity_object(self, response, urn):
+        properties, custom_properties = self.parse_properties(response)
+        name, display_name, qualified_name = self.parse_names(response, properties)
+
+        child_relations = self.parse_relations(
+            relationship_type=RelationshipType.CHILD,
+            relations_list=[response["relationships"]],
+            entity_type_of_relations="TABLE",
+        )
+        relations_to_display = self.list_relations_to_display(child_relations)
+
+        return Schema(
+            urn=urn,
+            display_name=display_name,
+            name=name,
+            fully_qualified_name=qualified_name,
+            description=properties.get("description", ""),
+            relationships=relations_to_display,
+            subject_areas=self.parse_subject_areas(response),
+            governance=Governance(
+                data_owner=self.parse_data_owner(response),
+                data_custodians=self.parse_custodians(response),
+                data_stewards=self.parse_stewards(response),
+            ),
+            tags=self.parse_tags(response),
+            glossary_terms=self.parse_glossary_terms(response),
+            metadata_last_ingested=self.parse_metadata_last_ingested(response),
+            created=self.parse_data_created(properties),
+            data_last_modified=self.parse_data_last_modified(properties),
+            custom_properties=custom_properties,
+            platform=EntityRef(
+                display_name=response["platform"]["name"],
+                urn=response["platform"]["name"],
+            ),
+        )
+
+
 class PublicationCollectionParser(ContainerParser):
     def __init__(self):
         super().__init__()
@@ -997,5 +1054,7 @@ class EntityParserFactory:
         if entity_type == DatahubEntityType.CONTAINER.value:
             if entity_subtype == DatahubSubtype.PUBLICATION_COLLECTION.value:
                 return PublicationCollectionParser()
+            if entity_subtype == DatahubSubtype.SCHEMA.value:
+                return SchemaParser()
             else:
                 return DatabaseParser()

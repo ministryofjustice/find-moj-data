@@ -42,3 +42,10 @@ def pagination(page_obj, urlpattern, **url_kwargs):
     context["page_numbers"] = numbers
 
     return context
+
+
+@register.filter(name="quality_tag")
+def quality_tag(value: str):
+    """Map quality values to GOV.UK tag colors"""
+    mapping = {"poor": "red", "acceptable": "yellow", "good": "green"}
+    return mapping.get(value.lower(), "grey")  # Default to grey if value is unknown

@@ -1,26 +1,28 @@
+{% load govuk %}
+
 {% if entity.name == "all_assets" %}
       <td class="govuk-table__cell">
-        <span class="govuk-tag-status {{ column.quality_metrics.completeness|default:'na' }}">
+        <span class="govuk-tag govuk-tag--{{ column.quality_metrics.completeness|quality_tag }}">
           {{ column.quality_metrics.completeness|default:"na" }}
         </span>
       </td>
       <td class="govuk-table__cell">
-        <span class="govuk-tag-status {{ column.quality_metrics.accuracy|default:'na' }}">
+        <span class="govuk-tag govuk-tag--{{ column.quality_metrics.accuracy|quality_tag }}">
           {{ column.quality_metrics.accuracy|default:"na" }}
         </span>
       </td>
       <td class="govuk-table__cell">
-        <span class="govuk-tag-status {{ column.quality_metrics.uniqueness|default:'na' }}">
+        <span class="govuk-tag govuk-tag--{{ column.quality_metrics.uniqueness|quality_tag }}">
           {{ column.quality_metrics.uniqueness|default:"na" }}
         </span>
       </td>
       <td class="govuk-table__cell">
-        <span class="govuk-tag-status {{ column.quality_metrics.consistency|default:'na' }}">
+        <span class="govuk-tag govuk-tag--{{ column.quality_metrics.consistency|quality_tag }}">
           {{ column.quality_metrics.consistency|default:"na" }}
         </span>
       </td>
       <td class="govuk-table__cell">
-        <span class="govuk-tag-status {{ column.quality_metrics.validity|default:'na' }}">
+        <span class="govuk-tag govuk-tag--{{ column.quality_metrics.validity|quality_tag }}">
           {{ column.quality_metrics.validity|default:"na" }}
         </span>
       </td>

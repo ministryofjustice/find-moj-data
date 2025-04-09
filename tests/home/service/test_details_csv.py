@@ -1,6 +1,11 @@
 from unittest.mock import MagicMock
 
-from datahub_client.entities import Column, EntityRef, EntitySummary, ColumnQualityMetrics
+from datahub_client.entities import (
+    Column,
+    ColumnQualityMetrics,
+    EntityRef,
+    EntitySummary,
+)
 from home.service.details import (
     DashboardDetailsService,
     DatabaseDetailsService,
