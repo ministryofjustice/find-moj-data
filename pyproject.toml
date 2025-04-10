@@ -29,7 +29,7 @@ pydantic = { extras = ["email"], version = "^2.10.6" }
 email-validator = "2.2.0"
 acryl-datahub = { extras = ["datahub-rest"], version = "^0.13.3.2" }
 deepdiff = "^8.3.0"
-boto3 = "^1.37.11"
+boto3 = "^1.37.32"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
