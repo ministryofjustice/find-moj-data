@@ -93,6 +93,40 @@ class DatabaseDetailsService(GenericService):
         return context
 
 
+class SchemaDetailsService(GenericService):
+    def __init__(self, urn: str):
+        self.urn = urn
+        self.client = self._get_catalogue_client()
+
+        self.schema_metadata = self.client.get_schema_details(self.urn)
+
+        if not self.schema_metadata:
+            raise ObjectDoesNotExist(urn)
+
+        self.entities_in_database = self.schema_metadata.relationships[
+            RelationshipType.CHILD
+        ]
+        self.context = self._get_context()
+        self.template = "details_schema.html"
+
+    def _get_context(self):
+        context = {
+            "entity": self.schema_metadata,
+            "entity_type": "Schema",
+            "tables": sorted(
+                self.entities_in_database,
+                key=lambda d: d.entity_ref.display_name,
+            ),
+            "h1_value": self.schema_metadata.name,
+            "is_access_requirements_a_url": is_access_requirements_a_url(
+                self.schema_metadata.custom_properties.access_information.dc_access_requirements
+            ),
+            "PlatformUrns": PlatformUrns,
+        }
+
+        return context
+
+
 class DatasetDetailsService(GenericService):
     def __init__(self, urn: str):
         super().__init__()

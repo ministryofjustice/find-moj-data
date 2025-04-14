@@ -8,6 +8,7 @@ from datahub_client.entities import (
     AccessInformation,
     Chart,
     Column,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Database,
@@ -22,7 +23,7 @@ from datahub_client.entities import (
     SecurityClassification,
     Table,
     TagRef,
-    UsageRestrictions, ColumnQualityMetrics,
+    UsageRestrictions,
 )
 from datahub_client.exceptions import EntityDoesNotExist
 

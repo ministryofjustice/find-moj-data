@@ -15,6 +15,7 @@ from datahub_client.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
     DatabaseEntityMapping,
+    SchemaEntityMapping,
     PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
     TableEntityMapping,
@@ -26,6 +27,7 @@ from home.service.details import (
     ChartDetailsService,
     DashboardDetailsService,
     DatabaseDetailsService,
+    SchemaDetailsService,
     DatasetDetailsService,
     PublicationCollectionDetailsService,
     PublicationDatasetDetailsService,
@@ -43,6 +45,7 @@ from home.service.subject_area_fetcher import SubjectAreaFetcher
 type_details_map = {
     TableEntityMapping.url_formatted: DatasetDetailsService,
     DatabaseEntityMapping.url_formatted: DatabaseDetailsService,
+    SchemaEntityMapping.url_formatted: SchemaDetailsService,
     ChartEntityMapping.url_formatted: ChartDetailsService,
     DashboardEntityMapping.url_formatted: DashboardDetailsService,
     PublicationCollectionEntityMapping.url_formatted: PublicationCollectionDetailsService,
@@ -80,6 +83,8 @@ def details_view_csv(request, result_type, urn) -> HttpResponse:
             csv_formatter = DatasetDetailsCsvFormatter(DatasetDetailsService(urn))
         case DatabaseEntityMapping.url_formatted:
             csv_formatter = DatabaseDetailsCsvFormatter(DatabaseDetailsService(urn))
+        case SchemaEntityMapping.url_formatted:
+            csv_formatter = DatabaseDetailsCsvFormatter(SchemaDetailsService(urn))
         case DashboardEntityMapping.url_formatted:
             csv_formatter = DashboardDetailsCsvFormatter(DashboardDetailsService(urn))
         case _:
@@ -89,7 +94,7 @@ def details_view_csv(request, result_type, urn) -> HttpResponse:
     # In case there are any quotes in the filename, remove them in order to
     # not to break the header.
     unsavoury_characters = str.maketrans({'"': ""})
-    filename = urn.translate(unsavoury_characters) + ".csv"
+    filename = csv_formatter.filename().translate(unsavoury_characters)
 
     response = HttpResponse(
         content_type="text/csv",
@@ -154,3 +159,22 @@ def cookies_view(request):
         "previous_page": referer or "/",  # Provide a default fallback if none found
     }
     return render(request, "cookies.html", context)
+
+
+def accessibility_statement_view(request):
+    valid_subject_areas = [
+        urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS
+    ]
+    referer = request.META.get("HTTP_REFERER")
+
+    if referer:
+        referer_domain = urlparse(referer).netloc
+
+        # Validate this referer domain against declared valid domains
+        if referer_domain not in valid_subject_areas:
+            referer = "/"  # Set to home page if invalid
+
+    context = {
+        "previous_page": referer or "/",  # Provide a default fallback if none found
+    }
+    return render(request, "accessibility_statement.html", context)
