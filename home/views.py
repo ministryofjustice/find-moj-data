@@ -15,9 +15,9 @@ from datahub_client.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
     DatabaseEntityMapping,
-    SchemaEntityMapping,
     PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
+    SchemaEntityMapping,
     TableEntityMapping,
 )
 from datahub_client.exceptions import EntityDoesNotExist
@@ -27,10 +27,10 @@ from home.service.details import (
     ChartDetailsService,
     DashboardDetailsService,
     DatabaseDetailsService,
-    SchemaDetailsService,
     DatasetDetailsService,
     PublicationCollectionDetailsService,
     PublicationDatasetDetailsService,
+    SchemaDetailsService,
 )
 from home.service.details_csv import (
     DashboardDetailsCsvFormatter,
@@ -176,5 +176,6 @@ def accessibility_statement_view(request):
 
     context = {
         "previous_page": referer or "/",  # Provide a default fallback if none found
+        "h1_value": "Accessibility statement",
     }
     return render(request, "accessibility_statement.html", context)
