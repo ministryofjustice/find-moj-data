@@ -14,7 +14,7 @@ metadata:
       SecDefaultAction "phase:2,pass,log,tag:github_team=data-catalogue"
       SecDefaultAction "phase:4,pass,log,tag:github_team=data-catalogue"
 spec:
-  ingressClassName: modsec-non-prod
+  ingressClassName: modsec
   tls:
     - hosts:
         - ${EXTERNAL_DOMAIN_PREFIX}find-moj-data.service.justice.gov.uk
