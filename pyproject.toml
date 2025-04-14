@@ -33,12 +33,12 @@ boto3 = "^1.37.11"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
-pre-commit = "^4.1.0"
-selenium = "~=4.29.0"
+pre-commit = "^4.2.0"
+selenium = "~=4.31.0"
 flake8 = ">=6.1.0"
-pytest-django = "^4.10.0"
-pytest-cov = "^6.0.0"
-faker = "^37.0.0"
+pytest-django = "^4.11.1"
+pytest-cov = "^6.1.1"
+faker = "^37.1.0"
 isort = "^6.0.1"
 freezegun = "^1.5.1"
 
