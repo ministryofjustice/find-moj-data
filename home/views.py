@@ -159,3 +159,22 @@ def cookies_view(request):
         "previous_page": referer or "/",  # Provide a default fallback if none found
     }
     return render(request, "cookies.html", context)
+
+
+def accessibility_statement_view(request):
+    valid_subject_areas = [
+        urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS
+    ]
+    referer = request.META.get("HTTP_REFERER")
+
+    if referer:
+        referer_domain = urlparse(referer).netloc
+
+        # Validate this referer domain against declared valid domains
+        if referer_domain not in valid_subject_areas:
+            referer = "/"  # Set to home page if invalid
+
+    context = {
+        "previous_page": referer or "/",  # Provide a default fallback if none found
+    }
+    return render(request, "accessibility_statement.html", context)
