@@ -246,6 +246,7 @@ class EntityParser:
         )
 
         further_information = FurtherInformation.model_validate(custom_properties_dict)
+        readable_name = custom_properties_dict.get("dc_readable_name", "")
 
         custom_properties = CustomEntityProperties(
             access_information=access_information,
@@ -253,6 +254,7 @@ class EntityParser:
             data_summary=data_summary,
             further_information=further_information,
             security_classification=security_classification,
+            readable_name=readable_name
         )
 
         return properties, custom_properties
@@ -845,9 +847,11 @@ class SchemaParser(ContainerParser):
         )
         relations_to_display = self.list_relations_to_display(child_relations)
 
+        readable_name = custom_properties.readable_name or display_name
         return Schema(
             urn=urn,
             display_name=display_name,
+            readable_name=readable_name,
             name=name,
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
