@@ -847,7 +847,10 @@ class SchemaParser(ContainerParser):
         )
         relations_to_display = self.list_relations_to_display(child_relations)
 
-        readable_name = custom_properties.readable_name or display_name
+        display_name = custom_properties.readable_name or display_name
+
+        readable_name = display_name
+
         return Schema(
             urn=urn,
             display_name=display_name,
