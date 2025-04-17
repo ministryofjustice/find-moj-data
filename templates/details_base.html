@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-  <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+  <nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
         <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
@@ -24,11 +24,11 @@
           <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
         </li>
       {% endif %}
-      <li class="govuk-breadcrumbs__list-item">
+      <li class="govuk-breadcrumbs__list-item" aria-current="page">
         <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{entity.name}}</a>
       </li>
     </ol>
-  </div>
+  </nav>
 {% endblock breadcrumbs %}
 
 {% block content %}
