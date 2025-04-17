@@ -519,7 +519,10 @@ class CustomEntityProperties(BaseModel):
         description="If the data is published or not",
         default="Official-Sensitive",
     )
-
+    readable_name: str = Field(
+        description="The readable name of the data entity",
+        default="",
+    )
     class Config:
         use_enum_values = True
 
@@ -667,7 +670,9 @@ class Schema(Entity):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:my_schema"],
     )
-
+    readable_name: str | None = Field(
+        description="Readable name of the entity", examples=["Absconds"]
+    )
 
 class PublicationCollection(Entity):
     """For source system publication collections"""

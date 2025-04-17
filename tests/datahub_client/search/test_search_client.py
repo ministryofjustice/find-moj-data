@@ -1069,6 +1069,7 @@ def test_search_for_container(mock_graph, searcher):
                     "security_classification": SecurityClassification.OFFICIAL_SENSITIVE.value,  # noqa E501
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
+                    "readable_name": "",
                     "usage_restrictions": UsageRestrictions(
                         dpia_required=False,
                         dpia_location="",
