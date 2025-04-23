@@ -523,6 +523,7 @@ class CustomEntityProperties(BaseModel):
         description="The readable name of the data entity",
         default="",
     )
+
     class Config:
         use_enum_values = True
 
@@ -673,6 +674,7 @@ class Schema(Entity):
     readable_name: str | None = Field(
         description="Readable name of the entity", examples=["Absconds"]
     )
+
 
 class PublicationCollection(Entity):
     """For source system publication collections"""

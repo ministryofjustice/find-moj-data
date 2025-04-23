@@ -10,7 +10,6 @@ from datahub_client.entities import (
     CustomEntityProperties,
     Dashboard,
     Database,
-    Schema,
     DatahubEntityType,
     DatahubSubtype,
     DataSummary,
@@ -22,6 +21,7 @@ from datahub_client.entities import (
     PublicationCollection,
     PublicationDataset,
     RelationshipType,
+    Schema,
     SecurityClassification,
     Table,
     TagRef,
@@ -32,12 +32,12 @@ from datahub_client.parsers import (
     ChartParser,
     DashboardParser,
     DatabaseParser,
-    SchemaParser,
     DatasetParser,
     EntityParser,
     EntityParserFactory,
     PublicationCollectionParser,
     PublicationDatasetParser,
+    SchemaParser,
     TableParser,
     parse_assertions,
 )
@@ -975,9 +975,7 @@ class TestEntityParserFactory:
                 {
                     "entity": {
                         "type": DatahubEntityType.CONTAINER.value,
-                        "subTypes": {
-                            "typeNames": [DatahubSubtype.SCHEMA.value]
-                        },
+                        "subTypes": {"typeNames": [DatahubSubtype.SCHEMA.value]},
                     }
                 },
                 SchemaParser,

@@ -7,9 +7,9 @@ from datahub_client.entities import (
     ChartEntityMapping,
     DashboardEntityMapping,
     DatabaseEntityMapping,
-    SchemaEntityMapping,
     PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
+    SchemaEntityMapping,
     TableEntityMapping,
 )
 from datahub_client.search.search_types import MultiSelectFilter, SearchResponse

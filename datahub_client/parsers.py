@@ -17,8 +17,6 @@ from datahub_client.entities import (
     DashboardEntityMapping,
     Database,
     DatabaseEntityMapping,
-    Schema,
-    SchemaEntityMapping,
     DatahubEntityType,
     DatahubSubtype,
     DataSummary,
@@ -35,6 +33,8 @@ from datahub_client.entities import (
     PublicationDataset,
     PublicationDatasetEntityMapping,
     RelationshipType,
+    Schema,
+    SchemaEntityMapping,
     SecurityClassification,
     SubjectAreaTaxonomy,
     Table,
@@ -254,7 +254,7 @@ class EntityParser:
             data_summary=data_summary,
             further_information=further_information,
             security_classification=security_classification,
-            readable_name=readable_name
+            readable_name=readable_name,
         )
 
         return properties, custom_properties

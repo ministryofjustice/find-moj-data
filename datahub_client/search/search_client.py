@@ -8,8 +8,8 @@ from datahub.ingestion.graph.client import DataHubGraph
 from datahub_client.entities import (
     ChartEntityMapping,
     DatabaseEntityMapping,
-    SchemaEntityMapping,
     FindMoJdataEntityMapper,
+    SchemaEntityMapping,
     SubjectAreaTaxonomy,
     TableEntityMapping,
 )

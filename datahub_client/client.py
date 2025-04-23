@@ -12,15 +12,15 @@ from datahub_client.entities import (
     CustomEntityProperties,
     Dashboard,
     Database,
-    Schema,
     DatabaseEntityMapping,
-    SchemaEntityMapping,
     EntitySummary,
     FindMoJdataEntityMapper,
     GlossaryTermRef,
     PublicationCollection,
     PublicationDataset,
     RelationshipType,
+    Schema,
+    SchemaEntityMapping,
     Table,
     TableEntityMapping,
 )
@@ -30,10 +30,10 @@ from datahub_client.parsers import (
     ChartParser,
     DashboardParser,
     DatabaseParser,
-    SchemaParser,
     GlossaryTermParser,
     PublicationCollectionParser,
     PublicationDatasetParser,
+    SchemaParser,
     TableParser,
 )
 from datahub_client.search.search_client import SearchClient
@@ -205,7 +205,6 @@ class DataHubCatalogueClient:
             return database_object
 
         raise EntityDoesNotExist(f"Schema with urn: {urn} does not exist")
-
 
     def get_publication_collection_details(self, urn: str) -> PublicationCollection:
         if self.check_entity_exists_by_urn(urn):
