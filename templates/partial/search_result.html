@@ -7,7 +7,7 @@
       <div class="govuk-grid-column-full">
         <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
           {% with result_type=result.result_type.url_formatted %}
-            <a href="{% url 'home:details' result_type=result_type urn=result.urn %}" class="govuk-link">{{result.name}}</a>
+            <a href="{% url 'home:details' result_type=result_type urn=result.urn %}" class="govuk-link">{% firstof result.metadata.readable_name result.name %}</a>
           {% endwith %}
         </h3>
         {% if result.description %}

@@ -148,7 +148,12 @@ def test_one_search_result(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
-                subject_areas=[TagRef(urn="urn:li:tag:Prisons and probation", display_name="Prisons and probation")],
+                subject_areas=[
+                    TagRef(
+                        urn="urn:li:tag:Prisons and probation",
+                        display_name="Prisons and probation",
+                    )
+                ],
                 last_modified=None,
                 created=None,
                 parent_entity=EntityRef(urn="urn:li:container:abc", display_name="abc"),
@@ -235,7 +240,12 @@ def test_dataset_result(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
-                subject_areas=[TagRef(urn="urn:li:tag:Prisons and probation", display_name="Prisons and probation")],
+                subject_areas=[
+                    TagRef(
+                        urn="urn:li:tag:Prisons and probation",
+                        display_name="Prisons and probation",
+                    )
+                ],
                 last_modified=None,
                 created=None,
             )
@@ -1069,6 +1079,7 @@ def test_search_for_container(mock_graph, searcher):
                     "security_classification": SecurityClassification.OFFICIAL_SENSITIVE.value,  # noqa E501
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
+                    "readable_name": "",
                     "usage_restrictions": UsageRestrictions(
                         dpia_required=False,
                         dpia_location="",
