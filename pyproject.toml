@@ -28,7 +28,7 @@ notifications-python-client = "^10.0.1"
 pydantic = { extras = ["email"], version = "^2.10.6" }
 email-validator = "2.2.0"
 acryl-datahub = { extras = ["datahub-rest"], version = "^0.13.3.2" }
-deepdiff = "^8.3.0"
+deepdiff = "^8.4.2"
 boto3 = "^1.37.33"
 
 [tool.poetry.group.dev.dependencies]
