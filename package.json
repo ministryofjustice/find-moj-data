@@ -4,7 +4,7 @@
     "@ministryofjustice/frontend": "^5.1.2",
     "@x-govuk/govuk-prototype-components": "^3.0.9",
     "babel-jest": "^29.7.0",
-    "govuk-frontend": "^5.9.0",
+    "govuk-frontend": "^5.10.0",
     "jest-environment-jsdom": "^29.7.0",
     "sass": "^1.87.0"
   },
