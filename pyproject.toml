@@ -21,7 +21,7 @@ sentry-sdk = { extras = ["django"], version = "^2.27.0" }
 django-azure-auth = "2.3.0"
 django-waffle = "^4.2.0"
 psycopg = "^3.2.8"
-psycopg-binary = "^3.2.6"
+psycopg-binary = "^3.2.8"
 django-debug-toolbar = "^5.1.0"
 redis = { extras = ["hiredis"], version = "^5.2.1" }
 notifications-python-client = "^10.0.1"
