@@ -12,6 +12,7 @@ metadata:
       SecRuleEngine On
       SecRule REQUEST_URI "@contains .profile" "id:1005,phase:1,t:lowercase,ctl:ruleRemoveById=930130"
       SecRule REQUEST_URI "@contains nomis_internet" "id:1006,phase:2,t:none,nolog,pass,ctl:ruleRemoveById=933150"
+      SecRule REQUEST_URI "@contains performance_kpis_intermediate" "id:1007,phase:2,t:none,nolog,pass,ctl:ruleRemoveById=933150"
       SecDefaultAction "phase:2,pass,log,tag:github_team=data-catalogue"
       SecDefaultAction "phase:4,pass,log,tag:github_team=data-catalogue"
 spec:
