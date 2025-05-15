@@ -20,7 +20,7 @@ nltk = "^3.9.1"
 sentry-sdk = { extras = ["django"], version = "^2.28.0" }
 django-azure-auth = "2.3.0"
 django-waffle = "^4.2.0"
-psycopg = "^3.2.8"
+psycopg = "^3.2.9"
 psycopg-binary = "^3.2.8"
 django-debug-toolbar = "^5.2.0"
 redis = { extras = ["hiredis"], version = "^6.1.0" }
