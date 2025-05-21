@@ -1,7 +1,6 @@
 name: Create issue to check for updates to the MOJ IP address list
 permissions:
   issues: write
-
 on:
   schedule:
     # Every 6 months
