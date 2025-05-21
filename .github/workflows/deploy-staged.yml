@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
@@ -15,6 +18,8 @@ jobs:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
 
   deploy-preprod:
+    permissions:
+      deployments: write
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
     needs: build
     with:
@@ -38,6 +43,8 @@ jobs:
       quicksight_role_arn: ${{ secrets.QUICKSIGHT_ROLE_ARN }}
 
   notify-preprod-success:
+    permissions:
+      deployments: write
     needs: deploy-preprod
     runs-on: ubuntu-latest
     if: |
@@ -64,6 +71,8 @@ jobs:
           verbose-logging: true
 
   deploy-prod:
+    permissions:
+      deployments: write
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
     needs: deploy-preprod
     with:
@@ -87,6 +96,8 @@ jobs:
       quicksight_role_arn: ${{ secrets.QUICKSIGHT_ROLE_ARN }}
 
   post-deploy:
+    permissions:
+      contents: write
     name: "Post-deploy admin"
     needs: deploy-prod
     runs-on: ubuntu-latest
