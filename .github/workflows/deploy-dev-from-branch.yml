@@ -8,6 +8,9 @@ on:
         required: false
         type: boolean
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -18,12 +21,19 @@ jobs:
     uses: "./.github/workflows/reusable-tests.yml"
 
   build:
+    permissions:
+      contents: read
+      id-token: write
     if: ${{ always() && !failure() && !cancelled() }} # don't skip if tests are skipped
     uses: "./.github/workflows/reusable-build.yml"
     secrets:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
 
   deploy-dev:
+    permissions:
+      contents: read
+      deployments: write
+      id-token: write
     needs: build
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
     with:
