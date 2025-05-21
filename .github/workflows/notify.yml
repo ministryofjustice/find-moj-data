@@ -1,5 +1,7 @@
 name: Notify Deployment Status
 # based on: https://github.com/integrations/slack/issues/1563#issuecomment-1588009077
+permissions:
+  contents: read
 on:
   workflow_run:
     workflows:
