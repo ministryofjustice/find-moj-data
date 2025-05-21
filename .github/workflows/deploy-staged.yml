@@ -80,6 +80,7 @@ jobs:
     permissions:
       contents: read
       deployments: write
+      id-token: write
     uses: "./.github/workflows/reusable-push-and-deploy.yml"
     needs: deploy-preprod
     with:
