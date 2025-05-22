@@ -791,6 +791,7 @@ class SubjectAreaTaxonomy:
 ALL_FILTERABLE_TAGS = [
     TagRef.from_name("Civil courts"),
     TagRef.from_name("Criminal courts"),
+    TagRef.from_name("Digital prison reporting"),
     TagRef.from_name("Electronic monitoring"),
     TagRef.from_name("Employees"),
     TagRef.from_name("Family courts"),
