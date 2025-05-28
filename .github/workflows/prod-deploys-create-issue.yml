@@ -1,4 +1,6 @@
 name: Create issue for push to prod
+permissions:
+  issues: write
 on:
   schedule:
     # Runs on the 1st and 15th of each month at 9AM
