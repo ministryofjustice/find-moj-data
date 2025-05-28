@@ -7,10 +7,9 @@ $govuk-global-styles: true;
 
 $govuk-new-typography-scale: true;
 
-@import "node_modules/govuk-frontend/dist/govuk/index";
+//@import "node_modules/govuk-frontend/dist/govuk/index";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "./components/search";
-@import "node_modules/@x-govuk/govuk-prototype-components/src/x-govuk/components/masthead";
 @import "node_modules/@x-govuk/govuk-prototype-components/src/x-govuk/components/masthead";
 @import "./glossary";
 @import "./details";
