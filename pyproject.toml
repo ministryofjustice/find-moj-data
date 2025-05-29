@@ -41,7 +41,7 @@ pytest-django = "^4.11.1"
 pytest-cov = "^6.1.1"
 faker = "^37.1.0"
 isort = "^6.0.1"
-freezegun = "^1.5.1"
+freezegun = "^1.5.2"
 
 [build-system]
 requires = ["poetry-core"]
