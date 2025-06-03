@@ -1,3 +1,4 @@
+@use "node_modules/govuk-frontend/dist/govuk" as *;
 .app-metadata-list {
     @extend .govuk-summary-list;
     @extend .govuk-summary-list--no-border;
