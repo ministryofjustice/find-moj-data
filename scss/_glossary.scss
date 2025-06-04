@@ -1,3 +1,5 @@
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
 @include govuk-media-query($from: tablet) {
     #sticky-sidebar {
         position: sticky;
