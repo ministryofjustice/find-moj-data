@@ -23,7 +23,7 @@ django-waffle = "^4.2.0"
 psycopg = "^3.2.9"
 psycopg-binary = "^3.2.9"
 django-debug-toolbar = "^5.2.0"
-redis = { extras = ["hiredis"], version = "^6.1.0" }
+redis = { extras = ["hiredis"], version = "^6.2.0" }
 notifications-python-client = "^10.0.1"
 pydantic = { extras = ["email"], version = "^2.11.5" }
 email-validator = "2.2.0"
