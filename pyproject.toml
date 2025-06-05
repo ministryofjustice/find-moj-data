@@ -23,25 +23,25 @@ django-waffle = "^4.2.0"
 psycopg = "^3.2.9"
 psycopg-binary = "^3.2.9"
 django-debug-toolbar = "^5.2.0"
-redis = { extras = ["hiredis"], version = "^6.1.0" }
+redis = { extras = ["hiredis"], version = "^6.2.0" }
 notifications-python-client = "^10.0.1"
 pydantic = { extras = ["email"], version = "^2.11.5" }
 email-validator = "2.2.0"
 acryl-datahub = { extras = ["datahub-rest"], version = "^0.13.3.2" }
 deepdiff = "^8.5.0"
-boto3 = "^1.38.19"
-setuptools = "80.8.0"
+boto3 = "^1.38.30"
+setuptools = "80.9.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
 pre-commit = "^4.2.0"
-selenium = "~=4.32.0"
+selenium = "~=4.33.0"
 flake8 = ">=6.1.0"
 pytest-django = "^4.11.1"
 pytest-cov = "^6.1.1"
-faker = "^37.1.0"
+faker = "^37.3.0"
 isort = "^6.0.1"
-freezegun = "^1.5.1"
+freezegun = "^1.5.2"
 
 [build-system]
 requires = ["poetry-core"]

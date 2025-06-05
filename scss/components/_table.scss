@@ -14,6 +14,9 @@
  * 9. Hiding tablet specific header from tablet view
  * 10. Adding a display block value due to IE 11 not having full flex support
  */
+
+ @use "node_modules/govuk-frontend/dist/govuk" as *;
+
 .app-table-responsive {
   width: 100%;
 

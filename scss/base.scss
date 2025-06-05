@@ -1,22 +1,23 @@
-$govuk-assets-path: "/static/assets/";
-$moj-assets-path: "/static/assets/";
-$app-images-path: "/static/assets/images";
+@use "vars";
 
-// Removes need to put classes on all elements
-$govuk-global-styles: true;
+@use "node_modules/govuk-frontend/dist/govuk" as * with (
+  $govuk-assets-path: vars.$assets-path,
+  $govuk-global-styles: vars.$govuk-global-styles,
+  $govuk-new-typography-scale: vars.$govuk-new-typography-scale,
+);
 
-$govuk-new-typography-scale: true;
+@forward "node_modules/@ministryofjustice/frontend/moj/all"  with (
+  $moj-assets-path: vars.$assets-path,
+);
 
-@import "node_modules/govuk-frontend/dist/govuk/index";
-@import "node_modules/@ministryofjustice/frontend/moj/all";
-@import "./components/search";
-@import "node_modules/@x-govuk/govuk-prototype-components/x-govuk/components/masthead/masthead";
-@import "node_modules/@x-govuk/govuk-prototype-components/x-govuk/components/masthead/masthead";
-@import "./glossary";
-@import "./details";
-@import "./components/table";
-@import "./components/card-grid";
-@import "./components/metadata-list";
+@use "node_modules/@x-govuk/govuk-prototype-components/src/x-govuk/components/masthead";
+@use "./components/search";
+@use "./glossary";
+@use "./details";
+@use "./components/table";
+@use "./components/card-grid";
+@use "./components/metadata-list";
+
 
 .js-required {
   display: none;
