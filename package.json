@@ -5,7 +5,7 @@
     "@x-govuk/govuk-prototype-components": "^4.0.0",
     "babel-jest": "^29.7.0",
     "govuk-frontend": "^5.10.2",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-jsdom": "^30.0.0",
     "sass": "^1.89.1"
   },
   "scripts": {
