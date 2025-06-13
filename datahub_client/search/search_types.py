@@ -122,3 +122,4 @@ class SearchResponse:
     page_results: list[SearchResult]
     malformed_result_urns: list[str] = field(default_factory=list)
     facets: SearchFacets = field(default_factory=SearchFacets)
+    tags: list[str] = field(default_factory=list)

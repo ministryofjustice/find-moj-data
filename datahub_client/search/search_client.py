@@ -12,6 +12,7 @@ from datahub_client.entities import (
     SchemaEntityMapping,
     SubjectAreaTaxonomy,
     TableEntityMapping,
+    ALL_FILTERABLE_TAGS,
 )
 from datahub_client.exceptions import CatalogueError
 from datahub_client.graphql.loader import get_graphql_query
@@ -93,6 +94,18 @@ class SearchClient:
             return SearchResponse(total_results=0, page_results=[])
 
         logger.debug(json.dumps(response, indent=2))
+        tags = []
+        filterable = [tag.display_name for tag in ALL_FILTERABLE_TAGS]
+        for item in response["facets"]:
+            if item["field"] == "tags":
+                for tag in item['aggregations']:
+                    print(tag)
+                    if tag['entity']['properties'] is not None:
+
+                        if tag['entity']['properties']['name'] in filterable:
+
+                            tag['entity']['properties']['slug'] = tag['entity']['properties']['name'].replace(' ', '+')
+                            tags.append(tag)
 
         page_results, malformed_result_urns = self._parse_search_results(response)
 
@@ -101,6 +114,7 @@ class SearchClient:
             page_results=page_results,
             malformed_result_urns=malformed_result_urns,
             facets=self._parse_facets(response.get("facets", [])),
+            tags = tags
         )
 
     def _parse_search_results(self, response) -> Tuple[list, list]:
