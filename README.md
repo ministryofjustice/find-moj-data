@@ -80,8 +80,3 @@ Current switches and default settings:
 - `search-sort-radio-buttons` off - switches on/off radio selection buttons for sort order of search results.
 - `display-result-tags` off - switches on/off the display of tags in search and results pages
 - `show_is_nullable_in_table_details_column` off - switches on/off the `Is Nullable` column in the table details page
-
-Current flags and default settings:
-
-- `home_variant_a` off - shows the new homepage design (variant A)
-- `home_variant_b` off - shows the new homepage design (variant B)

@@ -6,53 +6,14 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       {% if publications %}
-        <table class="govuk-table app-table-responsive">
-          <caption class="govuk-table__caption govuk-table__caption--m">Publication Collection content</caption>
-          <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header app-custom-class">Publication</th>
-              <th scope="col" class="govuk-table__header app-custom-class">Description</th>
-            </tr>
-          </thead>
-          <tbody class="govuk-table__body app-table-responsive__body">
-            {% for publication in publications %}
-              {% with entity_type=publication.entity_type|lower %}
-                <tr class="govuk-table__row app-table-responsive__row">
-                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Publication:</span><a href="{% url 'home:details' result_type=entity_type urn=publication.entity_ref.urn %}" class="govuk-link">{{publication.entity_ref.display_name}}</a></td>
-                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Description:</span>
-                  {% if publication.description %}
-                    {% if publication.description|length > 200 %}
-                    <div>
-                      {{ publication.description|markdown:3|truncatewords_html:25 }}
-                    </div>
-                    {% else %}
-                    <div>
-                      {{ publication.description|markdown:3 }}
-                    </div>
-                    {% endif %}
-                  {% else %}
-                  <p class="govuk-visually-hidden">A description for {{publication.entity_ref.display_name}} does not exist</p>
-                  {% endif %}
-                  </td>
-                </tr>
-              {% endwith %}
-            {% endfor %}
-          </tbody>
-        </table>
+        <div class="govuk-heading-m">Publication collection content</div>
+          {% include "partial/details_container.html" with items=publications title="Publication collection content" name_column="Publication" description_column="Description" %}
       {% else %}
         <h2 class="govuk-heading-m">Publication Collection content</h2>
         <p class="govuk-body">This Publication Collection is missing Publications information.</p>
       {% endif %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-s govuk-!-margin-top-3">
-                Access this data
-            </h2>
-            <div class="govuk-body">
-                <a href="{{entity.external_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">"{{ entity.display_name }}" on {{platform_name}}</a> (opens in new tab)
-            </div>
-        </div>
+      {% include "partial/access_data.html" %}
     </div>
-
+  </div>
 
 {% endblock extra_details %}

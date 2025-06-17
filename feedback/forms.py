@@ -23,6 +23,11 @@ class FeedbackForm(forms.ModelForm):
             "satisfaction_rating": RadioSelect(attrs={"class": "govuk-radios__input"})
         }
         formfield_callback = formfield
+        error_messages = {
+            "satisfaction_rating": {
+                "required": "Select how satisfied are you with this service"
+            }
+        }
 
 
 class IssueForm(forms.ModelForm):
@@ -49,6 +54,10 @@ class IssueForm(forms.ModelForm):
             ),
         }
         formfield_callback = formfield
+        error_messages = {
+            "reason": {"required": "Select what is wrong with this page"},
+            "additional_info": {"required": "Enter more details about the issue"},
+        }
 
     send_email_to_reporter = forms.TypedChoiceField(
         widget=RadioSelect(
@@ -58,4 +67,7 @@ class IssueForm(forms.ModelForm):
         coerce=lambda x: x == "Yes",
         required=True,
         label="Would you like us to email you a copy of this report?",
+        error_messages={
+            "required": "Select if you want us to email you a copy of this report"
+        },
     )

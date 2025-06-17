@@ -105,6 +105,40 @@ query getDatasetDetails($urn: String!) {
     tags {
       ...globalTagsFields
     }
+    glossaryTerms {
+      ...glossaryTermFields
+    }
+
+    # Adding quality test results from Assertions
+    assertions {
+      total
+      assertions {
+        urn
+        type
+        info {
+          description
+          datasetAssertion{
+            nativeType
+            nativeParameters{
+              key
+              value
+            }
+          }
+        }
+        runEvents {
+          runEvents{
+            timestampMillis
+            lastObservedMillis
+              result{
+                type
+              }
+          }
+
+
+        }
+      }
+    }
+
     lastIngested
     schemaMetadata {
       fields {
@@ -183,6 +217,19 @@ fragment ownershipFields on Ownership {
       type
       info {
         name
+      }
+    }
+  }
+}
+
+fragment glossaryTermFields on GlossaryTerms {
+  terms {
+    term {
+      urn
+      type
+      properties {
+        name
+        description
       }
     }
   }

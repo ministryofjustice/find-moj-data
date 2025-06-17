@@ -74,7 +74,7 @@ def test_no_search_results(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_one_search_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     assert subject_area
 
     datahub_response = {
@@ -148,7 +148,12 @@ def test_one_search_result(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
-                subject_areas=[TagRef(urn="urn:li:tag:Prison", display_name="Prison")],
+                subject_areas=[
+                    TagRef(
+                        urn="urn:li:tag:Prisons and probation",
+                        display_name="Prisons and probation",
+                    )
+                ],
                 last_modified=None,
                 created=None,
                 parent_entity=EntityRef(urn="urn:li:container:abc", display_name="abc"),
@@ -161,7 +166,7 @@ def test_one_search_result(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_dataset_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     assert subject_area
 
     datahub_response = {
@@ -235,7 +240,12 @@ def test_dataset_result(mock_graph, searcher):
                     "row_count": "",
                 },
                 tags=[],
-                subject_areas=[TagRef(urn="urn:li:tag:Prison", display_name="Prison")],
+                subject_areas=[
+                    TagRef(
+                        urn="urn:li:tag:Prisons and probation",
+                        display_name="Prisons and probation",
+                    )
+                ],
                 last_modified=None,
                 created=None,
             )
@@ -283,7 +293,7 @@ def test_bad_entity_type(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -972,7 +982,7 @@ def test_search_for_charts(mock_graph, searcher):
 
 @pytest.mark.django_db
 def test_search_for_container(mock_graph, searcher):
-    subject_area = SubjectAreaTaxonomy.get_by_name("Prison")
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
     assert subject_area
 
     datahub_response = {
@@ -1069,6 +1079,7 @@ def test_search_for_container(mock_graph, searcher):
                     "security_classification": SecurityClassification.OFFICIAL_SENSITIVE.value,  # noqa E501
                     "owner": "Shannon Lovett",
                     "owner_email": "shannon@longtail.com",
+                    "readable_name": "",
                     "usage_restrictions": UsageRestrictions(
                         dpia_required=False,
                         dpia_location="",
@@ -1097,10 +1108,9 @@ def test_search_for_container(mock_graph, searcher):
 @pytest.mark.parametrize(
     "tags, result",
     [
-        (["test0-tag", "dc_dc"], ["test0-tag"]),
-        (["dc_test0-tag", "dc_dc"], []),
-        (["dbt_dc", "dc_dc"], ["dbt_dc"]),
-        (["dbt:dc_", "tagger"], ["dbt:dc_", "tagger"]),
+        (["Electronic monitoring"], ["Electronic monitoring"]),
+        (["Invalid Tag", "Prison", "Probation"], ["Prison", "Probation"]),
+        (["Risk", "Reoffending"], ["Risk", "Reoffending"]),
     ],
 )
 def test_tag_to_display(tags, result):
@@ -1124,7 +1134,7 @@ def test_tag_to_display(tags, result):
             "s3_location": "",
             "row_count": "",
         },
-        tags=[TagRef(display_name=t, urn=f"urn:tag:{t}") for t in tags],
+        tags=[TagRef(display_name=t, urn=f"urn:li:tag:{t}") for t in tags],
         last_modified=None,
         created=None,
     )

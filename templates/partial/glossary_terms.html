@@ -1,0 +1,5 @@
+{% load markdown %}
+<h3 class="govuk-heading-s govuk-!-margin-bottom-3">Glossary</h3>
+{% for term in result.glossary_terms %}
+  <strong class="govuk-tag govuk-!-font-size-16 govuk-tag--grey govuk-!-margin-bottom-1">{{ term.display_name }}</strong>
+{% endfor %}

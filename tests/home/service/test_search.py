@@ -1,6 +1,5 @@
 import os
 import re
-from types import GeneratorType
 from urllib.parse import quote
 
 import pytest
@@ -18,12 +17,10 @@ class TestSearchService:
     def test_get_context_search_result(self, mock_catalogue, search_context):
         assert search_context["results"] == mock_catalogue.search().page_results
         assert search_context["total_results_str"] == "100"
-        assert search_context["total_results"] == 100
 
     def test_get_context_paginator(self, search_context):
         assert search_context["page_obj"].number == 1
-        assert isinstance(search_context["page_range"], GeneratorType)
-        assert search_context["paginator"].num_pages == 5
+        assert search_context["page_obj"].paginator.num_pages == 5
 
     def test_get_context_h1_value(self, search_context):
         assert search_context["h1_value"] == "Search MoJ data"
@@ -35,11 +32,11 @@ class TestSearchService:
             valid_subject_area_choice.label: (
                 "?query=test&"
                 "where_to_access=analytical_platform&"
+                "tags=Risk&"
                 "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
-                "clear_label=False&"
-                "tags=tag-1"
+                "clear_label=False"
             )
         }
 
@@ -47,11 +44,11 @@ class TestSearchService:
             "analytical_platform": (
                 "?query=test&"
                 f"subject_area={quote(valid_subject_area_choice.urn)}&"
+                "tags=Risk&"
                 "entity_types=TABLE&"
                 "sort=ascending&"
                 "clear_filter=False&"
-                "clear_label=False&"
-                "tags=tag-1"
+                "clear_label=False"
             )
         }
 
@@ -60,15 +57,15 @@ class TestSearchService:
                 "?query=test&"
                 f"subject_area={quote(valid_subject_area_choice.urn)}&"
                 "where_to_access=analytical_platform&"
+                "tags=Risk&"
                 "sort=ascending&"
                 "clear_filter=False&"
-                "clear_label=False&"
-                "tags=tag-1"
+                "clear_label=False"
             )
         }
 
         assert search_context["remove_filter_hrefs"]["Tags"] == {
-            "tag-1": (
+            "Risk": (
                 "?query=test&"
                 f"subject_area={quote(valid_subject_area_choice.urn)}&"
                 "where_to_access=analytical_platform&"

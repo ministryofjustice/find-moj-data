@@ -6,6 +6,7 @@
 {% load page_title %}
 {% load format_timesince %}
 
+
 {% block title %}
   {% with details_title=h1_value|add:" - "|add:entity_type %}
     {{details_title|render_title}}
@@ -13,7 +14,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-  <div class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile">
+  <nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
         <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
@@ -23,15 +24,29 @@
           <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
         </li>
       {% endif %}
-      <li class="govuk-breadcrumbs__list-item">
+      <li class="govuk-breadcrumbs__list-item" aria-current="page">
         <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{entity.name}}</a>
       </li>
     </ol>
-  </div>
+  </nav>
 {% endblock breadcrumbs %}
 
 {% block content %}
-  <div class="govuk-grid-row">
+  {% if messages %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Feedback submitted
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="govuk-grid-row app-header-negative-padding">
     <div class="govuk-grid-column-full">
       <span class="govuk-caption-l">{{entity_type}}</span>
       <h1 class="govuk-heading-l">{{h1_value}}</h1>
@@ -64,7 +79,7 @@
       </div>
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_url=is_access_requirements_a_url platform=entity.platform security_classification=entity.custom_properties.security_classification %}
+      {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform %}
     </div>
   </div>
 

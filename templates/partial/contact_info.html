@@ -1,24 +1,4 @@
 <div class="govuk-body">
-  {% if security_classification == "Official-Sensitive"%}
-    <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Request access</h2>
-    <p id="request_access" class="govuk-body">
-
-      {% if access_requirements %}
-        {% if is_access_url %}
-          <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Select this link for access information (opens in new tab)</a>
-        {% else %}
-          {{ access_requirements }}
-        {% endif %}
-      {% elif governance.data_custodians or governance.data_owner.email %}
-        Contact the data custodian to request access.
-      {% else %}
-        Not provided.
-      {% endif %}
-    </p>
-  {% endif %}
-</div>
-
-<div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Ask a question</h2>
   <ul id="contact_channels" class="govuk-list">
     {% if further_information.dc_slack_channel_url and further_information.dc_slack_channel_name %}
@@ -36,16 +16,17 @@
     {% endif %}
 
     {% if not further_information.dc_teams_channel_url and not further_information.dc_slack_channel_url and not further_information.dc_team_email %}
-      {% if governance.data_custodians or governance.data_owner.email %}
+      <!-- {% if governance.data_custodians or governance.data_owner.email %}
       <li id="contact_channels_data_owner">Contact the data custodian with questions.</li>
       {% else %}
       <li id="contact_channels_not_provided">Not provided.</li>
-      {% endif %}
+      {% endif %} -->
+      <li id="contact_channels_not_provided">Not provided.</li>
     {% endif %}
   </ul>
 </div>
 
-{% if governance.data_custodians and governance.data_custodians.0.email %}
+<!-- {% if governance.data_custodians and governance.data_custodians.0.email %}
 <div class="govuk-body">
   <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Data custodian (technical contact)</h2>
   <p id="data_owner" class="govuk-body">
@@ -65,7 +46,7 @@
     {% endif %}
   </p>
 </div>
-{% endif %}
+{% endif %} -->
 
 {% if NOTIFY_ENABLED and entity_name %}
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">

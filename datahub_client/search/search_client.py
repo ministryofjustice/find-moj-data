@@ -9,6 +9,7 @@ from datahub_client.entities import (
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
+    SchemaEntityMapping,
     SubjectAreaTaxonomy,
     TableEntityMapping,
 )
@@ -47,6 +48,7 @@ class SearchClient:
             TableEntityMapping,
             ChartEntityMapping,
             DatabaseEntityMapping,
+            SchemaEntityMapping,
         ),
         filters: Sequence[MultiSelectFilter] | None = None,
         sort: SortOption | None = None,

@@ -34,6 +34,19 @@
             </div>
           </fieldset>
         </div>
+        <div class="govuk-form-group">
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Tags</legend>
+            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+              {% for tag in form.tags %}
+                <div aria-label="selection will trigger the filter and refresh the search results" class="govuk-checkboxes__item">
+                  {{ tag.tag}}
+                  <label class="govuk-label govuk-checkboxes__label" for="{{ tag.id_for_label }}">{{tag.choice_label}}</label>
+                </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+        </div>
       </div>
     </div>
   </div>

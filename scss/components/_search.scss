@@ -1,3 +1,6 @@
+@use "../vars";
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
 // Base enhancements to search fields
 .app-search {
   .govuk-input[type="search"] {
@@ -10,7 +13,7 @@
     // https://caniuse.com/mdn-css_selectors_-webkit-search-cancel-button
     &::-webkit-search-cancel-button {
       -webkit-appearance: none;
-      background-image: url(#{$app-images-path}/icon-close-cross-black.svg);
+      background-image: url(#{vars.$app-images-path}/icon-close-cross-black.svg);
       background-position: center;
       background-repeat: no-repeat;
       cursor: pointer;

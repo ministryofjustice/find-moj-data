@@ -1,0 +1,51 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load markdown %}
+{% load humanize %}
+{% load waffle_tags %}
+{% load govuk %}
+
+{% block breadcrumbs %}
+  <nav class="govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item">
+        <a class="govuk-breadcrumbs__link" href="{%url 'home:glossary' %}">Glossary</a>
+      </li>
+      <li class="govuk-breadcrumbs__list-item" aria-current="page">
+        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{glossary_term.display_name}}</a>
+      </li>
+    </ol>
+  </nav>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="govuk-grid-row app-header-negative-padding">
+  <div class="govuk-grid-column-full">
+    <span class="govuk-caption-l">Glossary</span>
+    <h1 class="govuk-heading-l">{{glossary_term.display_name}}</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="app-summary-card">
+      <h2 class="govuk-heading-s">
+        Description
+      </h2>
+      {{glossary_term.description | markdown}}
+    </div>
+  </div>
+</div>
+
+{% if results %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m govuk-!-display-inline-block" id="result-count">Related entit{{total_results|pluralize:"y,ies"}} ({{total_results_str|intcomma}})</h2>
+
+    {% include "partial/search_result.html" %}
+
+    {% pagination page_obj=page_obj urlpattern='home:glossary_term_pagination' urn=glossary_term.urn %}
+  </div>
+</div>
+{% endif %}
+{% endblock content %}

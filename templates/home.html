@@ -4,12 +4,22 @@
 
 {% block main %}
   <main class="main-wrapper-with-masthead" id="main-content" role="main">
-    <div class="app-masthead">
-      <div class="govuk-width-container app-width-container">
+    <div class="x-govuk-masthead x-govuk-masthead--large">
+      <div class="govuk-width-container">
+        <div class="govuk-phase-banner x-govuk-phase-banner--inverse" role="region" aria-label="New service information">
+          <p class="govuk-phase-banner__content">
+            <strong class="govuk-tag govuk-phase-banner__content__tag x-govuk-tag--inverse">
+              Public beta
+            </strong>
+            <span class="govuk-phase-banner__text">
+              This is a new service. Help us improve it and <a class="govuk-link govuk-link--inverse" href="{% url 'feedback:feedback' %}" rel="noreferrer noopener" target="_blank">give your feedback (opens in new tab)</a>.
+            </span>
+          </p>
+        </div>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl app-masthead__title">Discover data from across the Ministry of Justice</h1>
-            <p class="govuk-body-l" style="color: white;">
+            <h1 class="x-govuk-masthead__title">Discover data from across the Ministry of Justice</h1>
+            <p class="x-govuk-masthead__description" style="color: white;">
               Find MoJ Data shows you what data exists and how to access it.
               The service does not contain the data itself, only metadata – data which describes our assets. <a aria-label="Learn more about Find MoJ data" href="https://user-guide.find-moj-data.service.justice.gov.uk/">Learn more</a>
             </p>
@@ -20,7 +30,7 @@
                 class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
               >
                 <input id="search-input" name="query" class="search-input govuk-input" type="search" aria-label="Search input"/>
-                <button type="submit" aria-label="Search button">
+                <button type="submit" aria-label="Search">
                   <svg
                     aria-hidden="true"
                     focusable="false"
@@ -41,17 +51,9 @@
         </div>
       </div>
     </div>
-    <div class="govuk-main-wrapper govuk-main-wrapper--l">
+    <div class="govuk-main-wrapper">
       <div class="govuk-width-container app-width-container">
-        {% flag "home_variant_a" %}
-          {% include 'partial/home/subject_area_grid.html' %}
-        {% else %}
-          {% flag "home_variant_b" %}
-          {% include 'partial/home/subject_area_list.html' %}
-          {% else %}
-          {% include 'partial/home/old_design.html' %}
-          {% endflag %}
-        {% endflag %}
+        {% include 'partial/home/subject_area_grid.html' %}
       </div>
     </div>
   </main>

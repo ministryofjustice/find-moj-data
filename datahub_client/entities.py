@@ -3,7 +3,6 @@ from datetime import datetime
 from enum import Enum
 from typing import Literal, Optional
 
-import waffle
 from pydantic import AfterValidator, BaseModel, EmailStr, Field
 from typing_extensions import Annotated
 
@@ -36,6 +35,7 @@ class DatahubSubtype(Enum):
     SEED = "Seed"
     SOURCE = "Source"
     DATABASE = "Database"
+    SCHEMA = "Schema"
 
 
 class FindMoJdataEntityType(Enum):
@@ -46,6 +46,7 @@ class FindMoJdataEntityType(Enum):
     DASHBOARD = "Dashboard"
     PUBLICATION_DATASET = "Publication dataset"
     PUBLICATION_COLLECTION = "Publication collection"
+    SCHEMA = "Schema"
 
 
 @dataclass
@@ -82,8 +83,19 @@ GlossaryTermEntityMapping = FindMoJdataEntityMapper(
 DatabaseEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.DATABASE,
     DatahubEntityType.CONTAINER,
-    [DatahubSubtype.DATABASE.value],
+    [
+        DatahubSubtype.DATABASE.value,
+    ],
     "database",
+)
+
+SchemaEntityMapping = FindMoJdataEntityMapper(
+    FindMoJdataEntityType.SCHEMA,
+    DatahubEntityType.CONTAINER,
+    [
+        DatahubSubtype.SCHEMA.value,
+    ],
+    "schema",
 )
 
 DashboardEntityMapping = FindMoJdataEntityMapper(
@@ -109,10 +121,46 @@ Mappers = [
     ChartEntityMapping,
     GlossaryTermEntityMapping,
     DatabaseEntityMapping,
+    SchemaEntityMapping,
     DashboardEntityMapping,
     PublicationDatasetEntityMapping,
     PublicationCollectionEntityMapping,
 ]
+
+
+class ColumnAssertionType(Enum):
+    COMPLETENESS = "completeness"
+    CONSISTENCY = "consistency"
+    VALIDITY = "validity"
+    ACCURACY = "accuracy"
+    UNIQUENESS = "uniqueness"
+
+
+class ColumnAssertionLevel(Enum):
+    RED = "poor"
+    AMBER = "acceptable"
+    GREEN = "good"
+    NA = "na"
+
+
+class ColumnAssertionResult(Enum):
+    SUCCESS = "SUCCESS"
+    FAILURE = "FAILURE"
+    NA = "N/A"
+
+
+class ColumnAssertion(BaseModel):
+    type: ColumnAssertionType
+    level: ColumnAssertionLevel
+    result: ColumnAssertionResult
+
+
+class ColumnQualityMetrics(BaseModel):
+    completeness: str = Field(default="na", description="Completeness level")
+    consistency: str = Field(default="na", description="Consistency level")
+    accuracy: str = Field(default="na", description="Accuracy level")
+    uniqueness: str = Field(default="na", description="Uniqueness level")
+    validity: str = Field(default="na", description="Validity level")
 
 
 class SecurityClassification(Enum):
@@ -210,6 +258,9 @@ class Column(BaseModel):
     )
     foreign_keys: list[ColumnRef] = Field(
         description="References to columns in other tables", default_factory=list
+    )
+    quality_metrics: ColumnQualityMetrics = Field(
+        description="List of Assertions associated with this column",
     )
 
 
@@ -376,6 +427,13 @@ class EntitySummary(BaseModel):
     entity_type: str = Field(
         description="indicates the type of entity that is summarised"
     )
+    data_last_modified: Annotated[
+        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
+    ] = Field(
+        description="When the data entity was last modified in the source system",
+        default=None,
+        examples=[datetime(2011, 10, 2, 3, 0, 0)],
+    )
     tags: list[TagRef] = Field(description="Any tags associated with the entity")
 
 
@@ -460,6 +518,10 @@ class CustomEntityProperties(BaseModel):
     security_classification: SecurityClassification = Field(
         description="If the data is published or not",
         default="Official-Sensitive",
+    )
+    readable_name: str = Field(
+        description="The readable name of the data entity",
+        default="",
     )
 
     class Config:
@@ -589,9 +651,7 @@ class Entity(BaseModel):
 
     def model_post_init(self, __context):
         self.tags_to_display = [
-            tag.display_name
-            for tag in self.tags
-            if not tag.display_name.startswith("dc_")
+            tag.display_name for tag in self.tags if tag in ALL_FILTERABLE_TAGS
         ]
 
 
@@ -601,6 +661,18 @@ class Database(Entity):
     urn: str | None = Field(
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:my_database"],
+    )
+
+
+class Schema(Entity):
+    """For source system database schemas"""
+
+    urn: str | None = Field(
+        description="Unique identifier for the entity. Relates to Datahub's urn",
+        examples=["urn:li:container:my_schema"],
+    )
+    readable_name: str | None = Field(
+        description="Readable name of the entity", examples=["Absconds"]
     )
 
 
@@ -661,7 +733,8 @@ class Table(Entity):
                     description="unique ID for custody",
                     nullable=False,
                     is_primary_key=True,
-                ),
+                    quality_metrics=ColumnQualityMetrics(),
+                )
             ]
         ],
     )
@@ -695,22 +768,6 @@ class Dashboard(Entity):
 
 
 class SubjectAreaTaxonomy:
-    ALL_SUBJECT_AREAS_OLD = [
-        TagRef.from_name("Bold"),
-        TagRef.from_name("Civil"),
-        TagRef.from_name("Courts"),
-        TagRef.from_name("Electronic monitoring"),
-        TagRef.from_name("Finance"),
-        TagRef.from_name("General"),
-        TagRef.from_name("Interventions"),
-        TagRef.from_name("OPG"),
-        TagRef.from_name("People"),
-        TagRef.from_name("Prison"),
-        TagRef.from_name("Probation"),
-        TagRef.from_name("Property"),
-        TagRef.from_name("Risk"),
-    ]
-
     ALL_SUBJECT_AREAS = [
         TagRef.from_name("Prisons and probation"),
         TagRef.from_name("Courts and tribunals"),
@@ -718,19 +775,30 @@ class SubjectAreaTaxonomy:
         TagRef.from_name("Office of the Public Guardian"),
         TagRef.from_name("Legal aid"),
         TagRef.from_name("Crime and policing"),
-        TagRef.from_name("Reference data"),
+        TagRef.from_name("Miscellaneous"),
     ]
 
     @classmethod
     def get_by_name(cls, name):
-        subject_areas = (
-            cls.ALL_SUBJECT_AREAS
-            if waffle.switch_is_active("new_subject_areas")
-            else cls.ALL_SUBJECT_AREAS_OLD
-        )
-        matches = [i for i in subject_areas if i.display_name == name]
+        matches = [i for i in cls.ALL_SUBJECT_AREAS if i.display_name == name]
         return matches[0] if matches else None
 
     @classmethod
     def is_subject_area(cls, name):
         return cls.get_by_name(name) is not None
+
+
+ALL_FILTERABLE_TAGS = [
+    TagRef.from_name("Civil courts"),
+    TagRef.from_name("Criminal courts"),
+    TagRef.from_name("Digital prison reporting"),
+    TagRef.from_name("Electronic monitoring"),
+    TagRef.from_name("Employees"),
+    TagRef.from_name("Family courts"),
+    TagRef.from_name("Finance"),
+    TagRef.from_name("Prison"),
+    TagRef.from_name("Probation"),
+    TagRef.from_name("Property"),
+    TagRef.from_name("Reoffending"),
+    TagRef.from_name("Risk"),
+]

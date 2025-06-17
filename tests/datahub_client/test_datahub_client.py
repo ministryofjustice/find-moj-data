@@ -8,6 +8,7 @@ from datahub_client.entities import (
     AccessInformation,
     Chart,
     Column,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Database,
@@ -393,6 +394,7 @@ class TestCatalogueClientWithDatahub:
                     description="The primary identifier for the dataset entity.",
                     nullable=False,
                     is_primary_key=True,
+                    quality_metrics=ColumnQualityMetrics(),
                     foreign_keys=[
                         ColumnRef(
                             name="urn",

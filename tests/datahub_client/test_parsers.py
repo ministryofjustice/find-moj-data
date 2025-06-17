@@ -4,6 +4,8 @@ from datahub_client.entities import (
     AccessInformation,
     Chart,
     Column,
+    ColumnAssertionType,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
@@ -19,6 +21,7 @@ from datahub_client.entities import (
     PublicationCollection,
     PublicationDataset,
     RelationshipType,
+    Schema,
     SecurityClassification,
     Table,
     TagRef,
@@ -34,7 +37,9 @@ from datahub_client.parsers import (
     EntityParserFactory,
     PublicationCollectionParser,
     PublicationDatasetParser,
+    SchemaParser,
     TableParser,
+    parse_assertions,
 )
 from datahub_client.search.search_types import SearchResult
 
@@ -131,6 +136,7 @@ def mock_graphql_search_result(mock_dataset_graphql_entity):
         (TableParser(), Table),
         (ChartParser(), Chart),
         (DatabaseParser(), Database),
+        (SchemaParser(), Schema),
         (PublicationCollectionParser(), PublicationCollection),
         (PublicationDatasetParser(), PublicationDataset),
         (DashboardParser(), Dashboard),
@@ -155,6 +161,108 @@ class TestEntityParser:
     @pytest.fixture
     def parser(self):
         return EntityParser()
+
+    def test_parse_assertions(self):
+        assertions_input = {
+            "total": 2,
+            "assertions": [
+                {
+                    "info": {
+                        "datasetAssertion": {
+                            "nativeType": "column_completeness_green_property",
+                            "nativeParameters": [
+                                {"key": "column_name", "value": "col1"}
+                            ],
+                        }
+                    },
+                    "runEvents": {"runEvents": [{"result": {"type": "SUCCESS"}}]},
+                },
+                {
+                    "info": {
+                        "datasetAssertion": {
+                            "nativeType": "consistency_amber_property",
+                            "nativeParameters": [
+                                {"key": "column_name", "value": "col2"}
+                            ],
+                        }
+                    },
+                    "runEvents": {"runEvents": [{"result": {"type": "FAILED"}}]},
+                },
+            ],
+        }
+
+        parsed_assertions = parse_assertions(assertions_input)
+        assert "col1" in parsed_assertions
+        assert "col2" in parsed_assertions
+        assert (
+            parsed_assertions["col1"][ColumnAssertionType.COMPLETENESS]["green"]
+            == "SUCCESS"
+        )
+        assert (
+            parsed_assertions["col2"][ColumnAssertionType.CONSISTENCY]["amber"]
+            == "FAILED"
+        )
+
+    def test_parse_columns_with_assertions(self, parser):
+        entity = {
+            "schemaMetadata": {
+                "fields": [
+                    {
+                        "fieldPath": "col1",
+                        "label": None,
+                        "nullable": False,
+                        "description": "Test column 1",
+                        "type": "STRING",
+                        "nativeDataType": "string",
+                    },
+                    {
+                        "fieldPath": "col2",
+                        "label": None,
+                        "nullable": True,
+                        "description": "Test column 2",
+                        "type": "INT",
+                        "nativeDataType": "integer",
+                    },
+                ],
+                "primaryKeys": ["col1"],
+                "foreignKeys": [],
+            },
+            "assertions": {
+                "total": 2,
+                "assertions": [
+                    {
+                        "info": {
+                            "datasetAssertion": {
+                                "nativeType": "column_completeness_green_property",
+                                "nativeParameters": [
+                                    {"key": "column_name", "value": "col1"}
+                                ],
+                            }
+                        },
+                        "runEvents": {"runEvents": [{"result": {"type": "SUCCESS"}}]},
+                    },
+                    {
+                        "info": {
+                            "datasetAssertion": {
+                                "nativeType": "consistency_amber_property",
+                                "nativeParameters": [
+                                    {"key": "column_name", "value": "col2"}
+                                ],
+                            }
+                        },
+                        "runEvents": {"runEvents": [{"result": {"type": "FAILED"}}]},
+                    },
+                ],
+            },
+        }
+
+        columns = parser.parse_columns(entity)
+
+        assert len(columns) == 2
+        assert columns[0].name == "col1"
+        assert columns[0].quality_metrics.completeness == "good"
+        assert columns[1].name == "col2"
+        assert columns[1].quality_metrics.consistency == "poor"
 
     def test_parse_columns_with_primary_key_and_foreign_key(self, parser):
         entity = {
@@ -200,6 +308,7 @@ class TestEntityParser:
                 description="The primary identifier for the dataset entity.",
                 nullable=False,
                 is_primary_key=True,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[],
             ),
             Column(
@@ -209,6 +318,7 @@ class TestEntityParser:
                 description="Upstream lineage of a dataset",
                 nullable=False,
                 is_primary_key=False,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[
                     ColumnRef(
                         name="urn",
@@ -256,6 +366,7 @@ class TestEntityParser:
                 description="Upstream lineage of a dataset",
                 nullable=False,
                 is_primary_key=False,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[],
             ),
             Column(
@@ -265,6 +376,7 @@ class TestEntityParser:
                 description="The primary identifier for the dataset entity.",
                 nullable=False,
                 is_primary_key=False,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[],
             ),
         ]
@@ -295,6 +407,7 @@ class TestEntityParser:
                 description="",
                 nullable=False,
                 is_primary_key=False,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[],
             )
         ]
@@ -542,6 +655,7 @@ class TestEntityParser:
                 description="An unknown field type",
                 nullable=True,
                 is_primary_key=False,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[],
             )
         ]
@@ -856,6 +970,15 @@ class TestEntityParserFactory:
                     }
                 },
                 PublicationCollectionParser,
+            ),
+            (
+                {
+                    "entity": {
+                        "type": DatahubEntityType.CONTAINER.value,
+                        "subTypes": {"typeNames": [DatahubSubtype.SCHEMA.value]},
+                    }
+                },
+                SchemaParser,
             ),
         ],
     )

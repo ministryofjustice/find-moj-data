@@ -1,7 +1,9 @@
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
 .app-metadata-list {
     @extend .govuk-summary-list;
     @extend .govuk-summary-list--no-border;
-    @include govuk-responsive-margin(4, "bottom");
+    @include govuk-responsive-margin(3, "bottom");
 
     .app-metadata-list__row {
         @extend .govuk-summary-list__row;

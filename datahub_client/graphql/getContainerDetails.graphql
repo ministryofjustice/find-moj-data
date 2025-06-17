@@ -49,6 +49,9 @@ query getContainer($urn: String!) {
             properties {
               name
               description
+              lastModified {
+                time
+              }
             }
             tags {
               tags {

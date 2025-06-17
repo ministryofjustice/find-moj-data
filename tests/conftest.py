@@ -1,3 +1,4 @@
+import time
 from random import choice
 from typing import Any, Generator
 from unittest.mock import MagicMock, patch
@@ -18,6 +19,7 @@ from datahub_client.client import DataHubCatalogueClient
 from datahub_client.entities import (
     Chart,
     Column,
+    ColumnQualityMetrics,
     ColumnRef,
     CustomEntityProperties,
     Dashboard,
@@ -92,6 +94,9 @@ class Page:
 
     def primary_heading(self):
         return self.selenium.find_element(By.TAG_NAME, "h1")
+
+    def sleep(self, seconds: float = 0.1):
+        time.sleep(seconds)
 
 
 class DetailsPage(Page):
@@ -435,6 +440,7 @@ def generate_table_metadata(
                 description=column_description,
                 nullable=False,
                 is_primary_key=True,
+                quality_metrics=ColumnQualityMetrics(),
                 foreign_keys=[
                     ColumnRef(
                         name="urn",
@@ -866,14 +872,14 @@ def mock_get_glossary_terms_response(mock_catalogue):
         page_results=[
             SearchResult(
                 urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
-                name="IAO",
-                description="Information asset owner.\n",
+                name="NOMIS",
+                description="NOMIS",
                 metadata={
                     "parentNodes": [
                         {
                             "properties": {
-                                "name": "Data protection terms",
-                                "description": "Data protection terms",
+                                "name": "Data sources",
+                                "description": "Data sources",
                             }
                         }
                     ]
@@ -882,14 +888,14 @@ def mock_get_glossary_terms_response(mock_catalogue):
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
-                name="Other term",
-                description="Term description to test groupings work",
+                name="XHIBIT",
+                description="XHIBIT",
                 metadata={
                     "parentNodes": [
                         {
                             "properties": {
-                                "name": "Data protection terms",
-                                "description": "Data protection terms",
+                                "name": "Data sources",
+                                "description": "Data sources",
                             }
                         }
                     ]
@@ -898,9 +904,18 @@ def mock_get_glossary_terms_response(mock_catalogue):
             ),
             SearchResult(
                 urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
-                name="Security classification",
-                description="Only data that is 'official'",
-                metadata={"parentNodes": []},
+                name="Asset",
+                description="Asset",
+                metadata={
+                    "parentNodes": [
+                        {
+                            "properties": {
+                                "name": "Other technical terms",
+                                "description": "Other technical terms",
+                            }
+                        }
+                    ]
+                },
                 result_type=GlossaryTermEntityMapping,
             ),
         ],
@@ -950,7 +965,7 @@ def valid_form(valid_subject_area_choice):
             "sort": "ascending",
             "clear_filter": False,
             "clear_label": False,
-            "tags": ["tag-1"],
+            "tags": ["Risk"],
         }
     )
 

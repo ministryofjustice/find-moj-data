@@ -194,14 +194,8 @@ class SearchService(GenericService):
             "highlighted_results": self.highlighted_results.page_results,
             "h1_value": "Search MoJ data",
             "page_obj": self.paginator.get_page(self.page),
-            "page_range": self.paginator.get_elided_page_range(  # type: ignore
-                self.page, on_each_side=2, on_ends=1
-            ),
             "number_of_words": len(self.form_data.get("query", "").split()),
-            "paginator": self.paginator,
-            "results_per_page": items_per_page,
             "total_results_str": total_results,
-            "total_results": self.results.total_results,
             "remove_filter_hrefs": self._generate_remove_filter_hrefs(),
             "readable_match_reasons": self._get_match_reason_display_names(),
         }

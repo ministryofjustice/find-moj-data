@@ -62,9 +62,6 @@ jobs:
     name: Push image to CP namespace ECR and apply deployment in CP
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read # This is required for actions/checkout
     steps:
       - uses: actions/checkout@v4
 
@@ -145,6 +142,7 @@ jobs:
           NOTIFY_DATA_OWNER_TEMPLATE_ID: ${{ vars. NOTIFY_DATA_OWNER_TEMPLATE_ID }}
           NOTIFY_SENDER_TEMPLATE_ID: ${{ vars.NOTIFY_SENDER_TEMPLATE_ID }}
           NOTIFY_DATA_CATALOGUE_TEMPLATE_ID: ${{ vars.NOTIFY_DATA_CATALOGUE_TEMPLATE_ID }}
+          NOTIFY_FEEDBACK_TEMPLATE_ID: ${{ vars.NOTIFY_FEEDBACK_TEMPLATE_ID }}
           DATA_CATALOGUE_EMAIL: ${{ vars.DATA_CATALOGUE_EMAIL }}
           LIMIT_WHITELIST: ${{ secrets.LIMIT_WHITELIST }}
           QUICKSIGHT_ACCOUNT_ID: ${{ secrets.QUICKSIGHT_ACCOUNT_ID }}
@@ -182,10 +180,10 @@ jobs:
 
       - name: Slack failure notification
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
+        uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:
           payload: |
             {"blocks":[{"type": "section","text": {"type": "mrkdwn","text": ":no_entry: Failed GitHub Action:"}},{"type": "section","fields":[{"type": "mrkdwn","text": "*Workflow:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }}>"},{"type": "mrkdwn","text": "*Job:*\n${{ github.job }}"},{"type": "mrkdwn","text": "*Repo:*\n${{ github.repository }}"}]}]}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_TYPE: incoming-webhook

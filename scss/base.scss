@@ -1,22 +1,23 @@
-$govuk-assets-path: "/static/assets/";
-$moj-assets-path: "/static/assets/";
-$app-images-path: "/static/assets/images";
+@use "vars";
 
-// Removes need to put classes on all elements
-$govuk-global-styles: true;
+@use "node_modules/govuk-frontend/dist/govuk" as * with (
+  $govuk-assets-path: vars.$assets-path,
+  $govuk-global-styles: vars.$govuk-global-styles,
+  $govuk-new-typography-scale: vars.$govuk-new-typography-scale,
+);
 
-$govuk-new-typography-scale: true;
+@forward "node_modules/@ministryofjustice/frontend/moj/all"  with (
+  $moj-assets-path: vars.$assets-path,
+);
 
-@import "node_modules/govuk-frontend/dist/govuk/index";
-@import "node_modules/@ministryofjustice/frontend/moj/all";
-@import "./components/search";
-@import "./components/masthead";
-@import "./glossary";
-@import "./details";
-@import "./components/table";
-@import "./components/cards";
-@import "./components/card-grid";
-@import "./components/metadata-list";
+@use "node_modules/@x-govuk/govuk-prototype-components/src/x-govuk/components/masthead";
+@use "./components/search";
+@use "./glossary";
+@use "./details";
+@use "./components/table";
+@use "./components/card-grid";
+@use "./components/metadata-list";
+
 
 .js-required {
   display: none;
@@ -77,4 +78,22 @@ code {
 // with better spacing, as the default was too tight
 .app-card-grid__description {
   max-width: 90%;
+}
+
+// This hides the blue underline on the "Home" link when we are on that page,
+// as it clashes with the blue of the masthead components and its inverse
+// phase banner.
+.skip-underlined-current.moj-primary-navigation__link[aria-current]:before {
+  display: none;
+}
+
+// Workaround for compiled markdown not following design system markup.
+.markdown-container ul {
+  @extend .govuk-list;
+  @extend .govuk-list--bullet;
+}
+
+.markdown-container ol {
+  @extend .govuk-list;
+  @extend .govuk-list--number;
 }

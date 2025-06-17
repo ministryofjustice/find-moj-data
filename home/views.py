@@ -3,7 +3,11 @@ import logging
 from urllib.parse import urlparse
 
 from django.conf import settings
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseBadRequest,
+)
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 
@@ -13,6 +17,7 @@ from datahub_client.entities import (
     DatabaseEntityMapping,
     PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
+    SchemaEntityMapping,
     TableEntityMapping,
 )
 from datahub_client.exceptions import EntityDoesNotExist
@@ -25,13 +30,14 @@ from home.service.details import (
     DatasetDetailsService,
     PublicationCollectionDetailsService,
     PublicationDatasetDetailsService,
+    SchemaDetailsService,
 )
 from home.service.details_csv import (
     DashboardDetailsCsvFormatter,
     DatabaseDetailsCsvFormatter,
     DatasetDetailsCsvFormatter,
 )
-from home.service.glossary import GlossaryService
+from home.service.glossary import GlossaryService, GlossaryTermService
 from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 from home.service.subject_area_fetcher import SubjectAreaFetcher
@@ -39,6 +45,7 @@ from home.service.subject_area_fetcher import SubjectAreaFetcher
 type_details_map = {
     TableEntityMapping.url_formatted: DatasetDetailsService,
     DatabaseEntityMapping.url_formatted: DatabaseDetailsService,
+    SchemaEntityMapping.url_formatted: SchemaDetailsService,
     ChartEntityMapping.url_formatted: ChartDetailsService,
     DashboardEntityMapping.url_formatted: DashboardDetailsService,
     PublicationCollectionEntityMapping.url_formatted: PublicationCollectionDetailsService,
@@ -76,6 +83,8 @@ def details_view_csv(request, result_type, urn) -> HttpResponse:
             csv_formatter = DatasetDetailsCsvFormatter(DatasetDetailsService(urn))
         case DatabaseEntityMapping.url_formatted:
             csv_formatter = DatabaseDetailsCsvFormatter(DatabaseDetailsService(urn))
+        case SchemaEntityMapping.url_formatted:
+            csv_formatter = DatabaseDetailsCsvFormatter(SchemaDetailsService(urn))
         case DashboardEntityMapping.url_formatted:
             csv_formatter = DashboardDetailsCsvFormatter(DashboardDetailsService(urn))
         case _:
@@ -85,7 +94,7 @@ def details_view_csv(request, result_type, urn) -> HttpResponse:
     # In case there are any quotes in the filename, remove them in order to
     # not to break the header.
     unsavoury_characters = str.maketrans({'"': ""})
-    filename = urn.translate(unsavoury_characters) + ".csv"
+    filename = csv_formatter.filename().translate(unsavoury_characters)
 
     response = HttpResponse(
         content_type="text/csv",
@@ -121,6 +130,11 @@ def glossary_view(request):
     return render(request, "glossary.html", glossary_service.context)
 
 
+def glossary_term_view(request, urn, page="1"):
+    service = GlossaryTermService(page, urn)
+    return render(request, "glossary_term.html", service.context)
+
+
 def metadata_specification_view(request):
     metadata_specification = MetadataSpecificationService()
     return render(
@@ -145,3 +159,23 @@ def cookies_view(request):
         "previous_page": referer or "/",  # Provide a default fallback if none found
     }
     return render(request, "cookies.html", context)
+
+
+def accessibility_statement_view(request):
+    valid_subject_areas = [
+        urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS
+    ]
+    referer = request.META.get("HTTP_REFERER")
+
+    if referer:
+        referer_domain = urlparse(referer).netloc
+
+        # Validate this referer domain against declared valid domains
+        if referer_domain not in valid_subject_areas:
+            referer = "/"  # Set to home page if invalid
+
+    context = {
+        "previous_page": referer or "/",  # Provide a default fallback if none found
+        "h1_value": "Accessibility statement",
+    }
+    return render(request, "accessibility_statement.html", context)
