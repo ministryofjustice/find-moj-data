@@ -50,7 +50,7 @@ class CustomClassProcessor(Treeprocessor):
                 "h1": "govuk-heading-xl",
                 "h2": "govuk-heading-l",
                 "h3": "govuk-heading-m",
-                "ul": "govuk-list govuk-list--bullet",
+                "ul": "govuk-list govuk-list--bullet govuk-list--spaced",
                 "table": "govuk-table",
                 "thead": "govuk-table__header",
                 "tr": "govuk-table__row",
@@ -75,24 +75,24 @@ def make_side_bar_items():
     and creates the sidebar object
     """
     sidebar = Sidebar()
-    for file in os.listdir(DOCS_DIR):
-        if file.endswith(".md"):
-            with open(os.path.join(DOCS_DIR, file), "r", encoding="utf-8") as f:
-                content = f.read()
-                subheader = []
-                for line in content.split("\n"):
-                    if line.startswith("# "):  # Header level 1
-                        header = line[2:].strip()
-                    elif line.startswith("##"):  # Header level 2 or higher
-                        subheader.append(line[3:].strip())
+    docs = sorted(doc for doc in os.listdir(DOCS_DIR) if doc.endswith(".md"))
+    for file in docs:
+        with open(os.path.join(DOCS_DIR, file), "r", encoding="utf-8") as f:
+            content = f.read()
+            subheader = []
+            for line in content.split("\n"):
+                if line.startswith("# "):  # Header level 1
+                    header = line[2:].strip()
+                elif line.startswith("##"):  # Header level 2 or higher
+                    subheader.append(line[3:].strip())
 
-                sidebar.add_item(
-                    SidebarItem(
-                        header=header,
-                        header_slug=slugify(header),
-                        subheader=subheader,
-                    )
+            sidebar.add_item(
+                SidebarItem(
+                    header=header,
+                    header_slug=slugify(header),
+                    subheader=subheader,
                 )
+            )
     return sidebar
 
 
@@ -104,7 +104,7 @@ def get_markdown_content(filename):
         return f.read()
 
 
-def userguide_view(request, slug="Overview"):
+def userguide_view(request, slug="About"):
     # Generate a sidebar menu from the file structure
     sidebar_items = make_side_bar_items()
     original_header = sidebar_items.slug_to_header.get(slug, slug)
@@ -117,6 +117,7 @@ def userguide_view(request, slug="Overview"):
             "attr_list",
             CustomClassExtension(),
             "tables",
+            "extra",
         ],
     )
     return render(
