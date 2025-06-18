@@ -47,7 +47,7 @@
                            class="govuk-checkboxes__input" form="searchform"
                            onchange="document.getElementById('searchform').submit();" id="id_tags_{{ forloop.counter0 }}" {% if tag.entity.properties.slug in request.get_full_path %}checked{% endif %}>
                     <label class="govuk-label govuk-checkboxes__label"
-                           for="id_tags_{{ forloop.counter0 }}">  {{ tag.entity.properties.name }} ({{ tag.count }})
+                           for="id_tags_{{ forloop.counter0 }}">  {{ tag.entity.properties.name }}
                     </label>
                   </div>
                 {% endfor %}
