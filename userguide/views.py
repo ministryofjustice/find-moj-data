@@ -104,7 +104,7 @@ def get_markdown_content(filename):
         return f.read()
 
 
-def userguide_view(request, slug="About"):
+def userguide_view(request, slug="about"):
     # Generate a sidebar menu from the file structure
     sidebar_items = make_side_bar_items()
     original_header = sidebar_items.slug_to_header.get(slug, slug)
