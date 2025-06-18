@@ -100,7 +100,6 @@ class SearchClient:
             for item in response["facets"]:
                 if item["field"] == "tags":
                     for tag in item["aggregations"]:
-                        print(tag)
                         if tag["entity"]["properties"] is not None:
 
                             if tag["entity"]["properties"]["name"] in filterable:
