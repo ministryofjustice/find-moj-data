@@ -6,13 +6,13 @@ from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph
 
 from datahub_client.entities import (
+    ALL_FILTERABLE_TAGS,
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
     SchemaEntityMapping,
     SubjectAreaTaxonomy,
     TableEntityMapping,
-    ALL_FILTERABLE_TAGS,
 )
 from datahub_client.exceptions import CatalogueError
 from datahub_client.graphql.loader import get_graphql_query
@@ -96,16 +96,19 @@ class SearchClient:
         logger.debug(json.dumps(response, indent=2))
         tags = []
         filterable = [tag.display_name for tag in ALL_FILTERABLE_TAGS]
-        for item in response["facets"]:
-            if item["field"] == "tags":
-                for tag in item['aggregations']:
-                    print(tag)
-                    if tag['entity']['properties'] is not None:
+        if "facets" in response:
+            for item in response["facets"]:
+                if item["field"] == "tags":
+                    for tag in item["aggregations"]:
+                        print(tag)
+                        if tag["entity"]["properties"] is not None:
 
-                        if tag['entity']['properties']['name'] in filterable:
+                            if tag["entity"]["properties"]["name"] in filterable:
 
-                            tag['entity']['properties']['slug'] = tag['entity']['properties']['name'].replace(' ', '+')
-                            tags.append(tag)
+                                tag["entity"]["properties"]["slug"] = tag["entity"][
+                                    "properties"
+                                ]["name"].replace(" ", "+")
+                                tags.append(tag)
 
         page_results, malformed_result_urns = self._parse_search_results(response)
 
@@ -114,7 +117,7 @@ class SearchClient:
             page_results=page_results,
             malformed_result_urns=malformed_result_urns,
             facets=self._parse_facets(response.get("facets", [])),
-            tags = tags
+            tags=tags,
         )
 
     def _parse_search_results(self, response) -> Tuple[list, list]:
