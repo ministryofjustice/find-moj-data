@@ -162,14 +162,23 @@ cython_debug/
 .DS_Store
 
 #static files dirs
+!static/assets/images/guide/
+!static/assets/images/guide/*.jpg
 staticfiles/
-static/assets/*
+# static/assets/*
+static/assets/css/
+static/assets/css/*
+static/assets/images/*.png
+static/assets/images/*.svg
+static/assets/images/*.ico
+static/assets/rebrand
+static/assets/fonts
+static/assets/*.json
 !/static/assets/js/
 /static/assets/js/*.min.js
 /static/assets/js/*.map
 # Unignore the guide images directory
-!/static/assets/images/guide/
-!/static/assets/images/guide/**
+
 
 node_modules
 
