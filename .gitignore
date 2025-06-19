@@ -165,7 +165,6 @@ cython_debug/
 !static/assets/images/guide/
 !static/assets/images/guide/*.jpg
 staticfiles/
-# static/assets/*
 static/assets/css/
 static/assets/css/*
 static/assets/images/*.png
