@@ -69,7 +69,7 @@ class CustomClassExtension(Extension):
         md.treeprocessors.register(CustomClassProcessor(md), "govuk_class", 5)
 
 
-def make_side_bar_items():
+def make_side_bar_items() -> Sidebar:
     """
     Loads all markdown files in the content directory
     and creates the sidebar object
@@ -96,7 +96,10 @@ def make_side_bar_items():
     return sidebar
 
 
-def get_markdown_content(filename):
+def get_markdown_content(filename) -> str:
+    """The filename should be the header slug without the .md extension, and in the same case.
+    i.e, "# About" for "About.md".
+    """
     file_path = os.path.normpath(os.path.join(DOCS_DIR, filename + ".md"))
     if not file_path.startswith(DOCS_DIR):
         raise Http404("Page not found")
