@@ -49,7 +49,7 @@ You can see other information about a data asset, including:
 * security classification
 * how regularly the data owner intends to update the data
 
-<img src="/static/assets/images/guide/example-table-entity.jpg" alt="A screenshot illustrating a data asset example showcasing format type, table descriptions, field descriptions, database descriptions, table schemas, security classification, and how regularly the data owner intends to update the data" width="1000" height="900">
+<img src="/static/assets/images/guide/example-table-entity.jpg" alt="A screenshot illustrating a data asset example showcasing format type, table descriptions, field descriptions, database descriptions, table schemas, security classification, and how regularly the data owner intends to update the data" width="900" height="800">
 
 ### How Find MoJ Data works
 
