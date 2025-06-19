@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third" id="sticky-sidebar">
+        <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
             <h2 class="govuk-heading-s govuk-!-margin-bottom-3">On this page</h2>
             <ul class="govuk-list govuk-list--spaced">
                 {% for header, header_slug, subheaders in sidebar %}
@@ -15,7 +15,7 @@
                     <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline govuk-!-font-size-21" href="{% url 'userguide:userguide_detail' slug=header_slug %}">{{ header }}</a>
                 </li>
                 {% if subheaders %}
-                    <ul class="govuk-list govuk-list--bullet govuk-!-margin-left-5">
+                    <ul class="govuk-list govuk-list">
                         {% for subheader in subheaders %}
                             <li>
                                 <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline govuk-!-margin-left-5" href="{% url 'userguide:userguide_detail' slug=header_slug %}#{{ subheader|slugify|lower }}">{{ subheader }}</a>
@@ -26,7 +26,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="govuk-grid-column-two-thirds" style="border-left: 2px solid #b1b4b6;">
+        <div class="govuk-grid-column-three-quarters" style="border-left: 2px solid #b1b4b6;">
         {{ content|safe }}
     </div>
 </div>
