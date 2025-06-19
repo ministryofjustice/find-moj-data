@@ -14,6 +14,7 @@ RUN apk add --no-cache bash
 # Compile static assets
 COPY package.json package-lock.json ./
 COPY scripts/import-static.sh ./scripts/import-static.sh
+COPY static/assets/images/guide ./static/assets/images/guide
 COPY static/assets/js ./static/assets/js
 COPY scss ./scss
 RUN npm install --omit=dev
