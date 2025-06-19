@@ -162,6 +162,8 @@ cython_debug/
 .DS_Store
 
 #static files dirs
+!static/assets/images/guide
+!static/assets/images/guide/*
 staticfiles/
 static/assets/*
 !/static/assets/js/
