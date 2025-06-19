@@ -116,10 +116,16 @@ class SearchFacets:
         return None
 
 
+class TagItem:
+    name: str
+    slug: str
+    count: int
+
+
 @dataclass
 class SearchResponse:
     total_results: int
     page_results: list[SearchResult]
     malformed_result_urns: list[str] = field(default_factory=list)
     facets: SearchFacets = field(default_factory=SearchFacets)
-    tags: list[str] = field(default_factory=list)
+    tags: list[TagItem | None] = field(default_factory=list)

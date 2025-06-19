@@ -107,12 +107,13 @@ class SearchClient:
                                 tag["entity"]["properties"]["slug"] = tag["entity"][
                                     "properties"
                                 ]["name"].replace(" ", "+")
-                                new_tag = {"name": tag["entity"]["properties"]["name"],
-                                           "slug": tag["entity"]["properties"]["slug"],
-                                           "count": tag["count"]}
+                                new_tag = {
+                                    "name": tag["entity"]["properties"]["name"],
+                                    "slug": tag["entity"]["properties"]["slug"],
+                                    "count": tag["count"],
+                                }
 
                                 tags.append(new_tag)
-        print(tags)
         page_results, malformed_result_urns = self._parse_search_results(response)
 
         return SearchResponse(

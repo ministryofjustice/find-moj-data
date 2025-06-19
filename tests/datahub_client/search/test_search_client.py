@@ -24,6 +24,7 @@ from datahub_client.search.search_types import (
     SearchResponse,
     SearchResult,
     SortOption,
+    TagItem,
 )
 
 
@@ -1165,3 +1166,40 @@ def test_get_tags(mock_graph, searcher):
         ("tag2", "urn:li:tag:tag2"),
         ("tag3", "urn:li:tag:tag3"),
     ]
+
+
+def test_dynamic_tags(mock_graph, searcher):
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
+    assert subject_area
+
+    datahub_response = {
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 0,
+            "total": 0,
+            "searchResults": [],
+            "tags": [
+                {
+                    "name": "Electronic monitoring",
+                    "slug": "Electronic+monitoring",
+                    "count": 317,
+                },
+            ],
+        }
+    }
+    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+    response = searcher.search()
+    tag = TagItem()
+    tag.name = "Electronic monitoring"
+    tag.slug = "Electronic+monitoring"
+    tag.count = 317
+
+    expected = SearchResponse(
+        total_results=0,
+        page_results=[],
+        tags=[tag],
+    )
+    print(expected)
+    print(response)
+    assert response == expected
