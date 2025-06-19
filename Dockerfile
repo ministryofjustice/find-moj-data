@@ -14,6 +14,7 @@ RUN apk add --no-cache bash
 # Compile static assets
 COPY package.json package-lock.json ./
 COPY scripts/import-static.sh ./scripts/import-static.sh
+COPY static/assets/images/guide ./static/assets/images/guide
 COPY static/assets/js ./static/assets/js
 COPY scss ./scss
 RUN npm install --omit=dev
@@ -81,6 +82,7 @@ COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} datahub_client ./datahub_clien
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} home ./home
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} templates ./templates
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} dashboard ./dashboard
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} userguide ./userguide
 
 
 # Run django commands
