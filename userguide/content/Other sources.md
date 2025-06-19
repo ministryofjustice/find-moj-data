@@ -1,4 +1,4 @@
-# Other Sources
+# Other sources
 
 ### Airflow
 AP Users using Airflow for data workloads will generally register outputs with the AWS Glue catalog, so that they are accessible for analysis via AWS Athena. Find MoJ Data can easily ingest from AWS Glue, [please follow our instructions to do so.](/userguide/adding-metadata-from-the-aws-glue-catalog/)

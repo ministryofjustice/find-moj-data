@@ -1,4 +1,4 @@
-# Create a Derived Table
+# Create a derived table
 
 Find MoJ data uses the [Create a Derived Table](https://github.com/moj-analytical-services/create-a-derived-table) service (CaDeT) as a source of metadata about the Analytical Platform. CaDeT uses a python package called [dbt](https://www.getdbt.com/product/what-is-dbt).
 
