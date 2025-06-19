@@ -95,16 +95,11 @@
             </a>
           </li>
           <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="https://user-guide.find-moj-data.service.justice.gov.uk">
+            <a class="moj-primary-navigation__link" href="{% url 'userguide:userguide_index' %}" {% if request.path == userguide_url %}aria-current="page"{% endif %}>
               User guide
             </a>
           </li>
-          <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="{% url 'userguide:userguide_index' %}" {% if request.path == userguide_url %}aria-current="page"{% endif %}>
-              New User guide
-            </a>
-          </li>
-          
+
           <li class="moj-primary-navigation__item">
             <a class="moj-primary-navigation__link" href="https://user-guide.find-moj-data.service.justice.gov.uk/index.html#contact-us">
               Contact us
