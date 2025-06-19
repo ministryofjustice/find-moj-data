@@ -43,11 +43,11 @@
 
                   <div aria-label="selection will trigger the filter and refresh the search results"
                        class="govuk-checkboxes__item">
-                    <input type="checkbox" name="tags" value="{{ tag.entity.properties.name }}"
+                    <input type="checkbox" name="tags" value="{{ tag.name }}"
                            class="govuk-checkboxes__input" form="searchform"
-                           onchange="document.getElementById('searchform').submit();" id="id_tags_{{ forloop.counter0 }}" {% if tag.entity.properties.slug in request.get_full_path %}checked{% endif %}>
+                           onchange="document.getElementById('searchform').submit();" id="id_tags_{{ forloop.counter0 }}" {% if tag.slug in request.get_full_path %}checked{% endif %}>
                     <label class="govuk-label govuk-checkboxes__label"
-                           for="id_tags_{{ forloop.counter0 }}">  {{ tag.entity.properties.name }}
+                           for="id_tags_{{ forloop.counter0 }}">  {{ tag.name }}
                     </label>
                   </div>
                 {% endfor %}
