@@ -101,7 +101,7 @@
           </li>
 
           <li class="moj-primary-navigation__item">
-            <a class="moj-primary-navigation__link" href="https://user-guide.find-moj-data.service.justice.gov.uk/index.html#contact-us">
+            <a class="moj-primary-navigation__link" href="{% url 'userguide:userguide_index' %}about/#contact-us" {% if request.path == userguide_url %}aria-current="page"{% endif %}>
               Contact us
             </a>
           </li>
@@ -110,7 +110,7 @@
               Analytical Platform <span class="govuk-visually-hidden">(opens in new tab)</span>
             </a>
           </li>
-        </ul>
+        </ul>ß
 
       </nav>
 
