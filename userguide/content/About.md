@@ -34,7 +34,7 @@ You can use Find MoJ Data to:
 * evaluate datasets for relevance without needing access to the data they contain
 * locate data owners, so you can request access or report a problem
 
-### Using Find MoJ Data for your work
+### Using Find MoJ Data
 
 Anyone with an @justice.gov.uk (Microsoft) account can sign in to Find MoJ Data and start using it. Use the service’s search bar to discover datasets through keywords, or select a category to see all datasets in one area. You can filter results to focus on relevant datasets.
 
@@ -51,7 +51,7 @@ You can see other information about a data asset, including:
 
 <img src="/static/assets/images/guide/example-table-entity.jpg" alt="A screenshot illustrating a data asset example showcasing format type, table descriptions, field descriptions, database descriptions, table schemas, security classification, and how regularly the data owner intends to update the data" width="900" height="800">
 
-### How Find MoJ Data works
+### How it works
 
 <img src="/static/assets/images/guide/fmd-process-schematic.jpg" alt="A flowchart illustrating the steps in the Find MoJ Data process, starting with data owners providing datasets and ending with Find MoJ Data users accessing the information" width="700" height="300">
 
@@ -62,7 +62,7 @@ You can see other information about a data asset, including:
 * Users can find and evaluate dataset entries on Find MoJ Data.
 * Users can contact data owners to request access or report a problem.
 
-### MoJ data sources
+### Data sources
 
 The MoJ owns a large number of data sources which are stored and maintained differently, making the data landscape complex and difficult to join up. While we continue to grow and improve the catalogue, be aware that not every database or dataset we own is catalogued.
 
