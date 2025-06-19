@@ -63,7 +63,7 @@ The required fields are as follows:
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ |
 | dc_where_to_access_dataset | An enum representing how the data can be accessed by end users, eg a choice of ["AnalyticalPlatform", "CourtsAPI"]. For DBT, this always defaults to AnalyticalPlatform. | AnalyticalPlatform |
 
-### Ensure the data custodian has an account in Datahub
+### Data custodian
 
 The user's Datahub account must exist before you set the `dc_data_custodian`. This will happen automatically the first time they log into Datahub.
 
@@ -73,7 +73,7 @@ The user ID is visible in the URL of a user page in Datahub, e.g.
 
 [Speak to Find MoJ data team](/userguide/#contact-us) if you would like us to manually add a set of users without them logging in.
 
-### Full DBT project file example
+### DBT project file example
 
 ```yaml
 models:
