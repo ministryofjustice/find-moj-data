@@ -1175,31 +1175,32 @@ def test_dynamic_tags(mock_graph, searcher):
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
-            "count": 0,
-            "total": 0,
+            "count": 4,
+            "total": 4,
             "searchResults": [],
-            "tags": [
-                {
-                    "name": "Electronic monitoring",
-                    "slug": "Electronic+monitoring",
-                    "count": 317,
-                },
-            ],
+            "facets":[
+                {'field': 'tags', 'displayName': 'Tag', 'aggregations': [{'value': 'urn:li:tag:Prisons and probation', 'count': 4, 'entity': {'properties': {'name': 'Prisons and probation'}}}                                                                         ]
+                 }],
+            "tags": ['"afasdfsad'],
+
+
         }
     }
     mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
-
     response = searcher.search()
     tag = TagItem()
-    tag.name = "Electronic monitoring"
-    tag.slug = "Electronic+monitoring"
-    tag.count = 317
+    tag.name = "Prisons and probation"
+    tag.slug = "Prisons+and+probation"
+    tag.count = 4
 
     expected = SearchResponse(
-        total_results=0,
+        total_results=4,
         page_results=[],
         tags=[tag],
     )
+    print("expected")
     print(expected)
+    print("response")
     print(response)
+
     assert response == expected
