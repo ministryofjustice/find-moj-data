@@ -796,6 +796,7 @@ ALL_FILTERABLE_TAGS = [
     TagRef.from_name("Employees"),
     TagRef.from_name("Family courts"),
     TagRef.from_name("Finance"),
+    TagRef.from_name("Prisons"),
     TagRef.from_name("Prison"),
     TagRef.from_name("Probation"),
     TagRef.from_name("Property"),

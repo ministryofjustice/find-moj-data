@@ -24,6 +24,7 @@ from datahub_client.search.search_types import (
     SearchResponse,
     SearchResult,
     SortOption,
+    TagItem,
 )
 
 
@@ -87,7 +88,8 @@ def test_one_search_result(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                        # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": {
                             "urn": "urn:li:container:abc",
@@ -181,7 +183,8 @@ def test_dataset_result(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                        # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
                         "ownership": None,
@@ -267,7 +270,8 @@ def test_bad_entity_type(mock_graph, searcher):
                     "matchedFields": [],
                     "entity": {
                         "type": "UNKNOWN",
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                        # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
                         "ownership": None,
@@ -306,7 +310,8 @@ def test_2_dataset_results_with_one_malformed_result(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                        # noqa E501
                         "platform": {"name": "bigquery"},
                         "container": None,
                         "ownership": None,
@@ -413,7 +418,8 @@ def test_full_page(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                        # noqa E501
                         "platform": {"name": "bigquery"},
                         "ownership": None,
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
@@ -432,7 +438,8 @@ def test_full_page(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers2,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers2,PROD)",
+                        # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers2",
                         "properties": {"name": "customers2", "qualifiedName": None},
                     },
@@ -443,7 +450,8 @@ def test_full_page(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers3,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers3,PROD)",
+                        # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers3",
                         "properties": {
                             "name": "customers3",
@@ -553,7 +561,8 @@ def test_query_match(mock_graph, searcher):
                     "matchedFields": [
                         {
                             "name": "urn",
-                            "value": "urn:li:dataset:(urn:li:dataPlatform:looker,long_tail_companions.view.customer_focused,PROD)",  # noqa E501
+                            "value": "urn:li:dataset:(urn:li:dataPlatform:looker,long_tail_companions.view.customer_focused,PROD)",
+                            # noqa E501
                         },
                         {"name": "name", "value": "customer_focused"},
                         {
@@ -564,7 +573,8 @@ def test_query_match(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                        # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "properties": {
                             "name": "customers",
@@ -589,7 +599,8 @@ def test_query_match(mock_graph, searcher):
                 fully_qualified_name="calm-pagoda-323403.jaffle_shop.customers",
                 description="",
                 matches={
-                    "urn": "urn:li:dataset:(urn:li:dataPlatform:looker,long_tail_companions.view.customer_focused,PROD)",  # noqa E501
+                    "urn": "urn:li:dataset:(urn:li:dataPlatform:looker,long_tail_companions.view.customer_focused,PROD)",
+                    # noqa E501
                     "name": "customer_focused",
                     "sensitivityLevel": "OFFICIAL",
                 },
@@ -627,7 +638,8 @@ def test_result_with_owner(mock_graph, searcher):
                     "entity": {
                         "type": "DATASET",
                         "subTypes": {"typeNames": ["Table"]},
-                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",  # noqa E501
+                        "urn": "urn:li:dataset:(urn:li:dataPlatform:bigquery,calm-pagoda-323403.jaffle_shop.customers,PROD)",
+                        # noqa E501
                         "name": "calm-pagoda-323403.jaffle_shop.customers",
                         "ownership": {
                             "owners": [
@@ -1143,7 +1155,6 @@ def test_tag_to_display(tags, result):
 
 
 def test_get_tags(mock_graph, searcher):
-
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -1165,3 +1176,52 @@ def test_get_tags(mock_graph, searcher):
         ("tag2", "urn:li:tag:tag2"),
         ("tag3", "urn:li:tag:tag3"),
     ]
+
+
+def test_dynamic_tags(mock_graph, searcher):
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
+    assert subject_area
+
+    datahub_response = {
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 20,
+            "total": 4,
+            "searchResults": [],
+            "facets": [
+                {
+                    "field": "tags",
+                    "displayName": "Tag",
+                    "aggregations": [
+                        {
+                            "value": "urn:li:tag:Prisons",
+                            "count": 4,
+                            "entity": {"properties": {"name": "Prisons"}},
+                        },
+                    ],
+                }
+            ],
+        },
+    }
+
+    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+    response = searcher.search()
+    tag = TagItem()
+    tag.name = "Prisons"
+    tag.slug = "Prisons"
+    tag.count = 4
+
+    expected = SearchResponse(
+        total_results=4,
+        page_results=[],
+        facets=SearchFacets(
+            facets={
+                "tags": [
+                    FacetOption(value="urn:li:tag:Prisons", label="Prisons", count=4)
+                ]
+            }
+        ),
+        tags=[tag.__dict__],
+    )
+
+    assert response == expected

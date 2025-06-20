@@ -6,6 +6,7 @@ from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph
 
 from datahub_client.entities import (
+    ALL_FILTERABLE_TAGS,
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
@@ -93,7 +94,26 @@ class SearchClient:
             return SearchResponse(total_results=0, page_results=[])
 
         logger.debug(json.dumps(response, indent=2))
+        tags = []
+        filterable = [tag.display_name for tag in ALL_FILTERABLE_TAGS]
+        if "facets" in response:
+            for item in response["facets"]:
+                if item["field"] == "tags":
+                    for tag in item["aggregations"]:
+                        if tag["entity"]["properties"] is not None:
 
+                            if tag["entity"]["properties"]["name"] in filterable:
+
+                                tag["entity"]["properties"]["slug"] = tag["entity"][
+                                    "properties"
+                                ]["name"].replace(" ", "+")
+                                new_tag = {
+                                    "name": tag["entity"]["properties"]["name"],
+                                    "slug": tag["entity"]["properties"]["slug"],
+                                    "count": tag["count"],
+                                }
+
+                                tags.append(new_tag)
         page_results, malformed_result_urns = self._parse_search_results(response)
 
         return SearchResponse(
@@ -101,6 +121,7 @@ class SearchClient:
             page_results=page_results,
             malformed_result_urns=malformed_result_urns,
             facets=self._parse_facets(response.get("facets", [])),
+            tags=tags,
         )
 
     def _parse_search_results(self, response) -> Tuple[list, list]:
