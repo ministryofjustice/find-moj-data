@@ -1183,31 +1183,45 @@ def test_dynamic_tags(mock_graph, searcher):
     assert subject_area
 
     datahub_response = {
-        "searchAcrossEntities": {'start': 0,
-                                 'count': 20,
-                                 'total': 4,
-                                 "searchResults": [],
-                                 'facets': [{'field': 'tags', 'displayName': 'Tag', 'aggregations': [{'value': 'urn:li:tag:Prisons and probation', 'count': 4,'entity': {'properties': {'name': 'Prisons and probation'}}},]}]
-                                 },
-                                 "tags": [{'name': 'Prisons and probation', 'slug': 'Prisons+and+probation', 'count':4 }, ],
-
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 20,
+            "total": 4,
+            "searchResults": [],
+            "facets": [
+                {
+                    "field": "tags",
+                    "displayName": "Tag",
+                    "aggregations": [
+                        {
+                            "value": "urn:li:tag:Prisons",
+                            "count": 4,
+                            "entity": {"properties": {"name": "Prisons"}},
+                        },
+                    ],
+                }
+            ],
+        },
     }
 
     mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
     response = searcher.search()
     tag = TagItem()
-    tag.name = "Prisons and probation"
-    tag.slug = "Prisons+and+probation"
+    tag.name = "Prisons"
+    tag.slug = "Prisons"
     tag.count = 4
 
     expected = SearchResponse(
         total_results=4,
         page_results=[],
-        tags=[tag],
+        facets=SearchFacets(
+            facets={
+                "tags": [
+                    FacetOption(value="urn:li:tag:Prisons", label="Prisons", count=4)
+                ]
+            }
+        ),
+        tags=[tag.__dict__],
     )
-    print("expected")
-    print(expected)
-    print("response")
-    print(response)
 
     assert response == expected
