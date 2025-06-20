@@ -1175,7 +1175,7 @@ def test_dynamic_tags(mock_graph, searcher):
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
-            "count": 4,
+                "count": 4,
             "total": 4,
             "searchResults": [],
             "facets":[
