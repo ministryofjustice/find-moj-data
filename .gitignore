@@ -164,6 +164,7 @@ cython_debug/
 #static files dirs
 !static/assets/images/guide/
 !static/assets/images/guide/*.jpg
+!static/assets/images/guide/*.svg
 staticfiles/
 static/assets/css/
 static/assets/css/*
