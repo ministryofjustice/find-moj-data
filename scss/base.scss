@@ -47,6 +47,20 @@ mark {
   overflow-wrap: break-word;
 }
 
+pre {
+  background: #f3f2f1;  /* GOV.UK light grey */
+  padding: 10px;
+  border-left: 4px solid #1d70b8; /* GOV.UK blue */
+  border-radius: 5px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  color: #0b0c0c;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
 code {
   font-family: monaco, Consolas, "Lucida Console", monospace;
   @include govuk-font-size($size: 16); /* Slightly smaller font size */
