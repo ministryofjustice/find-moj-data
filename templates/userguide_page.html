@@ -9,6 +9,31 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
             <h2 class="govuk-heading-s govuk-!-margin-bottom-3">On this page</h2>
+            <div class="moj-side-navigation govuk-!-padding-right-4 govuk-!-padding-top-2" role="navigation" aria-label="Website navigation">
+                <ul class="moj-side-navigation__list">
+                    {% for header, header_slug, subheaders in sidebar %}
+                    <li class="moj-side-navigation__item moj-side-navigation__item--active">
+                        <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline govuk-!-font-size-21" href="{% url 'userguide:userguide_detail' slug=header_slug %}">{{ header }}</a>
+                    </li>
+                    {% if subheaders %}
+                        <ul class="moj-side-navigation__list moj-side-navigation__list--nested">
+                            {% for subheader in subheaders %}
+                                <li class="moj-side-navigation__item">
+                                    <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline" href="{% url 'userguide:userguide_detail' slug=header_slug %}#{{ subheader|slugify|lower }}"> - {{ subheader }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="govuk-grid-column-three-quarters" style="border-left: 2px solid #b1b4b6;">
+        {{ content|safe }}
+    </div>
+    <!-- <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter" id="sticky-sidebar">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-3">On this page</h2>
             <ul class="govuk-list govuk-list--spaced">
                 {% for header, header_slug, subheaders in sidebar %}
                 <li>
@@ -28,6 +53,5 @@
         </div>
         <div class="govuk-grid-column-three-quarters" style="border-left: 2px solid #b1b4b6;">
         {{ content|safe }}
-    </div>
-</div>
+    </div> -->
 {% endblock content %}
