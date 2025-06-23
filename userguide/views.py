@@ -116,11 +116,9 @@ def userguide_view(request, slug="about"):
         content,
         extensions=[
             "fenced_code",
-            "codehilite",
             "attr_list",
             CustomClassExtension(),
             "tables",
-            "extra",
         ],
     )
     return render(
