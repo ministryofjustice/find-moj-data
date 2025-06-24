@@ -11,7 +11,7 @@
   <div class="govuk-grid-column-one-quarter">
     <nav class="moj-side-navigation" aria-label="Side navigation">
         {% for header, header_slug, subheaders in sidebar %}
-        <h4 class="moj-side-navigation__title">{{ header }}</h4>
+        <a href="{% url 'userguide:userguide_detail' slug=header_slug %}" class="govuk-link govuk-link--no-visited-state">{{ header }}</a>
             {% if subheaders %}
             <ul class="moj-side-navigation__list" id="single-select">
                 {% for subheader in subheaders %}
