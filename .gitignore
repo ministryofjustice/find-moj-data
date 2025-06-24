@@ -177,8 +177,6 @@ static/assets/*.json
 !/static/assets/js/
 /static/assets/js/*.min.js
 /static/assets/js/*.map
-# Unignore the guide images directory
-
 
 node_modules
 
