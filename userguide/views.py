@@ -51,6 +51,7 @@ class CustomClassProcessor(Treeprocessor):
                 "h2": "govuk-heading-l",
                 "h3": "govuk-heading-m",
                 "ul": "govuk-list govuk-list--bullet govuk-list--spaced",
+                "a": "govuk-link govuk-link--no-visited-state govuk-link--no-underline",
                 "table": "govuk-table",
                 "thead": "govuk-table__header",
                 "tr": "govuk-table__row",
