@@ -162,8 +162,18 @@ cython_debug/
 .DS_Store
 
 #static files dirs
+!static/assets/images/guide/
+!static/assets/images/guide/*.jpg
+!static/assets/images/guide/*.svg
 staticfiles/
-static/assets/*
+static/assets/css/
+static/assets/css/*
+static/assets/images/*.png
+static/assets/images/*.svg
+static/assets/images/*.ico
+static/assets/rebrand
+static/assets/fonts
+static/assets/*.json
 !/static/assets/js/
 /static/assets/js/*.min.js
 /static/assets/js/*.map
