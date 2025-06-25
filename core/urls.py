@@ -27,6 +27,7 @@ urlpatterns = [
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
     path("dashboard/", include("dashboard.urls", namespace="dashboard")),
+    path("", include("userguide.urls", namespace="userguide")),
 ]
 
 if settings.DEBUG and not settings.TESTING:
