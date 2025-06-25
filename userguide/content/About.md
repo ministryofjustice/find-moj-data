@@ -4,7 +4,7 @@
 
 The aim is to increase the value of MoJ data by making it easy to find and understand. The catalogue contains **metadata** - data which describes the data assets - not the data itself.
 
-The service is now in private beta with a limited number of datasets catalogued, currently limited to models from the [Create a Derived Table (CaDeT)](https://github.com/moj-analytical-services/create-a-derived-table) service and charts from [Justice Data](https://data.justice.gov.uk/).
+The service is now in public beta with a limited number of datasets catalogued, currently limited to models from the [Create a Derived Table (CaDeT)](https://github.com/moj-analytical-services/create-a-derived-table) service and charts from [Justice Data](https://data.justice.gov.uk/).
 
 ### Getting started
 
