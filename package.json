@@ -15,6 +15,6 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
     "axe": "^12.1.0",
-    "jest": "^29.7.0"
+    "jest": "^30.0.2"
   }
 }
