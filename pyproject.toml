@@ -9,7 +9,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "^5.2"
-django-prometheus = "^2.4.0"
+django-prometheus = "^2.4.1"
 pyyaml = "^6.0.2"
 gunicorn = "^23.0.0"
 whitenoise = "^6.9.0"

@@ -947,17 +947,18 @@ sqlparse = ">=0.2"
 
 [[package]]
 name = "django-prometheus"
-version = "2.4.0"
+version = "2.4.1"
 description = "Django middlewares to monitor your application with Prometheus.io."
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "django_prometheus-2.4.0-py2.py3-none-any.whl", hash = "sha256:5b46b5f07b02ba8dd7abdb03a3c39073e8fd9120e2293a1ecb949bbb865378ac"},
-    {file = "django_prometheus-2.4.0.tar.gz", hash = "sha256:67da5c73d8e859aa73f6e11f52341c482691b17f8bd9844157cff6cdf51ce9bc"},
+    {file = "django_prometheus-2.4.1-py2.py3-none-any.whl", hash = "sha256:7fe5af7f7c9ad9cd8a429fe0f3f1bf651f0e244f77162147869eab7ec09cc5e7"},
+    {file = "django_prometheus-2.4.1.tar.gz", hash = "sha256:073628243d2a6de6a8a8c20e5b512872dfb85d66e1b60b28bcf1eca0155dad95"},
 ]
 
 [package.dependencies]
+Django = ">=4.2,<6.0"
 prometheus-client = ">=0.7"
 
 [[package]]
@@ -3579,4 +3580,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "c3cf4fce292d566dbcf5de374d85ec828d54c083b1c7d64b7f1f63737235ab5c"
+content-hash = "c1d60085bb71a0f84df6e5c8ea0d28495a06bbcca4cd0ec5e9958446594fd091"
