@@ -24,6 +24,7 @@ from datahub_client.search.search_types import (
     SearchResponse,
     SearchResult,
     SortOption,
+    TagItem,
 )
 
 
@@ -1143,7 +1144,6 @@ def test_tag_to_display(tags, result):
 
 
 def test_get_tags(mock_graph, searcher):
-
     datahub_response = {
         "searchAcrossEntities": {
             "start": 0,
@@ -1165,3 +1165,49 @@ def test_get_tags(mock_graph, searcher):
         ("tag2", "urn:li:tag:tag2"),
         ("tag3", "urn:li:tag:tag3"),
     ]
+
+
+def test_dynamic_tags(mock_graph, searcher):
+    subject_area = SubjectAreaTaxonomy.get_by_name("Prisons and probation")
+    assert subject_area
+
+    datahub_response = {
+        "searchAcrossEntities": {
+            "start": 0,
+            "count": 20,
+            "total": 4,
+            "searchResults": [],
+            "facets": [
+                {
+                    "field": "tags",
+                    "displayName": "Tag",
+                    "aggregations": [
+                        {
+                            "value": "urn:li:tag:Prison",
+                            "count": 4,
+                            "entity": {"properties": {"name": "Prison"}},
+                        },
+                    ],
+                }
+            ],
+        },
+    }
+
+    mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+    response = searcher.search()
+    tag = TagItem(name="Prison", slug="Prison", count=4)
+
+    expected = SearchResponse(
+        total_results=4,
+        page_results=[],
+        facets=SearchFacets(
+            facets={
+                "tags": [
+                    FacetOption(value="urn:li:tag:Prison", label="Prison", count=4)
+                ]
+            }
+        ),
+        tags=[tag],
+    )
+    print("response", response)
+    assert response == expected
