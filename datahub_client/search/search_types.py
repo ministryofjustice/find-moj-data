@@ -116,6 +116,7 @@ class SearchFacets:
         return None
 
 
+@dataclass
 class TagItem:
     name: str
     slug: str
