@@ -34,7 +34,7 @@ ENV UV_CACHE_DIR="/tmp/uv_cache"
 # Install UV and Python dependencies to a virtualenv
 COPY pyproject.toml uv.lock ./
 RUN pip install uv==0.7.17
-RUN uv sync --no-dev && rm -rf $UV_CACHE_DIR
+RUN uv sync --no-dev --locked && rm -rf $UV_CACHE_DIR
 
 #### FINAL RUNTIME IMAGE
 FROM ${ecr_path}${python_version}-${alpine_version} AS runtime
