@@ -6,6 +6,7 @@ from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph
 
 from datahub_client.entities import (
+    ALL_FILTERABLE_TAGS,
     ChartEntityMapping,
     DatabaseEntityMapping,
     FindMoJdataEntityMapper,
@@ -24,6 +25,7 @@ from datahub_client.search.search_types import (
     SearchResponse,
     SortOption,
     SubjectAreaOption,
+    TagItem,
 )
 
 logger = logging.getLogger(__name__)
@@ -93,7 +95,7 @@ class SearchClient:
             return SearchResponse(total_results=0, page_results=[])
 
         logger.debug(json.dumps(response, indent=2))
-
+        # Parse the search results
         page_results, malformed_result_urns = self._parse_search_results(response)
 
         return SearchResponse(
@@ -101,7 +103,38 @@ class SearchClient:
             page_results=page_results,
             malformed_result_urns=malformed_result_urns,
             facets=self._parse_facets(response.get("facets", [])),
+            tags=self._parse_dynamic_tags(response.get("facets", [])),
         )
+
+    def _parse_dynamic_tags(self, facets: list[dict[str, Any]]) -> list[TagItem | None]:
+        """Parses tags from the search response facets,
+        to provide only the options of tags contained within the search results to the user.
+
+        Args:
+            facets (dict[str, Any]): List of facets from the search response.
+
+        Returns:
+            list[TagItem | None]: Returns a list of TagItem objects or None if no tags are found.
+        """
+        filterable = [tag.display_name for tag in ALL_FILTERABLE_TAGS]
+        tags = []
+        for item in facets:
+            if item["field"] == "tags":
+                for tag in item["aggregations"]:
+                    if (
+                        tag["entity"]["properties"] is not None
+                        and tag["entity"]["properties"]["name"] in filterable
+                    ):
+                        slug = tag["entity"]["properties"]["name"].replace(" ", "+")
+
+                        new_tag = TagItem(
+                            name=tag["entity"]["properties"]["name"],
+                            slug=slug,
+                            count=tag["count"],
+                        )
+                        tags.append(new_tag)
+
+        return tags
 
     def _parse_search_results(self, response) -> Tuple[list, list]:
         page_results = []
