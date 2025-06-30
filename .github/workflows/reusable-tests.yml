@@ -20,6 +20,7 @@ jobs:
         id: setup-uv
         uses: astral-sh/setup-uv@v6
         with:
+          version: "0.7.17"
           python-version: "3.11"
       - name: Install project
         run: |
