@@ -4,7 +4,6 @@ ARG python_version=python:3.11
 ARG node_version=node:23
 
 #### NODE.JS BUILD
-
 FROM ${ecr_path}${node_version}-${alpine_version} AS node_builder
 WORKDIR /app
 
@@ -20,7 +19,6 @@ COPY scss ./scss
 RUN npm install --omit=dev
 
 #### PYTHON BUILD
-
 FROM ${ecr_path}${python_version}-${alpine_version} AS python_builder
 WORKDIR /app
 
@@ -29,18 +27,16 @@ RUN apk add --no-cache gcc musl-dev libffi-dev
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV POETRY_NO_INTERACTION=1 \
-  POETRY_VIRTUALENVS_IN_PROJECT=1 \
-  POETRY_VIRTUALENVS_CREATE=1 \
-  POETRY_CACHE_DIR=/tmp/poetry_cache
 
-# Install python dependencies to a virtualenv
-COPY pyproject.toml poetry.lock ./
-RUN pip install poetry==1.8.4
-RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
+# UV Environment variables
+ENV UV_CACHE_DIR="/tmp/uv_cache"
+
+# Install UV and Python dependencies to a virtualenv
+COPY pyproject.toml uv.lock ./
+RUN pip install uv==0.7.17
+RUN uv sync --no-dev && rm -rf $UV_CACHE_DIR
 
 #### FINAL RUNTIME IMAGE
-
 FROM ${ecr_path}${python_version}-${alpine_version} AS runtime
 
 # Workaround for CVE-2024-6345 upgrade the installed version of setuptools to the latest version
