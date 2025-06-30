@@ -1,51 +1,55 @@
-[tool.poetry]
+[project]
 name = "find-moj-data"
 version = "0.1.0"
 description = ""
-authors = ["Mitch Dawson <Mitchell.Dawson@justice.gov.uk>"]
+authors = [{ name = "Mitch Dawson", email = "Mitchell.Dawson@justice.gov.uk" }]
+requires-python = "~=3.11"
 readme = "README.md"
-package-mode = false
+dependencies = [
+    "django~=5.2",
+    "django-prometheus>=2.4.1,<3",
+    "pyyaml>=6.0.2,<7",
+    "gunicorn>=23.0.0,<24",
+    "whitenoise>=6.9.0,<7",
+    "markdown~=3.8",
+    "python-dotenv>=1.1.1,<2",
+    "markdown-headdown>=0.1.3,<0.2",
+    "nltk>=3.9.1,<4",
+    "sentry-sdk[django]>=2.32.0,<3",
+    "django-azure-auth==2.3.0",
+    "django-waffle>=5.0.0,<6",
+    "psycopg>=3.2.9,<4",
+    "psycopg-binary>=3.2.9,<4",
+    "django-debug-toolbar>=5.2.0,<6",
+    "redis[hiredis]>=6.2.0,<7",
+    "notifications-python-client>=10.0.1,<11",
+    "pydantic[email]>=2.11.7,<3",
+    "email-validator==2.2.0",
+    "acryl-datahub[datahub-rest]>=1.1.0.4,<2",
+    "deepdiff>=8.5.0,<9",
+    "boto3>=1.38.46,<2",
+    "setuptools==80.9.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-django = "^5.2"
-django-prometheus = "^2.4.1"
-pyyaml = "^6.0.2"
-gunicorn = "^23.0.0"
-whitenoise = "^6.9.0"
-markdown = "^3.8"
-python-dotenv = "^1.1.1"
-markdown-headdown = "^0.1.3"
-nltk = "^3.9.1"
-sentry-sdk = { extras = ["django"], version = "^2.32.0" }
-django-azure-auth = "2.3.0"
-django-waffle = "^5.0.0"
-psycopg = "^3.2.9"
-psycopg-binary = "^3.2.9"
-django-debug-toolbar = "^5.2.0"
-redis = { extras = ["hiredis"], version = "^6.2.0" }
-notifications-python-client = "^10.0.1"
-pydantic = { extras = ["email"], version = "^2.11.7" }
-email-validator = "2.2.0"
-acryl-datahub = { extras = ["datahub-rest"], version = "^1.1.0.4" }
-deepdiff = "^8.5.0"
-boto3 = "^1.38.46"
-setuptools = "80.9.0"
+[dependency-groups]
+dev = [
+    "black>=25.1.0,<26",
+    "pre-commit>=4.2.0,<5",
+    "selenium~=4.33.0",
+    "flake8>=6.1.0",
+    "pytest-django>=4.11.1,<5",
+    "pytest-cov>=6.2.1,<7",
+    "faker>=37.4.0,<38",
+    "isort>=6.0.1,<7",
+    "freezegun>=1.5.2,<2",
+]
 
-[tool.poetry.group.dev.dependencies]
-black = "^25.1.0"
-pre-commit = "^4.2.0"
-selenium = "~=4.33.0"
-flake8 = ">=6.1.0"
-pytest-django = "^4.11.1"
-pytest-cov = "^6.2.1"
-faker = "^37.4.0"
-isort = "^6.0.1"
-freezegun = "^1.5.2"
+[tool.uv]
+package = false
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings"
