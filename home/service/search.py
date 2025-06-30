@@ -198,6 +198,7 @@ class SearchService(GenericService):
             "total_results_str": total_results,
             "remove_filter_hrefs": self._generate_remove_filter_hrefs(),
             "readable_match_reasons": self._get_match_reason_display_names(),
+            "tags": self.results.tags,
         }
 
         return context
