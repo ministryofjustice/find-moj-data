@@ -17,7 +17,7 @@
           <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Subject area</legend>
             <div class="govuk-form-group">
-              {{form.subject_area}}
+              {{ form.subject_area }}
             </div>
           </fieldset>
         </div>
@@ -38,12 +38,21 @@
           <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Tags</legend>
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-              {% for tag in form.tags %}
-                <div aria-label="selection will trigger the filter and refresh the search results" class="govuk-checkboxes__item">
-                  {{ tag.tag}}
-                  <label class="govuk-label govuk-checkboxes__label" for="{{ tag.id_for_label }}">{{tag.choice_label}}</label>
-                </div>
-              {% endfor %}
+              {% if tags %}
+                {% for tag in tags %}
+                  <div aria-label="selection will trigger the filter and refresh the search results"
+                       class="govuk-checkboxes__item">
+                    <input type="checkbox" name="tags" value="{{ tag.name }}"
+                           class="govuk-checkboxes__input" form="searchform"
+                           onchange="document.getElementById('searchform').submit();" id="id_tags_{{ forloop.counter0 }}" {% if tag.name in request.GET|getlist:"tags" %}checked{% endif %}>
+                    <label class="govuk-label govuk-checkboxes__label"
+                           for="id_tags_{{ forloop.counter0 }}">  {{ tag.name }} ({{ tag.count }})
+                    </label>
+                  </div>
+                {% endfor %}
+              {% else %}
+                No Tags
+              {% endif %}
             </div>
           </fieldset>
         </div>

@@ -1,6 +1,7 @@
 # Define variables
 ENV_FILE := .env
 ENV := local
+BUILD_COMMAND := uv run
 
 # Default target
 all: build
@@ -10,11 +11,11 @@ build: install_deps set_env $(ENV_FILE) assets migrate setup_waffle_switches
 
 # Install Python dependencies
 install_python_deps:
-	if ! command -v poetry >/dev/null 2>&1; then \
-		echo "Poetry is not installed. Please install it from https://python-poetry.org/docs/#installation"; \
+	if ! command -v uv >/dev/null 2>&1; then \
+		echo "Uv is not installed. Please install it from https://docs.astral.sh/uv/getting-started/installation/"; \
 		exit 1; \
 	fi
-	poetry install --no-root
+	uv sync
 
 # Install Node.js dependencies
 install_npm_deps:
@@ -44,11 +45,11 @@ $(ENV_FILE): .env.tpl
 # Collect static files
 assets:
 	npm run dependencies
-	poetry run python manage.py collectstatic --noinput
+	$(BUILD_COMMAND) python manage.py collectstatic --noinput
 
 # Run migrations
 migrate:
-	poetry run python manage.py migrate
+	$(BUILD_COMMAND) python manage.py migrate
 
 # Setup waffle switches
 setup_waffle_switches:
@@ -58,22 +59,22 @@ setup_waffle_switches:
 
 # Run the application
 run:
-	poetry run python manage.py runserver
+	$(BUILD_COMMAND) python manage.py runserver
 
 # Run unit tests
 test: unit integration lint
 
 # Run Python and Javascript unit tests
 unit:
-	poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
+	$(BUILD_COMMAND) pytest --cov -m 'not slow and not datahub' --doctest-modules
 	npm test
 
 # Run integration tests. Requires chromedriver - version works with chromedriver 127.0.1 use - `npm install -g chromedriver@127.0.1`
 integration:
-	TESTING=true poetry run pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
+	TESTING=true $(BUILD_COMMAND)  pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
 
 end_to_end:
-	TESTING=true poetry run pytest tests/end_to_end --chromedriver-path $$(which chromedriver)
+	TESTING=true $(BUILD_COMMAND)  pytest tests/end_to_end --chromedriver-path $$(which chromedriver)
 
 # Get npm cache directory and store it in a file
 export_npm_cache_dir:

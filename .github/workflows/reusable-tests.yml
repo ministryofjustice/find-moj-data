@@ -16,21 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc
 
-      - name: Install poetry
-        run: pipx install poetry
-
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+      - name: Install UV & Python
+        id: setup-uv
+        uses: astral-sh/setup-uv@v6
         with:
+          version: "0.7.17"
           python-version: "3.11"
-          cache: poetry
-          cache-dependency-path: ./poetry.lock
-
       - name: Install project
         run: |
           make install_python_deps
           make install_npm_deps
-          poetry install --no-interaction --no-root
           sudo apt-get install gettext
 
       - name: Setup Node.js
@@ -57,7 +52,7 @@ jobs:
         id: fast-tests
         env:
           DJANGO_ALLOWED_HOSTS: "localhost testserver"
-        run: TESTING=True poetry run pytest --cov -m 'not slow and not datahub' --doctest-modules
+        run: TESTING=True uv run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
       - name: Set up chromedriver
         # https://github.com/marketplace/actions/setup-chromedriver
