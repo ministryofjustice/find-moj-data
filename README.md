@@ -14,10 +14,10 @@ uses the GOV.UK design system, and focuses on data discovery.
 
 Required for building the front end javascript dependencies
 
-## Poetry
+## UV
 
 Required for managing python package dependencies.
-Follow installation instructions here https://python-poetry.org/docs/#installation
+Follow installation instructions here https://docs.astral.sh/uv/getting-started/installation/
 
 ## 1Password
 

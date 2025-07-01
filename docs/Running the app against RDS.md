@@ -103,10 +103,10 @@ the local port.
 8.  Alternatively run the development server
 
     ```
-    poetry run python manage.py collectstatic --noinput
-    poetry run python manage.py migrate
-    poetry run python manage.py waffle_switch search-sort-radio-buttons off --create
-    poetry run python manage.py runserver
+    uv run python manage.py collectstatic --noinput
+    uv run python manage.py migrate
+    uv run python manage.py waffle_switch search-sort-radio-buttons off --create
+    uv run python manage.py runserver
     ```
 
 9.  The app should be running at http://localhost:8000
@@ -117,12 +117,12 @@ the local port.
 
 ## Contributing
 
-Run `pre-commit install` from inside the poetry environment to set up pre commit hooks.
+Run `pre-commit install` from inside the uv environment to set up pre commit hooks.
 
 - Linting and formatting handled by `black`, `flake8`, `pre-commit`, and `isort`
   - `isort` is configured in `pyproject.toml`
 - `detect-secrets` is used to prevent leakage of secrets
-- `sync_with_poetry` ensures the versions of the modules in the pre-commit specification
+- `sync_with_uv` ensures the versions of the modules in the pre-commit specification
   are kept in line with those in the `pyproject.toml` config.
 
 ## Testing
