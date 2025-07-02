@@ -3,7 +3,7 @@ name = "find-moj-data"
 version = "0.1.0"
 description = ""
 authors = [{ name = "Mitch Dawson", email = "Mitchell.Dawson@justice.gov.uk" }]
-requires-python = "~=3.11"
+requires-python = "~=3.13.5"
 readme = "README.md"
 dependencies = [
     "django~=5.2",
@@ -29,6 +29,7 @@ dependencies = [
     "deepdiff>=8.5.0,<9",
     "boto3>=1.38.46,<2",
     "setuptools==80.9.0",
+    "cffi==1.17.1",
 ]
 
 [dependency-groups]
