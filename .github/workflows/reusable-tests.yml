@@ -21,7 +21,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           version: "0.7.17"
-          python-version: "3.11"
+          python-version: "3.13.5"
       - name: Install project
         run: |
           make install_python_deps
@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "21"
+          node-version: "24.3"
 
       - name: Get npm cache directory
         id: npm-cache-dir
@@ -73,7 +73,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "21"
+          node-version: "24.3"
 
       - name: Get npm cache directory
         id: npm-cache-dir
