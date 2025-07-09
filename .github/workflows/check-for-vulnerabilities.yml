@@ -13,7 +13,7 @@ jobs:
       id-token: write
       security-events: write
     steps:
-      - uses: kunalnagarco/action-cve@v1.14.13
+      - uses: kunalnagarco/action-cve@v1.14.14
         with:
           token: ${{ secrets.VULN_CHECK_PERSONAL_ACCESS_TOKEN }}
           slack_webhook: ${{ secrets.VULN_CHECK_SLACK_WEBHOOK }}
