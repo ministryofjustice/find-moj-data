@@ -801,4 +801,6 @@ ALL_FILTERABLE_TAGS = [
     TagRef.from_name("Property"),
     TagRef.from_name("Reoffending"),
     TagRef.from_name("Risk"),
+    TagRef.from_name("Police national computer"),
+    TagRef.from_name("Employment and benefits"),
 ]
