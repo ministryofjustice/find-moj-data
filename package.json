@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-env": "^7.28.3",
     "@ministryofjustice/frontend": "^5.1.5",
-    "@x-govuk/govuk-prototype-components": "^5.0.1",
+    "@x-govuk/govuk-prototype-components": "^5.0.2",
     "babel-jest": "^30.0.5",
     "govuk-frontend": "^5.11.1",
     "jest-environment-jsdom": "^30.0.5",
@@ -13,7 +13,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/jest-dom": "^6.8.0",
     "axe": "^12.1.0",
     "jest": "^30.0.5"
   }
