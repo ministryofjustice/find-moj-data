@@ -2,7 +2,35 @@
     <div class="gem-c-feedback__prompt-content">
       <div class="gem-c-feedback__prompt-questions js-prompt-questions">
         <div class="gem-c-feedback__prompt-question-answer">
-          asdasd
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                  Can you tell us more?
+                </h1>
+              </legend>
+              <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                  {{form.easy_to_find}}
+                  <label class="govuk-label govuk-checkboxes__label" for="waste">
+                    It was easy to find what I needed
+                  </label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  {{form.information_useful}}
+                  <label class="govuk-label govuk-checkboxes__label" for="waste-2">
+                    The information I found was useful
+                  </label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  {{form.information_easy_to_understand}}
+                  <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                    The information I found was easy to understand
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
         </div>
       </div>
     </div>

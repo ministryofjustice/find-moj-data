@@ -7,10 +7,16 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 from core.settings import ALLOWED_HOSTS
 
-from .forms import FeedbackForm, IssueForm
+from .forms import FeedbackForm, FeedbackYesForm, IssueForm
 from .service import send_feedback_notification, send_notifications
 
 log = logging.getLogger(__name__)
+
+
+def feedback_yes_view(request) -> HttpResponse:
+    form = FeedbackYesForm()
+    context = {"form": form}
+    return render(request, "yes.html", context)
 
 
 def feedback_form_view(request) -> HttpResponse:

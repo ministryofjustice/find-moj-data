@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea, TextInput
 
-from .models import Feedback, Issue
+from .models import Feedback, FeedbackYes, Issue
 
 
 def formfield(field, **kwargs):
@@ -71,3 +71,51 @@ class IssueForm(forms.ModelForm):
             "required": "Select if you want us to email you a copy of this report"
         },
     )
+
+
+class FeedbackYesForm(forms.ModelForm):
+
+    class Meta:
+        model = FeedbackYes
+        fields = [
+            "easy_to_find",
+            "information_useful",
+            "information_easy_to_understand",
+            "interested_in_research",
+            "additional_information",
+            "url_path",
+        ]
+        widgets = {
+            "easy_to_find": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "information_useful": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "information_easy_to_understand": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "additional_information": Textarea(
+                attrs={
+                    "class": "govuk-textarea",
+                    "rows": "5",
+                    "aria-describedby": "more-detail-hint",
+                }
+            ),
+            "url_path": forms.HiddenInput(),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not any(
+            cleaned_data.get(field)
+            for field in [
+                "easy_to_find",
+                "information_useful",
+                "information_easy_to_understand",
+                "interested_in_research",
+                "additional_information",
+            ]
+        ):
+            raise forms.ValidationError("Select at least one option or provide details")
+        return cleaned_data

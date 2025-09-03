@@ -74,3 +74,44 @@ class Issue(models.Model):
             )
         )
         return encoded_entity_url
+
+
+class FeedbackYes(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=True
+    )
+
+    url_path = models.CharField(max_length=250)
+
+    easy_to_find = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="It was easy to find what I needed",
+        default=False,
+    )
+    information_useful = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information I found was useful",
+        default=False,
+    )
+    information_easy_to_understand = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information I found was easy to understand",
+        default=False,
+    )
+    interested_in_research = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Interested in participating in research to improve the site",
+        default=False,
+    )
+    additional_information = models.TextField(
+        verbose_name="Anything else you would like to tell us? (optional)",
+        null=True,
+        blank=True,
+    )
