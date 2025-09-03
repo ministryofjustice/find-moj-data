@@ -14,6 +14,7 @@
     <link rel="apple-touch-icon" href="{% static 'assets/images/govuk-icon-180.png' %}">
     <link rel="manifest" href="{% static 'assets/manifest.json' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/base.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'feedback.css' %}">
     <meta property="og:image" content="{% static 'assets/images/govuk-opengraph-image.png' %}">
     <meta name="robots" content="noindex, nofollow" />
   </head>
@@ -38,6 +39,9 @@
         </main>
       </div>
     {% endblock main %}
+          <div class="govuk-width-container app-width-container">
+                {% include "base/feedback.html" %}
+          </div>
     {% include "base/footer.html" %}
     <script type="module">
       import {initAll} from "{% static 'assets/js/govuk-frontend.min.js' %}"
