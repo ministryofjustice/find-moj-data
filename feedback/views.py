@@ -14,6 +14,17 @@ log = logging.getLogger(__name__)
 
 
 def feedback_yes_view(request) -> HttpResponse:
+    if request.method == "POST":
+        form = FeedbackYesForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            success_message = "We'll use it to improve the service."
+            context = {"success_message": success_message}
+            return render(request, "feedback_success.html", context)
+        else:
+            print(form.errors)
+            return render(request, "yes.html", {"form": form})
+
     form = FeedbackYesForm()
     context = {"form": form}
     return render(request, "yes.html", context)
