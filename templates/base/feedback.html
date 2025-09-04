@@ -1,5 +1,4 @@
 <div id="feedback-widget" data-module="feedback ga4-event-tracker" class="gem-c-feedback govuk-!-display-none-print">
-
   <div class="gem-c-feedback__prompt gem-c-feedback__js-show js-prompt" tabindex="-1">
     <div class="gem-c-feedback__prompt-content">
       <div class="gem-c-feedback__prompt-questions js-prompt-questions">
@@ -43,7 +42,7 @@
           <button
             class="govuk-button gem-c-feedback__prompt-link js-toggle-form js-something-is-wrong"
             aria-controls="something-is-wrong"
-            hx-get="{% url 'feedback:report' %}?url_path={{ request.get_full_path }} }}"
+            hx-get="{% url 'feedback:report' %}?url_path={{request.get_full_path}}"
             hx-target="#feedback-widget"
             hx-swap="innerHTML"
             data-ga4-event="{&quot;event_name&quot;:&quot;form_submit&quot;,&quot;type&quot;:&quot;feedback&quot;,&quot;text&quot;:&quot;Report a problem with this page&quot;,&quot;section&quot;:&quot;Is this page useful?&quot;,&quot;tool_name&quot;:&quot;Is this page useful?&quot;}"
@@ -58,4 +57,3 @@
 <div class="feedback-form">
 
 </div>
-

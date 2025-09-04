@@ -2,7 +2,6 @@
   <div class="gem-c-feedback__prompt-content">
     <div class="gem-c-feedback__prompt-questions js-prompt-questions">
       <div class="gem-c-feedback__prompt-question-answer">
-
         <form action="{% url 'feedback:yes' %}" method="post" novalidate>
           {% csrf_token %}
           <input type="hidden" name="url_path" value="{{ url_path }}">

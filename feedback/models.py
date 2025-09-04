@@ -3,7 +3,9 @@ from urllib.parse import ParseResult, quote, urlparse, urlunparse
 from django.conf import settings
 from django.core.validators import MinLengthValidator
 from django.db import models
+
 from feedback.mixins import FeedbackMixin
+
 
 class Feedback(models.Model):
     SATISFACTION_RATINGS = [
