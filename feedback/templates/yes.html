@@ -2,35 +2,69 @@
     <div class="gem-c-feedback__prompt-content">
       <div class="gem-c-feedback__prompt-questions js-prompt-questions">
         <div class="gem-c-feedback__prompt-question-answer">
-          <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                <h1 class="govuk-fieldset__heading">
-                  Can you tell us more?
-                </h1>
-              </legend>
-              <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                  {{form.easy_to_find}}
-                  <label class="govuk-label govuk-checkboxes__label" for="waste">
-                    It was easy to find what I needed
-                  </label>
+          <form action="{% url 'feedback:yes' %}" method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="url_path" value="{{ request.get_full_path }}">
+            <div class="govuk-form-group">
+              <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                  <h1 class="govuk-fieldset__heading">
+                    Can you tell us more?
+                  </h1>
+                </legend>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                  <div class="govuk-checkboxes__item">
+                    {{form.easy_to_find}}
+                    <label class="govuk-label govuk-checkboxes__label" for="waste">
+                      It was easy to find what I needed
+                    </label>
+                  </div>
+                  <div class="govuk-checkboxes__item">
+                    {{form.information_useful}}
+                    <label class="govuk-label govuk-checkboxes__label" for="waste-2">
+                      The information I found was useful
+                    </label>
+                  </div>
+                  <div class="govuk-checkboxes__item">
+                    {{form.information_easy_to_understand}}
+                    <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                      The information I found was easy to understand
+                    </label>
+                  </div>
                 </div>
-                <div class="govuk-checkboxes__item">
-                  {{form.information_useful}}
-                  <label class="govuk-label govuk-checkboxes__label" for="waste-2">
-                    The information I found was useful
-                  </label>
+                <div class="govuk-form-group govuk-!-padding-top-4">
+                  <h2 class="govuk-label-wrapper">
+                    <label class="govuk-label govuk-label--m" for="{{form.how_can_we_improve.id_for_label}}"> Is there anything else you would like to tell us?
+                    </label>
+                  </h2>
+                  {{form.additional_information}}
                 </div>
-                <div class="govuk-checkboxes__item">
-                  {{form.information_easy_to_understand}}
-                  <label class="govuk-label govuk-checkboxes__label" for="waste-3">
-                    The information I found was easy to understand
-                  </label>
+                <div class="govuk-form-group">
+                  <fieldset class="govuk-fieldset" aria-describedby="changedName-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                      <label class="govuk-label govuk-label--m">Are you interested in taking part in research on Find MoJ Data</label>
+                    </legend>
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                      {% for radio in form.interested_in_research %}
+                        <div class="govuk-radios__item">
+                          {{radio.tag}}
+                          <label class="govuk-label govuk-radios__label" for="{{radio.id_for_label}}">
+                            {{radio.choice_label}}
+                          </label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </fieldset>
                 </div>
-              </div>
-            </fieldset>
-          </div>
+                <div class="govuk-button-group">
+                  <button type="submit" class="govuk-button" data-module="govuk-button">
+                    Submit
+                  </button>
+                  <a class="govuk-link" href="#">Cancel</a>
+                </div>
+              </fieldset>
+            </div>
+          </form>
         </div>
       </div>
     </div>

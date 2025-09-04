@@ -98,11 +98,14 @@ class FeedbackYesForm(forms.ModelForm):
             "additional_information": Textarea(
                 attrs={
                     "class": "govuk-textarea",
-                    "rows": "5",
+                    "rows": "3",
                     "aria-describedby": "more-detail-hint",
                 }
             ),
             "url_path": forms.HiddenInput(),
+            "interested_in_research": RadioSelect(
+                attrs={"class": "govuk-radios__input"}
+            ),
         }
 
     def clean(self):
@@ -113,7 +116,6 @@ class FeedbackYesForm(forms.ModelForm):
                 "easy_to_find",
                 "information_useful",
                 "information_easy_to_understand",
-                "interested_in_research",
                 "additional_information",
             ]
         ):

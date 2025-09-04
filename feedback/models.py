@@ -77,6 +77,10 @@ class Issue(models.Model):
 
 
 class FeedbackYes(models.Model):
+    RESEARCH_FEEDBACK_CHOICES = [
+        (True, "Yes"),
+        (False, "No"),
+    ]
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -108,7 +112,8 @@ class FeedbackYes(models.Model):
         null=True,
         blank=True,
         verbose_name="Interested in participating in research to improve the site",
-        default=False,
+        default=True,
+        choices=RESEARCH_FEEDBACK_CHOICES,
     )
     additional_information = models.TextField(
         verbose_name="Anything else you would like to tell us? (optional)",
