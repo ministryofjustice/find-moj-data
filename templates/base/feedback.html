@@ -13,7 +13,7 @@
             <li class="gem-c-feedback__option-list-item">
               <button
                 class="govuk-button gem-c-feedback__prompt-link js-page-is-useful"
-                hx-get="{% url 'feedback:yes' %}"
+                hx-get="{% url 'feedback:yes' %}?url_path={{ request.get_full_path }}"
                 hx-target="#feedback-widget"
                 hx-swap="innerHTML"
                 data-ga4-event="{&quot;event_name&quot;:&quot;form_submit&quot;,&quot;type&quot;:&quot;feedback&quot;,&quot;text&quot;:&quot;Yes&quot;,&quot;section&quot;:&quot;Is this page useful?&quot;,&quot;tool_name&quot;:&quot;Is this page useful?&quot;}"
@@ -26,7 +26,7 @@
               <button
                 class="govuk-button gem-c-feedback__prompt-link js-toggle-form js-page-is-not-useful"
                 aria-controls="page-is-not-useful"
-                hx-get="{% url 'feedback:no' %}"
+                hx-get="{% url 'feedback:no' %}?url_path={{ request.get_full_path }}"
                 hx-target="#feedback-widget"
                 hx-swap="innerHTML"
                 data-ga4-event="{&quot;event_name&quot;:&quot;form_submit&quot;,&quot;type&quot;:&quot;feedback&quot;,&quot;text&quot;:&quot;No&quot;,&quot;section&quot;:&quot;Is this page useful?&quot;,&quot;tool_name&quot;:&quot;Is this page useful?&quot;}"
@@ -43,7 +43,7 @@
           <button
             class="govuk-button gem-c-feedback__prompt-link js-toggle-form js-something-is-wrong"
             aria-controls="something-is-wrong"
-            hx-get="{% url 'feedback:report' %}"
+            hx-get="{% url 'feedback:report' %}?url_path={{ request.?url_path={{ request.get_full_path }} }}"
             hx-target="#feedback-widget"
             hx-swap="innerHTML"
             data-ga4-event="{&quot;event_name&quot;:&quot;form_submit&quot;,&quot;type&quot;:&quot;feedback&quot;,&quot;text&quot;:&quot;Report a problem with this page&quot;,&quot;section&quot;:&quot;Is this page useful?&quot;,&quot;tool_name&quot;:&quot;Is this page useful?&quot;}"

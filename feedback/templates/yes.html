@@ -5,7 +5,7 @@
 
         <form action="{% url 'feedback:yes' %}" method="post" novalidate>
           {% csrf_token %}
-          <input type="hidden" name="url_path" value="{{ request.get_full_path }}">
+          <input type="hidden" name="url_path" value="{{ url_path }}">
           <div class="govuk-form-group">
             {% if form.errors %}
             <div class="govuk-error-summary" data-module="govuk-error-summary">

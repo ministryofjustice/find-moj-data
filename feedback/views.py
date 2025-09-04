@@ -26,7 +26,10 @@ def feedback_yes_view(request) -> HttpResponse:
             return render(request, "yes.html", {"form": form})
 
     form = FeedbackYesForm()
-    context = {"form": form}
+    url_path = request.GET.get('url_path', '')
+
+    context = {"form": form,
+               "url_path": url_path}
     return render(request, "yes.html", context)
 
 
