@@ -7,7 +7,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 from core.settings import ALLOWED_HOSTS
 
-from .forms import FeedbackForm, FeedbackYesForm, IssueForm
+from .forms import FeedbackForm, FeedbackYesForm, IssueForm, FeedbackNoForm, FeedbackReportForm
 from .service import send_feedback_notification, send_notifications
 
 log = logging.getLogger(__name__)
@@ -16,13 +16,11 @@ log = logging.getLogger(__name__)
 def feedback_yes_view(request) -> HttpResponse:
     if request.method == "POST":
         form = FeedbackYesForm(request.POST)
-        print(request.POST)
         if form.is_valid():
             success_message = "We'll use it to improve the service."
             context = {"success_message": success_message}
             return render(request, "feedback_success.html", context)
         else:
-            print(form.errors)
             return render(request, "yes.html", {"form": form})
 
     form = FeedbackYesForm()
@@ -32,6 +30,41 @@ def feedback_yes_view(request) -> HttpResponse:
                "url_path": url_path}
     return render(request, "yes.html", context)
 
+def feedback_no_view(request) -> HttpResponse:
+    if request.method == "POST":
+
+        form = FeedbackYesForm(request.POST)
+        if form.is_valid():
+            success_message = "We'll use it to improve the service."
+            context = {"success_message": success_message}
+            return render(request, "feedback_success.html", context)
+        else:
+            return render(request, "no.html", {"form": form})
+
+    form = FeedbackNoForm()
+    url_path = request.GET.get('url_path', '')
+
+    context = {"form": form,
+               "url_path": url_path}
+    return render(request, "no.html", context)
+
+def feedback_report_view(request) -> HttpResponse:
+    if request.method == "POST":
+
+        form = FeedbackYesForm(request.POST)
+        if form.is_valid():
+            success_message = "We'll use it to improve the service."
+            context = {"success_message": success_message}
+            return render(request, "feedback_success.html", context)
+        else:
+            return render(request, "report.html", {"form": form})
+
+    form = FeedbackReportForm()
+    url_path = request.GET.get('url_path', '')
+
+    context = {"form": form,
+               "url_path": url_path}
+    return render(request, "report.html", context)
 
 def feedback_form_view(request) -> HttpResponse:
     if request.method == "POST":

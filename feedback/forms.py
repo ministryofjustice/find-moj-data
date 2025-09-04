@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea, TextInput
 
-from .models import Feedback, FeedbackYes, Issue
+from .models import Feedback, FeedbackYes, FeedBackNo, FeedBackReport, Issue
 
 
 def formfield(field, **kwargs):
@@ -116,6 +116,111 @@ class FeedbackYesForm(forms.ModelForm):
                 "easy_to_find",
                 "information_useful",
                 "information_easy_to_understand",
+                "additional_information",
+            ]
+        ):
+            raise forms.ValidationError("Select at least one option or provide details")
+        return cleaned_data
+
+
+class FeedbackNoForm(forms.ModelForm):
+
+    class Meta:
+        model = FeedBackNo
+        fields = [
+            "not_clear",
+            "information_not_available",
+            "incomplete_information",
+            "difficult_to_understand",
+            "interested_in_research",
+            "additional_information",
+            "url_path",
+        ]
+        widgets = {
+            "not_clear": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "information_not_available": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "incomplete_information": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "difficult_to_understand": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "additional_information": Textarea(
+                attrs={
+                    "class": "govuk-textarea",
+                    "rows": "3",
+                    "aria-describedby": "more-detail-hint",
+                }
+            ),
+            "url_path": forms.HiddenInput(),
+            "interested_in_research": RadioSelect(
+                attrs={"class": "govuk-radios__input"}
+            ),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not any(
+            cleaned_data.get(field)
+            for field in [
+                "not_clear",
+                "information_not_available",
+                "incomplete_information",
+                "difficult_to_understand",
+                "additional_information",
+            ]
+        ):
+            raise forms.ValidationError("Select at least one option or provide details")
+        return cleaned_data
+
+
+class FeedbackReportForm(forms.ModelForm):
+
+    class Meta:
+        model = FeedBackReport
+        fields = [
+            "not_working",
+            "needs_fixing",
+            "something_else",
+            "interested_in_research",
+            "additional_information",
+            "url_path",
+        ]
+        widgets = {
+            "not_working": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "needs_fixing": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "something_else": forms.CheckboxInput(
+                attrs={"class": "govuk-checkboxes__input"}
+            ),
+            "additional_information": Textarea(
+                attrs={
+                    "class": "govuk-textarea",
+                    "rows": "3",
+                    "aria-describedby": "more-detail-hint",
+                }
+            ),
+            "url_path": forms.HiddenInput(),
+            "interested_in_research": RadioSelect(
+                attrs={"class": "govuk-radios__input"}
+            ),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not any(
+            cleaned_data.get(field)
+            for field in [
+                "not_working",
+                "needs_fixing",
+                "something_else",
                 "additional_information",
             ]
         ):

@@ -3,7 +3,7 @@ from urllib.parse import ParseResult, quote, urlparse, urlunparse
 from django.conf import settings
 from django.core.validators import MinLengthValidator
 from django.db import models
-
+from feedback.mixins import FeedbackMixin
 
 class Feedback(models.Model):
     SATISFACTION_RATINGS = [
@@ -76,19 +76,7 @@ class Issue(models.Model):
         return encoded_entity_url
 
 
-class FeedbackYes(models.Model):
-    RESEARCH_FEEDBACK_CHOICES = [
-        (True, "Yes"),
-        (False, "No"),
-    ]
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=True
-    )
-
-    url_path = models.CharField(max_length=250)
+class FeedbackYes(FeedbackMixin, models.Model):
 
     easy_to_find = models.BooleanField(
         null=True,
@@ -108,15 +96,51 @@ class FeedbackYes(models.Model):
         verbose_name="The information I found was easy to understand",
         default=False,
     )
-    interested_in_research = models.BooleanField(
+
+
+class FeedBackNo(FeedbackMixin, models.Model):
+    not_clear = models.BooleanField(
         null=True,
         blank=True,
-        verbose_name="Interested in participating in research to improve the site",
-        default=True,
-        choices=RESEARCH_FEEDBACK_CHOICES,
+        verbose_name="It was not clear how to find what I needed",
+        default=False,
     )
-    additional_information = models.TextField(
-        verbose_name="Anything else you would like to tell us? (optional)",
+    information_not_available = models.BooleanField(
         null=True,
         blank=True,
+        verbose_name="The information I needed did not seem to be available",
+        default=False,
+    )
+    incomplete_information = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information available was incomplete",
+        default=False,
+    )
+    difficult_to_understand = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information available was difficult to understand",
+        default=False,
+    )
+
+
+class FeedBackReport(FeedbackMixin, models.Model):
+    not_working = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="A link isn't working",
+        default=False,
+    )
+    needs_fixing = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="A bug needs fixing",
+        default=False,
+    )
+    something_else = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Something else",
+        default=False,
     )

@@ -43,7 +43,7 @@
           <button
             class="govuk-button gem-c-feedback__prompt-link js-toggle-form js-something-is-wrong"
             aria-controls="something-is-wrong"
-            hx-get="{% url 'feedback:report' %}?url_path={{ request.?url_path={{ request.get_full_path }} }}"
+            hx-get="{% url 'feedback:report' %}?url_path={{ request.get_full_path }} }}"
             hx-target="#feedback-widget"
             hx-swap="innerHTML"
             data-ga4-event="{&quot;event_name&quot;:&quot;form_submit&quot;,&quot;type&quot;:&quot;feedback&quot;,&quot;text&quot;:&quot;Report a problem with this page&quot;,&quot;section&quot;:&quot;Is this page useful?&quot;,&quot;tool_name&quot;:&quot;Is this page useful?&quot;}"

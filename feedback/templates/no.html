@@ -1,9 +1,101 @@
-  <div class="gem-c-feedback__prompt gem-c-feedback__js-show js-prompt" tabindex="-1">
-    <div class="gem-c-feedback__prompt-content">
-      <div class="gem-c-feedback__prompt-questions js-prompt-questions">
-        <div class="gem-c-feedback__prompt-question-answer">
-          asdasd
-        </div>
+<div class="gem-c-feedback__prompt gem-c-feedback__js-show js-prompt" tabindex="-1">
+  <div class="gem-c-feedback__prompt-content">
+    <div class="gem-c-feedback__prompt-questions js-prompt-questions">
+      <div class="gem-c-feedback__prompt-question-answer">
+
+        <form action="{% url 'feedback:no' %}" method="post" novalidate>
+          {% csrf_token %}
+          <input type="hidden" name="url_path" value="{{ url_path }}">
+          <div class="govuk-form-group">
+            {% if form.errors %}
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+              <div role="alert">
+                <h2 class="govuk-error-summary__title">
+                  There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                  <ul class="govuk-list govuk-error-summary__list">
+                    {% for errored_field, error_messages in form.errors.items %}
+                      {% for error in error_messages %}
+                        <li>
+                          <a href="#{{errored_field}}">{{error}}</a>
+                        </li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                  Can you tell us more?
+                </h1>
+              </legend>
+              <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                  {{form.not_clear}}
+                  <label class="govuk-label govuk-checkboxes__label" for="waste">
+                    It was not clear how to find what I needed
+                  </label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  {{form.information_not_available}}
+                  <label class="govuk-label govuk-checkboxes__label" for="waste-2">
+                    The information I needed did not seem to be available
+                  </label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  {{form.incomplete_information}}
+                  <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                    The information available was incomplete
+                  </label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  {{form.difficult_to_understand}}
+                  <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                    The information available was difficult to understand
+                  </label>
+                </div>
+              </div>
+              <div class="govuk-form-group govuk-!-padding-top-4">
+                <h2 class="govuk-label-wrapper">
+                  <label class="govuk-label govuk-label--m" for="{{form.how_can_we_improve.id_for_label}}"> Is there anything else you would like to tell us?
+                  </label>
+                </h2>
+                {{form.additional_information}}
+              </div>
+              <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="changedName-hint">
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <label class="govuk-label govuk-label--m">Are you interested in taking part in research on Find MoJ Data</label>
+                  </legend>
+                  <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                    {% for radio in form.interested_in_research %}
+                      <div class="govuk-radios__item">
+                        {{radio.tag}}
+                        <label class="govuk-label govuk-radios__label" for="{{radio.id_for_label}}">
+                          {{radio.choice_label}}
+                        </label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </fieldset>
+              </div>
+              <div class="govuk-button-group">
+                <button
+                  hx-post="{% url 'feedback:yes' %}"
+                  hx-target="#feedback-widget"
+                  hx-swap="innerHTML"type="submit" class="govuk-button" data-module="govuk-button">
+                  Submit
+                </button>
+                <a class="govuk-link" href="#">Cancel</a>
+              </div>
+            </fieldset>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
