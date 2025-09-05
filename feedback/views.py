@@ -14,40 +14,59 @@ from .forms import (
     FeedbackYesForm,
     IssueForm,
 )
-from .service import send_feedback_notification, send_notifications
+from .service import (
+    send_feedback_notification,
+    send_new_feedback_notification,
+    send_notifications,
+)
 
 log = logging.getLogger(__name__)
 
 
 def feedback_view(request) -> HttpResponse:
     url_path = request.GET.get("url_path", "")
+
     if request.method == "POST":
-        if request.path == "/feedback/yes":
-            form = FeedbackYesForm(request.POST)
-        elif request.path == "/feedback/no":
-            form = FeedbackNoForm(request.POST)
-        else:
-            form = FeedbackReportForm(request.POST)
+        success_message = "We'll use it to improve the service."
+
+        match request.path:
+            case "/feedback/yes":
+                form = FeedbackYesForm(request.POST)
+                subject = "Is this page useful - Yes"
+            case "/feedback/no":
+                form = FeedbackNoForm(request.POST)
+                subject = "Is this page useful - No"
+            case _:
+                form = FeedbackReportForm(request.POST)
+                success_message = "We look at every report received."
+                subject = "Report an issue with this page"
+
         if form.is_valid():
             feedback = form.save(commit=False)
             if not request.user.is_anonymous:
-                feedback.created_by = request.user
+                feedback.created_by_email = request.user.email
             feedback.save()
-            success_message = "We'll use it to improve the service."
+
+            # Send notification
+            send_new_feedback_notification(feedback, subject)
+
             context = {"success_message": success_message}
             return render(request, "feedback_success.html", context)
         else:
-            return render(request, "feedback_form.html", {"form": form, "url_path": url_path})
-    if request.path == "/feedback/yes":
-        form = FeedbackYesForm()
-    elif request.path == "/feedback/no":
-        form = FeedbackNoForm()
-    else:
-        form = FeedbackReportForm()
+            return render(
+                request, "feedback_form.html", {"form": form, "url_path": url_path}
+            )
+
+    match request.path:
+        case "/feedback/yes":
+            form = FeedbackYesForm()
+        case "/feedback/no":
+            form = FeedbackNoForm()
+        case _:
+            form = FeedbackReportForm()
 
     context = {"form": form, "url_path": url_path}
     return render(request, "feedback_form.html", context)
-
 
 
 def feedback_form_view(request) -> HttpResponse:
