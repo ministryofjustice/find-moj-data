@@ -32,20 +32,19 @@
                   Can you tell us more?
                 </h1>
               </legend>
+            </fieldset>
               {% for field in form %}
-                {% if field.widget_type == 'checkbox' %}
-                  <div class="govuk-checkboxes__item">
-                    {{ field }}
-                    <label class="govuk-label govuk-checkboxes__label" for="waste-3">
-                      {{ field.label }}
-                    </label>
-                  </div>
-                {% elif field.widget_type == 'radioselect' %}
-                  <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset" aria-describedby="changedName-hint">
-                      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <label class="govuk-label govuk-label--m">{{ field.label }}</label>
-                      </legend>
+                <div class="govuk-form-group">
+                  <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                    {% if field.widget_type == 'checkbox' %}
+                      <div class="govuk-checkboxes__item">
+                        {{ field }}
+                        <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                          {{ field.label }}
+                        </label>
+                      </div>
+                    {% elif field.widget_type == 'radioselect' %}
+                      <label class="govuk-label govuk-label--m">{{ field.label }}</label>
                       <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
                         {% for radio in field %}
                           <div class="govuk-radios__item">
@@ -56,20 +55,20 @@
                           </div>
                         {% endfor %}
                       </div>
-                    </fieldset>
-                  </div>
-                {% elif field.widget_type == 'textarea' %}
-                  <div class="govuk-form-group govuk-!-padding-top-4">
-                    <h2 class="govuk-label-wrapper">
-                      <label class="govuk-label govuk-label--m"
-                             for="{{ form.how_can_we_improve.id_for_label }}"> {{ field.label }}
-                      </label>
-                    </h2>
-                    {{ field }}
-                  </div>
-                {% else %}
-                {% endif %}
+                    {% elif field.widget_type == 'textarea' %}
+                      <div class="govuk-form-group govuk-!-padding-top-4">
+                        <h2 class="govuk-label-wrapper">
+                          <label class="govuk-label govuk-label--m"
+                                for="{{ form.how_can_we_improve.id_for_label }}"> {{ field.label }}
+                          </label>
+                        </h2>
+                        {{ field }}
+                      </div>
+                    {% endif %}
+                  </fieldset>
+                </div>
               {% endfor %}
+
               <div class="govuk-button-group">
                 <button
                   hx-post="{{request.get_full_path}}"
@@ -79,7 +78,6 @@
                 </button>
                 <a class="govuk-link" href="#">Cancel</a>
               </div>
-            </fieldset>
           </div>
         </form>
       </div>
