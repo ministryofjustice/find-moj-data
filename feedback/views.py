@@ -8,7 +8,6 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from core.settings import ALLOWED_HOSTS
 
 from .forms import (
-    FeedbackForm,
     FeedbackNoForm,
     FeedbackReportForm,
     FeedbackYesForm,
@@ -16,8 +15,7 @@ from .forms import (
 )
 from .service import (
     send_feedback_notification,
-    send_new_feedback_notification,
-    send_notifications,
+    send_issue_notifications,
 )
 
 log = logging.getLogger(__name__)
@@ -43,16 +41,20 @@ def feedback_view(request) -> HttpResponse:
 
         if form.is_valid():
             feedback = form.save(commit=False)
+            # In production, there should always be a signed in user,
+            # but this may not be the case in local development/unit tests
             if not request.user.is_anonymous:
                 feedback.created_by_email = request.user.email
+
             feedback.save()
 
             # Send notification
-            send_new_feedback_notification(feedback, subject)
+            send_feedback_notification(feedback, subject)
 
             context = {"success_message": success_message}
             return render(request, "feedback_success.html", context)
         else:
+            log.error(f"invalid feedback form submission: {form.errors}")
             return render(
                 request, "feedback_form.html", {"form": form, "url_path": url_path}
             )
@@ -67,45 +69,6 @@ def feedback_view(request) -> HttpResponse:
 
     context = {"form": form, "url_path": url_path}
     return render(request, "feedback_form.html", context)
-
-
-def feedback_form_view(request) -> HttpResponse:
-    if request.method == "POST":
-        form = FeedbackForm(request.POST)
-        if form.is_valid():
-            feedback = form.save()
-
-            user_email = None if request.user.is_anonymous else request.user.email
-            verbose_satisfaction_rating = dict(feedback.SATISFACTION_RATINGS).get(
-                feedback.satisfaction_rating, feedback.satisfaction_rating
-            )
-            send_feedback_notification(
-                user_email, verbose_satisfaction_rating, feedback.how_can_we_improve
-            )
-
-            return redirect("feedback:thanks")
-        else:
-            log.error(f"Unexpected invalid feedback form submission: {form.errors}")
-    else:
-
-        form = FeedbackForm()
-
-    return render(
-        request,
-        "feedback.html",
-        {
-            "h1_value": "Give feedback on Find MoJ data",
-            "form": form,
-        },
-    )
-
-
-def thank_you_view(request) -> HttpResponse:
-    return render(
-        request,
-        "thanks.html",
-        {"h1_value": "Thank you for your feedback"},
-    )
 
 
 def report_issue_view(request) -> HttpResponse:
@@ -134,7 +97,7 @@ def report_issue_view(request) -> HttpResponse:
             issue.save()
 
             # Call the send notifications service
-            send_notifications(
+            send_issue_notifications(
                 issue=issue,
                 send_email_to_reporter=form.cleaned_data["send_email_to_reporter"],
             )

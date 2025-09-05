@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea, TextInput
 
-from .models import Feedback, FeedBackNo, FeedBackReport, FeedBackYes, Issue
+from .models import FeedBackNo, FeedBackReport, FeedBackYes, Issue
 
 
 def formfield(field, **kwargs):
@@ -13,21 +13,6 @@ def formfield(field, **kwargs):
     then it will include this empty value, even if we have customised the widget is customised.
     """
     return field.formfield(initial=None, **kwargs)
-
-
-class FeedbackForm(forms.ModelForm):
-    class Meta:
-        model = Feedback
-        fields = ["satisfaction_rating", "how_can_we_improve"]
-        widgets = {
-            "satisfaction_rating": RadioSelect(attrs={"class": "govuk-radios__input"})
-        }
-        formfield_callback = formfield
-        error_messages = {
-            "satisfaction_rating": {
-                "required": "Select how satisfied are you with this service"
-            }
-        }
 
 
 class IssueForm(forms.ModelForm):
