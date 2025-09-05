@@ -1,5 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+
 
 class FeedbackMixin(models.Model):
     RESEARCH_FEEDBACK_CHOICES = [
