@@ -19,7 +19,8 @@ from .service import send_feedback_notification, send_notifications
 log = logging.getLogger(__name__)
 
 
-def feedback_yes_view(request) -> HttpResponse:
+def feedback_view(request) -> HttpResponse:
+    url_path = request.GET.get("url_path", "")
     if request.method == "POST":
         if request.path == "/feedback/yes":
             form = FeedbackYesForm(request.POST)
@@ -36,7 +37,7 @@ def feedback_yes_view(request) -> HttpResponse:
             context = {"success_message": success_message}
             return render(request, "feedback_success.html", context)
         else:
-            return render(request, "yes.html", {"form": form})
+            return render(request, "feedback_form.html", {"form": form, "url_path": url_path})
     if request.path == "/feedback/yes":
         form = FeedbackYesForm()
     elif request.path == "/feedback/no":
@@ -44,44 +45,9 @@ def feedback_yes_view(request) -> HttpResponse:
     else:
         form = FeedbackReportForm()
 
-    url_path = request.GET.get("url_path", "")
     context = {"form": form, "url_path": url_path}
-    return render(request, "yes.html", context)
+    return render(request, "feedback_form.html", context)
 
-
-def feedback_no_view(request) -> HttpResponse:
-    if request.method == "POST":
-        form = FeedbackYesForm(request.POST)
-        if form.is_valid():
-            success_message = "We'll use it to improve the service."
-            context = {"success_message": success_message}
-            return render(request, "feedback_success.html", context)
-        else:
-            return render(request, "no.html", {"form": form})
-
-    form = FeedbackNoForm()
-    url_path = request.GET.get("url_path", "")
-
-    context = {"form": form, "url_path": url_path}
-    return render(request, "no.html", context)
-
-
-def feedback_report_view(request) -> HttpResponse:
-    if request.method == "POST":
-
-        form = FeedbackYesForm(request.POST)
-        if form.is_valid():
-            success_message = "We'll use it to improve the service."
-            context = {"success_message": success_message}
-            return render(request, "feedback_success.html", context)
-        else:
-            return render(request, "report.html", {"form": form})
-
-    form = FeedbackReportForm()
-    url_path = request.GET.get("url_path", "")
-
-    context = {"form": form, "url_path": url_path}
-    return render(request, "report.html", context)
 
 
 def feedback_form_view(request) -> HttpResponse:
