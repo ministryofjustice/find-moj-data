@@ -21,12 +21,15 @@ log = logging.getLogger(__name__)
 
 def feedback_yes_view(request) -> HttpResponse:
     if request.method == "POST":
-        form = FeedbackYesForm(request.POST)
+        if request.path == "/feedback/yes":
+            form = FeedbackYesForm(request.POST)
+        elif request.path == "/feedback/no":
+            form = FeedbackNoForm(request.POST)
+        else:
+            form = FeedbackReportForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             feedback = form.save(commit=False)
             if not request.user.is_anonymous:
-                print(request.user)
                 feedback.created_by = request.user
             feedback.save()
             success_message = "We'll use it to improve the service."
@@ -34,8 +37,13 @@ def feedback_yes_view(request) -> HttpResponse:
             return render(request, "feedback_success.html", context)
         else:
             return render(request, "yes.html", {"form": form})
+    if request.path == "/feedback/yes":
+        form = FeedbackYesForm()
+    elif request.path == "/feedback/no":
+        form = FeedbackNoForm()
+    else:
+        form = FeedbackReportForm()
 
-    form = FeedbackYesForm()
     url_path = request.GET.get("url_path", "")
     context = {"form": form, "url_path": url_path}
     return render(request, "yes.html", context)

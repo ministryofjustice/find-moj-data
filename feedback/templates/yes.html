@@ -2,7 +2,7 @@
   <div class="gem-c-feedback__prompt-content">
     <div class="gem-c-feedback__prompt-questions js-prompt-questions">
       <div class="gem-c-feedback__prompt-question-answer">
-        <form action="{% url 'feedback:yes' %}" method="post" novalidate>
+        <form action="{{request.path}}" method="post" novalidate>
           {% csrf_token %}
           <input type="hidden" name="url_path" value="{{ url_path }}">
           <div class="govuk-form-group">
@@ -68,13 +68,11 @@
                     {{ field }}
                   </div>
                 {% else %}
-                  {{ field }}
                 {% endif %}
               {% endfor %}
-
               <div class="govuk-button-group">
                 <button
-                  hx-post="{% url 'feedback:yes' %}"
+                  hx-post="{{request.path}}"
                   hx-target="#feedback-widget"
                   hx-swap="innerHTML" type="submit" class="govuk-button" data-module="govuk-button">
                   Submit

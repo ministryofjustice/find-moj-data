@@ -13,7 +13,7 @@ urlpatterns = [
     ),
     path("", views.feedback_form_view, name="feedback"),
     path("yes", views.feedback_yes_view, name="yes"),
-    path("no",  views.feedback_no_view, name="no"),
-    path("report",  views.feedback_report_view, name="report"),
+    path("no",  views.feedback_yes_view, name="no"),
+    path("report",  views.feedback_yes_view, name="report"),
     path("thanks", views.thank_you_view, name="thanks"),
 ]
