@@ -27,7 +27,11 @@
               </div>
             {% endif %}
             <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
-
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                  Can you tell us more?
+                </h1>
+              </legend>
               {% for field in form %}
                 {% if field.widget_type == 'checkbox' %}
                   <div class="govuk-checkboxes__item">

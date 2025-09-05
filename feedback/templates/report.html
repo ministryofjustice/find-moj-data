@@ -2,30 +2,29 @@
   <div class="gem-c-feedback__prompt-content">
     <div class="gem-c-feedback__prompt-questions js-prompt-questions">
       <div class="gem-c-feedback__prompt-question-answer">
-
         <form action="{% url 'feedback:yes' %}" method="post" novalidate>
           {% csrf_token %}
           <input type="hidden" name="url_path" value="{{ url_path }}">
           <div class="govuk-form-group">
             {% if form.errors %}
-            <div class="govuk-error-summary" data-module="govuk-error-summary">
-              <div role="alert">
-                <h2 class="govuk-error-summary__title">
-                  There is a problem
-                </h2>
-                <div class="govuk-error-summary__body">
-                  <ul class="govuk-list govuk-error-summary__list">
-                    {% for errored_field, error_messages in form.errors.items %}
-                      {% for error in error_messages %}
-                        <li>
-                          <a href="#{{errored_field}}">{{error}}</a>
-                        </li>
+              <div class="govuk-error-summary" data-module="govuk-error-summary">
+                <div role="alert">
+                  <h2 class="govuk-error-summary__title">
+                    There is a problem
+                  </h2>
+                  <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                      {% for errored_field, error_messages in form.errors.items %}
+                        {% for error in error_messages %}
+                          <li>
+                            <a href="#{{ errored_field }}">{{ error }}</a>
+                          </li>
+                        {% endfor %}
                       {% endfor %}
-                    {% endfor %}
-                  </ul>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
             {% endif %}
             <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
               <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -33,56 +32,51 @@
                   Can you tell us more?
                 </h1>
               </legend>
-              <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                  {{form.not_working}}
-                  <label class="govuk-label govuk-checkboxes__label" for="waste">
-                    A link isn't working
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  {{form.needs_fixing}}
-                  <label class="govuk-label govuk-checkboxes__label" for="waste-2">
-                    A bug needs fixing
-                  </label>
-                </div>
-                <div class="govuk-checkboxes__item">
-                  {{form.something_else}}
-                  <label class="govuk-label govuk-checkboxes__label" for="waste-3">
-
-                    Something else
-                  </label>
-                </div>
-              </div>
-              <div class="govuk-form-group govuk-!-padding-top-4">
-                <h2 class="govuk-label-wrapper">
-                  <label class="govuk-label govuk-label--m" for="{{form.how_can_we_improve.id_for_label}}"> Is there anything else you would like to tell us?
-                  </label>
-                </h2>
-                {{form.additional_information}}
-              </div>
-              <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="changedName-hint">
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                    <label class="govuk-label govuk-label--m">Are you interested in taking part in research on Find MoJ Data</label>
-                  </legend>
-                  <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                    {% for radio in form.interested_in_research %}
-                      <div class="govuk-radios__item">
-                        {{radio.tag}}
-                        <label class="govuk-label govuk-radios__label" for="{{radio.id_for_label}}">
-                          {{radio.choice_label}}
-                        </label>
-                      </div>
-                    {% endfor %}
+              {% for field in form %}
+                {% if field.widget_type == 'checkbox' %}
+                  <div class="govuk-checkboxes__item">
+                    {{ field }}
+                    <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                      {{ field.label }}
+                    </label>
                   </div>
-                </fieldset>
-              </div>
+                {% elif field.widget_type == 'radioselect' %}
+                  <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" aria-describedby="changedName-hint">
+                      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <label class="govuk-label govuk-label--m">{{ field.label }}</label>
+                      </legend>
+                      <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        {% for radio in field %}
+                          <div class="govuk-radios__item">
+                            {{ radio.tag }}
+                            <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
+                              {{ radio.choice_label }}
+                            </label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </fieldset>
+                  </div>
+                {% elif field.widget_type == 'textarea' %}
+                  <div class="govuk-form-group govuk-!-padding-top-4">
+                    <h2 class="govuk-label-wrapper">
+                      <label class="govuk-label govuk-label--m"
+                             for="{{ form.how_can_we_improve.id_for_label }}"> {{ field.label }}
+                      </label>
+                    </h2>
+                    {{ field }}
+                  </div>
+                {% else %}
+                  {{ field }}
+                {% endif %}
+              {% endfor %}
+
               <div class="govuk-button-group">
                 <button
                   hx-post="{% url 'feedback:yes' %}"
                   hx-target="#feedback-widget"
-                  hx-swap="innerHTML"type="submit" class="govuk-button" data-module="govuk-button">
+                  hx-swap="innerHTML" type="submit" class="govuk-button" data-module="govuk-button">
                   Submit
                 </button>
                 <a class="govuk-link" href="#">Cancel</a>
