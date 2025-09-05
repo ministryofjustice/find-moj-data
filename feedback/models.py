@@ -6,6 +6,11 @@ from django.db import models
 
 from feedback.mixins import FeedbackMixin
 
+RESEARCH_FEEDBACK_CHOICES = [
+    (True, "Yes"),
+    (False, "No"),
+]
+
 
 class Feedback(models.Model):
     SATISFACTION_RATINGS = [
@@ -78,8 +83,7 @@ class Issue(models.Model):
         return encoded_entity_url
 
 
-class FeedbackYes(FeedbackMixin, models.Model):
-
+class FeedBackYes(FeedbackMixin, models.Model):
     easy_to_find = models.BooleanField(
         null=True,
         blank=True,
@@ -97,6 +101,13 @@ class FeedbackYes(FeedbackMixin, models.Model):
         blank=True,
         verbose_name="The information I found was easy to understand",
         default=False,
+    )
+    interested_in_research = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Interested in participating in research to improve the site",
+        default=True,
+        choices=RESEARCH_FEEDBACK_CHOICES,
     )
 
 
@@ -124,6 +135,13 @@ class FeedBackNo(FeedbackMixin, models.Model):
         blank=True,
         verbose_name="The information available was difficult to understand",
         default=False,
+    )
+    interested_in_research = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Interested in participating in research to improve the site",
+        default=True,
+        choices=RESEARCH_FEEDBACK_CHOICES,
     )
 
 
