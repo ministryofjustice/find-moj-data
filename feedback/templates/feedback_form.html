@@ -28,7 +28,7 @@
             {% endif %}
             <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
               <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                  What is the issue?
+                  {{ legend_label }}
               </legend>
             </fieldset>
               {% for field in form %}
@@ -56,18 +56,18 @@
                     {% elif field.widget_type == 'textarea' %}
                       <div class="govuk-form-group govuk-!-padding-top-4">
                         <h2 class="govuk-label-wrapper">
-                          <!-- {% if form.not_working %}
+                          {% if form.not_working %}
                           <label class="govuk-label govuk-label--m"
                                 for="{{ form.how_can_we_improve.id_for_label }}">Tell us more (optional)
                           </label>
                             <div id="more-detail-hint" class="govuk-hint">
                               Help us make sure the issue is appropriately addressed
                             </div>
-                          {% else %} -->
+                          {% else %}
                             <label class="govuk-label govuk-label--m"
                                 for="{{ form.additional_information.id_for_label }}"> {{ field.label }}
                             </label>
-                          <!-- {% endif %} -->
+                          {% endif %}
                         </h2>
                         {{ field }}
                       </div>
