@@ -47,7 +47,7 @@ def send_feedback_notification(
                 target=notify,
                 kwargs={
                     "personalisation": personalisation,
-                    "template_id": "7ad97ca8-c7fb-43e2-bffb-d6e09b6af2a6",
+                    "template_id": settings.NOTIFY_FEEDBACK_TEMPLATE_ID,
                     "email_address": settings.DATA_CATALOGUE_EMAIL,
                     "client": client,
                     "reference": str(feedback_instance.id),
