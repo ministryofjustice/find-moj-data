@@ -105,7 +105,7 @@ class FeedBackYes(FeedbackMixin, models.Model):
     interested_in_research = models.BooleanField(
         null=True,
         blank=True,
-        verbose_name="Interested in participating in research to improve the site",
+        verbose_name="Are you interested in taking part in research on Find MoJ Data",
         default=True,
         choices=RESEARCH_FEEDBACK_CHOICES,
     )
@@ -127,19 +127,19 @@ class FeedBackNo(FeedbackMixin, models.Model):
     incomplete_information = models.BooleanField(
         null=True,
         blank=True,
-        verbose_name="The information available was incomplete",
+        verbose_name="The information available is incomplete",
         default=False,
     )
     difficult_to_understand = models.BooleanField(
         null=True,
         blank=True,
-        verbose_name="The information available was difficult to understand",
+        verbose_name="The information available is difficult to understand",
         default=False,
     )
     interested_in_research = models.BooleanField(
         null=True,
         blank=True,
-        verbose_name="Interested in participating in research to improve the site",
+        verbose_name="Are you interested in taking part in research on Find MoJ Data",
         default=True,
         choices=RESEARCH_FEEDBACK_CHOICES,
     )
