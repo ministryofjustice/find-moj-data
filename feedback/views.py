@@ -59,6 +59,7 @@ def feedback_view(request) -> HttpResponse:
                 request, "feedback_form.html", {"form": form, "url_path": url_path}
             )
 
+    legend_label = "Can you tell us more?"
     match request.path:
         case "/feedback/yes":
             form = FeedbackYesForm()
@@ -66,8 +67,13 @@ def feedback_view(request) -> HttpResponse:
             form = FeedbackNoForm()
         case _:
             form = FeedbackReportForm()
+            legend_label = "What is the issue?"
 
-    context = {"form": form, "url_path": url_path}
+    context = {
+        "form": form,
+        "url_path": url_path,
+        "legend_label": legend_label,
+    }
     return render(request, "feedback_form.html", context)
 
 
