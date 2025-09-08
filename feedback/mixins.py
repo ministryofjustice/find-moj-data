@@ -8,7 +8,7 @@ class FeedbackMixin(models.Model):
 
     url_path = models.CharField(max_length=250)
     additional_information = models.TextField(
-        verbose_name="Anything else you would like to tell us? (optional)",
+        verbose_name="Is there anything else you would like to tell us? (optional)",
         null=True,
         blank=True,
     )
