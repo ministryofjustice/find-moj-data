@@ -184,28 +184,18 @@ class FeedbackReportForm(forms.ModelForm):
             "something_else": forms.CheckboxInput(
                 attrs={"class": "govuk-checkboxes__input"}
             ),
-            # "additional_information": Textarea(
-            #     attrs={
-            #         "class": "govuk-textarea",
-            #         "rows": "5",
-            #         "aria-describedby": "more-detail-hint",
-            #     }
-            # ),
-            "url_path": forms.HiddenInput(),
-            "interested_in_research": RadioSelect(
-                attrs={"class": "govuk-radios__input"}
-            ),
-        }
-        additional_information = forms.CharField(
-            widget=Textarea(
+            "additional_information": Textarea(
                 attrs={
                     "class": "govuk-textarea",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
                 }
             ),
-            label="Tell us more (optional)",
-        )
+            "url_path": forms.HiddenInput(),
+            "interested_in_research": RadioSelect(
+                attrs={"class": "govuk-radios__input"}
+            ),
+        }
 
     def clean(self):
         cleaned_data = super().clean()
