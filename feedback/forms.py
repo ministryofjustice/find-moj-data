@@ -192,9 +192,6 @@ class FeedbackReportForm(forms.ModelForm):
                 }
             ),
             "url_path": forms.HiddenInput(),
-            "interested_in_research": RadioSelect(
-                attrs={"class": "govuk-radios__input"}
-            ),
         }
 
     def clean(self):
