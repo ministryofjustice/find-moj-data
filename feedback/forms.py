@@ -81,8 +81,8 @@ class FeedbackYesForm(forms.ModelForm):
             "easy_to_find",
             "information_useful",
             "information_easy_to_understand",
-            "interested_in_research",
             "additional_information",
+            "interested_in_research",
             "url_path",
         ]
         widgets = {
@@ -132,8 +132,8 @@ class FeedbackNoForm(forms.ModelForm):
             "information_not_available",
             "incomplete_information",
             "difficult_to_understand",
-            "interested_in_research",
             "additional_information",
+            "interested_in_research",
             "url_path",
         ]
         widgets = {
@@ -170,8 +170,8 @@ class FeedbackNoForm(forms.ModelForm):
                 "not_clear",
                 "information_not_available",
                 "incomplete_information",
-                "difficult_to_understand",
                 "additional_information",
+                "difficult_to_understand",
             ]
         ):
             raise forms.ValidationError("Select at least one option or provide details")
