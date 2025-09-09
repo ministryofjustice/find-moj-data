@@ -1,0 +1,49 @@
+<div id="feedback-widget" class="gem-c-feedback govuk-!-display-none-print">
+  <div class="gem-c-feedback__prompt" tabindex="-1">
+    <div class="gem-c-feedback__prompt-content">
+      <div class="gem-c-feedback__prompt-questions">
+        <div class="gem-c-feedback__prompt-question-answer">
+          {% if 'search' in request.path or 'details' in request.path %}
+            <h2 class="gem-c-feedback__prompt-question">Did you find what you where looking for today?</h2>
+          {% else %}
+            <h2 class="gem-c-feedback__prompt-question">Is this page useful?</h2>
+          {% endif %}
+          <ul class="gem-c-feedback__option-list">
+            <li class="gem-c-feedback__option-list-item">
+              <button
+                class="govuk-button gem-c-feedback__prompt-link"
+                hx-get="{% url 'feedback:yes' %}?url_path={{ request.get_full_path }}"
+                hx-target="#feedback-widget"
+                hx-swap="innerHTML"
+              >
+                Yes <span class="govuk-visually-hidden">this page is useful</span>
+              </button>
+            </li>
+            <li class="gem-c-feedback__option-list-item">
+              <button
+                class="govuk-button gem-c-feedback__prompt-link"
+                hx-get="{% url 'feedback:no' %}?url_path={{ request.get_full_path }}"
+                hx-target="#feedback-widget"
+                hx-swap="innerHTML"
+              >No <span class="govuk-visually-hidden">this page is not useful</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      {% if 'details' not in request.path %}
+        <div
+          class="gem-c-feedback__prompt-questions">
+          <button
+            class="govuk-button gem-c-feedback__prompt-link"
+            hx-get="{% url 'feedback:report' %}?url_path={{request.get_full_path}}"
+            hx-target="#feedback-widget"
+            hx-swap="innerHTML"
+          >
+            Report an issue with this page
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

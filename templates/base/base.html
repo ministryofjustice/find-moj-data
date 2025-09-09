@@ -35,12 +35,10 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
           {% block content %}
           {% endblock content %}
+          {% include "base/feedback_bar.html" %}
         </main>
       </div>
     {% endblock main %}
-          <div class="govuk-width-container app-width-container">
-                {% include "base/feedback.html" %}
-          </div>
     {% include "base/footer.html" %}
     <script type="module">
       import {initAll} from "{% static 'assets/js/govuk-frontend.min.js' %}"
