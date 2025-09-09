@@ -71,9 +71,15 @@ code {
   color: govuk-colour("black");
 }
 
+.govuk-main-wrapper-with-feedback {
+  @extend .govuk-main-wrapper;
+  padding-bottom: govuk-spacing(0);
+}
+
 .main-wrapper-with-masthead {
   @extend .govuk-main-wrapper;
   padding-top: govuk-spacing(0);
+  padding-bottom: govuk-spacing(0);
 }
 
 // we've reduced the minimum here as the default value was higher
