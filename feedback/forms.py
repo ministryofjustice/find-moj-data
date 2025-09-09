@@ -86,7 +86,7 @@ class FeedbackYesForm(forms.ModelForm):
                     "class": "govuk-textarea",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
-                    "style": "width: auto"
+                    "style": "width: 600px"
 
                 }
             ),
@@ -142,7 +142,7 @@ class FeedbackNoForm(forms.ModelForm):
                     "class": "govuk-textarea",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
-                    "style": "width: auto"
+                    "style": "width: 600px"
 
                 }
             ),
@@ -194,7 +194,7 @@ class FeedbackReportForm(forms.ModelForm):
                     "class": "govuk-textarea",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
-                    "style": "width: auto"
+                    "style": "width: 600px"
                 }
             ),
             "url_path": forms.HiddenInput(),
