@@ -1,4 +1,3 @@
-from click import style
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea, TextInput
 
@@ -86,8 +85,7 @@ class FeedbackYesForm(forms.ModelForm):
                     "class": "govuk-textarea",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
-                    "style": "width: 600px"
-
+                    "style": "width: 600px",
                 }
             ),
             "url_path": forms.HiddenInput(),
@@ -142,8 +140,7 @@ class FeedbackNoForm(forms.ModelForm):
                     "class": "govuk-textarea",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
-                    "style": "width: 600px"
-
+                    "style": "width: 600px",
                 }
             ),
             "url_path": forms.HiddenInput(),
@@ -194,7 +191,7 @@ class FeedbackReportForm(forms.ModelForm):
                     "class": "govuk-textarea",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
-                    "style": "width: 600px"
+                    "style": "width: 600px",
                 }
             ),
             "url_path": forms.HiddenInput(),
