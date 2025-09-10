@@ -154,9 +154,7 @@ class TestFeedbackForms:
         first_result = self.search_page.first_search_result()
         assert first_result.text
         first_link = first_result.link()
-        # item_name = first_link.text
         first_link.click()
-        # return item_name
 
     def verify_successful_feedback_submission(self):
         feedback_success_heading = WebDriverWait(self.selenium, 10).until(
