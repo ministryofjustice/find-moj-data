@@ -6,12 +6,13 @@
           {% if 'search' in request.path or 'details' in request.path %}
             <h2 class="gem-c-feedback__prompt-question">Did you find what you where looking for today?</h2>
           {% else %}
-            <h2 class="gem-c-feedback__prompt-question">Is this page useful?</h2>
+            <h2 class="gem-c-feedback__prompt-question">Was this page useful?</h2>
           {% endif %}
           <ul class="gem-c-feedback__option-list">
             <li class="gem-c-feedback__option-list-item">
               <button
                 class="govuk-button gem-c-feedback__prompt-link"
+                id="feedback-yes-button"
                 hx-get="{% url 'feedback:yes' %}?url_path={{ request.get_full_path }}"
                 hx-target="#feedback-widget"
                 hx-swap="innerHTML"
@@ -22,6 +23,7 @@
             <li class="gem-c-feedback__option-list-item">
               <button
                 class="govuk-button gem-c-feedback__prompt-link"
+                id="feedback-no-button"
                 hx-get="{% url 'feedback:no' %}?url_path={{ request.get_full_path }}"
                 hx-target="#feedback-widget"
                 hx-swap="innerHTML"
@@ -36,6 +38,7 @@
           class="gem-c-feedback__prompt-questions">
           <button
             class="govuk-button gem-c-feedback__prompt-link"
+            id="feedback-report-button"
             hx-get="{% url 'feedback:report' %}?url_path={{request.get_full_path}}"
             hx-target="#feedback-widget"
             hx-swap="innerHTML"
