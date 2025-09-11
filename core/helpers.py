@@ -58,6 +58,7 @@ def before_send(event: Event, hint: Hint) -> Event | None:
         Event | None: Returns the event if it is not an Http404 error, otherwise None
     """
     exception_messages_404 = ["Asset does not exist", "Page not found"]
+
     if "exc_info" in hint:
         exc_type, exc_value, tb = hint["exc_info"]
         # Check if the exception is an Http404 error
