@@ -2,7 +2,6 @@ import json
 import os
 from typing import Any
 
-from django import forms
 from django.http import Http404
 from sentry_sdk.types import Event, Hint
 
@@ -59,18 +58,13 @@ def before_send(event: Event, hint: Hint) -> Event | None:
         Event | None: Returns the event if it is not an Http404 error, otherwise None
     """
     exception_messages_404 = ["Asset does not exist", "Page not found"]
-    feedback_form_validation_errors = ["Select at least one option or provide details"]
+
     if "exc_info" in hint:
         exc_type, exc_value, tb = hint["exc_info"]
         # Check if the exception is an Http404 error
         if isinstance(exc_value, Http404):
             # Check if we have a known error message string that we want to filter out
             for message in exception_messages_404:
-                if message in str(exc_value.args[0]):
-                    return None
-        # Catches empty feedback form submissions that have been blocked by the form validation
-        elif isinstance(exc_value, forms.ValidationError):
-            for message in feedback_form_validation_errors:
                 if message in str(exc_value.args[0]):
                     return None
     return event
