@@ -54,7 +54,7 @@ def feedback_view(request) -> HttpResponse:
             context = {"success_message": success_message}
             return render(request, "feedback_success.html", context)
         else:
-            log.error(f"invalid feedback form submission: {form.errors}")
+            log.info(f"invalid feedback form submission: {form.errors}")
             return render(
                 request, "feedback_form.html", {"form": form, "url_path": url_path}
             )
