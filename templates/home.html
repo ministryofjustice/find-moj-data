@@ -13,7 +13,6 @@
               Find MoJ Data shows you what data exists and how to access it.
               The service does not contain the data itself, only metadata – data which describes our assets. <a aria-label="Learn more about Find MoJ data" href="{% url 'userguide:userguide_index' %}contact-us/">Learn more</a>
             </p>
-
             <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0"
               onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
               <div
@@ -41,11 +40,11 @@
         </div>
       </div>
     </div>
-    <div class="govuk-main-wrapper">
+    <div class="govuk-main-wrapper-with-feedback">
       <div class="govuk-width-container app-width-container">
         {% include 'partial/home/subject_area_grid.html' %}
+        {% include "base/feedback_bar.html" %}
       </div>
     </div>
   </main>
-
 {% endblock main %}
