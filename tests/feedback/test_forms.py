@@ -1,29 +1,66 @@
 import pytest
 
-from feedback.forms import FeedbackForm, IssueForm
-from feedback.models import Feedback, Issue
+from feedback.forms import (
+    FeedbackNoForm,
+    FeedbackReportForm,
+    FeedbackYesForm,
+    IssueForm,
+)
+from feedback.models import FeedBackNo, FeedBackReport, FeedBackYes, Issue
 
 
 def test_invalid_feedback_form():
-    assert not FeedbackForm({}).is_valid()
+    feedback_forms = [FeedbackNoForm, FeedbackYesForm, FeedbackReportForm]
+    for form in feedback_forms:
+        assert not form({}).is_valid()
 
 
-def test_valid_feedback_form():
-    assert FeedbackForm({"satisfaction_rating": 5}).is_valid()
-    assert FeedbackForm(
-        {"satisfaction_rating": 1, "how_can_we_improve": "blah"}
-    ).is_valid()
+def test_valid_feedback_yes_form():
+    form = FeedbackYesForm({"easy_to_find": True, "url_path": "/some-path/"})
+    assert form.is_valid()
+
+
+def test_valid_feedback_no_form():
+    form = FeedbackNoForm({"not_clear": True, "url_path": "/some-path/"})
+    assert form.is_valid()
+
+
+def test_valid_feedback_report_form():
+    form = FeedbackReportForm({"not_working": True, "url_path": "/some-path/"})
+    assert form.is_valid()
 
 
 @pytest.mark.django_db
-def test_feedback_form_saves_to_db():
-    form = FeedbackForm({"satisfaction_rating": 1, "how_can_we_improve": "blah"})
+def test_feedback_yes_form_saves_to_db():
+    form = FeedbackYesForm({"easy_to_find": True, "url_path": "/some-path/"})
     form.save()
 
-    saved = Feedback.objects.first()
+    saved = FeedBackYes.objects.first()
     assert saved
-    assert saved.satisfaction_rating == 1
-    assert saved.how_can_we_improve == "blah"
+    assert saved.easy_to_find is True
+    assert saved.url_path == "/some-path/"
+
+
+@pytest.mark.django_db
+def test_feedback_no_form_saves_to_db():
+    form = FeedbackNoForm({"not_clear": True, "url_path": "/some-path/"})
+    form.save()
+
+    saved = FeedBackNo.objects.first()
+    assert saved
+    assert saved.not_clear is True
+    assert saved.url_path == "/some-path/"
+
+
+@pytest.mark.django_db
+def test_feedback_report_form_saves_to_db():
+    form = FeedbackReportForm({"not_working": True, "url_path": "/some-path/"})
+    form.save()
+
+    saved = FeedBackReport.objects.first()
+    assert saved
+    assert saved.not_working is True
+    assert saved.url_path == "/some-path/"
 
 
 def test_valid_report_issue_form():
@@ -65,3 +102,4 @@ def test_report_issue_form_saves_to_db(reporter):
     assert saved
     assert saved.reason == "Other"
     assert saved.additional_info == "a" * 10
+    assert saved.created_by == reporter

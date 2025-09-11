@@ -147,7 +147,7 @@ class EntityParser:
         outer_tags = entity.get("tags") or {}
         tags = []
         seen_tags = set()
-        
+
         for tag in outer_tags.get("tags", []):
             properties = tag.get("tag", {}).get("properties", {})
             # This is needed because tags created by dbt seemingly don't have properties
@@ -158,7 +158,11 @@ class EntityParser:
                 }
 
             name = properties.get("name", "")
-            if properties and not SubjectAreaTaxonomy.is_subject_area(name) and name not in seen_tags:
+            if (
+                properties
+                and not SubjectAreaTaxonomy.is_subject_area(name)
+                and name not in seen_tags
+            ):
                 seen_tags.add(name)
                 tags.append(
                     TagRef(
