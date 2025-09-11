@@ -4,28 +4,12 @@ from django.conf import settings
 from django.core.validators import MinLengthValidator
 from django.db import models
 
+from feedback.mixins import FeedbackMixin
 
-class Feedback(models.Model):
-    SATISFACTION_RATINGS = [
-        (5, "Very satisfied"),
-        (4, "Satisfied"),
-        (3, "Neither satisfied or dissatisfied"),
-        (2, "Dissatisfied"),
-        (1, "Very dissatisfied"),
-    ]
-
-    satisfaction_rating = models.IntegerField(
-        choices=SATISFACTION_RATINGS,
-        verbose_name="How satisfied are you with this service?",
-        null=False,
-        blank=False,
-    )
-
-    how_can_we_improve = models.TextField(
-        verbose_name="How can we improve this service? (optional)",
-        null=False,
-        blank=True,
-    )
+RESEARCH_FEEDBACK_CHOICES = [
+    (True, "Yes"),
+    (False, "No"),
+]
 
 
 class Issue(models.Model):
@@ -74,3 +58,86 @@ class Issue(models.Model):
             )
         )
         return encoded_entity_url
+
+
+class FeedBackYes(FeedbackMixin, models.Model):
+    easy_to_find = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="It was easy to find what I needed",
+        default=False,
+    )
+    information_useful = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information I found was useful",
+        default=False,
+    )
+    information_easy_to_understand = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information I found was easy to understand",
+        default=False,
+    )
+    interested_in_research = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Are you interested in taking part in research on Find MoJ Data?",
+        default=True,
+        choices=RESEARCH_FEEDBACK_CHOICES,
+    )
+
+
+class FeedBackNo(FeedbackMixin, models.Model):
+    not_clear = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="It was not clear how to find what I needed",
+        default=False,
+    )
+    information_not_available = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information I needed did not seem to be available",
+        default=False,
+    )
+    incomplete_information = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information available is incomplete",
+        default=False,
+    )
+    difficult_to_understand = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="The information available is difficult to understand",
+        default=False,
+    )
+    interested_in_research = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Are you interested in taking part in research on Find MoJ Data?",
+        default=True,
+        choices=RESEARCH_FEEDBACK_CHOICES,
+    )
+
+
+class FeedBackReport(FeedbackMixin, models.Model):
+    not_working = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="A link isn't working",
+        default=False,
+    )
+    needs_fixing = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="A bug needs fixing",
+        default=False,
+    )
+    something_else = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Something else",
+        default=False,
+    )
