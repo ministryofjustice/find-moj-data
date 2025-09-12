@@ -2,7 +2,7 @@
   <div class="gem-c-feedback__prompt-content">
     <div class="gem-c-feedback__prompt-questions">
       <div class="gem-c-feedback__prompt-question-answer">
-        <form action="{{request.path}}" method="post" novalidate>
+        <form action="{{ request.path }}" method="post" novalidate>
           {% csrf_token %}
           <input type="hidden" name="url_path" value="{{ url_path }}">
           <div class="govuk-form-group">
@@ -28,20 +28,20 @@
             {% endif %}
             <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
               <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                  {{ legend_label }}
+                {{ legend_label }}
               </legend>
-            </fieldset>
+              {% for field in field_set %}
+                <div class="govuk-checkboxes__item">
+                  {{ field }}
+                  <label class="govuk-label govuk-checkboxes__label" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                  </label>
+                </div>
+              {% endfor %}
+
               {% for field in form %}
-                <div class="govuk-form-group">
                   <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
-                    {% if field.widget_type == 'checkbox' %}
-                      <div class="govuk-checkboxes__item">
-                        {{ field }}
-                        <label class="govuk-label govuk-checkboxes__label" for="{{ field.id_for_label }}">
-                          {{ field.label }}
-                        </label>
-                      </div>
-                    {% elif field.widget_type == 'radioselect' %}
+                    {% if field.widget_type == 'radioselect' %}
                       <label class="govuk-label govuk-label--m">{{ field.label }}</label>
                       <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
                         {% for radio in field %}
@@ -57,15 +57,15 @@
                       <div class="govuk-form-group govuk-!-padding-top-4">
                         <h2 class="govuk-label-wrapper">
                           {% if form.not_working %}
-                          <label class="govuk-label govuk-label--m"
-                                for="{{ form.how_can_we_improve.id_for_label }}">Tell us more (optional)
-                          </label>
+                            <label class="govuk-label govuk-label--m"
+                                   for="{{ form.how_can_we_improve.id_for_label }}">Tell us more (optional)
+                            </label>
                             <div id="more-detail-hint" class="govuk-hint">
                               Help us make sure the issue is appropriately addressed
                             </div>
                           {% else %}
                             <label class="govuk-label govuk-label--m"
-                                for="{{ form.additional_information.id_for_label }}"> {{ field.label }}
+                                   for="{{ form.additional_information.id_for_label }}"> {{ field.label }}
                             </label>
                           {% endif %}
                         </h2>
@@ -73,12 +73,11 @@
                       </div>
                     {% endif %}
                   </fieldset>
-                </div>
               {% endfor %}
 
               <div class="govuk-button-group">
                 <button
-                  hx-post="{{request.get_full_path}}"
+                  hx-post="{{ request.get_full_path }}"
                   hx-target="#feedback-widget"
                   hx-swap="innerHTML" type="submit" class="govuk-button" data-module="govuk-button">
                   Submit

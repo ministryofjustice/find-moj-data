@@ -68,9 +68,14 @@ def feedback_view(request) -> HttpResponse:
         case _:
             form = FeedbackReportForm()
             legend_label = "What is the issue?"
+    field_set = []
 
+    for field in form:
+        if field.widget_type == "checkbox":
+            field_set.append(field)
     context = {
         "form": form,
+        "field_set": field_set,
         "url_path": url_path,
         "legend_label": legend_label,
     }
