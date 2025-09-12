@@ -11,14 +11,17 @@
             <h1 class="x-govuk-masthead__title">Discover data from across the Ministry of Justice</h1>
             <p class="x-govuk-masthead__description" style="color: white;">
               Find MoJ Data shows you what data exists and how to access it.
-              The service does not contain the data itself, only metadata – data which describes our assets. <a aria-label="Learn more about Find MoJ data" href="{% url 'userguide:userguide_index' %}contact-us/">Learn more</a>
+              The service does not contain the data itself, only metadata – data which describes our assets. <a
+              aria-label="Learn more about Find MoJ data" href="{% url 'userguide:userguide_index' %}contact-us/">Learn
+              more</a>
             </p>
             <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0"
-              onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
+                  onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
               <div
                 class="app-search app-search--compact app-search--on-govuk-blue govuk-form-group govuk-!-padding-bottom-0 govuk-!-margin-bottom-2"
               >
-                <input id="search-input" name="query" class="search-input govuk-input" type="search" aria-label="Search input"/>
+                <input id="search-input" name="query" class="search-input govuk-input" type="search"
+                       aria-label="Search input" />
                 <button type="submit" aria-label="Search">
                   <svg
                     aria-hidden="true"
@@ -43,6 +46,9 @@
     <div class="govuk-main-wrapper-with-feedback">
       <div class="govuk-width-container app-width-container">
         {% include 'partial/home/subject_area_grid.html' %}
+        <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl">
+        {% include "base/contact_bar.html" %}
+
         {% include "base/feedback_bar.html" %}
       </div>
     </div>

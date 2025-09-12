@@ -1,0 +1,16 @@
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
+.contact-card {
+  border-left-width: 5px;
+  background-color: govuk-colour("light-grey");
+}
+
+.contact-card-primary {
+@extend .contact-card;
+  border-color:govuk-colour("purple");
+}
+
+.contact-card-secondary {
+  @extend .contact-card;
+  border-color:govuk-colour("turquoise");
+}
