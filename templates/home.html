@@ -11,9 +11,7 @@
             <h1 class="x-govuk-masthead__title">Discover data from across the Ministry of Justice</h1>
             <p class="x-govuk-masthead__description" style="color: white;">
               Find MoJ Data shows you what data exists and how to access it.
-              The service does not contain the data itself, only metadata – data which describes our assets. <a
-              aria-label="Learn more about Find MoJ data" href="{% url 'userguide:userguide_index' %}contact-us/">Learn
-              more</a>
+              The service does not contain the data itself, only metadata – data which describes our assets.
             </p>
             <form action="{% url 'home:search' %}" method="get" role="search" class="govuk-!-margin-bottom-0"
                   onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
