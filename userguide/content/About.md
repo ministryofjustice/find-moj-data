@@ -19,7 +19,7 @@ Data modelling and engineering (DMET) curate analysis-ready clones of external d
 - Oasys
 - Sirius
 - Xhibit
-c
+
 In addition Create a Derived Table processes some prison apps data and tables uploaded from the data uploader.
 
 Create a Derived Table also contains derived tables that clean, join and transform the curated data listed above, using dimensional modelling, implementing tests and documentation to ensure that the output is reliable and understandable.
