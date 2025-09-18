@@ -77,6 +77,7 @@
 
               <div class="govuk-button-group">
                 <button
+                  id="submit-feedback-button"
                   hx-post="{{ request.get_full_path }}"
                   hx-target="#feedback-widget"
                   hx-swap="innerHTML" type="submit" class="govuk-button" data-module="govuk-button">
@@ -90,4 +91,3 @@
     </div>
   </div>
 </div>
-
