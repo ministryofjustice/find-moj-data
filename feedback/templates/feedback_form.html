@@ -30,65 +30,64 @@
               <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 {{ legend_label }}
               </legend>
-            </fieldset>
-            {% for field in field_set %}
-              <div class="govuk-checkboxes__item">
-                {{ field }}
-                <label class="govuk-label govuk-checkboxes__label" for="{{ field.id_for_label }}">
-                  {{ field.label }}
-                </label>
-              </div>
-            {% endfor %}
-            {% for field in form %}
-                <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
-                  {% if field.widget_type == 'radioselect' %}
-                    <label class="govuk-label govuk-label--s">{{ field.label }}</label>
-                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                      {% for radio in field %}
-                        <div class="govuk-radios__item">
-                          {{ radio.tag }}
-                          <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
-                            {{ radio.choice_label }}
-                          </label>
-                        </div>
-                      {% endfor %}
-                    </div>
-                  {% elif field.widget_type == 'textarea' %}
-                    <div class="govuk-form-group govuk-!-padding-top-4">
-                      <h2 class="govuk-label-wrapper">
-                        {% if form.not_working %}
-                          <label class="govuk-label govuk-label--s"
-                                 for="{{ form.how_can_we_improve.id_for_label }}">Tell us more (optional)
-                          </label>
-                          <div id="more-detail-hint" class="govuk-hint">
-                            Help us make sure the issue is appropriately addressed
-                          </div>
-                        {% else %}
-                          <label class="govuk-label govuk-label--s"
-                                 for="{{ form.additional_information.id_for_label }}"> {{ field.label }}
-                          </label>
-                        {% endif %}
-                      </h2>
-                      {{ field }}
-                    </div>
-                  {% endif %}
-                </fieldset>
-              </div>
-            {% endfor %}
+              {% for field in field_set %}
+                <div class="govuk-checkboxes__item">
+                  {{ field }}
+                  <label class="govuk-label govuk-checkboxes__label" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                  </label>
+                </div>
+              {% endfor %}
 
-            <div class="govuk-button-group">
-              <button
-                id="submit-feedback-button"
-                hx-post="{{ request.get_full_path }}"
-                hx-target="#feedback-widget"
-                hx-swap="innerHTML" type="submit" class="govuk-button" data-module="govuk-button">
-                Submit
-              </button>
-              <a class="govuk-link" href="{{ url_path }}">Cancel</a>
-            </div>
+              {% for field in form %}
+                  <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
+                    {% if field.widget_type == 'radioselect' %}
+                      <label class="govuk-label govuk-label--s">{{ field.label }}</label>
+                      <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                        {% for radio in field %}
+                          <div class="govuk-radios__item">
+                            {{ radio.tag }}
+                            <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
+                              {{ radio.choice_label }}
+                            </label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    {% elif field.widget_type == 'textarea' %}
+                      <div class="govuk-form-group govuk-!-padding-top-4">
+                        <h2 class="govuk-label-wrapper">
+                          {% if form.not_working %}
+                            <label class="govuk-label govuk-label--s"
+                                   for="{{ form.how_can_we_improve.id_for_label }}">Tell us more (optional)
+                            </label>
+                            <div id="more-detail-hint" class="govuk-hint">
+                              Help us make sure the issue is appropriately addressed
+                            </div>
+                          {% else %}
+                            <label class="govuk-label govuk-label--s"
+                                   for="{{ form.additional_information.id_for_label }}"> {{ field.label }}
+                            </label>
+                          {% endif %}
+                        </h2>
+                        {{ field }}
+                      </div>
+                    {% endif %}
+                  </fieldset>
+              {% endfor %}
+
+              <div class="govuk-button-group">
+                <button
+                  hx-post="{{ request.get_full_path }}"
+                  hx-target="#feedback-widget"
+                  hx-swap="innerHTML" type="submit" class="govuk-button" data-module="govuk-button">
+                  Submit
+                </button>
+                <a class="govuk-link" href="{{ url_path }}">Cancel</a>
+              </div>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
+
