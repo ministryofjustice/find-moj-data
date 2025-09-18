@@ -23,6 +23,7 @@ log = logging.getLogger(__name__)
 
 def feedback_view(request) -> HttpResponse:
     url_path = request.GET.get("url_path", "")
+    field_set = []
 
     if request.method == "POST":
         success_message = "We'll use it to improve the service."
@@ -54,9 +55,17 @@ def feedback_view(request) -> HttpResponse:
             context = {"success_message": success_message}
             return render(request, "feedback_success.html", context)
         else:
+
+            for field in form:
+                if field.widget_type == "checkbox":
+                    field_set.append(field)
             log.info(f"invalid feedback form submission: {form.errors}")
             return render(
-                request, "feedback_form.html", {"form": form, "url_path": url_path}
+                request, "feedback_form.html",
+                {"form": form,
+                 "url_path": url_path,
+                 "field_set": field_set,
+                 }
             )
 
     legend_label = "Can you tell us more?"
@@ -68,8 +77,6 @@ def feedback_view(request) -> HttpResponse:
         case _:
             form = FeedbackReportForm()
             legend_label = "What is the issue?"
-    field_set = []
-
     for field in form:
         if field.widget_type == "checkbox":
             field_set.append(field)
@@ -129,7 +136,7 @@ def report_issue_view(request) -> HttpResponse:
                 "report_issue.html",
                 {
                     "h1_value": "Report an issue with %s"
-                    % (request.session.get("entity_name")),
+                                % (request.session.get("entity_name")),
                     "form": form,
                     "entity_url": entity_url,
                 },
