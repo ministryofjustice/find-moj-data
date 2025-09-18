@@ -35,7 +35,9 @@
         <main class="govuk-main-wrapper-with-feedback" id="main-content" role="main">
           {% block content %}
           {% endblock content %}
-          {% include "base/feedback_bar.html" %}
+          {% if not report %}
+            {% include "base/feedback_bar.html" %}
+          {% endif %}
         </main>
       </div>
     {% endblock main %}
