@@ -141,6 +141,8 @@ def report_issue_view(request) -> HttpResponse:
                     % (request.session.get("entity_name")),
                     "form": form,
                     "entity_url": entity_url,
+                    "report": True,
+
                 },
             )
     else:
