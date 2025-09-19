@@ -50,6 +50,7 @@
 
 {% if NOTIFY_ENABLED and entity_name %}
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+  <h2 class="govuk-heading-s govuk-!-padding-1">Information missing or incorrect?</h2>
   <div class="govuk-body">
     <a type="button" class="govuk-button govuk-button--secondary" href="{% url 'feedback:report-issue' %}?entity_name={{ entity_name }}&data_custodian_email={{ governance.data_owner.email|urlencode }}&entity_url={{ request.build_absolute_uri}}" class="govuk-link">Report an issue</a>
   </div>

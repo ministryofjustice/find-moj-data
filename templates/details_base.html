@@ -14,29 +14,31 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-  <nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
-    <ol class="govuk-breadcrumbs__list">
+<nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
+    </li>
+    {% if parent_entity %}
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
+        <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
       </li>
-      {% if parent_entity %}
-        <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
-        </li>
-      {% endif %}
-      <li class="govuk-breadcrumbs__list-item" aria-current="page">
-        <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{entity.name}}</a>
-      </li>
-    </ol>
-  </nav>
+    {% endif %}
+    <li class="govuk-breadcrumbs__list-item" aria-current="page">
+      <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{entity.name}}</a>
+    </li>
+  </ol>
+</nav>
 {% endblock breadcrumbs %}
 
 {% block content %}
-  {% if messages %}
+{% if messages %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
     <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
       <div class="govuk-notification-banner__header">
         <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-          Feedback submitted
+          Report submitted
         </h2>
       </div>
       <div class="govuk-notification-banner__content">
@@ -45,44 +47,46 @@
         {% endfor %}
       </div>
     </div>
-  {% endif %}
-  <div class="govuk-grid-row app-header-negative-padding">
-    <div class="govuk-grid-column-full">
-      <span class="govuk-caption-l">{{entity_type}}</span>
-      <h1 class="govuk-heading-l">{{h1_value}}</h1>
-    </div>
   </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <div class="app-summary-card">
-        <h2 class="govuk-heading-s">
-          Description
-        </h2>
-        <div class="govuk-body">
-          {% if entity.description %}
-            {{entity.description|markdown:3}}
-          {% else %}
-            No description available.
-          {% endif %}
-        </div>
-        {% block extra_description %}
-        {% endblock extra_description %}
-        {% block metadata_list %}
-          {% include "partial/details_metadata.html" with entity=entity entity_type=entity_type %}
-          {% include "partial/esda_info.html" with is_esda=is_esda %}
-        {% endblock metadata_list %}
-        {% if entity.metadata_last_ingested %}
-          <div class="govuk-body-s app-summary-card__footer">
-            Entry last updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
-          </div>
+</div>
+{% endif %}
+<div class="govuk-grid-row app-header-negative-padding">
+  <div class="govuk-grid-column-full">
+    <span class="govuk-caption-l">{{entity_type}}</span>
+    <h1 class="govuk-heading-l">{{h1_value}}</h1>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="app-summary-card">
+      <h2 class="govuk-heading-s">
+        Description
+      </h2>
+      <div class="govuk-body">
+        {% if entity.description %}
+          {{entity.description|markdown:3}}
+        {% else %}
+          No description available.
         {% endif %}
       </div>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform %}
+      {% block extra_description %}
+      {% endblock extra_description %}
+      {% block metadata_list %}
+        {% include "partial/details_metadata.html" with entity=entity entity_type=entity_type %}
+        {% include "partial/esda_info.html" with is_esda=is_esda %}
+      {% endblock metadata_list %}
+      {% if entity.metadata_last_ingested %}
+        <div class="govuk-body-s app-summary-card__footer">
+          Entry last updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
+        </div>
+      {% endif %}
     </div>
   </div>
+  <div class="govuk-grid-column-one-third">
+    {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform %}
+  </div>
+</div>
 
-  {% block extra_details %}
-  {% endblock extra_details %}
+{% block extra_details %}
+{% endblock extra_details %}
 {% endblock content %}
