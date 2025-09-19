@@ -18,9 +18,8 @@ def formfield(field, **kwargs):
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Issue
-        fields = ["reason", "additional_info"]
+        fields = ["additional_info"]
         widgets = {
-            "reason": RadioSelect(attrs={"class": "govuk-radios__input"}),
             "additional_info": Textarea(
                 attrs={
                     "class": "govuk-textarea",
@@ -51,7 +50,7 @@ class IssueForm(forms.ModelForm):
         choices=(("Yes", "Yes"), ("No", "No")),
         coerce=lambda x: x == "Yes",
         required=True,
-        label="Would you like us to email you a copy of this report?",
+        label="Would you like an emailed copy of your report?",
         error_messages={
             "required": "Select if you want us to email you a copy of this report"
         },

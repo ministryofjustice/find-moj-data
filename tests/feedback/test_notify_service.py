@@ -16,7 +16,6 @@ from feedback.service import send, send_feedback_notification
 @pytest.mark.django_db
 def test_send_all_notifications(mock_notifications_client, reporter):
     data = {
-        "reason": "Other",
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
         "entity_url": "http://localhost/my_entity",
@@ -37,7 +36,6 @@ def test_send_notifications_no_data_custodian_email(
     mock_notifications_client, reporter
 ):
     data = {
-        "reason": "Other",
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
         "entity_url": "http://localhost/my_entity",
@@ -55,7 +53,6 @@ def test_send_notifications_no_data_custodian_email(
 @pytest.mark.django_db
 def test_send_all_notifications_no_reporter(mock_notifications_client):
     data = {
-        "reason": "Other",
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
         "entity_url": "http://localhost/my_entity",
@@ -74,7 +71,6 @@ def test_send_all_notifications_no_reporter_no_data_custodian_email(
     mock_notifications_client, reporter
 ):
     data = {
-        "reason": "Other",
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
         "entity_url": "http://localhost/my_entity",
@@ -92,7 +88,6 @@ def test_send_all_notifications_no_reporter_no_data_custodian_email(
 @pytest.mark.django_db
 def test_entity_url_encoding(reporter):
     data = {
-        "reason": "Other",
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
         "entity_url": "http://localhost:8000/details/table/urn:li:dataset:(urn:li:dataPlatform:dbt,cadet.awsdatacatalog.derived_oasys_dim.dim_ref_question,PROD)",  # noqa: E501

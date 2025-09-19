@@ -74,9 +74,7 @@ def test_valid_report_issue_form():
 
 
 def test_report_issue_form_invalid_additinal_info_length():
-    form = IssueForm(
-        {"reason": "Other", "additional_info": "a" * 9, "send_email_to_reporter": "Yes"}
-    )
+    form = IssueForm({"additional_info": "a" * 9, "send_email_to_reporter": "Yes"})
     assert not form.is_valid()
     assert (
         "Ensure this value has at least 10 characters (it has 9)."
@@ -88,7 +86,6 @@ def test_report_issue_form_invalid_additinal_info_length():
 def test_report_issue_form_saves_to_db(reporter):
     form = IssueForm(
         {
-            "reason": "Other",
             "additional_info": "a" * 10,
             "send_email_to_reporter": "Yes",
         }
@@ -100,6 +97,5 @@ def test_report_issue_form_saves_to_db(reporter):
 
     saved = Issue.objects.first()
     assert saved
-    assert saved.reason == "Other"
     assert saved.additional_info == "a" * 10
     assert saved.created_by == reporter
