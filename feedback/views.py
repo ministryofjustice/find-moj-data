@@ -123,7 +123,9 @@ def report_issue_view(request) -> HttpResponse:
                 send_email_to_reporter=form.cleaned_data["send_email_to_reporter"],
             )
             messages.add_message(
-                request, messages.SUCCESS, "Feedback submitted successfully"
+                request,
+                messages.SUCCESS,
+                "Thank you for reporting an issue. We look at every report received.",
             )
             if is_valid_url:
                 return redirect(issue.entity_url)
@@ -137,12 +139,10 @@ def report_issue_view(request) -> HttpResponse:
                 request,
                 "report_issue.html",
                 {
-                    "h1_value": "Report an issue with %s"
-                    % (request.session.get("entity_name")),
+                    "h1_value": "Report an issue",
                     "form": form,
                     "entity_url": entity_url,
                     "report": True,
-
                 },
             )
     else:
@@ -162,7 +162,7 @@ def report_issue_view(request) -> HttpResponse:
         request,
         "report_issue.html",
         {
-            "h1_value": f"Report an issue with {entity_name}",
+            "h1_value": "Report an issue",
             "form": form,
             "entity_name": entity_name,
             "entity_url": entity_url,
