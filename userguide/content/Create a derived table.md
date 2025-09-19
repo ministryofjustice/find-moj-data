@@ -71,7 +71,6 @@ The user ID is visible in the URL of a user page in Datahub, e.g.
 
 `https://datahub-catalogue-dev.apps.live.cloud-platform.service.justice.gov.uk/user/**urn:li:corpuser:Joe.Bloggs**/owner%20of`
 
-[Speak to Find MoJ data team](/userguide/#contact-us) if you would like us to manually add a set of users without them logging in.
 
 ### DBT project file example
 
