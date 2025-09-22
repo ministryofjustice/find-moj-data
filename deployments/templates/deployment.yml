@@ -94,14 +94,14 @@ spec:
               value: "${NOTIFY_ENABLED}"
             - name: NOTIFY_API_KEY
               value: "${NOTIFY_API_KEY}"
-            - name: NOTIFY_DATA_OWNER_TEMPLATE_ID
-              value: "${NOTIFY_DATA_OWNER_TEMPLATE_ID}"
-            - name: NOTIFY_SENDER_TEMPLATE_ID
-              value: "${NOTIFY_SENDER_TEMPLATE_ID}"
-            - name: NOTIFY_DATA_CATALOGUE_TEMPLATE_ID
-              value: "${NOTIFY_DATA_CATALOGUE_TEMPLATE_ID}"
             - name: NOTIFY_FEEDBACK_TEMPLATE_ID
               value: "${NOTIFY_FEEDBACK_TEMPLATE_ID}"
+            - name: NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID
+              value: "${NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID}"
+            - name: NOTIFY_REPORTER_INCLUDING_DATA_CATALOGUE_AND_DATA_OWNER_TEMPLATE_ID
+              value: "${NOTIFY_REPORTER_INCLUDING_DATA_CATALOGUE_AND_DATA_OWNER_TEMPLATE_ID}"
+            - name: NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID
+              value: "${NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID}"
             - name: DATA_CATALOGUE_EMAIL
               value: "${DATA_CATALOGUE_EMAIL}"
             - name: QUICKSIGHT_ACCOUNT_ID
