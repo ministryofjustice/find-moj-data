@@ -70,11 +70,6 @@ def send(
 ) -> None:
 
     personalisation = {
-        "assetOwner": (
-            issue.data_custodian_email
-            if issue.data_custodian_email
-            else "Data Catalog Team"
-        ),
         "userEmail": issue.created_by.email if issue.created_by else "",
         "assetName": issue.entity_name,
         "userMessage": issue.additional_info,
@@ -87,17 +82,28 @@ def send(
     if issue.data_custodian_email:
         notify(
             personalisation=personalisation,
-            template_id=settings.NOTIFY_DATA_OWNER_TEMPLATE_ID,
+            template_id=settings.NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID,
             email_address=issue.data_custodian_email,
             reference=reference,
             client=client,
         )
 
-    # Notify Sender
+    # Notify Reporter
     if issue.created_by and send_email_to_reporter:
+        if issue.data_custodian_email:
+            reporter_template_id = (
+                settings.NOTIFY_REPORTER_INCLUDING_DATA_CATALOGUE_AND_DATA_OWNER_TEMPLATE_ID  # noqa E501
+            )
+            personalisation.update({"assetOwner": issue.data_custodian_email})
+
+        else:
+            reporter_template_id = (
+                settings.NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID
+            )
+
         notify(
             personalisation=personalisation,
-            template_id=settings.NOTIFY_SENDER_TEMPLATE_ID,
+            template_id=reporter_template_id,
             email_address=issue.created_by.email,
             reference=reference,
             client=client,
@@ -106,7 +112,7 @@ def send(
     # Notify Data Catalog
     notify(
         personalisation=personalisation,
-        template_id=settings.NOTIFY_DATA_CATALOGUE_TEMPLATE_ID,
+        template_id=settings.NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID,
         email_address=settings.DATA_CATALOGUE_EMAIL,
         reference=reference,
         client=client,
