@@ -5,7 +5,6 @@
  <a href="javascript:history.back()" class="govuk-back-link">Back</a>
 {% endblock breadcrumbs %}
 {% block content %}
-
 <div class="govuk-grid-row  govuk-!-margin-top-0">
   {% if form.errors %}
   <div class="govuk-error-summary" data-module="govuk-error-summary">
@@ -28,73 +27,37 @@
   </div>
   {% endif %}
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-l app-report-issue-header">{{h1_value}}</h1>
-    <p class="govuk-body govuk-!-margin-bottom-6">
-    {% if technical_contact %}
-      The issue will be sent to the technical contact.
-    {% else %}
-      The issue will be sent to the data catalogue team.
-    {% endif %}
-    </p>
+    <span class="govuk-caption-l">{{entity_name}}</span>
+    <h1 class="govuk-heading-l app-report-issue-header govuk-!-padding-top-2">{{h1_value}}</h1>
+    <h2 class="govuk-heading-s">What is wrong with this information?</h2>
   </div>
-
   <div class="govuk-grid-column-two-thirds">
     <form action="{{ request.path }}" method="post" novalidate>
-      <div class="govuk-form-group {% if form.reason.errors %}govuk-form-group--error{% endif %}">
-        <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-            <h2 class="govuk-fieldset__heading" id="{{form.reason.name}}">
-              {{form.reason.label}}
-            </h2>
-          </legend>
-          {% for error in form.reason.errors %}
-          <p id="passport-issued-error" class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> {{error}}
-          </p>
-          {% endfor %}
-          <div class="govuk-radios" data-module="govuk-radios">
-            {% for radio in form.reason %}
-            <div class="govuk-radios__item">
-              {{radio.tag}}
-              <label class="govuk-label govuk-radios__label" for="{{radio.id_for_label}}">
-                {{radio.choice_label}}
-              </label>
-            </div>
-            {% endfor %}
-          </div>
-        </fieldset>
-      </div>
-
       <div class="govuk-form-group {% if form.additional_info.errors %}govuk-form-group--error{% endif %}">
-        <h2 class="govuk-label-wrapper" id="{{form.additional_info.name}}">
-          <label class="govuk-label govuk-label--m" for="{{form.additional_info.id_for_label}}">
-            {{form.additional_info.label}}
-          </label>
-        </h2>
         <div id="more-detail-hint" class="govuk-hint">
-          Please provide as much information as possible about the issue.
+          {{form.additional_info.label}}
         </div>
         {% for error in form.additional_info.errors %}
-        <p id="additional-info-issued-error" class="govuk-error-message">
-          <span class="govuk-visually-hidden">Error:</span> {{error}}
-        </p>
+          <p id="additional-info-issued-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{error}}
+          </p>
         {% endfor %}
         {{ form.additional_info }}
       </div>
-
       <div class="govuk-form-group {% if form.send_email_to_reporter.errors %}govuk-form-group--error{% endif %}">
         <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             <h2 class="govuk-fieldset__heading" id="{{form.send_email_to_reporter.name}}">
               {{form.send_email_to_reporter.label}}
             </h2>
+            <span class="govuk-caption-m govuk-!-padding-top-3">We'll send it to {{request.user.email}}</span>
           </legend>
           {% for error in form.send_email_to_reporter.errors %}
-          <p id="passport-issued-error" class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> {{error}}
-          </p>
+            <p id="passport-issued-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{error}}
+            </p>
           {% endfor %}
-          <div class="govuk-radios" data-module="govuk-radios">
+          <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
             {% for radio in form.send_email_to_reporter %}
             <div class="govuk-radios__item">
               {{radio.tag}}
@@ -106,12 +69,14 @@
           </div>
         </fieldset>
       </div>
-
-      <button type="submit" class="govuk-button" data-module="govuk-button">
-        Submit
-      </button>
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Submit
+        </button>
+        <a class="govuk-link" href="{{ entity_url }}">Cancel</a>
+      </div>
       {% csrf_token %}
     </form>
   </div>
-  {% endblock content %}
 </div>
+{% endblock content %}

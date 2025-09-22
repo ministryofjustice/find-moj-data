@@ -13,11 +13,6 @@ RESEARCH_FEEDBACK_CHOICES = [
 
 
 class Issue(models.Model):
-    class IssueChoices(models.TextChoices):
-        BROKEN_LINK = "Link is broken"
-        INCORRECT_CUSTODIAN = "Data custodian is incorrect"
-        OUTDATED_CONTACT = "Contact is outdated"
-        OTHER = "Other"
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -26,15 +21,8 @@ class Issue(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=True
     )
 
-    reason = models.CharField(
-        max_length=50,
-        choices=IssueChoices.choices,
-        verbose_name="What is wrong with this page?",
-        null=False,
-        blank=False,
-    )
     additional_info = models.TextField(
-        verbose_name="Can you provide more detail?",
+        verbose_name="Please provide as much information as you can to help resolve the issue.",
         null=False,
         blank=False,
         validators=[MinLengthValidator(10)],
