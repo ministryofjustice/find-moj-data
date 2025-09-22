@@ -5,7 +5,6 @@
  <a href="javascript:history.back()" class="govuk-back-link">Back</a>
 {% endblock breadcrumbs %}
 {% block content %}
-
 <div class="govuk-grid-row  govuk-!-margin-top-0">
   {% if form.errors %}
   <div class="govuk-error-summary" data-module="govuk-error-summary">
@@ -32,7 +31,6 @@
     <h1 class="govuk-heading-l app-report-issue-header govuk-!-padding-top-2">{{h1_value}}</h1>
     <h2 class="govuk-heading-s">What is wrong with this information?</h2>
   </div>
-
   <div class="govuk-grid-column-two-thirds">
     <form action="{{ request.path }}" method="post" novalidate>
       <div class="govuk-form-group {% if form.additional_info.errors %}govuk-form-group--error{% endif %}">
@@ -80,5 +78,5 @@
       {% csrf_token %}
     </form>
   </div>
-  {% endblock content %}
 </div>
+{% endblock content %}
