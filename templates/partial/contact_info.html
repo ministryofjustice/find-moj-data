@@ -26,31 +26,9 @@
   </ul>
 </div>
 
-<!-- {% if governance.data_custodians and governance.data_custodians.0.email %}
-<div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Data custodian (technical contact)</h2>
-  <p id="data_owner" class="govuk-body">
-      {{ governance.data_custodians.0.email|urlize }}
-  </p>
-</div>
-{% else %}
-<div class="govuk-body">
-  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Data custodian (technical contact)</h2>
-  <p id="data_owner" class="govuk-body">
-    {% if governance.data_owner.email %}
-      {{ governance.data_owner.email|urlize }}
-    {% elif platform.urn == PlatformUrns.PERFORMANCE_HUB %}
-      No owner is listed as this data is undergoing a review of ownership.
-    {% else %}
-      Not provided - <a href="https://moj.enterprise.slack.com/archives/C06NPM2200N" class="govuk-link" rel="noreferrer noopener" target="_blank">contact the Data Catalogue team</a> about this data.
-    {% endif %}
-  </p>
-</div>
-{% endif %} -->
-
 {% if NOTIFY_ENABLED and entity_name %}
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-  <h2 class="govuk-heading-s govuk-!-padding-1">Information missing or incorrect?</h2>
+  <h2 class="govuk-heading-s govuk-!-margin-top-1">Information missing or incorrect?</h2>
   <div class="govuk-body">
     <a type="button" class="govuk-button govuk-button--secondary" href="{% url 'feedback:report-issue' %}?entity_name={{ entity_name }}&data_custodian_email={{ governance.data_owner.email|urlencode }}&entity_url={{ request.build_absolute_uri}}" class="govuk-link">Report an issue</a>
   </div>
