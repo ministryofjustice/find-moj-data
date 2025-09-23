@@ -104,8 +104,11 @@ def get_markdown_content(filename) -> str:
     file_path = os.path.normpath(os.path.join(DOCS_DIR, filename + ".md"))
     if not file_path.startswith(DOCS_DIR):
         raise Http404("Page not found")
-    with open(file_path, "r", encoding="utf-8") as f:
-        return f.read()
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    else:
+        raise Http404("Page not found")
 
 
 def userguide_view(request, slug="about"):
