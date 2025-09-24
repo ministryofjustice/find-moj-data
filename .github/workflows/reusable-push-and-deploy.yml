@@ -41,21 +41,6 @@ on:
       limit_whitelist:
         description: "string of comma delimited subnets"
         required: true
-      quicksight_account_id:
-        description: "quicksight account id"
-        required: true
-      quicksight_role_arn:
-        description: "quicksight role arn to assume with generate embed url permissions"
-        required: true
-      quicksight_namespace:
-        description: "quicksight namespace"
-        required: true
-      quicksight_metadata_dashboard_id:
-        description: "quicksight dashboard id"
-        required: true
-      quicksight_metadata_dashboard_arn:
-        description: "quicksight dashboard arn"
-        required: true
 
 jobs:
   push-and-deploy:
