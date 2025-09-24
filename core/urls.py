@@ -26,7 +26,6 @@ urlpatterns = [
     path("feedback/", include("feedback.urls", namespace="feedback")),
     path("", include("home.urls", namespace="home")),
     path("", include("django_prometheus.urls")),
-    path("dashboard/", include("dashboard.urls", namespace="dashboard")),
     path("", include("userguide.urls", namespace="userguide")),
 ]
 
