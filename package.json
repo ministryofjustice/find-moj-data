@@ -1,12 +1,12 @@
 {
   "dependencies": {
     "@babel/preset-env": "^7.28.3",
-    "@ministryofjustice/frontend": "^5.1.5",
+    "@ministryofjustice/frontend": "^5.2.1",
     "@x-govuk/govuk-prototype-components": "^5.0.2",
     "babel-jest": "^30.0.5",
-    "govuk-frontend": "^5.11.2",
+    "govuk-frontend": "^5.12.0",
     "jest-environment-jsdom": "^30.0.5",
-    "sass": "^1.92.1"
+    "sass": "^1.93.2"
   },
   "scripts": {
     "dependencies": "bash scripts/import-static.sh",
