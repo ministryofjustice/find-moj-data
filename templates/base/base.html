@@ -3,57 +3,99 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template app-html-class">
 
-  <head>
-    <meta charset="utf-8">
-    <title> {% block title %} {{h1_value|render_title}} {% endblock %} </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="blue">
-    <link rel="icon" sizes="48x48" href="{% static 'assets/images/favicon.ico' %}">
-    <link rel="icon" sizes="any" href="{% static 'assets/images/favicon.svg' %}" type="image/svg+xml">
-    <link rel="mask-icon" href="{% static 'assets/images/govuk-icon-mask.svg' %}" color="blue">
-    <link rel="apple-touch-icon" href="{% static 'assets/images/govuk-icon-180.png' %}">
-    <link rel="manifest" href="{% static 'assets/manifest.json' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/base.css' %}">
-    <meta property="og:image" content="{% static 'assets/images/govuk-opengraph-image.png' %}">
-    <meta name="robots" content="noindex, nofollow" />
-  </head>
+<head>
+  <meta charset="utf-8">
+  <title> {% block title %} {{ h1_value|render_title }} {% endblock %} </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="blue">
+  <link rel="icon" sizes="48x48" href="{% static 'assets/images/favicon.ico' %}">
+  <link rel="icon" sizes="any" href="{% static 'assets/images/favicon.svg' %}" type="image/svg+xml">
+  <link rel="mask-icon" href="{% static 'assets/images/govuk-icon-mask.svg' %}" color="blue">
+  <link rel="apple-touch-icon" href="{% static 'assets/images/govuk-icon-180.png' %}">
+  <link rel="manifest" href="{% static 'assets/manifest.json' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/base.css' %}">
+  <meta property="og:image" content="{% static 'assets/images/govuk-opengraph-image.png' %}">
+  <meta name="robots" content="noindex, nofollow" />
 
-  <body class="govuk-template__body app-body-class" data-test="My value" data-other="report:details">
-    <script>
-      document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
-    </script>
-    {% block skiplinks %}
-      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
-    {% endblock %}
+  {% if request.user not in STAFF %}
+    <!-- Google Tag Manager (script) -->
 
-    {% include "base/navigation.html" %}
-    {% block main %}
-      <div class="govuk-width-container app-width-container">
-        {% block breadcrumbs %}
-        {% endblock breadcrumbs %}
+    <script>(function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        "gtm.start":
+          new Date().getTime(), event: "gtm.js"
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != "dataLayer" ? "&l=" + l : "";
+      j.async = true;
+      j.src =
+        "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, "script", "dataLayer", "{{ GTM_ID }}");</script>
+  {% endif %}
 
-        <main class="govuk-main-wrapper-with-feedback" id="main-content" role="main">
-          {% block content %}
-          {% endblock content %}
-          {% if not report %}
-            {% include "base/feedback_bar.html" %}
-          {% endif %}
-        </main>
-      </div>
-    {% endblock main %}
-    {% include "base/footer.html" %}
-    <script type="module">
-      import {initAll} from "{% static 'assets/js/govuk-frontend.min.js' %}"
-      initAll();
-    </script>
-    {% block scripts %}
-    {% endblock scripts %}
-    {% if ENABLE_ANALYTICS %}
-      <script async src="https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_ID }}"></script>
-      <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ ANALYTICS_ID }}');</script>
-    {% else %}
-            <script>window.dataLayer = window.dataLayer || []; function gtag(){}</script>
-    {% endif %}
-  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script> # pragma: allowlist secret
-  </body>
+</head>
+
+<body class="govuk-template__body app-body-class" data-test="My value" data-other="report:details">
+{% if request.user not in STAFF %}
+  <!-- Google Tag Manager (noscript) -->
+
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id={{ GTM_ID }}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+{% endif %}
+
+<script>
+  document.body.className += " js-enabled" + ("noModule" in HTMLScriptElement.prototype ? " govuk-frontend-supported" : "");
+</script>
+{% block skiplinks %}
+  <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+{% endblock %}
+
+{% include "base/navigation.html" %}
+{% block main %}
+  <div class="govuk-width-container app-width-container">
+    {% block breadcrumbs %}
+    {% endblock breadcrumbs %}
+
+    <main class="govuk-main-wrapper-with-feedback" id="main-content" role="main">
+      {% block content %}
+      {% endblock content %}
+      {% if not report %}
+        {% include "base/feedback_bar.html" %}
+      {% endif %}
+    </main>
+  </div>
+{% endblock main %}
+{% include "base/footer.html" %}
+<script type="module">
+  import { initAll } from "{% static 'assets/js/govuk-frontend.min.js' %}";
+
+  initAll();
+</script>
+{% block scripts %}
+{% endblock scripts %}
+{% if ENABLE_ANALYTICS and request.user not in STAFF %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_ID }}"></script>
+  <script>window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", '{{ ANALYTICS_ID }}');</script>
+{% else %}
+  <script>window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+  }</script>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"
+        integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm"
+        crossorigin="anonymous"></script>
+# pragma: allowlist secret
+</body>
 </html>
