@@ -47,7 +47,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: content-link(s)
+    id: content-link
     attributes:
       description: Please add any links to content documents if available.
       label: Content Link(s)
