@@ -32,7 +32,7 @@
       j.src =
         "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
       f.parentNode.insertBefore(j, f);
-    })(window, document, "script", "dataLayer", "{{ GTM_ID }}");</script>
+    })(window, document, "script", "dataLayer", "{{ GOOGLE_TAG_MANAGER_ID }}");</script>
   {% endif %}
 
 </head>
@@ -42,7 +42,7 @@
   <!-- Google Tag Manager (noscript) -->
 
   <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id={{ GTM_ID }}"
+    <iframe src="https://www.googletagmanager.com/ns.html?id={{ GOOGLE_TAG_MANAGER_ID }}"
             height="0" width="0" style="display:none;visibility:hidden"></iframe>
   </noscript>
 {% endif %}
