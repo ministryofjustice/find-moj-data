@@ -213,11 +213,11 @@ LOGGING = {
 CACHES = generate_cache_configuration()
 
 ANALYTICS_ID: str = os.environ.get("ANALYTICS_ID", "")
-GTM_ID: str = os.environ.get("GTM_ID", "")
+GOOGLE_TAG_MANAGER_ID: str = os.environ.get("GOOGLE_TAG_MANAGER_ID", "")
 ENABLE_ANALYTICS: bool = (
     os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES
 ) and ANALYTICS_ID != ""
-STAFF = str("STAFF", ).split(",")
+STAFF = str(os.environ.get("STAFF"), ).split(",")
 TESTING = os.environ.get("TESTING") in TRUTHY_VALUES
 
 # Sentry Configuration
