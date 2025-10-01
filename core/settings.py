@@ -217,7 +217,6 @@ ENABLE_ANALYTICS: bool = (
     os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES
 ) and ANALYTICS_ID != ""
 STAFF = str(os.environ.get("STAFF", "").lower()).split(",")
-print(STAFF)
 TESTING = os.environ.get("TESTING") in TRUTHY_VALUES
 
 # Sentry Configuration
