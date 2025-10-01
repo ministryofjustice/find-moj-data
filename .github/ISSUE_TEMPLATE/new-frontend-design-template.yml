@@ -1,6 +1,6 @@
-name: Frontend Design Story
-description: 🎨 Create a new Frontend Design story
-title: "[gitmoji] <title>"
+name: Frontend Design Implementation
+description: 🎨 Create a new Frontend Design Implementation
+title: ":sparkles: <title>"
 body:
   - type: markdown
     attributes:
@@ -47,7 +47,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: content-link(s)
+    id: content-link
     attributes:
       description: Please add any links to content documents if available.
       label: Content Link(s)
@@ -62,7 +62,6 @@ body:
       description: Please add any links to content screenshots if available.
       label: Screenshots
       value: |
-        Example
         [Screenshot 1](https://www.figma.com/file/xxxxxx)
         [Screenshot 2](https://www.figma.com/file/xxxxxx)
     validations:
@@ -73,10 +72,8 @@ body:
       label: Definition of Done
       placeholder: "Define the criteria for when this design work is considered done."
       value: |
-        Example
-        - [ ] Documentation has been written / updated
-        - [ ] README has been updated
+        - [ ] Designer has reviewed
         - [ ] User docs have been updated
-        - [ ] Another team member has reviewed
+        - [ ] Post deployment team review
     validations:
       required: false
