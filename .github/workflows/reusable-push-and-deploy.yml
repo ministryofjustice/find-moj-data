@@ -41,21 +41,6 @@ on:
       limit_whitelist:
         description: "string of comma delimited subnets"
         required: true
-      quicksight_account_id:
-        description: "quicksight account id"
-        required: true
-      quicksight_role_arn:
-        description: "quicksight role arn to assume with generate embed url permissions"
-        required: true
-      quicksight_namespace:
-        description: "quicksight namespace"
-        required: true
-      quicksight_metadata_dashboard_id:
-        description: "quicksight dashboard id"
-        required: true
-      quicksight_metadata_dashboard_arn:
-        description: "quicksight dashboard arn"
-        required: true
 
 jobs:
   push-and-deploy:
@@ -145,11 +130,6 @@ jobs:
           NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID: ${{ vars.NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID }}
           DATA_CATALOGUE_EMAIL: ${{ vars.DATA_CATALOGUE_EMAIL }}
           LIMIT_WHITELIST: ${{ secrets.LIMIT_WHITELIST }}
-          QUICKSIGHT_ACCOUNT_ID: ${{ secrets.QUICKSIGHT_ACCOUNT_ID }}
-          QUICKSIGHT_NAMESPACE: ${{ secrets.QUICKSIGHT_NAMESPACE }}
-          QUICKSIGHT_METADATA_DASHBOARD_ARN: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ARN }}
-          QUICKSIGHT_METADATA_DASHBOARD_ID: ${{ secrets.QUICKSIGHT_METADATA_DASHBOARD_ID }}
-          QUICKSIGHT_ROLE_ARN: ${{ secrets.QUICKSIGHT_ROLE_ARN }}
 
         run: |
           cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml

@@ -77,7 +77,6 @@ COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} feedback ./feedback
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} datahub_client ./datahub_client
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} home ./home
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} templates ./templates
-COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} dashboard ./dashboard
 COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} userguide ./userguide
 
 
