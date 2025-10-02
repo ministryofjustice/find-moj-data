@@ -26,7 +26,7 @@ dependencies = [
     "pydantic[email]>=2.11.7,<3",
     "email-validator==2.2.0",
     "acryl-datahub[datahub-rest]>=1.1.0.4,<2",
-    "deepdiff>=8.5.0,<9",
+    "deepdiff>=8.6.0,<9",
     "boto3>=1.38.46,<2",
     "setuptools==80.9.0",
     "cffi==1.17.1",
