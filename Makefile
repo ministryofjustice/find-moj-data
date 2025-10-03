@@ -40,7 +40,7 @@ install_deps: install_npm_deps install_python_deps
 # Install trivy for scanning docker images
 install_trivy:
 	if ! command -v trivy >/dev/null 2>&1; then \
-		echo "Trivy is not installed. Please install it from https://trivy.dev/latest/getting-started/installation/; \
+		echo "Trivy is not installed. Please install it from https://trivy.dev/latest/getting-started/installation/"; \
 		exit 1; \
 	fi
 
