@@ -35,6 +35,7 @@ ENV UV_CACHE_DIR="/tmp/uv_cache"
 COPY pyproject.toml uv.lock ./
 RUN pip install uv==0.7.17
 RUN uv sync --no-dev --locked && rm -rf $UV_CACHE_DIR
+RUN uv pip install 'aiohttp>=3.12.15' 'urllib3>=2.5.0'
 
 #### FINAL RUNTIME IMAGE
 FROM ${ecr_path}${python_version}-${alpine_version} AS runtime
@@ -44,6 +45,8 @@ RUN pip install -U setuptools
 
 # Install dependencies for the runtime image
 RUN apk add --no-cache bash make netcat-openbsd gettext
+# Upgrade vulnerable packages to mitigate CVE-2025-9230, CVE-2025-9231, CVE-2025-9232, CVE-2025-6965, CVE-2025-29088
+RUN apk upgrade libcrypto3 libssl3 sqlite-libs
 
 # Use a non-root user
 ENV CONTAINER_USER=appuser \

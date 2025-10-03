@@ -2,6 +2,7 @@
 ENV_FILE := .env
 ENV := local
 BUILD_COMMAND := uv run
+LOCAL_IMAGE_TAG := find-moj-data:local
 
 # Default target
 all: build
@@ -33,6 +34,13 @@ install_deps: install_npm_deps install_python_deps
 	fi
 	if ! command -v chromedriver >/dev/null 2>&1; then \
 		echo "Chromedriver is not installed. Please install it from https://sites.google.com/a/chromium.org/chromedriver/downloads"; \
+		exit 1; \
+	fi
+
+# Install trivy for scanning docker images
+install_trivy:
+	if ! command -v trivy >/dev/null 2>&1; then \
+		echo "Trivy is not installed. Please install it from https://trivy.dev/latest/getting-started/installation/"; \
 		exit 1; \
 	fi
 
@@ -91,4 +99,11 @@ clean:
 lint:
 	pre-commit run --all-files
 
-.PHONY: all build install_deps set_env assets migrate setup_waffle_switches run test unit integration clean lint
+build-image:
+	docker build  -t $(LOCAL_IMAGE_TAG) .
+
+scan: install_trivy build-image
+	trivy image --scanners vuln $(LOCAL_IMAGE_TAG)
+
+
+.PHONY: all build install_deps set_env assets migrate setup_waffle_switches run test unit integration clean lint build-image scan install_trivy
