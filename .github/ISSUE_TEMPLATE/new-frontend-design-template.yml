@@ -1,0 +1,79 @@
+name: Frontend Design Implementation
+description: 🎨 Create a new Frontend Design Implementation
+title: ":sparkles: <title>"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill out the fields below.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: "Describe the design work to be done."
+      value: "As a…
+
+        I need/want/expect to…
+
+        So that…"
+    validations:
+      required: true
+  - type: textarea
+    id: tasklist
+    attributes:
+      label: Task List
+      value: |
+        - [ ] Task 1
+        - [ ] Task 2
+        - [ ] Task 3
+        - [ ] Task 4
+  - type: textarea
+    id: figama-prototype-link
+    attributes:
+      description: Please add a link to the Figma prototype if available.
+      label: Figma Prototype Link
+      value: |
+        [Figma File](https://www.figma.com/file/xxxxxx)
+    validations:
+      required: false
+  - type: textarea
+    id: figma-dev-mode-link
+    attributes:
+      description: Please add a link to the Figma design file in Dev Mode if available.
+      placeholder: https://www.figma.com/file/xxxxxx
+      label: Figma Dev Mode Link
+      value: |
+        [Figma File](https://www.figma.com/file/xxxxxx)
+    validations:
+      required: false
+  - type: textarea
+    id: content-link
+    attributes:
+      description: Please add any links to content documents if available.
+      label: Content Link(s)
+      value: |
+        [Content File 1](https://www.figma.com/file/xxxxxx)
+        [Content File 2](https://www.figma.com/file/xxxxxx)
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      description: Please add any links to content screenshots if available.
+      label: Screenshots
+      value: |
+        [Screenshot 1](https://www.figma.com/file/xxxxxx)
+        [Screenshot 2](https://www.figma.com/file/xxxxxx)
+    validations:
+      required: false
+  - type: textarea
+    id: its-done-when
+    attributes:
+      label: Definition of Done
+      placeholder: "Define the criteria for when this design work is considered done."
+      value: |
+        - [ ] Designer has reviewed
+        - [ ] User docs have been updated
+        - [ ] Post deployment team review
+    validations:
+      required: false
