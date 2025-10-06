@@ -24,22 +24,22 @@ dependencies = [
     "redis[hiredis]>=6.2.0,<7",
     "notifications-python-client>=10.0.1,<11",
     "pydantic[email]>=2.11.7,<3",
-    "email-validator==2.2.0",
+    "email-validator==2.3.0",
     "acryl-datahub[datahub-rest]>=1.1.0.4,<2",
     "deepdiff>=8.6.0,<9",
     "boto3>=1.38.46,<2",
     "setuptools==80.9.0",
-    "cffi==1.17.1",
+    "cffi==2.0.0",
 ]
 
 [dependency-groups]
 dev = [
     "black>=25.1.0,<26",
     "pre-commit>=4.2.0,<5",
-    "selenium~=4.33.0",
+    "selenium~=4.36.0",
     "flake8>=6.1.0",
     "pytest-django>=4.11.1,<5",
-    "pytest-cov>=6.2.1,<7",
+    "pytest-cov>=6.2.1,<8",
     "faker>=37.4.0,<38",
     "isort>=6.0.1,<7",
     "freezegun>=1.5.2,<2",
