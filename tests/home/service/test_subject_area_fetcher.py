@@ -7,6 +7,7 @@ class TestSubjectAreaFetcher:
             filter_zero_entities=True, sort_total_descending=False
         ).fetch()
         assert len(subject_area_options) == 3
+
         assert all(
             subject_area_option.total > 0
             for subject_area_option in subject_area_options
@@ -23,7 +24,7 @@ class TestSubjectAreaFetcher:
 
     def test_sort_subject_areas_by_name_ascending(self, mock_catalogue) -> None:
         subject_area_options = SubjectAreaFetcher(
-            filter_zero_entities=False, sort_total_descending=False
+            filter_zero_entities=True, sort_total_descending=False
         ).fetch()
         urns = [subject_area_option.urn for subject_area_option in subject_area_options]
         assert urns == sorted(urns)

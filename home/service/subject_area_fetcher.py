@@ -45,7 +45,6 @@ class SubjectAreaFetcher(GenericService):
         # Append 'Miscellaneous' to the end of the list
         if miscellanouse_sa is not None:
             result.append(miscellanouse_sa)
-
         return result
 
     def fetch(self) -> list[SubjectAreaOption]:
@@ -58,5 +57,6 @@ class SubjectAreaFetcher(GenericService):
         if not result:
             result = self.client.list_subject_areas()
             cache.set(self.cache_key, result, self.cache_timeout_seconds, version=2)
-            result = self.filter_and_sort(result)
+
+        result = self.filter_and_sort(result)
         return result
