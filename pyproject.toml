@@ -21,7 +21,7 @@ dependencies = [
     "psycopg>=3.2.9,<4",
     "psycopg-binary>=3.2.9,<4",
     "django-debug-toolbar>=5.2.0,<7",
-    "redis[hiredis]>=6.2.0,<7",
+    "redis[hiredis]>=6.2.0,<8",
     "notifications-python-client>=10.0.1,<11",
     "pydantic[email]>=2.11.7,<3",
     "email-validator==2.3.0",
