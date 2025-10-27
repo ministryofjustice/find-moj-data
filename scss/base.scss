@@ -118,3 +118,9 @@ code {
   @extend .govuk-list;
   @extend .govuk-list--number;
 }
+
+// Reduce section break padding top for govuk-section-break--xl
+.govuk-section-break--xl-no-margin-top {
+  @extend .govuk-section-break--xl;
+  margin-top: 0;
+}
