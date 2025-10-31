@@ -21,7 +21,7 @@ dependencies = [
     "psycopg>=3.2.9,<4",
     "psycopg-binary>=3.2.9,<4",
     "django-debug-toolbar>=5.2.0,<7",
-    "redis[hiredis]>=6.2.0,<7",
+    "redis[hiredis]>=6.2.0,<8",
     "notifications-python-client>=10.0.1,<11",
     "pydantic[email]>=2.11.7,<3",
     "email-validator==2.3.0",
@@ -36,7 +36,7 @@ dependencies = [
 dev = [
     "black>=25.1.0,<26",
     "pre-commit>=4.2.0,<5",
-    "selenium~=4.37.0",
+    "selenium~=4.38.0",
     "flake8>=6.1.0",
     "pytest-django>=4.11.1,<5",
     "pytest-cov>=6.2.1,<8",
