@@ -9,62 +9,77 @@
 
 {% block title %}
   {% with details_title=h1_value|add:" - "|add:entity_type %}
-    {{details_title|render_title}}
+    {{ details_title|render_title }}
   {% endwith %}
 {% endblock %}
 
 {% block breadcrumbs %}
-<nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
-  <ol class="govuk-breadcrumbs__list">
-    <li class="govuk-breadcrumbs__list-item">
-      <a class="govuk-breadcrumbs__link" href="{%url 'home:search' %}?{{request.session.last_search|default:''}}">Search</a>
-    </li>
-    {% if parent_entity %}
+  <nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+    <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{parent_entity.display_name}}</a>
+        <a class="govuk-breadcrumbs__link" href="{% url 'home:search' %}?{{ request.session.last_search|default:'' }}">Search</a>
       </li>
-    {% endif %}
-    <li class="govuk-breadcrumbs__list-item" aria-current="page">
-      <a class="govuk-breadcrumbs__link" href="{{request.path}}">{{entity.name}}</a>
-    </li>
-  </ol>
-</nav>
+      {% if parent_entity %}
+        <li class="govuk-breadcrumbs__list-item">
+          <a class="govuk-breadcrumbs__link"
+             href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{ parent_entity.display_name }}</a>
+        </li>
+      {% endif %}
+      <li class="govuk-breadcrumbs__list-item" aria-current="page">
+        <a class="govuk-breadcrumbs__link" href="{{ request.path }}">{{ entity.name }}</a>
+      </li>
+    </ol>
+  </nav>
 {% endblock breadcrumbs %}
 
 {% block content %}
-{% if messages %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-      <div class="govuk-notification-banner__header">
-        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-          Report submitted
-        </h2>
-      </div>
-      <div class="govuk-notification-banner__content">
-        {% for message in messages %}
-          {{ message }}
-        {% endfor %}
+  {% if messages %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+             aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+          <div class="govuk-notification-banner__header">
+            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+              Report submitted
+            </h2>
+          </div>
+          <div class="govuk-notification-banner__content">
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+          </div>
+        </div>
       </div>
     </div>
+  {% endif %}
+  <div class="govuk-grid-row app-header-negative-padding">
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l">{{ entity_type }}</span>
+      <h1 class="govuk-heading-l">{{ h1_value }}</h1>
+    </div>
   </div>
-</div>
-{% endif %}
-<div class="govuk-grid-row app-header-negative-padding">
-  <div class="govuk-grid-column-full">
-    <span class="govuk-caption-l">{{entity_type}}</span>
-    <h1 class="govuk-heading-l">{{h1_value}}</h1>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="app-summary-card">
-      <h2 class="govuk-heading-s">
-        Description
-      </h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body" style="background: #f4f8fb">
+        <div class="govuk-grid-row govuk-!-padding-1 govuk-!-margin-0">
+          <div class="govuk-grid-column-one-third">
+            <h1 class="govuk-heading-s govuk-!-margin-0">data last updated</h1>
+            <div class="govuk-body-s">{{ entity.data_last_modified | date:"j F Y" | default:'Check source'}}</div>
+          </div>
+          <div class="govuk-grid-column-one-third">
+            <h\ class="govuk-heading-s govuk-!-margin-0">Refresh Period</h>
+            <div class="govuk-body-s">{{ entity.custom_properties.data_summary.refresh_period | default:'Check source' }}</div>
+          </div>
+          <div class="govuk-grid-column-one-third">
+            <h1 class="govuk-heading-s govuk-!-margin-0">Entry last synced</h1>
+            <div class="govuk-body-s">{{ entity.metadata_last_ingested|timesince|format_timesince }} ago</div>
+          </div>
+        </div>
+
+      </div>
       <div class="govuk-body">
         {% if entity.description %}
-          {{entity.description|markdown:3}}
+          {{ entity.description|markdown:3 }}
         {% else %}
           No description available.
         {% endif %}
@@ -75,18 +90,12 @@
         {% include "partial/details_metadata.html" with entity=entity entity_type=entity_type %}
         {% include "partial/esda_info.html" with is_esda=is_esda %}
       {% endblock metadata_list %}
-      {% if entity.metadata_last_ingested %}
-        <div class="govuk-body-s app-summary-card__footer">
-          Entry last updated {{entity.metadata_last_ingested|timesince|format_timesince}} ago
-        </div>
-      {% endif %}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform %}
     </div>
   </div>
-  <div class="govuk-grid-column-one-third">
-    {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform %}
-  </div>
-</div>
 
-{% block extra_details %}
-{% endblock extra_details %}
+  {% block extra_details %}
+  {% endblock extra_details %}
 {% endblock content %}
