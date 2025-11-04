@@ -63,15 +63,15 @@
       <div class="govuk-body" style="background: #f4f8fb">
         <div class="govuk-grid-row govuk-!-padding-1 govuk-!-margin-0">
           <div class="govuk-grid-column-one-third">
-            <h1 class="govuk-heading-s govuk-!-margin-0">data last updated</h1>
+            <h1 class="govuk-heading-s govuk-!-margin-0">Date Last Updated</h1>
             <div class="govuk-body-s">{{ entity.data_last_modified | date:"j F Y" | default:'Check source'}}</div>
           </div>
           <div class="govuk-grid-column-one-third">
-            <h\ class="govuk-heading-s govuk-!-margin-0">Refresh Period</h>
+            <h1 class="govuk-heading-s govuk-!-margin-0">Refresh Period</h1>
             <div class="govuk-body-s">{{ entity.custom_properties.data_summary.refresh_period | default:'Check source' }}</div>
           </div>
           <div class="govuk-grid-column-one-third">
-            <h1 class="govuk-heading-s govuk-!-margin-0">Entry last synced</h1>
+            <h1 class="govuk-heading-s govuk-!-margin-0">Entry Last Synced</h1>
             <div class="govuk-body-s">{{ entity.metadata_last_ingested|timesince|format_timesince }} ago</div>
           </div>
         </div>
