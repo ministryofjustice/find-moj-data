@@ -202,11 +202,14 @@ class EntityParser:
         ]
         if len(relevant_refresh_schedules) > 1:
             logger.warning(f"More than one refresh period tag found: {tags=}")
-
-        if relevant_refresh_schedules:
-            refresh_schedule = ", ".join(relevant_refresh_schedules).capitalize()
-            return refresh_schedule
-
+        refresh_schedule = ", ".join(relevant_refresh_schedules)
+        match refresh_schedule:
+            case "daily":
+                return "Every Day"
+            case "weekly":
+                return "every Week"
+            case "monthly":
+                return "every Month"
         return ""
 
     def parse_properties(
