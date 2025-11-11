@@ -923,10 +923,10 @@ class TestEntityParser:
             ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], None),
             (
                 [
-                    TagRef(display_name="Every Day", urn="urn:li:tag:dc_cadet"),
+                    TagRef(display_name="daily", urn="urn:li:tag:dc_cadet"),
                     TagRef(display_name="monthly", urn="urn:li:tag:dc_cadet"),
                 ],
-                "Every month",
+                "Every day, Every month",
             ),
         ],
     )
