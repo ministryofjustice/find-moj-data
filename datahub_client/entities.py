@@ -493,7 +493,7 @@ class DataSummary(BaseModel):
     refresh_period: str = Field(
         description="Indicates the frequency that the data are refreshed/updated",
         default="",
-        examples=["Annually", "Quarterly", "Monthly", "Weekly", "Daily"],
+        examples=["Every month", "Every week", "Every day"],
     )
 
 

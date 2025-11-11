@@ -191,26 +191,18 @@ class EntityParser:
     @staticmethod
     def get_refresh_period_from_cadet_tags(
         tags: list[TagRef],
-        refresh_schedules: tuple[str] = ("daily", "weekly", "monthly"),
-    ) -> str:
-        # Check if any of the tags are refresh period tags eg "daily_opg"
-        relevant_refresh_schedules = [
-            schedule
-            for tag_ref in tags
-            for schedule in refresh_schedules
-            if schedule in tag_ref.display_name
-        ]
+        refresh_schedules: dict[str, str] = {"daily": "Every day", "weekly": "Every week", "monthly": "Every month"},
+    ) -> str | None:
+
+        relevant_refresh_schedules = [schedule_new for tag_ref in tags for schedule_old, schedule_new in
+                                      refresh_schedules.items() if schedule_old in tag_ref.display_name]
         if len(relevant_refresh_schedules) > 1:
             logger.warning(f"More than one refresh period tag found: {tags=}")
-        refresh_schedule = ", ".join(relevant_refresh_schedules)
-        match refresh_schedule:
-            case "daily":
-                return "Every Day"
-            case "weekly":
-                return "Every Week"
-            case "monthly":
-                return "Every Month"
-        return ""
+        if relevant_refresh_schedules:
+            refresh_schedule = ", ".join(set(relevant_refresh_schedules))
+            return refresh_schedule
+        return None
+
 
     def parse_properties(
         self, entity: dict[str, Any]
