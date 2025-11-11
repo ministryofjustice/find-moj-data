@@ -918,15 +918,15 @@ class TestEntityParser:
     @pytest.mark.parametrize(
         "tags, expected_refresh_period",
         [
-            ([TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")], "Every Day"),
-            ([TagRef(display_name="monthly", urn="urn:li:tag:monthly")], "Every Month"),
-            ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], ""),
+            ([TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")], "Every day"),
+            ([TagRef(display_name="monthly", urn="urn:li:tag:monthly")], "Every month"),
+            ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], None),
             (
                 [
                     TagRef(display_name="Every Day", urn="urn:li:tag:dc_cadet"),
                     TagRef(display_name="monthly", urn="urn:li:tag:dc_cadet"),
                 ],
-                "Every Month",
+                "Every month",
             ),
         ],
     )
