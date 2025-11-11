@@ -594,7 +594,7 @@ requires-dist = [
     { name = "pydantic", extras = ["email"], specifier = ">=2.11.7,<3" },
     { name = "python-dotenv", specifier = ">=1.1.1,<2" },
     { name = "pyyaml", specifier = ">=6.0.2,<7" },
-    { name = "redis", extras = ["hiredis"], specifier = ">=6.2.0,<7" },
+    { name = "redis", extras = ["hiredis"], specifier = ">=6.2.0,<8" },
     { name = "sentry-sdk", extras = ["django"], specifier = ">=2.32.0,<3" },
     { name = "setuptools", specifier = "==80.9.0" },
     { name = "whitenoise", specifier = ">=6.9.0,<7" },
@@ -606,11 +606,11 @@ dev = [
     { name = "faker", specifier = ">=37.4.0,<38" },
     { name = "flake8", specifier = ">=6.1.0" },
     { name = "freezegun", specifier = ">=1.5.2,<2" },
-    { name = "isort", specifier = ">=6.0.1,<7" },
+    { name = "isort", specifier = ">=6.0.1,<8" },
     { name = "pre-commit", specifier = ">=4.2.0,<5" },
     { name = "pytest-cov", specifier = ">=6.2.1,<8" },
     { name = "pytest-django", specifier = ">=4.11.1,<5" },
-    { name = "selenium", specifier = "~=4.36.0" },
+    { name = "selenium", specifier = "~=4.38.0" },
 ]
 
 [[package]]
@@ -1376,7 +1376,7 @@ wheels = [
 
 [[package]]
 name = "selenium"
-version = "4.36.0"
+version = "4.38.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
@@ -1386,9 +1386,9 @@ dependencies = [
     { name = "urllib3", extra = ["socks"] },
     { name = "websocket-client" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/10/35/33d3d84e3399c9d00b489aeccfdc78115e149e45816fb8fe84274329e8a2/selenium-4.36.0.tar.gz", hash = "sha256:0eced83038736c3a013b824116df0b6dbb83e93721545f51b680451013416723", size = 913613, upload-time = "2025-10-02T15:24:37.483Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c9/a0/60a5e7e946420786d57816f64536e21a29f0554706b36f3cba348107024c/selenium-4.38.0.tar.gz", hash = "sha256:c117af6727859d50f622d6d0785b945c5db3e28a45ec12ad85cee2e7cc84fc4c", size = 924101, upload-time = "2025-10-25T02:13:06.752Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/74/9e/642a355e43a4ebf68bc4f00dd4ab264f635079c5dc7ed6d9991a0c2be3d7/selenium-4.36.0-py3-none-any.whl", hash = "sha256:525fdfe96b99c27d9a2c773c75aa7413f4c24bdb7b9749c1950aa3b5f79ed915", size = 9587029, upload-time = "2025-10-02T15:24:35.025Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/d3/76c8f4a8d99b9f1ebcf9a611b4dd992bf5ee082a6093cfc649af3d10f35b/selenium-4.38.0-py3-none-any.whl", hash = "sha256:ed47563f188130a6fd486b327ca7ba48c5b11fb900e07d6457befdde320e35fd", size = 9694571, upload-time = "2025-10-25T02:13:04.417Z" },
 ]
 
 [[package]]
@@ -1486,7 +1486,7 @@ wheels = [
 
 [[package]]
 name = "trio"
-version = "0.30.0"
+version = "0.31.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
@@ -1496,9 +1496,9 @@ dependencies = [
     { name = "sniffio" },
     { name = "sortedcontainers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/01/c1/68d582b4d3a1c1f8118e18042464bb12a7c1b75d64d75111b297687041e3/trio-0.30.0.tar.gz", hash = "sha256:0781c857c0c81f8f51e0089929a26b5bb63d57f927728a5586f7e36171f064df", size = 593776, upload-time = "2025-04-21T00:48:19.507Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/76/8f/c6e36dd11201e2a565977d8b13f0b027ba4593c1a80bed5185489178e257/trio-0.31.0.tar.gz", hash = "sha256:f71d551ccaa79d0cb73017a33ef3264fde8335728eb4c6391451fe5d253a9d5b", size = 605825, upload-time = "2025-09-09T15:17:15.242Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/69/8e/3f6dfda475ecd940e786defe6df6c500734e686c9cd0a0f8ef6821e9b2f2/trio-0.30.0-py3-none-any.whl", hash = "sha256:3bf4f06b8decf8d3cf00af85f40a89824669e2d033bb32469d34840edcfc22a5", size = 499194, upload-time = "2025-04-21T00:48:17.167Z" },
+    { url = "https://files.pythonhosted.org/packages/31/5b/94237a3485620dbff9741df02ff6d8acaa5fdec67d81ab3f62e4d8511bf7/trio-0.31.0-py3-none-any.whl", hash = "sha256:b5d14cd6293d79298b49c3485ffd9c07e3ce03a6da8c7dfbe0cb3dd7dc9a4774", size = 512679, upload-time = "2025-09-09T15:17:13.821Z" },
 ]
 
 [[package]]
