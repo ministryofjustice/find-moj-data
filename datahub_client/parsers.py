@@ -207,9 +207,9 @@ class EntityParser:
             case "daily":
                 return "Every Day"
             case "weekly":
-                return "every Week"
+                return "Every Week"
             case "monthly":
-                return "every Month"
+                return "Every Month"
         return ""
 
     def parse_properties(
