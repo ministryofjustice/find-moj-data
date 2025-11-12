@@ -49,7 +49,7 @@ You can see other information about a data asset, including:
 * security classification
 * how regularly the data owner intends to update the data
 
-<img src="/static/assets/images/guide/example-table-entity.jpg" alt="A screenshot illustrating a data asset example showcasing format type, table descriptions, field descriptions, database descriptions, table schemas, security classification, and how regularly the data owner intends to update the data" width="600" height="600">
+<img src="/static/assets/images/guide/dataset-example.svg" alt="A screenshot illustrating a data asset example showcasing format type, table descriptions, field descriptions, database descriptions, table schemas, security classification, and how regularly the data owner intends to update the data" width="600" height="600">
 
 ### How it works
 
