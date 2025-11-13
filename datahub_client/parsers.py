@@ -193,7 +193,6 @@ class EntityParser:
         tags: list[TagRef],
         refresh_schedules: dict[str, str] = {"daily": "Every day", "weekly": "Every week", "monthly": "Every month"},
     ) -> str | None:
-
         relevant_refresh_schedules = [
             schedule_new
             for tag_ref in tags
@@ -203,7 +202,7 @@ class EntityParser:
         if len(relevant_refresh_schedules) > 1:
             logger.warning(f"More than one refresh period tag found: {tags=}")
         if relevant_refresh_schedules:
-            refresh_schedule = ", ".join(set(relevant_refresh_schedules))
+            refresh_schedule = ", ".join(sorted(set(relevant_refresh_schedules)))
             return refresh_schedule
         return None
 
