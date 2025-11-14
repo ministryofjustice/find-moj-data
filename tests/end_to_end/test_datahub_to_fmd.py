@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 @pytest.mark.datahub
 class TestDatahubToFindMoJdata:
     """
-    Test that Find MoJ data works with a real Datahub backend.
+    Test that Find MOJ data works with a real Datahub backend.
     The datahub mark is used to bypass the `mock_catalogue` fixture.
     """
 

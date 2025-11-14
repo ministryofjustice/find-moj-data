@@ -103,7 +103,7 @@ class EntityParser:
 
     @staticmethod
     def parse_names(
-            entity: dict[str, Any], properties: dict[str, Any]
+        entity: dict[str, Any], properties: dict[str, Any]
     ) -> Tuple[str, str, str]:
         """
         Returns a tuple of 3 name values.
@@ -159,9 +159,9 @@ class EntityParser:
 
             name = properties.get("name", "")
             if (
-                    properties
-                    and not SubjectAreaTaxonomy.is_subject_area(name)
-                    and name not in seen_tags
+                properties
+                and not SubjectAreaTaxonomy.is_subject_area(name)
+                and name not in seen_tags
             ):
                 seen_tags.add(name)
                 tags.append(
@@ -191,9 +191,12 @@ class EntityParser:
     @staticmethod
     def get_refresh_period_from_cadet_tags(
         tags: list[TagRef],
-        refresh_schedules: dict[str, str] = {"daily": "Every day", "weekly": "Every week", "monthly": "Every month"},
+        refresh_schedules: dict[str, str] = {
+            "daily": "Every day",
+            "weekly": "Every week",
+            "monthly": "Every month",
+        },
     ) -> str | None:
-
         relevant_refresh_schedules = [
             schedule_new
             for tag_ref in tags
@@ -203,12 +206,12 @@ class EntityParser:
         if len(relevant_refresh_schedules) > 1:
             logger.warning(f"More than one refresh period tag found: {tags=}")
         if relevant_refresh_schedules:
-            refresh_schedule = ", ".join(set(relevant_refresh_schedules))
+            refresh_schedule = ", ".join(sorted(set(relevant_refresh_schedules)))
             return refresh_schedule
         return None
 
     def parse_properties(
-            self, entity: dict[str, Any]
+        self, entity: dict[str, Any]
     ) -> Tuple[dict[str, Any], CustomEntityProperties]:
         """
         Parse properties and editableProperties into a single dictionary.
@@ -229,7 +232,7 @@ class EntityParser:
 
         if "dpia_required" in custom_properties_dict:
             custom_properties_dict["dpia_required"] = (
-                    custom_properties_dict["dpia_required"] == "True"
+                custom_properties_dict["dpia_required"] == "True"
             )
 
         properties.pop("customProperties", None)
@@ -451,9 +454,9 @@ class EntityParser:
         return quality_metrics
 
     def _parse_owners_by_type(
-            self,
-            entity: dict[str, Any],
-            ownership_type_urn: str,
+        self,
+        entity: dict[str, Any],
+        ownership_type_urn: str,
     ) -> list[OwnerRef]:
         """
         Parse ownership information, if it is set, and return a list of owners
@@ -492,11 +495,11 @@ class EntityParser:
         return None if created == 0 else created
 
     def parse_relations(
-            self,
-            relationship_type: RelationshipType,
-            relations_list: list[dict],
-            relation_key="relationships",
-            entity_type_of_relations: None | str = None,
+        self,
+        relationship_type: RelationshipType,
+        relations_list: list[dict],
+        relation_key="relationships",
+        entity_type_of_relations: None | str = None,
     ) -> dict[RelationshipType, list[EntitySummary]]:
         """
         parse the relationships results returned from a graphql querys
@@ -551,7 +554,7 @@ class EntityParser:
         return relations_return
 
     def list_relations_to_display(
-            self, relations: dict[RelationshipType, list[EntitySummary]]
+        self, relations: dict[RelationshipType, list[EntitySummary]]
     ) -> dict[RelationshipType, list[EntitySummary]]:
         """
         returns a dict of relationships tagged to display
@@ -563,7 +566,7 @@ class EntityParser:
                 entity
                 for entity in value
                 if "urn:li:tag:dc_display_in_catalogue"
-                   in [tag.urn for tag in entity.tags]
+                in [tag.urn for tag in entity.tags]
             ]
 
         return relations_to_display
@@ -889,7 +892,7 @@ class PublicationCollectionParser(ContainerParser):
         self.mapper = PublicationCollectionEntityMapping
 
     def parse_to_entity_object(
-            self, response: dict[str, Any], urn: str
+        self, response: dict[str, Any], urn: str
     ) -> PublicationCollection:
         properties, custom_properties = self.parse_properties(response)
         name, display_name, qualified_name = self.parse_names(response, properties)

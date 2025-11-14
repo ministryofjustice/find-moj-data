@@ -902,23 +902,13 @@ class TestEntityParser:
             ),
         ]
 
-    def test_parse_updated(self, parser):
-        expected_timestamp = 12345678
-        example_with_updated = {
-            "runs": {"runs": [{"created": {"time": expected_timestamp}}]}
-        }
-        example_no_updated = {}
-
-        assert (
-            parser.parse_last_datajob_run_date(example_with_updated)
-            == expected_timestamp
-        )
-        assert parser.parse_last_datajob_run_date(example_no_updated) is None
-
     @pytest.mark.parametrize(
         "tags, expected_refresh_period",
         [
-            ([TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")], "Every day"),
+            (
+                [TagRef(display_name="daily_opg", urn="urn:li:tag:daily_opg")],
+                "Every day",
+            ),
             ([TagRef(display_name="monthly", urn="urn:li:tag:monthly")], "Every month"),
             ([TagRef(display_name="dc_cadet", urn="urn:li:tag:dc_cadet")], None),
             (
@@ -935,6 +925,19 @@ class TestEntityParser:
     ):
         refresh_period = parser.get_refresh_period_from_cadet_tags(tags)
         assert refresh_period == expected_refresh_period
+
+    def test_parse_updated(self, parser):
+        expected_timestamp = 12345678
+        example_with_updated = {
+            "runs": {"runs": [{"created": {"time": expected_timestamp}}]}
+        }
+        example_no_updated = {}
+
+        assert (
+            parser.parse_last_datajob_run_date(example_with_updated)
+            == expected_timestamp
+        )
+        assert parser.parse_last_datajob_run_date(example_no_updated) is None
 
 
 class TestEntityParserFactory:
