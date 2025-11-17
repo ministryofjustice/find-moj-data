@@ -13,7 +13,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5.0.1
 
       - name: Create issue
         env:
