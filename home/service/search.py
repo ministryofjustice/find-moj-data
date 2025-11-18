@@ -192,7 +192,7 @@ class SearchService(GenericService):
             "results": self.results.page_results,
             "malformed_result_urns": self.results.malformed_result_urns,
             "highlighted_results": self.highlighted_results.page_results,
-            "h1_value": "Search MoJ data",
+            "h1_value": "Search for data assets",
             "page_obj": self.paginator.get_page(self.page),
             "number_of_words": len(self.form_data.get("query", "").split()),
             "total_results_str": total_results,

@@ -8,55 +8,63 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4" id="searchform"
-        onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
+      <h1 class="govuk-heading-l">{{ h1_value }}</h1>
+
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <form action="{% url 'home:search' %}" method="get" role="search" class="search__form govuk-!-margin-bottom-4"
+          id="searchform"
+          onsubmit="gtag('event', 'search', {'search_term': this.querySelector('#search-input').value});">
+      {% include "partial/filter.html" %}
+      <div class="govuk-grid-column-two-thirds">
         <div class="govuk-form-group">
-          <h1 class="govuk-heading-l">{{h1_value}}</h1>
           <div class="app-search app-search--compact">
-            <label for="{{ form.query.id_for_label }}" class="govuk-label govuk-visually-hidden-focusable">Search input</label>
+            <label for="{{ form.query.id_for_label }}" class="govuk-label govuk-visually-hidden-focusable">Search
+              input</label>
             {{ form.query }}
             <button class="search-button" type="submit" id="search-button" aria-label="Search">
-              <svg aria-hidden="true" class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="40" height="40">
-                <path d="M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z" fill="currentColor"></path>
+              <svg aria-hidden="true" class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg"
+                   viewBox="0 0 36 36" width="40" height="40">
+                <path
+                  d="M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z"
+                  fill="currentColor"></path>
               </svg>
             </button>
           </div>
         </div>
-      </form>
-      <details class="govuk-details">
-        <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text">
-            Search tips
+        <details class="govuk-details govuk-tag--grey govuk-!-padding-2">
+          <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text-no-boarder">
+            Show search tips
           </span>
-        </summary>
-        <div class="govuk-details__text">
-          {# Search query tips (when expanded) #}
+          </summary>
+          <div class="govuk-!-padding-2">
+            {# Search query tips (when expanded) #}
             <ul class="govuk-list govuk-list--bullet">
-              <li><p>Use multiple words to narrow down your search.</p><p>For example: <strong>prisons probation</strong> matches data mentioning "prisons" AND "probation".</p></li>
-              <li><p>Separate words with a pipe to broaden your search.</p><p>For example: <strong>prisons | probation</strong> matches data mentioning "prisons" OR "probation".</p></li>
-              <li><p>Quote phrases to require an exact match.</p><p>For example: <strong>"case management"</strong> matches the exact phrase "case management" but not either word on its own.</p></li>
-              <li><p>Use a minus sign to exclude words.</p><p>For example: <strong>courts -magistrates</strong> excludes any results that mention "magistrates".</p></li>
+              <li><p>Use a pipe <b>|</b> to broaden your search: prisons | probation searches "prisons" OR "probation".
+              </p></li>
+              <li><p>Use <b>“”</b> to search for an exact match for a phrase.</p></li>
+              <li><p>Use a <b>-</b> to exclude words.</p></li>
             </ul>
-        </div>
-      </details>
-    </div>
-  </div>
-  <div class="govuk-grid-row">
-    {% include "partial/filter.html" %}
-    <div class="govuk-grid-column-two-thirds">
-      {% if malformed_result_urns %}
-        <p class="govuk-error-message">Some results were malformed and are not shown</p>
-      {% endif %}
-      {% if results %}
-        <h2 class="govuk-heading-m govuk-!-display-inline-block" id="result-count">{{total_results_str|intcomma}} results</h2>
-      {% else %}
-        {% include "partial/no_results.html" %}
-      {% endif %}
-      {% switch 'search-sort-radio-buttons' %}
-        {% include "partial/sort.html" %}
-      {% endswitch %}
-      {% include "partial/search_result.html" %}
-      {% pagination page_obj=page_obj urlpattern='home:pagination' %}
-    </div>
+          </div>
+        </details>
+        {% if malformed_result_urns %}
+          <p class="govuk-error-message">Some results were malformed and are not shown</p>
+        {% endif %}
+        {% if results %}
+          <h2 class="govuk-heading-m govuk-!-display-inline-block" id="result-count">{{ total_results_str|intcomma }}
+            results</h2>
+        {% else %}
+          {% include "partial/no_results.html" %}
+        {% endif %}
+        {% switch 'search-sort-radio-buttons' %}
+          {% include "partial/sort.html" %}
+        {% endswitch %}
+        {% include "partial/search_result.html" %}
+        {% pagination page_obj=page_obj urlpattern='home:pagination' %}
+      </div>
+    </form>
+
   </div>
 {% endblock content %}

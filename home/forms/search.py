@@ -75,7 +75,7 @@ class SearchForm(forms.Form):
                 "form": "searchform",
                 "class": "govuk-select",
                 "aria-label": f"{subject_area_translate} - {select_filter_translate}",
-                "onchange": "document.getElementById('searchform').submit();",
+                # "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -86,7 +86,7 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
+                # "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -97,7 +97,7 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
+                # "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -108,7 +108,7 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
+                # "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -118,7 +118,7 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-radios__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
+                # "onchange": "document.getElementById('searchform').submit();",
             }
         ),
         required=False,
