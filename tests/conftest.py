@@ -337,7 +337,7 @@ def page_titles():
         "Home",
         "Search MoJ data",
     ]
-    return [f"{page} - Find MoJ data - GOV.UK" for page in pages]
+    return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
 
 
 def generate_search_result(
