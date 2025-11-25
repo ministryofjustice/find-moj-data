@@ -8,20 +8,18 @@ body:
     attributes:
       description: A clear and concise description of the task.
       label: Describe the task.
-      value:
     validations:
       required: true
-  - type: checkboxes
-    id: steps
+ - type: textarea
+    id: its-done-when
     attributes:
-      description: Steps to address the task.
-      label: Steps to Address
-    validations:
-      required: false
-  - type: textarea
-    id: complete_when
-    attributes:
-      description: Task complete when...
-      label: Task complete when..
+      label: Definition of Done
+      placeholder: "Define the criteria for when this task is considered done."
+      value: |
+        - [ ] criteria 1
+        - [ ] criteria 2
+        - [ ] criteria 3
+        - [ ] criteria 4
+        - [ ] criteria 5
     validations:
       required: false
