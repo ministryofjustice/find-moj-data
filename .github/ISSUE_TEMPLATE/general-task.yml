@@ -2,9 +2,9 @@ name: 📋 Task
 description: Create a Task
 title: "📋 <title>"
 type: "Task"
-labels: 
+labels:
 body:
-   - type: textarea
+  - type: textarea
     id: description
     attributes:
       description: A clear and concise description of the task.
@@ -12,14 +12,14 @@ body:
       value:
     validations:
       required: true
-  - type: checkboxes
+  - type: checkboxes`
     id: steps
     attributes:
       description: Steps to address the task.
       label: Steps to Address
     validations:
       required: false
-- type: textarea
+  - type: textarea
     id: complete when
     attributes:
       description: Task complete when...
