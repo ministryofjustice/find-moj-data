@@ -11,7 +11,7 @@ body:
       value:
     validations:
       required: true
-  - type: checkboxes`
+  - type: checkboxes
     id: steps
     attributes:
       description: Steps to address the task.
