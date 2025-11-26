@@ -10,7 +10,7 @@ body:
       label: Describe the task.
     validations:
       required: true
- - type: textarea
+  - type: textarea
     id: its-done-when
     attributes:
       label: Definition of Done
