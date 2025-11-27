@@ -174,7 +174,7 @@ DATABASES = {
 }
 
 # Define a service name setting for page titles
-SERVICE_NAME = "Find MoJ data"
+SERVICE_NAME = "Find MOJ data"
 GOV_UK_SUFFIX = "GOV.UK"
 
 MAX_RESULTS = 10_000

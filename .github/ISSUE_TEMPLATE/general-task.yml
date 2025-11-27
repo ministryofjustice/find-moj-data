@@ -1,0 +1,25 @@
+name: 📋 Task
+description: Create a Task
+title: "📋 <title>"
+type: "Task"
+body:
+  - type: textarea
+    id: description
+    attributes:
+      description: A clear and concise description of the task.
+      label: Describe the task.
+    validations:
+      required: true
+  - type: textarea
+    id: its-done-when
+    attributes:
+      label: Definition of Done
+      placeholder: "Define the criteria for when this task is considered done."
+      value: |
+        - [ ] criteria 1
+        - [ ] criteria 2
+        - [ ] criteria 3
+        - [ ] criteria 4
+        - [ ] criteria 5
+    validations:
+      required: false
