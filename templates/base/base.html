@@ -16,7 +16,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'assets/css/base.css' %}">
   <meta property="og:image" content="{% static 'assets/images/govuk-opengraph-image.png' %}">
   <meta name="robots" content="noindex, nofollow" />
-  {{request.user }}
+  {{request.user|lower }}
 {{ STAFF }}
   {% if request.user|lower not in STAFF %}
 <!-- Google Tag Manager -->
