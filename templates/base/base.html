@@ -17,7 +17,7 @@
   <meta property="og:image" content="{% static 'assets/images/govuk-opengraph-image.png' %}">
   <meta name="robots" content="noindex, nofollow" />
   {{request.user|lower }}
-{{ STAFF }}
+  {{ STAFF }}
   {% if request.user|lower not in STAFF %}
 <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

@@ -216,7 +216,7 @@ GOOGLE_TAG_MANAGER_ID: str = os.environ.get("GOOGLE_TAG_MANAGER_ID", "")
 ENABLE_ANALYTICS: bool = (
     os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES
 ) and ANALYTICS_ID != ""
-STAFF = str(os.environ.get("STAFF", "").lower()).split(",")
+STAFF = str(os.environ.get("STAFF", "mark.mckinlay@justice.gov.uk,lesley-ann.donnell@justice.gov.uk,claire.hansford@justice.gov.uk,jeremy.collins@justice.gov.uk,dean.willicombe@justice.gov.uk,sabrina.durnberger@justice.gov.uk,sabrina.durnberger@justice.gov.uk,mitchell.dawson@justice.gov.uk").lower()).split(",")
 TESTING = os.environ.get("TESTING") in TRUTHY_VALUES
 
 # Sentry Configuration
