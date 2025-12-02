@@ -31,7 +31,7 @@
 </head>
 
 <body class="govuk-template__body app-body-class" data-test="My value" data-other="report:details">
-{% if request.user not in STAFF %}
+  {% if request.user|lower not in STAFF %}
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ GOOGLE_TAG_MANAGER_ID }}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
