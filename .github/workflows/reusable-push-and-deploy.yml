@@ -115,6 +115,7 @@ jobs:
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
+          STAFF: ${{ vars.STAFF }}
           GOOGLE_TAG_MANAGER_ID: ${{ vars.GOOGLE_TAG_MANAGER_ID }}
           SLACK_ALERT_WEBHOOK: ${{ secrets.SLACK_ALERT_WEBHOOK }}
           AZURE_AUTH_ENABLED: ${{ vars.AZURE_AUTH_ENABLED}}
