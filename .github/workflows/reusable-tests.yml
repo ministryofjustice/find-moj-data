@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
   workflow_call:
+    secrets:
+      STAFF:
+        required: false
 
 permissions:
   contents: read
