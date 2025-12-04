@@ -50,4 +50,4 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
-      STAFF: ${{ secrets.STAFF }}
+      staff: ${{ secrets.STAFF }}
