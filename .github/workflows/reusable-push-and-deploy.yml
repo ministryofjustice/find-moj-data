@@ -41,6 +41,9 @@ on:
       limit_whitelist:
         description: "string of comma delimited subnets"
         required: true
+      staff:
+        description: "string of comma delimited email addresses"
+        required: true
 
 jobs:
   push-and-deploy:
