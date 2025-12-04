@@ -105,6 +105,8 @@ spec:
               value: "${NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID}"
             - name: DATA_CATALOGUE_EMAIL
               value: "${DATA_CATALOGUE_EMAIL}"
+            - name: STAFF
+              value: "${STAFF}"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -115,11 +117,6 @@ spec:
                 secretKeyRef:
                   name: find-moj-data-secrets
                   key: catalogue-token
-            - name: STAFF
-              valueFrom:
-                secretKeyRef:
-                  name: find-moj-data-secrets
-                  key: staff
             - name: AZURE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
