@@ -75,8 +75,6 @@ spec:
               value: "${ANALYTICS_ID}"
             - name: GOOGLE_TAG_MANAGER_ID
               value: "${GOOGLE_TAG_MANAGER_ID}"
-            - name: STAFF
-              value: "${STAFF}"
             - name: AZURE_AUTH_ENABLED
               value: "${AZURE_AUTH_ENABLED}"
             - name: AZURE_CLIENT_ID
@@ -117,6 +115,11 @@ spec:
                 secretKeyRef:
                   name: find-moj-data-secrets
                   key: catalogue-token
+            - name: STAFF
+              valueFrom:
+                secretKeyRef:
+                  name: find-moj-data-secrets
+                  key: staff
             - name: AZURE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
