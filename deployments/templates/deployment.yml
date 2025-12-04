@@ -83,6 +83,8 @@ spec:
               value: "$AZURE_REDIRECT_URI"
             - name: AZURE_AUTHORITY
               value: "$AZURE_AUTHORITY"
+            - name: STAFF
+              value: "$STAFF"
             - name: CSRF_TRUSTED_ORIGINS
               value: "${CSRF_TRUSTED_ORIGINS}"
             - name: ENABLE_TRACING
@@ -115,11 +117,6 @@ spec:
                 secretKeyRef:
                   name: find-moj-data-secrets
                   key: catalogue-token
-            - name: STAFF
-              valueFrom:
-                secretKeyRef:
-                  name: find-moj-data-secrets
-                  key: staff
             - name: AZURE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
