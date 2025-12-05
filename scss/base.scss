@@ -124,3 +124,11 @@ code {
   @extend .govuk-section-break--xl;
   margin-top: 0;
 }
+
+
+
+.guidance-panel {
+    border-left-color: govuk-colour('blue');
+    background-color: #eaf4f9;
+}
+
