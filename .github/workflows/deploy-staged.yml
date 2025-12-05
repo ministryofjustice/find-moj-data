@@ -10,6 +10,8 @@ permissions:
 jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
+    secrets:
+      STAFF: ${{ secrets.STAFF }}
 
   build:
     permissions:
@@ -94,7 +96,6 @@ jobs:
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
       staff: ${{ secrets.STAFF }}
-
 
   post-deploy:
     permissions:
