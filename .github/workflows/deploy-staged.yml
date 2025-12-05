@@ -10,6 +10,8 @@ permissions:
 jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
+    secrets:
+      STAFF: ${{ secrets.STAFF }}
 
   build:
     permissions:
@@ -19,7 +21,6 @@ jobs:
     uses: "./.github/workflows/reusable-build.yml"
     secrets:
       slack_alert_webhook: ${{ secrets.SLACK_ALERT_WEBHOOK }}
-      STAFF: ${{ secrets.STAFF }}
 
   deploy-preprod:
     permissions:
@@ -95,7 +96,6 @@ jobs:
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
       staff: ${{ secrets.STAFF }}
-
 
   post-deploy:
     permissions:

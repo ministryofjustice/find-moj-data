@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
   workflow_call:
+    secrets:
+      staff:
+        description: "staff emails secret for tests"
+        required: true
 
 permissions:
   contents: read
