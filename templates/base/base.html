@@ -16,7 +16,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'assets/css/base.css' %}">
   <meta property="og:image" content="{% static 'assets/images/govuk-opengraph-image.png' %}">
   <meta name="robots" content="noindex, nofollow" />
-  {% if request.user|lower not in STAFF %}
+  {% if request.user.email|lower not in STAFF %}
 <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -29,7 +29,7 @@
 </head>
 
 <body class="govuk-template__body app-body-class" data-test="My value" data-other="report:details">
-  {% if request.user|lower not in STAFF %}
+  {% if request.user.email|lower not in STAFF %}
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ GOOGLE_TAG_MANAGER_ID }}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -65,7 +65,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </script>
 {% block scripts %}
 {% endblock scripts %}
-{% if ENABLE_ANALYTICS and request.user|lower not in STAFF %}
+{% if ENABLE_ANALYTICS and request.user.email|lower not in STAFF %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ ANALYTICS_ID }}"></script>
   <script>window.dataLayer = window.dataLayer || [];
 
