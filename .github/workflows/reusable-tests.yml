@@ -6,7 +6,7 @@ on:
   workflow_call:
     secrets:
       staff:
-        description: "staff emails secret for tests"
+        description: "string of comma delimited email addresses"
         required: true
 
 permissions:
