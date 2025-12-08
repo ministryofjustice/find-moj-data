@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
   workflow_call:
+    secrets:
+      staff:
+        description: "string of comma delimited email addresses"
+        required: true
 
 permissions:
   contents: read
