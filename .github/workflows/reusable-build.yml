@@ -25,7 +25,7 @@ jobs:
           outputs: type=docker,dest=/tmp/fmd-image.tar
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: fmd-image
           path: /tmp/fmd-image.tar
