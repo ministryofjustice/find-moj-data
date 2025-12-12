@@ -4,11 +4,12 @@
 
 {% block extra_details %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      {% comment %} All tables should be accessible via the AP {% endcomment %}
+    <div class="govuk-grid-column-two-thirds">
       {% if entity.custom_properties.security_classification == "Official-Sensitive" %}
         {% include "partial/access_ap_data.html" with access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_requirements_a_url=is_access_requirements_a_url entity_name=entity.name %}
       {% endif %}
+    </div>
+    <div class="govuk-grid-column-full">
 
       {% if entity.column_details %}
         <div class="govuk-heading-m">Table schema</div>
@@ -16,42 +17,46 @@
 
         <table class="govuk-table app-table-responsive">
           <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header">Column name</th>
-              <th scope="col" class="govuk-table__header">Description</th>
-              <th scope="col" class="govuk-table__header">Type</th>
-              {% switch 'show_is_nullable_in_table_details_column' %}
-                <th scope="col" class="govuk-table__header">Is nullable</th>
-              {% endswitch %}
-              {% if entity.name == "all_assets" %}
-                <th scope="col" class="govuk-table__header">Completeness</th>
-                <th scope="col" class="govuk-table__header">Accuracy</th>
-                <th scope="col" class="govuk-table__header">Uniqueness</th>
-                <th scope="col" class="govuk-table__header">Consistency</th>
-                <th scope="col" class="govuk-table__header">Validity</th>
-              {% endif %}
-            </tr>
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Column name</th>
+            <th scope="col" class="govuk-table__header">Description</th>
+            <th scope="col" class="govuk-table__header">Type</th>
+            {% switch 'show_is_nullable_in_table_details_column' %}
+              <th scope="col" class="govuk-table__header">Is nullable</th>
+            {% endswitch %}
+            {% if entity.name == "all_assets" %}
+              <th scope="col" class="govuk-table__header">Completeness</th>
+              <th scope="col" class="govuk-table__header">Accuracy</th>
+              <th scope="col" class="govuk-table__header">Uniqueness</th>
+              <th scope="col" class="govuk-table__header">Consistency</th>
+              <th scope="col" class="govuk-table__header">Validity</th>
+            {% endif %}
+          </tr>
           </thead>
           <tbody class="govuk-table__body app-table-responsive__body">
-            {% for column in entity.column_details %}
-              <tr class="govuk-table__row app-table-responsive__row">
-                <td class="govuk-table__cell"><span class="app-table-responsive__heading">Column name:</span>{{ column.display_name }}</td>
-                <td class="govuk-table__cell column-description"><span class="app-table-responsive__heading">Description:</span>
+          {% for column in entity.column_details %}
+            <tr class="govuk-table__row app-table-responsive__row">
+              <td class="govuk-table__cell"><span
+                class="app-table-responsive__heading">Column name:</span>{{ column.display_name }}</td>
+              <td class="govuk-table__cell column-description"><span
+                class="app-table-responsive__heading">Description:</span>
                 {% if column.description %}
-                <div>
-                  {{column.description|default:''|markdown:3}}
-                </div>
+                  <div>
+                    {{ column.description|default:''|markdown:3 }}
+                  </div>
                 {% else %}
-                <p class="govuk-visually-hidden">A description for {{column.display_name}} does not exist</p>
+                  <p class="govuk-visually-hidden">A description for {{ column.display_name }} does not exist</p>
                 {% endif %}
-                </td>
-                <td class="govuk-table__cell"><span class="app-table-responsive__heading">Type:</span>{{column.type|title}}</td>
-                {% switch 'show_is_nullable_in_table_details_column' %}
-                  <td class="govuk-table__cell"><span class="app-table-responsive__heading">Is nullable:</span>{{column.nullable|yesno:"Yes,No,"}}</td>
-                {% endswitch %}
-                {% include "partial/_specific_table_metrics.html" %}
-              </tr>
-            {% endfor %}
+              </td>
+              <td class="govuk-table__cell"><span
+                class="app-table-responsive__heading">Type:</span>{{ column.type|title }}</td>
+              {% switch 'show_is_nullable_in_table_details_column' %}
+                <td class="govuk-table__cell"><span
+                  class="app-table-responsive__heading">Is nullable:</span>{{ column.nullable|yesno:"Yes,No," }}</td>
+              {% endswitch %}
+              {% include "partial/_specific_table_metrics.html" %}
+            </tr>
+          {% endfor %}
           </tbody>
         </table>
 
@@ -62,11 +67,11 @@
 
       {% if has_lineage %}
         <h2 class="govuk-heading-m">Lineage</h2>
-        <div class="govuk-body-m" >
+        <div class="govuk-body-m">
           See where this data came from and how it is used in other tables.
         </div>
         <div class="govuk-body">
-          <a href="{{lineage_url}}" class="govuk-link" rel="noreferrer noopener" target="_blank">
+          <a href="{{ lineage_url }}" class="govuk-link" rel="noreferrer noopener" target="_blank">
             View lineage in DataHub (opens in new tab)
           </a>
         </div>
