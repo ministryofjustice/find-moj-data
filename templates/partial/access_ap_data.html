@@ -2,9 +2,9 @@
     <h2 class="govuk-heading-m">Access</h2>
     <div id="request_access" class="govuk-!-margin-0 guidance-panel govuk-inset-text">
       {% if access_requirements %}
-        <p>This asset is available on the Analytical Platform.  You may need to request access.</p>
+        <p>This asset is available on the Analytical Platform. You may need to request access.</p>
         {% if is_access_requirements_a_url %}
-        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Learn how to access this data in the Analytical Platform</a>
+        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="{{ access_requirements }}" class="govuk-link" rel="noreferrer noopener" target="_blank">Learn how to access this data in the Analytical Platform <span class="govuk-visually-hidden">(opens in new tab)</span></a>
         {% else %}
             {{ access_requirements }}
         {% endif %}
@@ -13,7 +13,7 @@
         Contact the data custodian to request access.
         {% endcomment %}
       {% else %}
-        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="https://user-guidance.analytical-platform.service.justice.gov.uk/tools/create-a-derived-table/database-access/#database-access" class="govuk-link" rel="noreferrer noopener" target="_blank">Learn how to access this data in the Analytical Platform</a>
+        <a onclick="gtag('event', 'click_access_link', {'entity_name': '{{ entity_name }}'})" href="https://user-guidance.analytical-platform.service.justice.gov.uk/tools/create-a-derived-table/database-access/#database-access" class="govuk-link" rel="noreferrer noopener" target="_blank">Learn how to access this data in the Analytical Platform <span class="govuk-visually-hidden">(opens in new tab)</span></a>
       {% endif %}
     </div>
   </div>
