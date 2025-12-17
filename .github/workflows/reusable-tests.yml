@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
   workflow_call:
+    secrets:
+      staff:
+        description: "string of comma delimited email addresses"
+        required: true
 
 permissions:
   contents: read
@@ -52,6 +56,7 @@ jobs:
         id: fast-tests
         env:
           DJANGO_ALLOWED_HOSTS: "localhost testserver"
+          STAFF: ${{ secrets.STAFF }}
         run: TESTING=True uv run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
       - name: Set up chromedriver
