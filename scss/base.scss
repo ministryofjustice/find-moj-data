@@ -19,7 +19,7 @@
 @use "./components/metadata-list";
 @use "./components/feedback";
 @use "./components/contact";
-
+@use "./components/access_panel";
 .js-required {
   display: none;
 }
@@ -124,11 +124,3 @@ code {
   @extend .govuk-section-break--xl;
   margin-top: 0;
 }
-
-
-
-.guidance-panel {
-    border-left-color: govuk-colour('blue');
-    background-color: #eaf4f9;
-}
-
