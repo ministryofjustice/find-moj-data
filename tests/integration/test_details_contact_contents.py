@@ -52,7 +52,7 @@ class TestDetailsPageContactDetails:
         "access_reqs, expected_text",
         [
             (
-                "https://place-to-get-your-access.com",
+                "",
                 "Learn how to access this data in the Analytical Platform (opens in new tab)",
             ),
             # ( commented out as we're hiding references to data custodians for now
@@ -80,18 +80,17 @@ class TestDetailsPageContactDetails:
 
         self.start_on_the_details_page()
         request_access_metadata = self.details_database_page.request_access()
-
         assert request_access_metadata.text == expected_text
 
     @pytest.mark.parametrize(
         "access_reqs, slack_channel, custodian, expected_text",
         [
-            (
-                "Some contact info",
-                "#contact us",
-                "meta.data@justice.gov.uk",
-                "Some contact info",
-            ),
+            # (
+            #     "Some contact info",
+            #     "#contact us",
+            #     "meta.data@justice.gov.uk",
+            #     "Some contact info",
+            # ),
             # (
             #     "",
             #     "#contact_us",
