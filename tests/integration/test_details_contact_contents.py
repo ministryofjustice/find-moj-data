@@ -80,8 +80,6 @@ class TestDetailsPageContactDetails:
 
         self.start_on_the_details_page()
         request_access_metadata = self.details_database_page.request_access()
-        print(f"{request_access_metadata.text=}")
-        print(f"{expected_text=}")
         assert request_access_metadata.text == expected_text
 
     @pytest.mark.parametrize(
