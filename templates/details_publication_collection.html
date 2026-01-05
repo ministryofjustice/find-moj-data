@@ -5,6 +5,8 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
+          {% include "partial/access_data.html" %}
+
       {% if publications %}
         <div class="govuk-heading-m">Publication collection content</div>
           {% include "partial/details_container.html" with items=publications title="Publication collection content" name_column="Publication" description_column="Description" %}
@@ -12,7 +14,6 @@
         <h2 class="govuk-heading-m">Publication Collection content</h2>
         <p class="govuk-body">This Publication Collection is missing Publications information.</p>
       {% endif %}
-      {% include "partial/access_data.html" %}
     </div>
   </div>
 
