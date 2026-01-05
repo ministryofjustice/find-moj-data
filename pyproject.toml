@@ -36,11 +36,11 @@ dependencies = [
 dev = [
     "black>=25.1.0,<26",
     "pre-commit>=4.2.0,<5",
-    "selenium~=4.38.0",
+    "selenium~=4.39.0",
     "flake8>=6.1.0",
     "pytest-django>=4.11.1,<5",
     "pytest-cov>=6.2.1,<8",
-    "faker>=37.4.0,<38",
+    "faker>=37.4.0,<41",
     "isort>=6.0.1,<8",
     "freezegun>=1.5.2,<2",
 ]
