@@ -3,11 +3,13 @@
 
 {% block extra_details %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+      <div class="govuk-grid-column-two-thirds">
       {% comment %} All databases should be accessible via the AP {% endcomment %}
       {% if entity.custom_properties.security_classification == "Official-Sensitive" %}
         {% include "partial/access_ap_data.html" with access_requirements=entity.custom_properties.access_information.dc_access_requirements is_access_requirements_a_url=is_access_requirements_a_url entity_name=entity.name %}
       {% endif %}
+      </div>
+    <div class="govuk-grid-column-full">
       {% if tables %}
       <div class="govuk-heading-m">Database content</div>
         {% include "partial/download_button.html" with entity_type='database' title="table descriptions" %}
