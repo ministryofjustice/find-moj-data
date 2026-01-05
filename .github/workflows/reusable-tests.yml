@@ -42,7 +42,7 @@ jobs:
         run: make export_npm_cache_dir
 
       - name: Load cached npm
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -85,7 +85,7 @@ jobs:
         run: make export_npm_cache_dir
 
       - name: Load cached npm
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
