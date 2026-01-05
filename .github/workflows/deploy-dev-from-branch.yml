@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       run-tests:
-        description: 'Run code tests'
+        description: "Run code tests"
         required: false
         type: boolean
 
@@ -19,6 +19,8 @@ jobs:
   code-tests:
     if: ${{ inputs.run-tests }}
     uses: "./.github/workflows/reusable-tests.yml"
+    secrets:
+      STAFF: ${{ secrets.STAFF }}
 
   build:
     permissions:
@@ -50,3 +52,4 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
+      staff: ${{ secrets.STAFF }}

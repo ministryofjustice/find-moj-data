@@ -10,6 +10,8 @@ permissions:
 jobs:
   code-tests:
     uses: "./.github/workflows/reusable-tests.yml"
+    secrets:
+      STAFF: ${{ secrets.STAFF }}
 
   build:
     permissions:
@@ -41,6 +43,7 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
+      staff: ${{ secrets.STAFF }}
 
   notify-preprod-success:
     permissions:
@@ -92,6 +95,7 @@ jobs:
       azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       notify_api_key: ${{ secrets.NOTIFY_API_KEY }}
       limit_whitelist: ${{ secrets.LIMIT_WHITELIST }}
+      staff: ${{ secrets.STAFF }}
 
   post-deploy:
     permissions:
@@ -103,7 +107,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.1.4
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v4.1.4
 
       - name: Generate a draft release (to be published manually)
         run: gh release create --generate-notes --latest --draft ${{ github.sha }} --title "Release candidate"
