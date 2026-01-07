@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
   workflow_call:
+    secrets:
+      staff:
+        description: "string of comma delimited email addresses"
+        required: true
 
 permissions:
   contents: read
@@ -14,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
       - name: Install UV & Python
         id: setup-uv
@@ -38,7 +42,7 @@ jobs:
         run: make export_npm_cache_dir
 
       - name: Load cached npm
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -52,6 +56,7 @@ jobs:
         id: fast-tests
         env:
           DJANGO_ALLOWED_HOSTS: "localhost testserver"
+          STAFF: ${{ secrets.STAFF }}
         run: TESTING=True uv run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
       - name: Set up chromedriver
@@ -68,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -80,7 +85,7 @@ jobs:
         run: make export_npm_cache_dir
 
       - name: Load cached npm
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: $(cat .npm_cache_dir)
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}

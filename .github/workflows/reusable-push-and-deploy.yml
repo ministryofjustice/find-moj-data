@@ -41,6 +41,9 @@ on:
       limit_whitelist:
         description: "string of comma delimited subnets"
         required: true
+      staff:
+        description: "string of comma delimited email addresses"
+        required: true
 
 jobs:
   push-and-deploy:
@@ -48,7 +51,7 @@ jobs:
     environment: ${{ inputs.env }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6.0.1
 
       - uses: aws-actions/configure-aws-credentials@v5
         with:
@@ -115,6 +118,7 @@ jobs:
           NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
           ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS }}
           ANALYTICS_ID: ${{ vars.ANALYTICS_ID }}
+          STAFF: ${{ secrets.STAFF }}
           GOOGLE_TAG_MANAGER_ID: ${{ vars.GOOGLE_TAG_MANAGER_ID }}
           SLACK_ALERT_WEBHOOK: ${{ secrets.SLACK_ALERT_WEBHOOK }}
           AZURE_AUTH_ENABLED: ${{ vars.AZURE_AUTH_ENABLED}}
