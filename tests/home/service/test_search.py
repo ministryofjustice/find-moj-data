@@ -23,7 +23,7 @@ class TestSearchService:
         assert search_context["page_obj"].paginator.num_pages == 5
 
     def test_get_context_h1_value(self, search_context):
-        assert search_context["h1_value"] == "Search MoJ data"
+        assert search_context["h1_value"] == "Search for data assets"
 
     def test_get_context_remove_filter_hrefs(
         self, search_context, valid_subject_area_choice
