@@ -57,9 +57,7 @@ class TestInteractWithSearchResults:
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("court timeliness")
         self.click_on_the_first_result()
-        self.verify_i_am_on_the_table_details_page(
-            "Description:\ndescription with markdown"
-        )
+        self.verify_i_am_on_the_table_details_page("Description:\ndescription with markdown")
 
     def test_table_search_to_details_accessibility(self, mock_catalogue):
         """
@@ -76,9 +74,7 @@ class TestInteractWithSearchResults:
         self.start_on_the_search_page()
         self.enter_a_query_and_submit("court timeliness")
         self.click_on_the_first_result()
-        self.verify_i_am_on_the_table_details_page(
-            "Description:\nA description for urn does not exist"
-        )
+        self.verify_i_am_on_the_table_details_page("Description:\nA description for urn does not exist")
 
     def test_database_search_to_table_details(self, mock_catalogue, example_database):
         """
@@ -96,23 +92,15 @@ class TestInteractWithSearchResults:
         self.verify_database_details()
         self.verify_database_tables_listed()
         self.click_on_table()
-        self.verify_i_am_on_the_table_details_page(
-            "Description:\ndescription with markdown"
-        )
+        self.verify_i_am_on_the_table_details_page("Description:\ndescription with markdown")
 
-    def test_publication_collection_search_to_details(
-        self, mock_catalogue, example_publication_collection
-    ):
+    def test_publication_collection_search_to_details(self, mock_catalogue, example_publication_collection):
         """
         Users can search for a publication collection and access a detail page
         """
         mock_search_response(
             mock_catalogue=mock_catalogue,
-            page_results=[
-                search_result_from_publication_collection(
-                    example_publication_collection
-                )
-            ],
+            page_results=[search_result_from_publication_collection(example_publication_collection)],
             total_results=100,
         )
         self.start_on_the_search_page()
@@ -124,17 +112,13 @@ class TestInteractWithSearchResults:
         self.click_on_publication_collection_dataset_link()
         self.verify_i_am_on_the_publication_dataset_details_page()
 
-    def test_publication_dataset_search_to_details(
-        self, mock_catalogue, example_publication_dataset
-    ):
+    def test_publication_dataset_search_to_details(self, mock_catalogue, example_publication_dataset):
         """
         Users can search for a publication dataset and access a detail page
         """
         mock_search_response(
             mock_catalogue=mock_catalogue,
-            page_results=[
-                search_result_from_publication_dataset(example_publication_dataset)
-            ],
+            page_results=[search_result_from_publication_dataset(example_publication_dataset)],
             total_results=100,
         )
         self.start_on_the_search_page()
@@ -160,9 +144,7 @@ class TestInteractWithSearchResults:
         return item_name
 
     def verify_i_am_on_the_database_details_page(self, item_name):
-        heading_text = self.details_database_page.primary_heading().text.replace(
-            " Database", ""
-        )
+        heading_text = self.details_database_page.primary_heading().text.replace(" Database", "")
         assert heading_text == self.selenium.title.split("-")[0].strip()
         assert item_name.endswith(heading_text)
 
@@ -188,9 +170,7 @@ class TestInteractWithSearchResults:
         self.details_database_page.table_link().click()
 
     def verify_i_am_on_the_table_details_page(self, column_description):
-        heading_text = self.details_database_page.primary_heading().text.replace(
-            " Table", ""
-        )
+        heading_text = self.details_database_page.primary_heading().text.replace(" Table", "")
         assert heading_text == self.selenium.title.split("-")[0].strip()
 
         assert self.table_details_page.column_descriptions() == [column_description]
@@ -199,15 +179,11 @@ class TestInteractWithSearchResults:
         self.publication_collection_details_page.dataset_link().click()
 
     def verify_publication_collection_details(self):
-        publication_collection_details = (
-            self.publication_collection_details_page.collection_details()
-        )
+        publication_collection_details = self.publication_collection_details_page.collection_details()
         assert publication_collection_details.text
 
     def verify_publication_dataset_details(self):
-        publication_dataset_details = (
-            self.publication_dataset_details_page.dataset_details()
-        )
+        publication_dataset_details = self.publication_dataset_details_page.dataset_details()
         assert publication_dataset_details.text
 
     def verify_publication_collection_datasets_listed(self):
@@ -215,18 +191,12 @@ class TestInteractWithSearchResults:
         assert publications.text
 
     def verify_i_am_on_the_publications_collections_details_page(self, item_name):
-        heading_text = (
-            self.publication_collection_details_page.primary_heading().text.replace(
-                " Publication collection", ""
-            )
+        heading_text = self.publication_collection_details_page.primary_heading().text.replace(
+            " Publication collection", ""
         )
         assert heading_text == self.selenium.title.split("-")[0].strip()
         assert item_name.endswith(heading_text)
 
     def verify_i_am_on_the_publication_dataset_details_page(self):
-        heading_text = (
-            self.publication_dataset_details_page.primary_heading().text.replace(
-                " Publication dataset", ""
-            )
-        )
+        heading_text = self.publication_dataset_details_page.primary_heading().text.replace(" Publication dataset", "")
         assert heading_text == self.selenium.title.split("-")[0].strip()

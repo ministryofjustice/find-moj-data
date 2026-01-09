@@ -34,20 +34,18 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "black>=25.1.0,<26",
     "pre-commit>=4.2.0,<5",
     "selenium~=4.38.0",
-    "flake8>=6.1.0",
     "pytest-django>=4.11.1,<5",
     "pytest-cov>=6.2.1,<8",
     "faker>=37.4.0,<38",
-    "isort>=6.0.1,<8",
     "freezegun>=1.5.2,<2",
+    "ruff>=0.9.2,<1",
 ]
 
 [tool.uv]
 package = false
-required-version = "0.7.17"
+required-version = ">=0.7.17"
 
 [build-system]
 requires = ["hatchling"]
@@ -62,19 +60,42 @@ markers = [
 ]
 testpaths = ["tests"]
 
-[tool.isort]
-profile = "black"
-
-[tool.flake8]
-per-file-ignores = [
-    '*/test_datahub_client.py:E501',
-    '*/test_graphql_helpers.py:E501',
-    '*/test_search.py:E501',
-    '*/test_integration_with_datahub_server.py:E501,F401',
-    '*/conftest.py:E501,F401',
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    "build",
+    "dist",
+    "migrations",
 ]
-ignore = ['E203', 'E266', 'W503', 'F403']
-exclude = ".git,.mypy_cache,.pytest_cache,build,dist"
-max-line-length = 89
-max-complexity = 18
-select = "B,C,E,F,W,T4,B9"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "E203",   # whitespace before ':'
+    "E266",   # too many leading '#' for block comment
+]
+
+[tool.ruff.lint.per-file-ignores]
+"*/conftest.py" = ["F401", "E501"]
+"*/test_datahub_client.py" = ["E501"]
+"*/test_graphql_helpers.py" = ["E501"]
+"*/test_search.py" = ["E501"]
+"*/test_integration_with_datahub_server.py" = ["E501", "F401"]
+"*/type_helpers.py" = ["UP047"]  # Uses TypeVar pattern from upstream datahub
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "home", "feedback", "users", "datahub_client", "userguide"]

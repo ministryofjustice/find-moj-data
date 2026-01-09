@@ -6,16 +6,11 @@ class TestSubjectAreaFetcher:
         subject_area_options = SubjectAreaFetcher().fetch()
         assert len(subject_area_options) == 3
 
-        assert all(
-            subject_area_option.total > 0
-            for subject_area_option in subject_area_options
-        )
+        assert all(subject_area_option.total > 0 for subject_area_option in subject_area_options)
 
     def test_sort_subject_areas_by_total_descending(self, mock_catalogue) -> None:
         subject_area_options = SubjectAreaFetcher(sort_total_descending=True).fetch()
-        totals = [
-            subject_area_option.total for subject_area_option in subject_area_options
-        ]
+        totals = [subject_area_option.total for subject_area_option in subject_area_options]
         assert totals == sorted(totals, reverse=True)
 
     def test_sort_subject_areas_by_name(self, mock_catalogue) -> None:

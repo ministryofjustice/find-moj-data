@@ -46,12 +46,8 @@ class TestTableView:
     @pytest.mark.parametrize("switch_bool", [True, False])
     @pytest.mark.django_db
     def test_table(self, client, switch_bool):
-        with override_switch(
-            name="show_is_nullable_in_table_details_column", active=switch_bool
-        ):
-            response = client.get(
-                reverse("home:details", kwargs={"urn": "fake", "result_type": "table"})
-            )
+        with override_switch(name="show_is_nullable_in_table_details_column", active=switch_bool):
+            response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "table"}))
 
         assert response.status_code == 200
         assert response.headers["Cache-Control"] == "max-age=300, private"
@@ -65,13 +61,9 @@ class TestTableView:
             )
         )
         assert response.status_code == 200
-        assert (
-            response.headers["Content-Disposition"]
-            == 'attachment; filename="Foo.example_table.csv"'
-        )
+        assert response.headers["Content-Disposition"] == 'attachment; filename="Foo.example_table.csv"'
         assert response.content == (
-            b"name,display_name,type,description\r\n"
-            + b"urn,urn,string,description **with markdown**\r\n"
+            b"name,display_name,type,description\r\n" + b"urn,urn,string,description **with markdown**\r\n"
         )
 
 
@@ -85,13 +77,9 @@ class TestDatabaseView:
             )
         )
         assert response.status_code == 200
-        assert (
-            response.headers["Content-Disposition"]
-            == 'attachment; filename="Foo.example_database.csv"'
-        )
+        assert response.headers["Content-Disposition"] == 'attachment; filename="Foo.example_database.csv"'
         assert response.content == (
-            b"urn,display_name,description\r\n"
-            + b"urn:li:dataset:fake_table,fake_table,table description\r\n"
+            b"urn,display_name,description\r\n" + b"urn:li:dataset:fake_table,fake_table,table description\r\n"
         )
 
 
@@ -105,21 +93,15 @@ class TestDashboardView:
             )
         )
         assert response.status_code == 200
-        assert (
-            response.headers["Content-Disposition"]
-            == 'attachment; filename="Foo.example_dashboard.csv"'
-        )
+        assert response.headers["Content-Disposition"] == 'attachment; filename="Foo.example_dashboard.csv"'
         assert response.content == (
-            b"urn,display_name,description\r\n"
-            + b"urn:li:chart:fake_chart,fake_chart,chart description\r\n"
+            b"urn,display_name,description\r\n" + b"urn:li:chart:fake_chart,fake_chart,chart description\r\n"
         )
 
 
 class TestChartView:
     def test_chart(self, client):
-        response = client.get(
-            reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"})
-        )
+        response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
         assert response.status_code == 200
         assert response.headers["Cache-Control"] == "max-age=300, private"
 

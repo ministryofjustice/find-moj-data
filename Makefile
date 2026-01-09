@@ -8,7 +8,7 @@ LOCAL_IMAGE_TAG := find-moj-data:local
 all: build
 
 # Setup the application
-build: install_deps set_env $(ENV_FILE) assets migrate setup_waffle_switches
+build: install_deps set_env $(ENV_FILE) assets migrate setup_waffle_switches install-hooks update-hooks
 
 # Install Python dependencies
 install_python_deps:
@@ -61,9 +61,9 @@ migrate:
 
 # Setup waffle switches
 setup_waffle_switches:
-	python manage.py waffle_switch search-sort-radio-buttons off --create # create switch with default setting
-	python manage.py waffle_switch display-result-tags on --create # create display tags switch with default off
-	python manage.py waffle_switch show_is_nullable_in_table_details_column off --create # create isnullable column switch with default off
+	$(BUILD_COMMAND) python manage.py waffle_switch search-sort-radio-buttons off --create # create switch with default setting
+	$(BUILD_COMMAND) python manage.py waffle_switch display-result-tags on --create # create display tags switch with default off
+	$(BUILD_COMMAND) python manage.py waffle_switch show_is_nullable_in_table_details_column off --create # create isnullable column switch with default off
 
 # Run the application
 run:
@@ -96,8 +96,33 @@ clean:
 	rm -f $(ENV_FILE)
 	find . -name "*.pyc" -exec rm -f {} \;
 
+# Run all linting (pre-commit hooks)
 lint:
-	pre-commit run --all-files
+	$(BUILD_COMMAND) pre-commit run --all-files
+
+# Run ruff format check
+format-check:
+	$(BUILD_COMMAND) ruff format --check .
+
+# Run ruff format (fix)
+format:
+	$(BUILD_COMMAND) ruff format .
+
+# Run ruff lint check
+lint-check:
+	$(BUILD_COMMAND) ruff check .
+
+# Run ruff lint with autofix
+lint-fix:
+	$(BUILD_COMMAND) ruff check --fix .
+
+# Install pre-commit hooks (run once after cloning)
+install-hooks:
+	$(BUILD_COMMAND) pre-commit install
+
+# Update pre-commit hooks to latest versions
+update-hooks:
+	$(BUILD_COMMAND) pre-commit autoupdate
 
 build-image:
 	docker build  -t $(LOCAL_IMAGE_TAG) .
@@ -106,4 +131,4 @@ scan: install_trivy build-image
 	trivy image --scanners vuln $(LOCAL_IMAGE_TAG)
 
 
-.PHONY: all build install_deps set_env assets migrate setup_waffle_switches run test unit integration clean lint build-image scan install_trivy
+.PHONY: all build install_deps set_env assets migrate setup_waffle_switches run test unit integration clean lint format format-check lint-check lint-fix install-hooks update-hooks build-image scan install_trivy

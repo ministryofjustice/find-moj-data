@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Sequence
+from collections.abc import Sequence
 
 from datahub.configuration.common import ConfigurationError
 from datahub.ingestion.graph.client import DatahubClientConfig, DataHubGraph
@@ -95,9 +95,7 @@ class DataHubCatalogueClient:
         else:
             raise ConnectivityError("api_url is incorrectly formatted")
 
-        self.server_config = DatahubClientConfig(
-            server=self.gms_endpoint, token=jwt_token
-        )
+        self.server_config = DatahubClientConfig(server=self.gms_endpoint, token=jwt_token)
 
         try:
             self.graph = graph or DataHubGraph(self.server_config)
@@ -154,9 +152,7 @@ class DataHubCatalogueClient:
         filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
     ) -> list[SubjectAreaOption]:
-        return self.search_client.list_subject_areas(
-            query=query, filters=filters, count=count
-        )
+        return self.search_client.list_subject_areas(query=query, filters=filters, count=count)
 
     def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
         """Wraps the client's glossary terms query"""
@@ -168,9 +164,7 @@ class DataHubCatalogueClient:
 
     def get_table_details(self, urn) -> Table:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})[
-                "dataset"
-            ]
+            response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})["dataset"]
             table_object = TableParser().parse_to_entity_object(response, urn)
             return table_object
 
@@ -178,9 +172,7 @@ class DataHubCatalogueClient:
 
     def get_chart_details(self, urn) -> Chart:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.chart_query, {"urn": urn})[
-                "chart"
-            ]
+            response = self.graph.execute_graphql(self.chart_query, {"urn": urn})["chart"]
             chart_object = ChartParser().parse_to_entity_object(response, urn)
             return chart_object
 
@@ -188,9 +180,7 @@ class DataHubCatalogueClient:
 
     def get_database_details(self, urn: str) -> Database:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
-                "container"
-            ]
+            response = self.graph.execute_graphql(self.database_query, {"urn": urn})["container"]
             database_object = DatabaseParser().parse_to_entity_object(response, urn)
             return database_object
 
@@ -198,9 +188,7 @@ class DataHubCatalogueClient:
 
     def get_schema_details(self, urn: str) -> Schema:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
-                "container"
-            ]
+            response = self.graph.execute_graphql(self.database_query, {"urn": urn})["container"]
             database_object = SchemaParser().parse_to_entity_object(response, urn)
             return database_object
 
@@ -208,32 +196,22 @@ class DataHubCatalogueClient:
 
     def get_publication_collection_details(self, urn: str) -> PublicationCollection:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.database_query, {"urn": urn})[
-                "container"
-            ]
-            publication_collection_object = (
-                PublicationCollectionParser().parse_to_entity_object(response, urn)
-            )
+            response = self.graph.execute_graphql(self.database_query, {"urn": urn})["container"]
+            publication_collection_object = PublicationCollectionParser().parse_to_entity_object(response, urn)
             return publication_collection_object
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
     def get_publication_dataset_details(self, urn: str) -> PublicationDataset:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})[
-                "dataset"
-            ]
-            publication_dataset_object = (
-                PublicationDatasetParser().parse_to_entity_object(response, urn)
-            )
+            response = self.graph.execute_graphql(self.dataset_query, {"urn": urn})["dataset"]
+            publication_dataset_object = PublicationDatasetParser().parse_to_entity_object(response, urn)
             return publication_dataset_object
 
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")
 
     def get_dashboard_details(self, urn: str) -> Dashboard:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.dashboard_query, {"urn": urn})[
-                "dashboard"
-            ]
+            response = self.graph.execute_graphql(self.dashboard_query, {"urn": urn})["dashboard"]
             dashboard_object = DashboardParser().parse_to_entity_object(response, urn)
             return dashboard_object
 
@@ -241,9 +219,7 @@ class DataHubCatalogueClient:
 
     def get_glossary_term_details(self, urn: str) -> GlossaryTermRef:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(
-                self.glossary_term_query, {"urn": urn}
-            )
+            response = self.graph.execute_graphql(self.glossary_term_query, {"urn": urn})
             glossary_term = GlossaryTermParser().parse_to_entity_object(response, urn)
             return glossary_term
 
@@ -257,13 +233,10 @@ class DataHubCatalogueClient:
         get each custom property as an unnested key/value pair.
         we cannot push nested structures to datahub custom properties
         """
-        custom_properties_dict = json.loads(
-            custom_properties.model_dump_json(), parse_int=str
-        )
+        custom_properties_dict = json.loads(custom_properties.model_dump_json(), parse_int=str)
         custom_properties_unnested = self._flatten_dict(custom_properties_dict)
         custom_properties_unnested_all_string_values = {
-            key: str(value) if value is not None else ""
-            for key, value in custom_properties_unnested.items()
+            key: str(value) if value is not None else "" for key, value in custom_properties_unnested.items()
         }
 
         return custom_properties_unnested_all_string_values
@@ -288,10 +261,7 @@ class DataHubCatalogueClient:
 
         for key, value in relations.items():
             relations_to_display[key] = [
-                entity
-                for entity in value
-                if "urn:li:tag:dc_display_in_catalogue"
-                in [tag.urn for tag in entity.tags]
+                entity for entity in value if "urn:li:tag:dc_display_in_catalogue" in [tag.urn for tag in entity.tags]
             ]
 
         return relations_to_display

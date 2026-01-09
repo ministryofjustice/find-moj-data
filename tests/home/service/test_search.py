@@ -23,11 +23,9 @@ class TestSearchService:
         assert search_context["page_obj"].paginator.num_pages == 5
 
     def test_get_context_h1_value(self, search_context):
-        assert search_context["h1_value"] == "Search MoJ data"
+        assert search_context["h1_value"] == "Search for data assets"
 
-    def test_get_context_remove_filter_hrefs(
-        self, search_context, valid_subject_area_choice
-    ):
+    def test_get_context_remove_filter_hrefs(self, search_context, valid_subject_area_choice):
         assert search_context["remove_filter_hrefs"]["Subject area"] == {
             valid_subject_area_choice.label: (
                 "?query=test&"
@@ -117,9 +115,7 @@ class TestSearchService:
             ),
         ],
     )
-    def test__add_mark_tags(
-        self, query, description, marked_description, search_service
-    ):
+    def test__add_mark_tags(self, query, description, marked_description, search_service):
         pattern = search_service._compile_query_word_highlighting_pattern(query)
         assert (
             search_service._add_mark_tags(
@@ -135,10 +131,7 @@ class TestSearchService:
 
         search_service = SearchService(form=form, page="1")
 
-        assert (
-            search_service.results.page_results
-            == search_service.highlighted_results.page_results
-        )
+        assert search_service.results.page_results == search_service.highlighted_results.page_results
 
     def test_highlight_results_with_query(self, search_service):
         form = SearchForm(data={"query": "a"})
@@ -146,10 +139,7 @@ class TestSearchService:
 
         search_service = SearchService(form=form, page="1")
 
-        assert (
-            search_service.results.page_results
-            != search_service.highlighted_results.page_results
-        )
+        assert search_service.results.page_results != search_service.highlighted_results.page_results
 
     # @pytest.mark.parametrize(
     #     "query, formatted_query",

@@ -82,9 +82,7 @@ class SearchResult:
     tags_to_display: list[str] = field(init=False)
 
     def __post_init__(self):
-        self.tags_to_display = [
-            tag.display_name for tag in self.tags if tag in ALL_FILTERABLE_TAGS
-        ]
+        self.tags_to_display = [tag.display_name for tag in self.tags if tag in ALL_FILTERABLE_TAGS]
 
 
 @dataclass

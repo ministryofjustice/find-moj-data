@@ -1,0 +1,48 @@
+name: Lint
+
+on:
+    pull_request:
+        types: [opened, edited, reopened, synchronize]
+    push:
+        branches: [main]
+
+permissions:
+    contents: read
+
+jobs:
+    ruff:
+        name: Ruff (Python)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v5
+              with:
+                  version: "0.7.17"
+
+            - name: Run ruff format check
+              run: uvx ruff format --check .
+
+            - name: Run ruff lint
+              run: uvx ruff check .
+
+    pre-commit:
+        name: Pre-commit hooks
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install uv & Python
+              uses: astral-sh/setup-uv@v5
+              with:
+                  version: "0.7.17"
+                  python-version: "3.13.5"
+
+            - name: Install dependencies
+              run: uv sync --group dev
+
+            - name: Run pre-commit
+              run: uv run pre-commit run --all-files
