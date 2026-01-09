@@ -338,7 +338,6 @@ def publication_dataset_details_page(selenium) -> PublicationDatasetDetailsPage:
 def page_titles():
     pages = [
         "Home",
-        "Search MOJ data",
         "Search for data assets",
     ]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
