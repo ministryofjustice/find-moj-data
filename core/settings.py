@@ -131,11 +131,7 @@ STATIC_URL = "/static/"
 # https://whitenoise.readthedocs.io/en/latest/django.html#make-sure-staticfiles-is-configured-correctly
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-    }
-}
+STORAGES = {"staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"}}
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -161,9 +157,7 @@ ENV = os.environ.get("ENV")
 DATABASES = {
     "default": {
         "ENGINE": (
-            "django.db.backends.postgresql"
-            if os.environ.get("RDS_INSTANCE_ADDRESS")
-            else "django.db.backends.sqlite3"
+            "django.db.backends.postgresql" if os.environ.get("RDS_INSTANCE_ADDRESS") else "django.db.backends.sqlite3"
         ),
         "NAME": os.environ.get("DATABASE_NAME", BASE_DIR / "db.sqlite3"),
         "USER": os.environ.get("DATABASE_USERNAME", ""),
@@ -213,9 +207,7 @@ CACHES = generate_cache_configuration()
 
 ANALYTICS_ID: str = os.environ.get("ANALYTICS_ID", "")
 GOOGLE_TAG_MANAGER_ID: str = os.environ.get("GOOGLE_TAG_MANAGER_ID", "")
-ENABLE_ANALYTICS: bool = (
-    os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES
-) and ANALYTICS_ID != ""
+ENABLE_ANALYTICS: bool = (os.environ.get("ENABLE_ANALYTICS") in TRUTHY_VALUES) and ANALYTICS_ID != ""
 STAFF = str(os.environ.get("STAFF", "").lower()).split(",")
 TESTING = os.environ.get("TESTING") in TRUTHY_VALUES
 
@@ -227,9 +219,7 @@ if not TESTING:
 
     sentry_sdk.init(
         before_send=before_send,
-        dsn=os.environ.get(
-            "SENTRY_DSN_WORKAROUND"
-        ),  # Datahub overwrites with this variable unless it is renamed,
+        dsn=os.environ.get("SENTRY_DSN_WORKAROUND"),  # Datahub overwrites with this variable unless it is renamed,
         # causing Sentry to tag issues with the incorrect environment
         enable_tracing=ENABLE_TRACING,
         # Set traces_sample_rate to 1.0 to capture 100%
@@ -290,15 +280,11 @@ GIT_REF = os.environ.get("GIT_REF", "unknown")
 NOTIFY_ENABLED = os.environ.get("NOTIFY_ENABLED", "false") in TRUTHY_VALUES
 NOTIFY_API_KEY = os.environ.get("NOTIFY_API_KEY")
 
-NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID = os.environ.get(
-    "NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID"
-)
+NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID = os.environ.get("NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID")
 NOTIFY_REPORTER_INCLUDING_DATA_CATALOGUE_AND_DATA_OWNER_TEMPLATE_ID = os.environ.get(
     "NOTIFY_REPORTER_INCLUDING_DATA_CATALOGUE_AND_DATA_OWNER_TEMPLATE_ID"
 )
-NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID = os.environ.get(
-    "NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID"
-)
+NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID = os.environ.get("NOTIFY_DATA_CATALOGUE_OR_DATA_OWNER_TEMPLATE_ID")
 NOTIFY_FEEDBACK_TEMPLATE_ID = os.environ.get("NOTIFY_FEEDBACK_TEMPLATE_ID")
 
 # Data Catalogue Email

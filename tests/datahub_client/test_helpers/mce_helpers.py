@@ -4,17 +4,9 @@ import json
 import logging
 import os
 import re
+from collections.abc import Callable, Sequence
 from typing import (
     Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
-    Sequence,
-    Set,
-    Tuple,
-    Type,
-    Union,
 )
 
 from datahub.emitter.mcp import MetadataChangeProposalWrapper
@@ -40,9 +32,7 @@ IGNORE_PATH_TIMESTAMPS = [
 
 class MCEConstants:
     PROPOSED_SNAPSHOT = "proposedSnapshot"
-    DATASET_SNAPSHOT_CLASS = (
-        "com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot"
-    )
+    DATASET_SNAPSHOT_CLASS = "com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot"
 
 
 class MCPConstants:
@@ -78,8 +68,8 @@ def clean_nones(value):
 
 def check_golden_file(
     pytestconfig: PytestConfig,
-    output_path: Union[str, os.PathLike],
-    golden_path: Union[str, os.PathLike],
+    output_path: str | os.PathLike,
+    golden_path: str | os.PathLike,
     ignore_paths: Sequence[str] = (),
 ) -> None:
     update_golden = pytestconfig.getoption("--update-golden-files")
@@ -100,16 +90,13 @@ def _get_field_for_entity_type_in_mce(entity_type: str) -> str:
     raise Exception(f"Not implemented for entity_type {entity_type}")
 
 
-def _get_filter(
-    mce: bool = False, mcp: bool = False, entity_type: Optional[str] = None
-) -> Callable[[Dict], bool]:
+def _get_filter(mce: bool = False, mcp: bool = False, entity_type: str | None = None) -> Callable[[dict], bool]:
     if mce:
         # cheap way to determine if we are working with an MCE for the appropriate entity_type
         if entity_type:
             return (
                 lambda x: MCEConstants.PROPOSED_SNAPSHOT in x
-                and _get_field_for_entity_type_in_mce(str(entity_type))
-                in x[MCEConstants.PROPOSED_SNAPSHOT]
+                and _get_field_for_entity_type_in_mce(str(entity_type)) in x[MCEConstants.PROPOSED_SNAPSHOT]
             )
         else:
             return lambda x: MCEConstants.PROPOSED_SNAPSHOT in x
@@ -121,7 +108,7 @@ def _get_filter(
     return lambda _: False
 
 
-def _get_element(event: Dict[str, Any], path_spec: List[str]) -> Any:
+def _get_element(event: dict[str, Any], path_spec: list[str]) -> Any:
     try:
         for p in path_spec:
             if p not in event:
@@ -134,9 +121,7 @@ def _get_element(event: Dict[str, Any], path_spec: List[str]) -> Any:
         raise e
 
 
-def _element_matches_pattern(
-    event: Dict[str, Any], path_spec: List[str], pattern: str
-) -> Tuple[bool, bool]:
+def _element_matches_pattern(event: dict[str, Any], path_spec: list[str], pattern: str) -> tuple[bool, bool]:
     import re
 
     element = _get_element(event, path_spec)
@@ -146,13 +131,13 @@ def _element_matches_pattern(
         return (True, re.search(pattern, str(element)) is not None)
 
 
-def get_entity_urns(events_file: str) -> Set[str]:
+def get_entity_urns(events_file: str) -> set[str]:
     events = load_json_file(events_file)
     assert isinstance(events, list)
     return _get_entity_urns(events)
 
 
-def _get_entity_urns(events_list: List[Dict]) -> Set[str]:
+def _get_entity_urns(events_list: list[dict]) -> set[str]:
     entity_type = "dataset"
     # mce urns
     mce_urns = {
@@ -169,10 +154,8 @@ def _get_entity_urns(events_list: List[Dict]) -> Set[str]:
     return all_urns
 
 
-def assert_mcp_entity_urn(
-    filter: str, entity_type: str, regex_pattern: str, file: str
-) -> int:
-    def get_path_spec_for_urn() -> List[str]:
+def assert_mcp_entity_urn(filter: str, entity_type: str, regex_pattern: str, file: str) -> int:
+    def get_path_spec_for_urn() -> list[str]:
         return [MCPConstants.ENTITY_URN]
 
     test_output = load_json_file(file)
@@ -180,21 +163,17 @@ def assert_mcp_entity_urn(
         path_spec = get_path_spec_for_urn()
         filter_operator = _get_filter(mcp=True, entity_type=entity_type)
         filtered_events = [
-            (x, _element_matches_pattern(x, path_spec, regex_pattern))
-            for x in test_output
-            if filter_operator(x)
+            (x, _element_matches_pattern(x, path_spec, regex_pattern)) for x in test_output if filter_operator(x)
         ]
         failed_events = [y for y in filtered_events if not y[1][0] or not y[1][1]]
         if failed_events:
             raise Exception("Failed to match events", failed_events)
         return len(filtered_events)
     else:
-        raise Exception(
-            f"Did not expect the file {file} to not contain a list of items"
-        )
+        raise Exception(f"Did not expect the file {file} to not contain a list of items")
 
 
-def _get_mce_urn_path_spec(entity_type: str) -> List[str]:
+def _get_mce_urn_path_spec(entity_type: str) -> list[str]:
     if entity_type == EntityType.DATASET:
         return [
             MCEConstants.PROPOSED_SNAPSHOT,
@@ -204,13 +183,11 @@ def _get_mce_urn_path_spec(entity_type: str) -> List[str]:
     raise Exception(f"Not implemented for entity_type: {entity_type}")
 
 
-def _get_mcp_urn_path_spec() -> List[str]:
+def _get_mcp_urn_path_spec() -> list[str]:
     return [MCPConstants.ENTITY_URN]
 
 
-def assert_mce_entity_urn(
-    filter: str, entity_type: str, regex_pattern: str, file: str
-) -> int:
+def assert_mce_entity_urn(filter: str, entity_type: str, regex_pattern: str, file: str) -> int:
     """Assert that all mce entity urns must match the regex pattern passed in.
 
     Return the number of events matched"""
@@ -220,30 +197,26 @@ def assert_mce_entity_urn(
         path_spec = _get_mce_urn_path_spec(entity_type)
         filter_operator = _get_filter(mce=True)
         filtered_events = [
-            (x, _element_matches_pattern(x, path_spec, regex_pattern))
-            for x in test_output
-            if filter_operator(x)
+            (x, _element_matches_pattern(x, path_spec, regex_pattern)) for x in test_output if filter_operator(x)
         ]
         failed_events = [y for y in filtered_events if not y[1][0] or not y[1][1]]
         if failed_events:
-            raise Exception(
-                "Failed to match events: {json.dumps(failed_events, indent=2)}"
-            )
+            raise Exception("Failed to match events: {json.dumps(failed_events, indent=2)}")
         return len(filtered_events)
     else:
-        raise Exception(
-            f"Did not expect the file {file} to not contain a list of items"
-        )
+        raise Exception(f"Did not expect the file {file} to not contain a list of items")
 
 
 def assert_for_each_entity(
     entity_type: str,
     aspect_name: str,
-    aspect_field_matcher: Dict[str, Any],
+    aspect_field_matcher: dict[str, Any],
     file: str,
-    exception_urns: List[str] = [],
+    exception_urns: list[str] | None = None,
 ) -> int:
     """Assert that an aspect name with the desired fields exists for each entity urn"""
+    if exception_urns is None:
+        exception_urns = []
     test_output = load_json_file(file)
     assert isinstance(test_output, list)
     # mce urns
@@ -262,25 +235,19 @@ def assert_for_each_entity(
     assert None not in all_urns
     aspect_map = dict.fromkeys(all_urns)
     # iterate over all mcps
-    for o in [
-        mcp
-        for mcp in test_output
-        if _get_filter(mcp=True, entity_type=entity_type)(mcp)
-    ]:
+    for o in [mcp for mcp in test_output if _get_filter(mcp=True, entity_type=entity_type)(mcp)]:
         if o.get(MCPConstants.ASPECT_NAME) == aspect_name:
             # load the inner aspect payload and assign to this urn
-            aspect_map[o[MCPConstants.ENTITY_URN]] = o.get(
-                MCPConstants.ASPECT_VALUE, {}
-            ).get("json")
+            aspect_map[o[MCPConstants.ENTITY_URN]] = o.get(MCPConstants.ASPECT_VALUE, {}).get("json")
 
-    success: List[str] = []
-    failures: List[str] = []
+    success: list[str] = []
+    failures: list[str] = []
     for urn, aspect_val in aspect_map.items():
         if aspect_val is not None:
             for f in aspect_field_matcher:
-                assert aspect_field_matcher[f] == _get_element(
-                    aspect_val, [f]
-                ), f"urn: {urn} -> Field {f} must match value {aspect_field_matcher[f]}, found {_get_element(aspect_val, [f])}"  # noqa: E501
+                assert aspect_field_matcher[f] == _get_element(aspect_val, [f]), (
+                    f"urn: {urn} -> Field {f} must match value {aspect_field_matcher[f]}, found {_get_element(aspect_val, [f])}"
+                )  # noqa: E501
             success.append(urn)
         elif urn not in exception_urns:
             print(f"Adding {urn} to failures")
@@ -289,22 +256,18 @@ def assert_for_each_entity(
     if success:
         print(f"Succeeded on assertion for urns {success}")
     if failures:
-        raise AssertionError(
-            f"Failed to find aspect_name {aspect_name} for urns {json.dumps(failures, indent=2)}"
-        )
+        raise AssertionError(f"Failed to find aspect_name {aspect_name} for urns {json.dumps(failures, indent=2)}")
 
     return len(success)
 
 
-def assert_entity_mce_aspect(
-    entity_urn: str, aspect: Any, aspect_type: Type, file: str
-) -> int:
+def assert_entity_mce_aspect(entity_urn: str, aspect: Any, aspect_type: type, file: str) -> int:
     # TODO: Replace with read_metadata_file()
     test_output = load_json_file(file)
     entity_type = Urn.create_from_string(entity_urn).get_type()
     assert isinstance(test_output, list)
     # mce urns
-    mces: List[MetadataChangeEventClass] = [
+    mces: list[MetadataChangeEventClass] = [
         MetadataChangeEventClass.from_obj(x)
         for x in test_output
         if _get_filter(mce=True, entity_type=entity_type)(x)
@@ -319,19 +282,16 @@ def assert_entity_mce_aspect(
     return matches
 
 
-def assert_entity_mcp_aspect(
-    entity_urn: str, aspect_field_matcher: Dict[str, Any], aspect_name: str, file: str
-) -> int:
+def assert_entity_mcp_aspect(entity_urn: str, aspect_field_matcher: dict[str, Any], aspect_name: str, file: str) -> int:
     # TODO: Replace with read_metadata_file()
     test_output = load_json_file(file)
     entity_type = Urn.create_from_string(entity_urn).get_type()
     assert isinstance(test_output, list)
     # mcps that match entity_urn
-    mcps: List[MetadataChangeProposalWrapper] = [
+    mcps: list[MetadataChangeProposalWrapper] = [
         MetadataChangeProposalWrapper.from_obj_require_wrapper(x)
         for x in test_output
-        if _get_filter(mcp=True, entity_type=entity_type)(x)
-        and _get_element(x, _get_mcp_urn_path_spec()) == entity_urn
+        if _get_filter(mcp=True, entity_type=entity_type)(x) and _get_element(x, _get_mcp_urn_path_spec()) == entity_urn
     ]
     matches = 0
     for mcp in mcps:
@@ -339,9 +299,9 @@ def assert_entity_mcp_aspect(
             assert mcp.aspect
             aspect_val = mcp.aspect.to_obj()
             for f in aspect_field_matcher:
-                assert aspect_field_matcher[f] == _get_element(
-                    aspect_val, [f]
-                ), f"urn: {mcp.entityUrn} -> Field {f} must match value {aspect_field_matcher[f]}, found {_get_element(aspect_val, [f])}"  # noqa: E501
+                assert aspect_field_matcher[f] == _get_element(aspect_val, [f]), (
+                    f"urn: {mcp.entityUrn} -> Field {f} must match value {aspect_field_matcher[f]}, found {_get_element(aspect_val, [f])}"
+                )  # noqa: E501
                 matches = matches + 1
     return matches
 
@@ -397,6 +357,4 @@ def assert_entity_urn_like(entity_type: str, regex_pattern: str, file: str) -> i
     if matched_urns:
         return len(matched_urns)
     else:
-        raise AssertionError(
-            f"No urns found that match the pattern {regex_pattern}. Full list is {all_urns}"
-        )
+        raise AssertionError(f"No urns found that match the pattern {regex_pattern}. Full list is {all_urns}")

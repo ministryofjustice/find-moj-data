@@ -98,9 +98,7 @@ class TestDatasetDetailsService:
         parent = {
             RelationshipType.PARENT: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:container:parent", display_name="parent"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:container:parent", display_name="parent"),
                     description="",
                     tags=[],
                     entity_type="DATABASE",
@@ -112,9 +110,7 @@ class TestDatasetDetailsService:
 
         service = DatasetDetailsService("urn:li:datsset:test")
         context = service.context
-        assert context["parent_entity"] == EntityRef(
-            urn="urn:li:container:parent", display_name="parent"
-        )
+        assert context["parent_entity"] == EntityRef(urn="urn:li:container:parent", display_name="parent")
 
     def test_get_context_contains_slack(self, mock_catalogue):
         custom_properties = CustomEntityProperties(
@@ -129,16 +125,10 @@ class TestDatasetDetailsService:
         service = DatasetDetailsService("urn:li:datsset:test")
         context = service.context
         assert context["entity"].custom_properties == custom_properties
-        assert (
-            context[
-                "entity"
-            ].custom_properties.further_information.dc_slack_channel_name
-            == "test"
-        )
+        assert context["entity"].custom_properties.further_information.dc_slack_channel_name == "test"
 
 
 class TestDatabaseDetailsService:
-
     def test_get_context_database(self, mock_catalogue, example_database):
         """
         Tests that the context contains the database metadata returned by the
@@ -171,12 +161,7 @@ class TestDatabaseDetailsService:
         context = service.context
 
         assert context["entity"].custom_properties == custom_properties
-        assert (
-            context[
-                "entity"
-            ].custom_properties.further_information.dc_slack_channel_name
-            == "test"
-        )
+        assert context["entity"].custom_properties.further_information.dc_slack_channel_name == "test"
 
     def test_database_entities_in_context(self, example_database: Database):
         service = DatabaseDetailsService("example_database")
@@ -199,9 +184,7 @@ class TestChartDetailsService:
             subject_areas=[TagRef(urn="LAA", display_name="LAA")],
             governance=Governance(
                 data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
-                data_stewards=[
-                    OwnerRef(display_name="", email="lorem@ipsum.com", urn="")
-                ],
+                data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
             ),
             platform=EntityRef(urn="", display_name="justice-data"),
         )
@@ -225,9 +208,7 @@ class TestChartDetailsService:
         parent = {
             RelationshipType.PARENT: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:container:parent", display_name="parent"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:container:parent", display_name="parent"),
                     description="",
                     tags=[],
                     entity_type="DASHBOARD",
@@ -239,9 +220,7 @@ class TestChartDetailsService:
 
         service = ChartDetailsService("urn:li:chart:test")
         context = service.context
-        assert context["parent_entity"] == EntityRef(
-            urn="urn:li:container:parent", display_name="parent"
-        )
+        assert context["parent_entity"] == EntityRef(urn="urn:li:container:parent", display_name="parent")
 
 
 class TestDashboardDetailsService:
@@ -266,9 +245,7 @@ class TestDashboardDetailsService:
 
     def test_custom_properties_in_context(self, mock_catalogue):
         custom_properties = CustomEntityProperties(
-            access_information=AccessInformation(
-                dc_access_requirements="This is a test there's nothing to access"
-            )
+            access_information=AccessInformation(dc_access_requirements="This is a test there's nothing to access")
         )
         mock_dashboard_name = "urn:li:dashboard:fake"
         mock_dashboard_metadata = generate_dashboard_metadata(

@@ -44,9 +44,7 @@ class TestDetailsPageContactDetails:
         return result
 
     def start_on_the_details_page(self):
-        self.selenium.get(
-            f"{self.live_server_url}/details/database/urn:li:container:test"
-        )
+        self.selenium.get(f"{self.live_server_url}/details/database/urn:li:container:test")
 
     @pytest.mark.parametrize(
         "access_reqs, expected_text",
@@ -61,9 +59,7 @@ class TestDetailsPageContactDetails:
             # ),
         ],
     )
-    def test_access_requirements_content(
-        self, database, mock_catalogue, access_reqs, expected_text
-    ):
+    def test_access_requirements_content(self, database, mock_catalogue, access_reqs, expected_text):
         """
         test that what is displayed in the request action section of contacts is what we expect
         e.g.
@@ -72,9 +68,7 @@ class TestDetailsPageContactDetails:
         shown as given
         3 - where no access_requirements custom property exists default to the standard line
         """
-        database.custom_properties.access_information = AccessInformation(
-            dc_access_requirements=access_reqs
-        )
+        database.custom_properties.access_information = AccessInformation(dc_access_requirements=access_reqs)
         database.custom_properties.security_classification = "Official-Sensitive"
         mock_get_database_details_response(mock_catalogue, database)
 
@@ -122,13 +116,9 @@ class TestDetailsPageContactDetails:
     ):
         database.custom_properties.security_classification = "Official-Sensitive"
         if access_reqs:
-            database.custom_properties.access_information = AccessInformation(
-                dc_access_requirements=access_reqs
-            )
+            database.custom_properties.access_information = AccessInformation(dc_access_requirements=access_reqs)
         if custodian:
-            database.governance.data_custodians = [
-                OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")
-            ]
+            database.governance.data_custodians = [OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")]
         else:
             database.governance.data_custodians = []
 
@@ -196,9 +186,7 @@ class TestDetailsPageContactDetails:
         expected_text,
     ):
         if custodian:
-            database.governance.data_custodians = [
-                OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")
-            ]
+            database.governance.data_custodians = [OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")]
         else:
             database.governance.data_custodians = []
 
@@ -254,9 +242,7 @@ class TestDetailsPageContactDetails:
         expected_text,
     ):
         if custodian:
-            database.governance.data_custodians = [
-                OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")
-            ]
+            database.governance.data_custodians = [OwnerRef(display_name=custodian, email=custodian, urn="urn:bla")]
         else:
             database.governance.data_custodians = []
 

@@ -1,6 +1,7 @@
 import time
+from collections.abc import Generator
 from random import choice
-from typing import Any, Generator
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -78,7 +79,7 @@ def axe_version(request):
 
 
 @pytest.fixture(scope="function")
-def selenium(live_server) -> Generator[RemoteWebDriver, Any, None]:
+def selenium(live_server) -> Generator[RemoteWebDriver, Any]:
     options = ChromeOptions()
     options.add_argument("headless")
     options.add_argument("window-size=1280,720")
@@ -133,17 +134,12 @@ class DatabaseDetailsPage(DetailsPage):
         return self.selenium.find_element(By.TAG_NAME, "table")
 
     def table_link(self):
-        return self.selenium.find_element(
-            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
-        )
+        return self.selenium.find_element(By.CSS_SELECTOR, ".govuk-table tr td:first-child a")
 
 
 class TableDetailsPage(DetailsPage):
     def column_descriptions(self):
-        return [
-            c.text
-            for c in self.selenium.find_elements(By.CSS_SELECTOR, ".column-description")
-        ]
+        return [c.text for c in self.selenium.find_elements(By.CSS_SELECTOR, ".column-description")]
 
 
 class HomePage(Page):
@@ -154,16 +150,10 @@ class HomePage(Page):
         return self.selenium.find_element(By.NAME, "query")
 
     def subject_area_link(self, subject_area) -> WebElement:
-        all_subject_areas = self.selenium.find_elements(
-            By.CSS_SELECTOR, "ul#subject-area-list li a"
-        )
+        all_subject_areas = self.selenium.find_elements(By.CSS_SELECTOR, "ul#subject-area-list li a")
         all_subject_area_names = [d.text for d in all_subject_areas]
         result = next(
-            (
-                s
-                for s in all_subject_areas
-                if subject_area == s.text.split("(")[0].strip()
-            ),
+            (s for s in all_subject_areas if subject_area == s.text.split("(")[0].strip()),
             None,
         )
         if not result:
@@ -182,9 +172,7 @@ class PublicationCollectionDetailsPage(DetailsPage):
         return self.selenium.find_element(By.TAG_NAME, "table")
 
     def dataset_link(self):
-        return self.selenium.find_element(
-            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
-        )
+        return self.selenium.find_element(By.CSS_SELECTOR, ".govuk-table tr td:first-child a")
 
 
 class PublicationDatasetDetailsPage(DetailsPage):
@@ -198,9 +186,7 @@ class PublicationDatasetDetailsPage(DetailsPage):
         return self.selenium.find_element(By.TAG_NAME, "table")
 
     def dataset_link(self):
-        return self.selenium.find_element(
-            By.CSS_SELECTOR, ".govuk-table tr td:first-child a"
-        )
+        return self.selenium.find_element(By.CSS_SELECTOR, ".govuk-table tr td:first-child a")
 
 
 class SearchResultWrapper:
@@ -223,9 +209,7 @@ class SearchPage(Page):
 
     def first_search_result(self) -> SearchResultWrapper:
         return SearchResultWrapper(
-            self.selenium.find_element(By.ID, "search-results").find_element(
-                By.CSS_SELECTOR, ".govuk-grid-row"
-            )
+            self.selenium.find_element(By.ID, "search-results").find_element(By.CSS_SELECTOR, ".govuk-grid-row")
         )
 
     def search_bar(self) -> WebElement:
@@ -249,12 +233,7 @@ class SearchPage(Page):
         return select.first_selected_option
 
     def get_all_filter_names(self) -> list:
-        filter_names = [
-            item.text
-            for item in self.selenium.find_elements(
-                By.CLASS_NAME, "govuk-checkboxes__item"
-            )
-        ]
+        filter_names = [item.text for item in self.selenium.find_elements(By.CLASS_NAME, "govuk-checkboxes__item")]
         return filter_names
 
     def get_selected_checkbox_filter_names(self) -> list:
@@ -269,9 +248,7 @@ class SearchPage(Page):
         return self.selenium.find_element(By.XPATH, f"//label[ text() = '{name}' ]")
 
     def selected_filter_tags(self) -> list[WebElement]:
-        return self.selenium.find_elements(
-            By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-filter-label']"
-        )
+        return self.selenium.find_elements(By.CSS_SELECTOR, ".moj-filter__tag [data-test-id='selected-filter-label']")
 
     def selected_filter_tag(self, value) -> WebElement:
         for result in self.selenium.find_elements(
@@ -286,19 +263,13 @@ class SearchPage(Page):
         return self.selenium.find_element(By.ID, "clear_filter")
 
     def current_page(self) -> WebElement:
-        return self.selenium.find_element(
-            By.CLASS_NAME, "govuk-pagination__item--current"
-        )
+        return self.selenium.find_element(By.CLASS_NAME, "govuk-pagination__item--current")
 
     def next_page(self) -> WebElement:
-        return self.selenium.find_element(
-            By.CLASS_NAME, "govuk-pagination__next"
-        ).find_element(By.TAG_NAME, "a")
+        return self.selenium.find_element(By.CLASS_NAME, "govuk-pagination__next").find_element(By.TAG_NAME, "a")
 
     def previous_page(self) -> WebElement:
-        return self.selenium.find_element(
-            By.CLASS_NAME, "govuk-pagination__prev"
-        ).find_element(By.TAG_NAME, "a")
+        return self.selenium.find_element(By.CLASS_NAME, "govuk-pagination__prev").find_element(By.TAG_NAME, "a")
 
 
 @pytest.fixture
@@ -340,9 +311,7 @@ def page_titles():
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
 
 
-def generate_search_result(
-    result_type: FindMoJdataEntityMapper | None = None, urn=None, metadata=None
-) -> SearchResult:
+def generate_search_result(result_type: FindMoJdataEntityMapper | None = None, urn=None, metadata=None) -> SearchResult:
     """
     Generate a random search result
     """
@@ -350,11 +319,7 @@ def generate_search_result(
 
     return SearchResult(
         urn=urn or fake.unique.name(),
-        result_type=(
-            choice((DatabaseEntityMapping, TableEntityMapping))
-            if result_type is None
-            else result_type
-        ),
+        result_type=(choice((DatabaseEntityMapping, TableEntityMapping)) if result_type is None else result_type),
         name=name,
         fully_qualified_name=name,
         description=fake.paragraph(),
@@ -415,8 +380,7 @@ def generate_table_metadata(
         name=name,
         fully_qualified_name=f"Foo.{name}",
         description=description,
-        relationships=relations
-        or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
+        relationships=relations or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
         subject_areas=[TagRef(display_name="LAA", urn="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
@@ -514,9 +478,7 @@ def generate_database_metadata(
         or {
             RelationshipType.CHILD: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:dataset:fake_table", display_name="fake_table"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:dataset:fake_table", display_name="fake_table"),
                     description="table description",
                     tags=[
                         TagRef(
@@ -532,9 +494,7 @@ def generate_database_metadata(
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
-            data_custodians=[
-                OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
-            ],
+            data_custodians=[OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
         glossary_terms=[
@@ -570,9 +530,7 @@ def generate_dashboard_metadata(
         or {
             RelationshipType.CHILD: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:chart:fake_chart", display_name="fake_chart"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:chart:fake_chart", display_name="fake_chart"),
                     description="chart description",
                     tags=[
                         TagRef(
@@ -644,9 +602,7 @@ def generate_publication_collection_metadata(
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
-            data_custodians=[
-                OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")
-            ],
+            data_custodians=[OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
         glossary_terms=[
@@ -658,9 +614,7 @@ def generate_publication_collection_metadata(
         ],
         metadata_last_ingested=1710426920000,
         created=None,
-        platform=EntityRef(
-            urn="urn:li:dataPlatform:justice-data", display_name="justice-data"
-        ),
+        platform=EntityRef(urn="urn:li:dataPlatform:justice-data", display_name="justice-data"),
         custom_properties=custom_properties or CustomEntityProperties(),
     )
 
@@ -682,8 +636,7 @@ def generate_publication_dataset_metadata(
         name=name,
         fully_qualified_name=f"Foo.{name}",
         description=description,
-        relationships=relations
-        or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
+        relationships=relations or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
         subject_areas=[TagRef(urn="urn:li:tag:LAA", display_name="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
@@ -774,9 +727,7 @@ def mock_catalogue(
     mock_fn = patcher.start()
     mock_catalogue = MagicMock(spec=DataHubCatalogueClient)
     mock_fn.return_value = mock_catalogue
-    mock_search_response(
-        mock_catalogue, page_results=generate_page(), total_results=100
-    )
+    mock_search_response(mock_catalogue, page_results=generate_page(), total_results=100)
     mock_list_subject_areas_response(
         mock_catalogue,
         subject_areas=[
@@ -812,12 +763,8 @@ def mock_catalogue(
     mock_get_database_details_response(mock_catalogue, example_database)
     mock_get_dashboard_details_response(mock_catalogue, example_dashboard)
     mock_get_tags_response(mock_catalogue)
-    mock_get_publication_collection_details_response(
-        mock_catalogue, example_publication_collection
-    )
-    mock_get_publication_dataset_details_response(
-        mock_catalogue, example_publication_dataset
-    )
+    mock_get_publication_collection_details_response(mock_catalogue, example_publication_collection)
+    mock_get_publication_dataset_details_response(mock_catalogue, example_publication_dataset)
 
     yield mock_catalogue
 
@@ -825,9 +772,7 @@ def mock_catalogue(
 
 
 def mock_list_database_tables_response(mock_catalogue, total_results, page_results=()):
-    search_response = SearchResponse(
-        total_results=total_results, page_results=page_results
-    )
+    search_response = SearchResponse(total_results=total_results, page_results=page_results)
     mock_catalogue.list_database_tables.return_value = search_response
 
 
@@ -848,9 +793,7 @@ def mock_get_database_details_response(mock_catalogue, example_database):
 
 
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
-    search_response = SearchResponse(
-        total_results=total_results, page_results=page_results
-    )
+    search_response = SearchResponse(total_results=total_results, page_results=page_results)
     mock_catalogue.search.return_value = search_response
 
 
@@ -922,20 +865,12 @@ def mock_get_glossary_terms_response(mock_catalogue):
     )
 
 
-def mock_get_publication_collection_details_response(
-    mock_catalogue, example_publication_collection
-):
-    mock_catalogue.get_publication_collection_details.return_value = (
-        example_publication_collection
-    )
+def mock_get_publication_collection_details_response(mock_catalogue, example_publication_collection):
+    mock_catalogue.get_publication_collection_details.return_value = example_publication_collection
 
 
-def mock_get_publication_dataset_details_response(
-    mock_catalogue, example_publication_dataset
-):
-    mock_catalogue.get_publication_dataset_details.return_value = (
-        example_publication_dataset
-    )
+def mock_get_publication_dataset_details_response(mock_catalogue, example_publication_dataset):
+    mock_catalogue.get_publication_dataset_details.return_value = example_publication_dataset
 
 
 @pytest.fixture

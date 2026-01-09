@@ -1,9 +1,11 @@
-from typing import Sequence
+from collections.abc import Sequence
 
 from datahub_client.search.search_types import MultiSelectFilter
 
 
-def map_filters(filters: Sequence[MultiSelectFilter] | None, entity_filters=[]):
+def map_filters(filters: Sequence[MultiSelectFilter] | None, entity_filters=None):
+    if entity_filters is None:
+        entity_filters = []
     if filters is None:
         filters = []
 
@@ -37,10 +39,7 @@ def map_filters(filters: Sequence[MultiSelectFilter] | None, entity_filters=[]):
     if entities:
         for entity in entities:
             entity["and"].extend(
-                [
-                    {"field": filter.filter_name, "values": filter.included_values}
-                    for filter in filters
-                ]
+                [{"field": filter.filter_name, "values": filter.included_values} for filter in filters]
             )
             result = entities
     else:

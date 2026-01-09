@@ -10,18 +10,14 @@ class SubjectAreaFetcher(GenericService):
     Fetches subject areas with the total number of associated entities from the backend.
     """
 
-    def __init__(
-        self, filter_zero_entities: bool = True, sort_total_descending: bool = False
-    ):
+    def __init__(self, filter_zero_entities: bool = True, sort_total_descending: bool = False):
         self.client = self._get_catalogue_client()
         self.cache_key = "list_subject_areas"
         self.cache_timeout_seconds = 300
         self.filter_zero_entities = filter_zero_entities
         self.sort_total_descending = sort_total_descending
 
-    def filter_and_sort(
-        self, subject_areas: list[SubjectAreaOption]
-    ) -> list[SubjectAreaOption]:
+    def filter_and_sort(self, subject_areas: list[SubjectAreaOption]) -> list[SubjectAreaOption]:
         result = subject_areas
         if self.filter_zero_entities:
             result = [subject_area for subject_area in result if subject_area.total > 0]
