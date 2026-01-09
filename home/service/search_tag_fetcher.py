@@ -19,8 +19,6 @@ class SearchTagFetcher(GenericService):
         if not result:
             result = self.client.get_tags()
 
-            cache.set(
-                self.cache_key, result, timeout=self.cache_timeout_seconds, version=2
-            )
+            cache.set(self.cache_key, result, timeout=self.cache_timeout_seconds, version=2)
 
         return result

@@ -107,11 +107,7 @@ def mock_dataset_graphql_entity():
                         "urn": "urn:li:container:test",
                         "type": "DATABASE",
                         "properties": {"name": "test", "description": "a test entity"},
-                        "tags": {
-                            "tags": [
-                                {"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}
-                            ]
-                        },
+                        "tags": {"tags": [{"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}]},
                     }
                 }
             ],
@@ -148,9 +144,7 @@ class TestParsers:
         assert isinstance(search_result, SearchResult)
         assert search_result.urn == mock_graphql_search_result["entity"]["urn"]
 
-    def test_parse_to_entity_object(
-        self, parser, entity_object_type, mock_dataset_graphql_entity
-    ):
+    def test_parse_to_entity_object(self, parser, entity_object_type, mock_dataset_graphql_entity):
         urn = "urn:li:dataset:test_dataset"
         table = parser.parse_to_entity_object(mock_dataset_graphql_entity, urn)
         assert isinstance(table, entity_object_type)
@@ -170,9 +164,7 @@ class TestEntityParser:
                     "info": {
                         "datasetAssertion": {
                             "nativeType": "column_completeness_green_property",
-                            "nativeParameters": [
-                                {"key": "column_name", "value": "col1"}
-                            ],
+                            "nativeParameters": [{"key": "column_name", "value": "col1"}],
                         }
                     },
                     "runEvents": {"runEvents": [{"result": {"type": "SUCCESS"}}]},
@@ -181,9 +173,7 @@ class TestEntityParser:
                     "info": {
                         "datasetAssertion": {
                             "nativeType": "consistency_amber_property",
-                            "nativeParameters": [
-                                {"key": "column_name", "value": "col2"}
-                            ],
+                            "nativeParameters": [{"key": "column_name", "value": "col2"}],
                         }
                     },
                     "runEvents": {"runEvents": [{"result": {"type": "FAILED"}}]},
@@ -194,14 +184,8 @@ class TestEntityParser:
         parsed_assertions = parse_assertions(assertions_input)
         assert "col1" in parsed_assertions
         assert "col2" in parsed_assertions
-        assert (
-            parsed_assertions["col1"][ColumnAssertionType.COMPLETENESS]["green"]
-            == "SUCCESS"
-        )
-        assert (
-            parsed_assertions["col2"][ColumnAssertionType.CONSISTENCY]["amber"]
-            == "FAILED"
-        )
+        assert parsed_assertions["col1"][ColumnAssertionType.COMPLETENESS]["green"] == "SUCCESS"
+        assert parsed_assertions["col2"][ColumnAssertionType.CONSISTENCY]["amber"] == "FAILED"
 
     def test_parse_columns_with_assertions(self, parser):
         entity = {
@@ -234,9 +218,7 @@ class TestEntityParser:
                         "info": {
                             "datasetAssertion": {
                                 "nativeType": "column_completeness_green_property",
-                                "nativeParameters": [
-                                    {"key": "column_name", "value": "col1"}
-                                ],
+                                "nativeParameters": [{"key": "column_name", "value": "col1"}],
                             }
                         },
                         "runEvents": {"runEvents": [{"result": {"type": "SUCCESS"}}]},
@@ -245,9 +227,7 @@ class TestEntityParser:
                         "info": {
                             "datasetAssertion": {
                                 "nativeType": "consistency_amber_property",
-                                "nativeParameters": [
-                                    {"key": "column_name", "value": "col2"}
-                                ],
+                                "nativeParameters": [{"key": "column_name", "value": "col2"}],
                             }
                         },
                         "runEvents": {"runEvents": [{"result": {"type": "FAILED"}}]},
@@ -431,29 +411,17 @@ class TestEntityParser:
                                 "name": "test",
                                 "description": "a test entity",
                             },
-                            "tags": {
-                                "tags": [
-                                    {
-                                        "tag": {
-                                            "urn": "urn:li:tag:dc_display_in_catalogue"
-                                        }
-                                    }
-                                ]
-                            },
+                            "tags": {"tags": [{"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}]},
                         }
                     }
                 ],
             }
         }
-        result = parser.parse_relations(
-            RelationshipType.PARENT, [relations["relationships"]]
-        )
+        result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
         assert result == {
             RelationshipType.PARENT: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:dataProduct:test", display_name="test"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:dataProduct:test", display_name="test"),
                     description="a test entity",
                     entity_type="DATA_PRODUCT",
                     tags=[
@@ -468,9 +436,7 @@ class TestEntityParser:
 
     def test_parse_relations_blank(self, parser):
         relations = {"relationships": {"total": 0, "relationships": []}}
-        result = parser.parse_relations(
-            RelationshipType.PARENT, [relations["relationships"]]
-        )
+        result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
         assert result == {RelationshipType.PARENT: []}
 
     @pytest.mark.parametrize(
@@ -673,15 +639,7 @@ class TestEntityParser:
                                 "name": "test1",
                                 "description": "first test entity",
                             },
-                            "tags": {
-                                "tags": [
-                                    {
-                                        "tag": {
-                                            "urn": "urn:li:tag:dc_display_in_catalogue"
-                                        }
-                                    }
-                                ]
-                            },
+                            "tags": {"tags": [{"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}]},
                         }
                     },
                     {
@@ -692,29 +650,17 @@ class TestEntityParser:
                                 "name": "test2",
                                 "description": "second test entity",
                             },
-                            "tags": {
-                                "tags": [
-                                    {
-                                        "tag": {
-                                            "urn": "urn:li:tag:dc_display_in_catalogue2"
-                                        }
-                                    }
-                                ]
-                            },
+                            "tags": {"tags": [{"tag": {"urn": "urn:li:tag:dc_display_in_catalogue2"}}]},
                         }
                     },
                 ],
             }
         }
-        result = parser.parse_relations(
-            RelationshipType.PARENT, [relations["relationships"]]
-        )
+        result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
         assert result == {
             RelationshipType.PARENT: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:dataProduct:test1", display_name="test1"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:dataProduct:test1", display_name="test1"),
                     description="first test entity",
                     entity_type="DATA_PRODUCT",
                     tags=[
@@ -725,9 +671,7 @@ class TestEntityParser:
                     ],
                 ),
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:dataProduct:test2", display_name="test2"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:dataProduct:test2", display_name="test2"),
                     description="second test entity",
                     entity_type="DATA_PRODUCT",
                     tags=[
@@ -762,9 +706,7 @@ class TestEntityParser:
         assert result == [tag]
 
     def test_parse_glossary_terms(self, parser):
-        term = GlossaryTermRef(
-            display_name="abc", urn="urn:glossaryTerm:abc", description="hello world"
-        )
+        term = GlossaryTermRef(display_name="abc", urn="urn:glossaryTerm:abc", description="hello world")
         result = parser.parse_glossary_terms(
             {
                 "glossaryTerms": {
@@ -920,23 +862,16 @@ class TestEntityParser:
             ),
         ],
     )
-    def test_get_refresh_period_from_cadet_tags(
-        self, parser, tags, expected_refresh_period
-    ):
+    def test_get_refresh_period_from_cadet_tags(self, parser, tags, expected_refresh_period):
         refresh_period = parser.get_refresh_period_from_cadet_tags(tags)
         assert refresh_period == expected_refresh_period
 
     def test_parse_updated(self, parser):
         expected_timestamp = 12345678
-        example_with_updated = {
-            "runs": {"runs": [{"created": {"time": expected_timestamp}}]}
-        }
+        example_with_updated = {"runs": {"runs": [{"created": {"time": expected_timestamp}}]}}
         example_no_updated = {}
 
-        assert (
-            parser.parse_last_datajob_run_date(example_with_updated)
-            == expected_timestamp
-        )
+        assert parser.parse_last_datajob_run_date(example_with_updated) == expected_timestamp
         assert parser.parse_last_datajob_run_date(example_no_updated) is None
 
 
@@ -953,9 +888,7 @@ class TestEntityParserFactory:
                 {
                     "entity": {
                         "type": DatahubEntityType.DATASET.value,
-                        "subTypes": {
-                            "typeNames": [DatahubSubtype.PUBLICATION_DATASET.value]
-                        },
+                        "subTypes": {"typeNames": [DatahubSubtype.PUBLICATION_DATASET.value]},
                     }
                 },
                 PublicationDatasetParser,
@@ -967,9 +900,7 @@ class TestEntityParserFactory:
                 {
                     "entity": {
                         "type": DatahubEntityType.CONTAINER.value,
-                        "subTypes": {
-                            "typeNames": [DatahubSubtype.PUBLICATION_COLLECTION.value]
-                        },
+                        "subTypes": {"typeNames": [DatahubSubtype.PUBLICATION_COLLECTION.value]},
                     }
                 },
                 PublicationCollectionParser,
@@ -985,8 +916,6 @@ class TestEntityParserFactory:
             ),
         ],
     )
-    def test_get_parser_for_entity_type(
-        self, parser_factory, entity_slug, expected_parser
-    ):
+    def test_get_parser_for_entity_type(self, parser_factory, entity_slug, expected_parser):
         parser = parser_factory.get_parser(entity_slug)
         assert isinstance(parser, expected_parser)

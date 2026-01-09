@@ -5,7 +5,6 @@ from django.db.utils import IntegrityError
 
 @pytest.mark.django_db
 class TestUserModel:
-
     def test_create_user(self):
         user_model = get_user_model()
 

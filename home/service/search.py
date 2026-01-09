@@ -41,23 +41,15 @@ class SearchService(GenericService):
         self.context = self._get_context(items_per_page)
 
     @staticmethod
-    def _build_custom_property_filter(
-        filter_param: str, filter_value_list: list[str]
-    ) -> list[str]:
+    def _build_custom_property_filter(filter_param: str, filter_value_list: list[str]) -> list[str]:
         return [f"{filter_param}{filter_value}" for filter_value in filter_value_list]
 
     @staticmethod
     def _build_entity_types(
         entity_types: list[str],
     ) -> tuple[FindMoJdataEntityMapper, ...]:
-        default_entities = tuple(
-            Mapper for Mapper in Mappers if Mapper.datahub_type.value != "GLOSSARY_TERM"
-        )
-        chosen_entities = tuple(
-            Mapper
-            for Mapper in Mappers
-            if Mapper.find_moj_data_type.name in entity_types
-        )
+        default_entities = tuple(Mapper for Mapper in Mappers if Mapper.datahub_type.value != "GLOSSARY_TERM")
+        chosen_entities = tuple(Mapper for Mapper in Mappers if Mapper.find_moj_data_type.name in entity_types)
 
         return chosen_entities if chosen_entities else default_entities
 
@@ -76,11 +68,7 @@ class SearchService(GenericService):
 
         # we want to sort results ascending when a user is browsing data via
         # non-keyword searches - otherwise we use the default relevant ordering
-        sort = (
-            form_data.get("sort", "relevance")
-            if query not in ["*", ""]
-            else "ascending"
-        )
+        sort = form_data.get("sort", "relevance") if query not in ["*", ""] else "ascending"
 
         subject_area = form_data.get("subject_area", "")
         tags = form_data.get("tags", "")
@@ -95,9 +83,7 @@ class SearchService(GenericService):
         if where_to_access:
             filter_value.append(MultiSelectFilter("customProperties", where_to_access))
         if tags:
-            filter_value.append(
-                MultiSelectFilter("tags", [f"urn:li:tag:{tag}" for tag in tags])
-            )
+            filter_value.append(MultiSelectFilter("tags", [f"urn:li:tag:{tag}" for tag in tags]))
 
         page_for_search = str(int(page) - 1)
         if sort == "ascending":
@@ -131,35 +117,27 @@ class SearchService(GenericService):
             tags = self.form.cleaned_data.get("tags", [])
             remove_filter_hrefs = {}
             if subject_area:
-                remove_filter_hrefs["Subject area"] = (
-                    self._generate_subject_area_clear_href()
-                )
+                remove_filter_hrefs["Subject area"] = self._generate_subject_area_clear_href()
             if entity_types:
                 entity_types_clear_href = {}
                 for entity_type in entity_types:
-                    entity_types_clear_href[entity_type.lower().title()] = (
-                        self.form.encode_without_filter(
-                            filter_name="entity_types", filter_value=entity_type
-                        )
+                    entity_types_clear_href[entity_type.lower().title()] = self.form.encode_without_filter(
+                        filter_name="entity_types", filter_value=entity_type
                     )
                 remove_filter_hrefs["Entity types"] = entity_types_clear_href
 
             if where_to_access:
                 where_to_access_clear_href = {}
                 for access in where_to_access:
-                    where_to_access_clear_href[access] = (
-                        self.form.encode_without_filter(
-                            filter_name="where_to_access", filter_value=access
-                        )
+                    where_to_access_clear_href[access] = self.form.encode_without_filter(
+                        filter_name="where_to_access", filter_value=access
                     )
                 remove_filter_hrefs["Where to access"] = where_to_access_clear_href
 
             if tags:
                 tags_clear_href = {}
                 for tag in tags:
-                    tags_clear_href[tag] = self.form.encode_without_filter(
-                        filter_name="tags", filter_value=tag
-                    )
+                    tags_clear_href[tag] = self.form.encode_without_filter(filter_name="tags", filter_value=tag)
                 remove_filter_hrefs["Tags"] = tags_clear_href
         else:
             remove_filter_hrefs = None
@@ -173,13 +151,7 @@ class SearchService(GenericService):
 
         label = self.subject_area_labels.get(subject_area, subject_area)
 
-        return {
-            label: (
-                self.form.encode_without_filter(
-                    filter_name="subject_area", filter_value=subject_area
-                )
-            )
-        }
+        return {label: (self.form.encode_without_filter(filter_name="subject_area", filter_value=subject_area))}
 
     def _get_context(self, items_per_page: int) -> dict[str, Any]:
         if self.results.total_results >= settings.MAX_RESULTS:
@@ -212,13 +184,9 @@ class SearchService(GenericService):
             return highlighted_results
 
         else:
-            query_word_highlighting_pattern = (
-                self._compile_query_word_highlighting_pattern(query)
-            )
+            query_word_highlighting_pattern = self._compile_query_word_highlighting_pattern(query)
             for result in highlighted_results.page_results:
-                result.description = self._add_mark_tags(
-                    result.description or "", query_word_highlighting_pattern
-                )
+                result.description = self._add_mark_tags(result.description or "", query_word_highlighting_pattern)
             return highlighted_results
 
     def _compile_query_word_highlighting_pattern(self, query: str) -> re.Pattern:
@@ -226,7 +194,7 @@ class SearchService(GenericService):
         if len(terms) > 1:
             terms = [query] + terms
 
-        pattern = "|".join([r"(\w*{}\w*)".format(re.escape(word)) for word in terms])
+        pattern = "|".join([rf"(\w*{re.escape(word)}\w*)" for word in terms])
 
         return re.compile(rf"({pattern})", flags=re.IGNORECASE)
 

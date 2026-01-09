@@ -1,7 +1,7 @@
 import os
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import Iterator, List, Tuple
 
 import markdown
 from django.http import Http404
@@ -22,7 +22,7 @@ class SidebarItem:
 
 @dataclass
 class Sidebar:
-    sidebar: List[SidebarItem] = field(default_factory=list)
+    sidebar: list[SidebarItem] = field(default_factory=list)
     slug_to_header: dict = field(default_factory=dict)
 
     def add_item(self, item: SidebarItem):
@@ -30,10 +30,14 @@ class Sidebar:
         self.sidebar.append(item)
         self.slug_to_header[item.header_slug] = item.header
 
-    def __iter__(self) -> Iterator[Tuple[str, str, List[str]]]:
+    def __iter__(self) -> Iterator[tuple[str, str, list[str]]]:
         """Makes the Sidebar iterable."""
         for item in self.sidebar:
-            yield item.header, item.header_slug, item.subheader,
+            yield (
+                item.header,
+                item.header_slug,
+                item.subheader,
+            )
 
 
 class CustomClassProcessor(Treeprocessor):
@@ -78,7 +82,7 @@ def make_side_bar_items() -> Sidebar:
     sidebar = Sidebar()
     docs = sorted(doc for doc in os.listdir(DOCS_DIR) if doc.endswith(".md"))
     for file in docs:
-        with open(os.path.join(DOCS_DIR, file), "r", encoding="utf-8") as f:
+        with open(os.path.join(DOCS_DIR, file), encoding="utf-8") as f:
             content = f.read()
             subheader = []
             for line in content.split("\n"):
@@ -105,7 +109,7 @@ def get_markdown_content(filename) -> str:
     if not file_path.startswith(DOCS_DIR):
         raise Http404("Page not found")
     if os.path.exists(file_path):
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             return f.read()
     else:
         raise Http404("Page not found")

@@ -38,9 +38,7 @@ def send_feedback_notification(
             personalisation = {
                 "subject": subject,
                 "userEmail": (feedback_instance.created_by_email),
-                "link_to_file": prepare_upload(
-                    f, filename="feedback.csv", confirm_email_before_download=False
-                ),
+                "link_to_file": prepare_upload(f, filename="feedback.csv", confirm_email_before_download=False),
             }
 
             t = threading.Thread(
@@ -65,10 +63,7 @@ def send_issue_notifications(issue: Issue, send_email_to_reporter: bool) -> None
         t.start()
 
 
-def send(
-    issue: Issue, client: NotificationsAPIClient, send_email_to_reporter: bool
-) -> None:
-
+def send(issue: Issue, client: NotificationsAPIClient, send_email_to_reporter: bool) -> None:
     personalisation = {
         "userEmail": issue.created_by.email if issue.created_by else "",
         "assetName": issue.entity_name,
@@ -97,9 +92,7 @@ def send(
             personalisation.update({"assetOwner": issue.data_custodian_email})
 
         else:
-            reporter_template_id = (
-                settings.NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID
-            )
+            reporter_template_id = settings.NOTIFY_REPORTER_DATA_CATALOGUE_ONLY_TEMPLATE_ID
 
         notify(
             personalisation=personalisation,
@@ -126,7 +119,6 @@ def notify(
     reference: str,
     client: NotificationsAPIClient,
 ) -> None:
-
     try:
         response = client.send_email_notification(
             email_address=email_address,  # required string

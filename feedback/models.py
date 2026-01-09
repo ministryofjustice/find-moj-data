@@ -13,13 +13,10 @@ RESEARCH_FEEDBACK_CHOICES = [
 
 
 class Issue(models.Model):
-
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=True
-    )
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=True)
 
     additional_info = models.TextField(
         verbose_name="Please provide as much information as you can to help resolve the issue.",

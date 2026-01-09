@@ -30,9 +30,7 @@ def test_entity_timestamps_in_future_validation():
         "relationships": {
             RelationshipType.PARENT: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:database:example", display_name="example"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:database:example", display_name="example"),
                     description="entity for an example",
                     entity_type="DATABASE",
                     tags=[
@@ -78,9 +76,7 @@ def test_entity_timestamps_in_future_validation():
         "data_last_modified": future_timestamp,
         "platform": EntityRef(urn="urn:li:dataPlatform:kafka", display_name="Kafka"),
         "custom_properties": CustomEntityProperties(
-            usage_restrictions=UsageRestrictions(
-                dpia_required=False, dpia_location="OneTrust"
-            ),
+            usage_restrictions=UsageRestrictions(dpia_required=False, dpia_location="OneTrust"),
             access_information=AccessInformation(
                 dc_where_to_access_dataset="Analytical platform",
                 source_dataset_name="stg_xhibit_bw_history",
