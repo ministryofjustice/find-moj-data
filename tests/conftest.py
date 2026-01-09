@@ -257,6 +257,9 @@ class SearchPage(Page):
         ]
         return filter_names
 
+    def apply_filters_button(self) -> WebElement:
+        return self.selenium.find_element(By.CLASS_NAME, "apply_filters")
+
     def get_selected_checkbox_filter_names(self) -> list:
         selected_filters = [
             item.accessible_name
@@ -335,7 +338,7 @@ def publication_dataset_details_page(selenium) -> PublicationDatasetDetailsPage:
 def page_titles():
     pages = [
         "Home",
-        "Search MoJ data",
+        "Search for data assets",
     ]
     return [f"{page} - Find MOJ data - GOV.UK" for page in pages]
 

@@ -298,4 +298,4 @@ class TestFeedbackForms:
         assert self.selenium.title in self.page_titles
 
         heading_text = self.search_page.primary_heading().text
-        assert heading_text == "Search MoJ data"
+        assert heading_text == "Search for data assets"

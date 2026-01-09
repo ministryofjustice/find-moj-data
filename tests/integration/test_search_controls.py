@@ -116,6 +116,7 @@ class TestSearchInteractions:
         self.click_next_page()
         self.verify_page("2")
         self.select_subject_area("Prisons")
+        self.click_on_the_apply_filters_button()
         self.verify_page("1")
 
     def test_clear_single_filter(self):
@@ -127,6 +128,7 @@ class TestSearchInteractions:
         self.start_on_the_search_page()
         self.select_subject_area(subject_area)
         self.verify_subject_area_selected(subject_area)
+        self.click_on_the_apply_filters_button()
         self.click_clear_selected_filter(subject_area)
         self.verify_unselected_subject_area()
 
@@ -143,6 +145,8 @@ class TestSearchInteractions:
         for filter in filters:
             self.click_option(filter)
             self.search_page.sleep()
+            self.click_on_the_apply_filters_button()
+
         self.verify_subject_area_selected(subject_area)
         self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
@@ -163,6 +167,9 @@ class TestSearchInteractions:
 
     def click_on_the_search_button(self):
         self.search_page.search_button().click()
+
+    def click_on_the_apply_filters_button(self):
+        self.search_page.apply_filters_button().click()
 
     def verify_checkbox_filters_selected(self, filters):
         selected_filters = self.search_page.get_selected_checkbox_filter_names()
