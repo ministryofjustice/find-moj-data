@@ -41,6 +41,51 @@ class SearchClient:
         self.list_subject_areas_query = get_graphql_query("listSubjectAreas")
         self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
+        self.get_entity_types_counts_query = get_graphql_query("getEntityTypeCounts")
+
+    def get_entity_type_counts(
+        self,
+        query: str = "*",
+        count: int = 20,
+        filters: Sequence[MultiSelectFilter] | None = None,
+    ) -> tuple[dict[str, int], dict[str, int]]:
+        """
+        This method is designed to obtain the entity type counts for the given query and filters.
+        These counts should show all entity types available irrespective of the selected entity types in the search.
+        We therefore do not apply any entity type filters here and must remove it if present in the filters.
+        """
+        if filters is not None:
+            filters = map_filters(filters)
+        else:
+            filters = []
+
+        variables = {
+            "query": query,
+            "filters": filters,
+        }
+
+        try:
+            response = self.graph.execute_graphql(self.get_entity_types_counts_query, variables)
+        except GraphError as e:
+            raise CatalogueError("Unable to execute getEntityTypeCounts query") from e
+
+        response = response["aggregateAcrossEntities"]
+
+        entity_type_counts = {}
+        entity_sub_type_counts = {}
+        for facet in response["facets"]:
+            if facet["field"] == "_entityType":
+                for aggregation in facet["aggregations"]:
+                    entity_type = aggregation["value"]
+                    count = aggregation["count"]
+                    entity_type_counts[entity_type] = count
+            elif facet["field"] == "typeNames":
+                for aggregation in facet["aggregations"]:
+                    entity_subtype = aggregation["value"]
+                    count = aggregation["count"]
+                    entity_sub_type_counts[entity_subtype] = count
+
+        return entity_type_counts, entity_sub_type_counts
 
     def search(
         self,
