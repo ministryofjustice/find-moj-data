@@ -27,7 +27,7 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Asset types</legend>
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
               {% for entity_type in form.entity_types %}
-                <div aria-label="selection will trigger the filter and refresh the search results" class="govuk-checkboxes__item">
+                <div class="govuk-checkboxes__item">
                   {{ entity_type.tag}}
                   <label class="govuk-label govuk-checkboxes__label" for="{{ entity_type.id_for_label }}">{{entity_type.choice_label}}</label>
                 </div>
@@ -41,8 +41,7 @@
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
               {% if tags %}
                 {% for tag in tags %}
-                  <div aria-label="selection will trigger the filter and refresh the search results"
-                       class="govuk-checkboxes__item">
+                  <div class="govuk-checkboxes__item">
                     <input type="checkbox" name="tags" value="{{ tag.name }}"
                            class="govuk-checkboxes__input" form="searchform"
                             id="id_tags_{{ forloop.counter0 }}" {% if tag.name in request.GET|getlist:"tags" %}checked{% endif %}>
