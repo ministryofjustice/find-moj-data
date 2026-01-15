@@ -125,6 +125,39 @@ Mappers = [
 ]
 
 
+def get_entity_type_counts_from_datahub(
+    entity_type_counts: dict[str, int],
+    subtype_counts: dict[str, int],
+) -> dict[FindMoJdataEntityType, int]:
+    """
+    Map DataHub entity type and subtype counts to FindMoJdata entity type counts.
+
+    For entity types that have subtypes (DATASET, CONTAINER), we sum the
+    subtype counts. For entity types without subtypes (CHART, DASHBOARD,
+    GLOSSARY_TERM), we use the entity type count directly.
+
+    Args:
+        entity_type_counts: Dict mapping DataHub entity type names to counts
+        subtype_counts: Dict mapping DataHub subtype names to counts
+
+    Returns:
+        Dict mapping FindMoJdataEntityType to counts
+    """
+    result: dict[FindMoJdataEntityType, int] = {}
+
+    for mapper in Mappers:
+        if mapper.datahub_subtypes:
+            # Sum counts for all subtypes that belong to this mapper
+            count = sum(subtype_counts.get(subtype, 0) for subtype in mapper.datahub_subtypes)
+        else:
+            # Use the entity type count directly
+            count = entity_type_counts.get(mapper.datahub_type.value, 0)
+
+        result[mapper.find_moj_data_type] = count
+
+    return result
+
+
 class ColumnAssertionType(Enum):
     COMPLETENESS = "completeness"
     CONSISTENCY = "consistency"

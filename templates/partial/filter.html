@@ -1,4 +1,5 @@
 {% load clear_filter %}
+{% load lookup %}
 <div class="govuk-grid-column-one-third">
   <div class="moj-filter">
     <div class="moj-filter__header">
@@ -28,8 +29,8 @@
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
               {% for entity_type in form.entity_types %}
                 <div aria-label="selection will trigger the filter and refresh the search results" class="govuk-checkboxes__item">
-                  {{ entity_type.tag}}
-                  <label class="govuk-label govuk-checkboxes__label" for="{{ entity_type.id_for_label }}">{{entity_type.choice_label}}</label>
+                  {{ entity_type.tag }}
+                  <label class="govuk-label govuk-checkboxes__label" for="{{ entity_type.id_for_label }}">{{ entity_type.choice_label }} ({{ entity_type_counts|get_count:entity_type.data.value }})</label>
                 </div>
               {% endfor %}
             </div>
