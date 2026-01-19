@@ -17,7 +17,7 @@
   <nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{% url 'home:search' %}?{{ request.session.last_search|default:'' }}">Back to search results</a>
+        <a class="govuk-back-link" href="{% url 'home:search' %}?{{ request.session.last_search|default:'' }}">Back to search results</a>
       </li>
     </ol>
   </nav>
