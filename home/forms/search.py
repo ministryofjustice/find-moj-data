@@ -91,12 +91,6 @@ class SearchForm(forms.Form):
     entity_types = forms.MultipleChoiceField(
         choices=get_entity_types,
         required=False,
-        widget=forms.CheckboxSelectMultiple(
-            attrs={
-                "class": "govuk-checkboxes__input",
-                "form": "searchform",
-            }
-        ),
     )
     sort = forms.ChoiceField(
         choices=get_sort_choices,

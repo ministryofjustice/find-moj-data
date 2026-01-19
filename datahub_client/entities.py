@@ -145,7 +145,9 @@ def get_entity_type_counts_from_datahub(
     """
     result: dict[FindMoJdataEntityType, int] = {}
 
-    for mapper in Mappers:
+    mappers = [mapper for mapper in Mappers if mapper.datahub_type.value != "GLOSSARY_TERM"]
+
+    for mapper in mappers:
         if mapper.datahub_subtypes:
             # Sum counts for all subtypes that belong to this mapper
             count = sum(subtype_counts.get(subtype, 0) for subtype in mapper.datahub_subtypes)
@@ -154,6 +156,9 @@ def get_entity_type_counts_from_datahub(
             count = entity_type_counts.get(mapper.datahub_type.value, 0)
 
         result[mapper.find_moj_data_type] = count
+
+    # Sort the result by count in descending order
+    result = dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
     return result
 

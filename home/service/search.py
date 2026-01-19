@@ -171,9 +171,6 @@ class SearchService(GenericService):
         else:
             total_results = str(self.results.total_results)
 
-        # Convert entity type counts to use enum name as key for easy template access
-        entity_type_counts_by_name = {entity_type.name: count for entity_type, count in self.entity_type_counts.items()}
-
         context = {
             "form": self.form,
             "results": self.results.page_results,
@@ -186,7 +183,7 @@ class SearchService(GenericService):
             "remove_filter_hrefs": self._generate_remove_filter_hrefs(),
             "readable_match_reasons": self._get_match_reason_display_names(),
             "tags": self.results.tags,
-            "entity_type_counts": entity_type_counts_by_name,
+            "entity_type_counts": self.entity_type_counts.items(),
         }
 
         return context
