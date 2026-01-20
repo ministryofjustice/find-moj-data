@@ -62,9 +62,7 @@ class TestCatalogueClientWithDatahub:
             relationships={
                 RelationshipType.CHILD: [
                     EntitySummary(
-                        entity_ref=EntityRef(
-                            urn="urn:li:dataset:fake_table", display_name="fake_table"
-                        ),
+                        entity_ref=EntityRef(urn="urn:li:dataset:fake_table", display_name="fake_table"),
                         description="table description",
                         tags=[
                             TagRef(
@@ -107,9 +105,7 @@ class TestCatalogueClientWithDatahub:
             relationships={
                 RelationshipType.PARENT: [
                     EntitySummary(
-                        entity_ref=EntityRef(
-                            urn="urn:li:container:my_database", display_name="database"
-                        ),
+                        entity_ref=EntityRef(urn="urn:li:container:my_database", display_name="database"),
                         description="db description",
                         tags=[
                             TagRef(
@@ -177,11 +173,7 @@ class TestCatalogueClientWithDatahub:
             fully_qualified_name="Foo.Dataset",
             description="Dataset",
             relationships={
-                RelationshipType.PARENT: [
-                    EntityRef(
-                        urn="urn:li:container:my_database", display_name="database"
-                    )
-                ]
+                RelationshipType.PARENT: [EntityRef(urn="urn:li:container:my_database", display_name="database")]
             },
             subject_areas=[],
             governance=Governance(
@@ -241,15 +233,11 @@ class TestCatalogueClientWithDatahub:
 
     @pytest.fixture
     def datahub_client(self, base_mock_graph) -> DataHubCatalogueClient:
-        return DataHubCatalogueClient(
-            jwt_token="abc", api_url="http://example.com/api/gms", graph=base_mock_graph
-        )
+        return DataHubCatalogueClient(jwt_token="abc", api_url="http://example.com/api/gms", graph=base_mock_graph)
 
     @pytest.fixture
     def golden_file_in_db(self):
-        return Path(
-            Path(__file__).parent / "../../test_resources/golden_database_in.json"
-        )
+        return Path(Path(__file__).parent / "../../test_resources/golden_database_in.json")
 
     def test_get_dataset(
         self,
@@ -281,9 +269,7 @@ class TestCatalogueClientWithDatahub:
                                         {
                                             "tag": {
                                                 "urn": "urn:li:tag:dc_display_in_catalogue",
-                                                "properties": {
-                                                    "name": "dc_display_in_catalogue"
-                                                },
+                                                "properties": {"name": "dc_display_in_catalogue"},
                                             }
                                         }
                                     ]
@@ -297,9 +283,7 @@ class TestCatalogueClientWithDatahub:
                     "name": "Dataset",
                     "qualifiedName": "Foo.Dataset",
                     "description": "Dataset",
-                    "customProperties": [
-                        {"key": "sensitivityLevel", "value": "OFFICIAL"}
-                    ],
+                    "customProperties": [{"key": "sensitivityLevel", "value": "OFFICIAL"}],
                     "lastModified": {"time": 1709619407814},
                 },
                 "editableProperties": None,
@@ -345,9 +329,7 @@ class TestCatalogueClientWithDatahub:
             }
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
-        with patch(
-            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
+        with patch("datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
 
@@ -361,9 +343,7 @@ class TestCatalogueClientWithDatahub:
                 RelationshipType.DATA_LINEAGE: [],
                 RelationshipType.PARENT: [
                     EntitySummary(
-                        entity_ref=EntityRef(
-                            urn="urn:li:container:database", display_name="database"
-                        ),
+                        entity_ref=EntityRef(urn="urn:li:container:database", display_name="database"),
                         description="",
                         tags=[
                             TagRef(
@@ -429,9 +409,7 @@ class TestCatalogueClientWithDatahub:
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-        with patch(
-            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
+        with patch("datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
 
@@ -492,9 +470,7 @@ class TestCatalogueClientWithDatahub:
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-        with patch(
-            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
+        with patch("datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
             mock_exists.return_value = True
             chart = datahub_client.get_chart_details(urn)
 
@@ -572,18 +548,14 @@ class TestCatalogueClientWithDatahub:
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-        with patch(
-            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
+        with patch("datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
             mock_exists.return_value = True
             collection = datahub_client.get_publication_collection_details(urn)
 
         expected_relationships = {
             RelationshipType.CHILD: [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:dataset:publication", display_name="publication"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:dataset:publication", display_name="publication"),
                     description="",
                     entity_type="publication_dataset",
                     tags=[
@@ -640,9 +612,7 @@ class TestCatalogueClientWithDatahub:
 
         assert collection == expected
 
-    def test_get_database_details_filters_entities(
-        self, datahub_client, base_mock_graph
-    ):
+    def test_get_database_details_filters_entities(self, datahub_client, base_mock_graph):
         urn = "urn:li:container:foo"
         datahub_response = {
             "container": {
@@ -702,16 +672,12 @@ class TestCatalogueClientWithDatahub:
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-        with patch(
-            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
+        with patch("datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
             mock_exists.return_value = True
             database = datahub_client.get_database_details(urn)
             assert database.relationships[RelationshipType.CHILD] == [
                 EntitySummary(
-                    entity_ref=EntityRef(
-                        urn="urn:li:dataset:DatasetToShow", display_name="DatasetToShow"
-                    ),
+                    entity_ref=EntityRef(urn="urn:li:dataset:DatasetToShow", display_name="DatasetToShow"),
                     description="Dataset to show",
                     entity_type="TABLE",
                     tags=[
@@ -731,9 +697,7 @@ class TestCatalogueClientWithDatahub:
         datahub_response = {"dataset": None}
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-        with patch(
-            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
+        with patch("datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
             mock_exists.return_value = False  # Entity does not exist
             with pytest.raises(EntityDoesNotExist):
                 datahub_client.get_table_details(urn)
@@ -749,9 +713,7 @@ class TestCatalogueClientWithDatahub:
         }
         base_mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
 
-        with patch(
-            "datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn"
-        ) as mock_exists:
+        with patch("datahub_client.client.DataHubCatalogueClient.check_entity_exists_by_urn") as mock_exists:
             mock_exists.return_value = True
             dataset = datahub_client.get_table_details(urn)
 

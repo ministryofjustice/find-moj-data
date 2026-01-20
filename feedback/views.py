@@ -55,7 +55,6 @@ def feedback_view(request) -> HttpResponse:
             context = {"success_message": success_message}
             return render(request, "feedback_success.html", context)
         else:
-
             for field in form:
                 if field.widget_type == "checkbox":
                     field_set.append(field)
@@ -151,9 +150,7 @@ def report_issue_view(request) -> HttpResponse:
 
         request.session["entity_name"] = entity_name
         request.session["entity_url"] = entity_url
-        request.session["data_custodian_email"] = request.GET.get(
-            "data_custodian_email", ""
-        )
+        request.session["data_custodian_email"] = request.GET.get("data_custodian_email", "")
 
         form = IssueForm()
 

@@ -32,9 +32,7 @@ def test_send_all_notifications(mock_notifications_client, reporter):
 
 
 @pytest.mark.django_db
-def test_send_notifications_no_data_custodian_email(
-    mock_notifications_client, reporter
-):
+def test_send_notifications_no_data_custodian_email(mock_notifications_client, reporter):
     data = {
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
@@ -67,9 +65,7 @@ def test_send_all_notifications_no_reporter(mock_notifications_client):
 
 
 @pytest.mark.django_db
-def test_send_all_notifications_no_reporter_no_data_custodian_email(
-    mock_notifications_client, reporter
-):
+def test_send_all_notifications_no_reporter_no_data_custodian_email(mock_notifications_client, reporter):
     data = {
         "additional_info": "This is some additional information.",
         "entity_name": "my_entity",
@@ -131,9 +127,7 @@ def test_send_yes_feedback_notification_settings(mock_notifications_client, sett
         personalisation = {
             "subject": subject,
             "userEmail": (feedback.created_by_email),
-            "link_to_file": prepare_upload(
-                f, filename="feedback.csv", confirm_email_before_download=False
-            ),
+            "link_to_file": prepare_upload(f, filename="feedback.csv", confirm_email_before_download=False),
         }
 
     send_feedback_notification(feedback, subject)
@@ -176,9 +170,7 @@ def test_send_no_feedback_notification_settings(mock_notifications_client, setti
         personalisation = {
             "subject": subject,
             "userEmail": (feedback.created_by_email),
-            "link_to_file": prepare_upload(
-                f, filename="feedback.csv", confirm_email_before_download=False
-            ),
+            "link_to_file": prepare_upload(f, filename="feedback.csv", confirm_email_before_download=False),
         }
 
     send_feedback_notification(feedback, subject)
@@ -192,9 +184,7 @@ def test_send_no_feedback_notification_settings(mock_notifications_client, setti
 
 
 @pytest.mark.django_db
-def test_send_report_feedback_notification_settings(
-    mock_notifications_client, settings
-):
+def test_send_report_feedback_notification_settings(mock_notifications_client, settings):
     settings.NOTIFY_ENABLED = True
     settings.DATA_CATALOGUE_EMAIL = "team@foo.com"
     settings.NOTIFY_FEEDBACK_TEMPLATE_ID = "abc"
@@ -223,9 +213,7 @@ def test_send_report_feedback_notification_settings(
         personalisation = {
             "subject": subject,
             "userEmail": (feedback.created_by_email),
-            "link_to_file": prepare_upload(
-                f, filename="feedback.csv", confirm_email_before_download=False
-            ),
+            "link_to_file": prepare_upload(f, filename="feedback.csv", confirm_email_before_download=False),
         }
 
     send_feedback_notification(feedback, subject)

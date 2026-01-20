@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pytest
 
@@ -16,7 +16,7 @@ def base_entity_metadata():
 
 @pytest.fixture
 def base_mock_graph(
-    base_entity_metadata: Dict[str, Dict[str, Any]],
+    base_entity_metadata: dict[str, dict[str, Any]],
 ) -> MockDataHubGraph:
     return MockDataHubGraph(entity_graph=base_entity_metadata)
 

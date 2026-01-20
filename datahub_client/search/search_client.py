@@ -1,6 +1,7 @@
 import json
 import logging
-from typing import Any, Sequence, Tuple
+from collections.abc import Sequence
+from typing import Any
 
 from datahub.configuration.common import GraphError  # pylint: disable=E0611
 from datahub.ingestion.graph.client import DataHubGraph
@@ -121,10 +122,7 @@ class SearchClient:
         for item in facets:
             if item["field"] == "tags":
                 for tag in item["aggregations"]:
-                    if (
-                        tag["entity"]["properties"] is not None
-                        and tag["entity"]["properties"]["name"] in filterable
-                    ):
+                    if tag["entity"]["properties"] is not None and tag["entity"]["properties"]["name"] in filterable:
                         slug = tag["entity"]["properties"]["name"].replace(" ", "+")
 
                         new_tag = TagItem(
@@ -136,7 +134,7 @@ class SearchClient:
 
         return tags
 
-    def _parse_search_results(self, response) -> Tuple[list, list]:
+    def _parse_search_results(self, response) -> tuple[list, list]:
         page_results = []
         malformed_result_urns = []
         parser_factory = EntityParserFactory()
@@ -149,9 +147,7 @@ class SearchClient:
                 page_results.append(parsed_search_result)
 
             except KeyError as k_e:
-                logger.exception(
-                    f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}"
-                )
+                logger.exception(f"Parsing for result {entity_urn} failed, unknown entity type: {k_e}")
                 malformed_result_urns.append(entity_urn)
             except Exception:
                 logger.exception(f"Parsing for result {entity_urn} failed")
@@ -165,7 +161,6 @@ class SearchClient:
         filters: Sequence[MultiSelectFilter] | None = None,
         count: int = 1000,
     ):
-
         formatted_filters = map_filters(filters)
         formatted_filters = formatted_filters[0]["and"]
 
@@ -175,18 +170,14 @@ class SearchClient:
             "filters": formatted_filters,
         }
         try:
-            response = self.graph.execute_graphql(
-                self.list_subject_areas_query, variables
-            )
+            response = self.graph.execute_graphql(self.list_subject_areas_query, variables)
         except GraphError as e:
             raise CatalogueError("Unable to execute list domains query") from e
 
         response = response["aggregateAcrossEntities"]
         return self._parse_list_subject_areas(response["facets"])
 
-    def _parse_list_subject_areas(
-        self, facets: list[dict[str, Any]]
-    ) -> list[SubjectAreaOption]:
+    def _parse_list_subject_areas(self, facets: list[dict[str, Any]]) -> list[SubjectAreaOption]:
         """
         Iterate over all the tag values, and return values for those
         that match the top level subject areas.
@@ -202,9 +193,7 @@ class SearchClient:
             if not subject_area:
                 continue
 
-            subject_areas.append(
-                SubjectAreaOption(subject_area.urn, name, description, count)
-            )
+            subject_areas.append(SubjectAreaOption(subject_area.urn, name, description, count))
 
         return sorted(subject_areas, key=lambda s: s.name)
 
@@ -235,9 +224,7 @@ class SearchClient:
         "Get some number of glossary terms from DataHub"
         variables = {"count": count}
         try:
-            response = self.graph.execute_graphql(
-                self.get_glossary_terms_query, variables
-            )
+            response = self.graph.execute_graphql(self.get_glossary_terms_query, variables)
         except GraphError as e:
             raise CatalogueError("Unable to execute getGlossaryTerms query") from e
 
@@ -249,9 +236,7 @@ class SearchClient:
         for result in response["searchResults"]:
             page_results.append(parser.parse(entity=result["entity"]))
 
-        return SearchResponse(
-            total_results=response["total"], page_results=page_results
-        )
+        return SearchResponse(total_results=response["total"], page_results=page_results)
 
     def get_tags(self, count: int = 2000):
         """

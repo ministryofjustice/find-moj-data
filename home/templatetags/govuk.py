@@ -17,11 +17,7 @@ def pagination(page_obj, urlpattern, **url_kwargs):
             )
         }
     if page_obj.has_next():
-        context["next_page"] = {
-            "url": reverse(
-                urlpattern, kwargs=dict(page=page_obj.next_page_number(), **url_kwargs)
-            )
-        }
+        context["next_page"] = {"url": reverse(urlpattern, kwargs=dict(page=page_obj.next_page_number(), **url_kwargs))}
 
     numbers = []
     for page_number in paginator.get_elided_page_range(  # type: ignore
@@ -33,9 +29,7 @@ def pagination(page_obj, urlpattern, **url_kwargs):
             numbers.append(
                 {
                     "number": page_number,
-                    "url": reverse(
-                        urlpattern, kwargs=dict(page=page_number, **url_kwargs)
-                    ),
+                    "url": reverse(urlpattern, kwargs=dict(page=page_number, **url_kwargs)),
                 }
             )
 

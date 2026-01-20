@@ -58,9 +58,7 @@ def home_view(request):
     """
     Displys only subject areas that have entities tagged for display in the catalog.
     """
-    subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher(
-        sort_total_descending=True
-    ).fetch()
+    subject_areas: list[SubjectAreaOption] = SubjectAreaFetcher(sort_total_descending=True).fetch()
     context = {"subject_areas": subject_areas, "h1_value": "Home"}
     return render(request, "home.html", context)
 
@@ -71,9 +69,9 @@ def details_view(request, result_type, urn):
         service = type_details_map[result_type](urn)
     except KeyError as missing_result_type:
         logging.exception(f"Missing service_details_map for {missing_result_type}")
-        raise Http404("Invalid result type")
-    except EntityDoesNotExist:
-        raise Http404(f"{result_type} '{urn}' does not exist")
+        raise Http404("Invalid result type") from missing_result_type
+    except EntityDoesNotExist as e:
+        raise Http404(f"{result_type} '{urn}' does not exist") from e
 
     return render(request, service.template, service.context)
 
@@ -139,15 +137,11 @@ def glossary_term_view(request, urn, page="1"):
 
 def metadata_specification_view(request):
     metadata_specification = MetadataSpecificationService()
-    return render(
-        request, "metadata_specification.html", metadata_specification.context
-    )
+    return render(request, "metadata_specification.html", metadata_specification.context)
 
 
 def cookies_view(request):
-    valid_subject_areas = [
-        urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS
-    ]
+    valid_subject_areas = [urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS]
     referer = request.META.get("HTTP_REFERER")
 
     if referer:
@@ -164,9 +158,7 @@ def cookies_view(request):
 
 
 def accessibility_statement_view(request):
-    valid_subject_areas = [
-        urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS
-    ]
+    valid_subject_areas = [urlparse(origin).netloc for origin in settings.CSRF_TRUSTED_ORIGINS]
     referer = request.META.get("HTTP_REFERER")
 
     if referer:

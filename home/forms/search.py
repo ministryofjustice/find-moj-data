@@ -38,13 +38,7 @@ def get_where_to_access_choices():
 
 
 def get_entity_types():
-    return sorted(
-        [
-            (entity.name, entity.value)
-            for entity in FindMoJdataEntityType
-            if entity.name != "GLOSSARY_TERM"
-        ]
-    )
+    return sorted([(entity.name, entity.value) for entity in FindMoJdataEntityType if entity.name != "GLOSSARY_TERM"])
 
 
 def get_tags():
@@ -56,16 +50,12 @@ class SearchForm(forms.Form):
     """Django form to represent search page inputs"""
 
     subject_area_translate = "Subject area"
-    select_filter_translate = (
-        "selection will trigger the filter and refresh the search results"
-    )
+    select_filter_translate = "selection will trigger the filter and refresh the search results"
 
     query = forms.CharField(
         strip=False,
         required=False,
-        widget=forms.TextInput(
-            attrs={"class": "govuk-input search-input", "type": "search"}
-        ),
+        widget=forms.TextInput(attrs={"class": "govuk-input search-input", "type": "search"}),
     )
     subject_area = forms.ChoiceField(
         choices=get_subject_area_choices,
@@ -75,7 +65,6 @@ class SearchForm(forms.Form):
                 "form": "searchform",
                 "class": "govuk-select",
                 "aria-label": f"{subject_area_translate} - {select_filter_translate}",
-                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -86,7 +75,6 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -97,7 +85,6 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -108,7 +95,6 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-checkboxes__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
     )
@@ -118,7 +104,6 @@ class SearchForm(forms.Form):
             attrs={
                 "class": "govuk-radios__input",
                 "form": "searchform",
-                "onchange": "document.getElementById('searchform').submit();",
             }
         ),
         required=False,

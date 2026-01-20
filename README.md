@@ -53,6 +53,28 @@ make test
 make run
 ```
 
+## Developer Setup
+
+After cloning the repository, install pre-commit hooks to ensure consistent code quality:
+
+```sh
+make install-hooks
+```
+
+This enables automatic linting and formatting checks on every commit. The project uses [Ruff](https://docs.astral.sh/ruff/) for Python linting and formatting.
+
+### Available Linting Commands
+
+| Command | Description |
+|---------|-------------|
+| `make lint` | Run all pre-commit hooks |
+| `make format` | Auto-format Python code with Ruff |
+| `make format-check` | Check formatting without changes |
+| `make lint-fix` | Run Ruff lint with auto-fix |
+| `make lint-check` | Check linting without fixes |
+
+Note: Linting is also enforced in GitHub Actions on all PRs and pushes to main.
+
 Note: in local development we are using SQLite. Another option is [running the app against RDS](./docs/Running%20the%20app%20against%20RDS.md).
 
 # Reusing this frontend outside the MoJ

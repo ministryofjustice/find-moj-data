@@ -36,9 +36,7 @@ def screenshotter(request, selenium: RemoteWebDriver):
         timestamp = datetime.now().strftime(r"%Y%m%d%H%M%S")
         TMP_DIR.mkdir(exist_ok=True)
         path = str(TMP_DIR / f"{timestamp}-{testname}-failed.png")
-        total_height = selenium.execute_script(
-            "return document.body.parentNode.scrollHeight"
-        )
+        total_height = selenium.execute_script("return document.body.parentNode.scrollHeight")
         selenium.set_window_size(1920, total_height)
         selenium.save_screenshot(path)
         print(f"Screenshot saved to {path}")

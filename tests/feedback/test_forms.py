@@ -76,10 +76,7 @@ def test_valid_report_issue_form():
 def test_report_issue_form_invalid_additinal_info_length():
     form = IssueForm({"additional_info": "a" * 9, "send_email_to_reporter": "Yes"})
     assert not form.is_valid()
-    assert (
-        "Ensure this value has at least 10 characters (it has 9)."
-        == form.errors["additional_info"][0]
-    )
+    assert "Ensure this value has at least 10 characters (it has 9)." == form.errors["additional_info"][0]
 
 
 @pytest.mark.django_db

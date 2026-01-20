@@ -56,9 +56,7 @@ class GlossaryService(GenericService):
                     pass
             return parent_index, name
 
-        page_results_copy = [
-            i for i in glossary_search_results.page_results if include_term(i)
-        ]
+        page_results_copy = [i for i in glossary_search_results.page_results if include_term(i)]
         page_results_copy.sort(key=sorter)
 
         def grouper(result):
@@ -81,9 +79,9 @@ class GlossaryService(GenericService):
         # Adding the description in the list comprehension doesn't seem to work
         for parent_term in sorted_total_results:
             if parent_term["members"][0].metadata.get("parentNodes"):
-                parent_term["description"] = parent_term["members"][0].metadata[
-                    "parentNodes"
-                ][0]["properties"]["description"]
+                parent_term["description"] = parent_term["members"][0].metadata["parentNodes"][0]["properties"][
+                    "description"
+                ]
             else:
                 parent_term["description"] = ""
 

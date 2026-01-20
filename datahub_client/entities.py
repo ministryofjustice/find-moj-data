@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Literal, Optional
+from typing import Annotated, Literal
 
 from pydantic import AfterValidator, BaseModel, EmailStr, Field
-from typing_extensions import Annotated
 
 from .validators import check_timestamp_is_in_the_past
 
@@ -69,9 +68,7 @@ TableEntityMapping = FindMoJdataEntityMapper(
     "table",
 )
 
-ChartEntityMapping = FindMoJdataEntityMapper(
-    FindMoJdataEntityType.CHART, DatahubEntityType.CHART, [], "chart"
-)
+ChartEntityMapping = FindMoJdataEntityMapper(FindMoJdataEntityType.CHART, DatahubEntityType.CHART, [], "chart")
 
 GlossaryTermEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.GLOSSARY_TERM,
@@ -210,9 +207,7 @@ class ColumnRef(BaseModel):
         ),
         examples=["custody_id", "table_name.custody_id"],
     )
-    display_name: str = Field(
-        description="A user-friendly version of the name", examples=["custody_id"]
-    )
+    display_name: str = Field(description="A user-friendly version of the name", examples=["custody_id"])
     table: EntityRef = Field(
         description="Reference to the table the column belongs to",
         examples=[
@@ -249,16 +244,12 @@ class Column(BaseModel):
         description="A description of the column",
         examples=["Unique identifier for custody event"],
     )
-    nullable: bool = Field(
-        description="Whether the field is nullable or not", examples=[True, False]
-    )
+    nullable: bool = Field(description="Whether the field is nullable or not", examples=[True, False])
     is_primary_key: bool = Field(
         description="Whether the field is part of the primary key",
         examples=[True, False],
     )
-    foreign_keys: list[ColumnRef] = Field(
-        description="References to columns in other tables", default_factory=list
-    )
+    foreign_keys: list[ColumnRef] = Field(description="References to columns in other tables", default_factory=list)
     quality_metrics: ColumnQualityMetrics = Field(
         description="List of Assertions associated with this column",
     )
@@ -369,16 +360,11 @@ class UsageRestrictions(BaseModel):
     """
 
     dpia_required: bool | None = Field(
-        description=(
-            "Bool for if a data privacy impact assessment (DPIA) is required to access "
-            "this database"
-        ),
+        description=("Bool for if a data privacy impact assessment (DPIA) is required to access this database"),
         default=None,
         examples=[True, False],
     )
-    dpia_location: str = Field(
-        description="Where to find the DPIA document", default="", examples=["OneTrust"]
-    )
+    dpia_location: str = Field(description="Where to find the DPIA document", default="", examples=["OneTrust"])
 
 
 class AccessInformation(BaseModel):
@@ -420,16 +406,10 @@ class EntitySummary(BaseModel):
     details pages
     """
 
-    entity_ref: EntityRef = Field(
-        description="The entity reference containing name and urn"
-    )
+    entity_ref: EntityRef = Field(description="The entity reference containing name and urn")
     description: str = Field(description="A description of the entity")
-    entity_type: str = Field(
-        description="indicates the type of entity that is summarised"
-    )
-    data_last_modified: Annotated[
-        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
-    ] = Field(
+    entity_type: str = Field(description="indicates the type of entity that is summarised")
+    data_last_modified: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
         description="When the data entity was last modified in the source system",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
@@ -508,9 +488,7 @@ class CustomEntityProperties(BaseModel):
         description="Metadata about how to access a data entity",
         default_factory=AccessInformation,
     )
-    data_summary: DataSummary = Field(
-        description="Summary of data stored in this table", default_factory=DataSummary
-    )
+    data_summary: DataSummary = Field(description="Summary of data stored in this table", default_factory=DataSummary)
     further_information: FurtherInformation = Field(
         description="Routes to further information about the data",
         default_factory=FurtherInformation,
@@ -539,9 +517,7 @@ class Entity(BaseModel):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:tag:PII", "urn:li:chart:(justice-data,absconds)"],
     )
-    display_name: str | None = Field(
-        description="Display name of the entity", examples=["Absconds"]
-    )
+    display_name: str | None = Field(description="Display name of the entity", examples=["Absconds"])
     name: str = Field(
         description="Actual name of the entity in its source platform",
         examples=["Absconds"],
@@ -564,17 +540,12 @@ class Entity(BaseModel):
     )
     relationships: dict[RelationshipType, list[EntitySummary]] = Field(
         default={},
-        description=(
-            "References to related entities in the metadata graph, such as platform or "
-            "parent entities"
-        ),
+        description=("References to related entities in the metadata graph, such as platform or parent entities"),
         examples=[
             {
                 RelationshipType.PARENT: [
                     EntitySummary(
-                        entity_ref=EntityRef(
-                            urn="urn:li:database:example", display_name="example"
-                        ),
+                        entity_ref=EntityRef(urn="urn:li:database:example", display_name="example"),
                         description="entity for an example",
                         entity_type="DATABASE",
                         tags=[
@@ -611,32 +582,23 @@ class Entity(BaseModel):
             ]
         ],
     )
-    metadata_last_ingested: Annotated[
-        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
-    ] = Field(
+    metadata_last_ingested: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
         description="When the metadata was last updated in the catalogue",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
-    created: Annotated[
-        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
-    ] = Field(
+    created: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
         description="When the data entity was first created",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
-    data_last_modified: Annotated[
-        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
-    ] = Field(
+    data_last_modified: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
         description="When the data entity was last modified in the source system",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],
     )
     platform: EntityRef = Field(
-        description=(
-            "The platform that an entity should belong to, e.g. Glue, Athena, DBT. "
-            "Should exist in datahub"
-        ),
+        description=("The platform that an entity should belong to, e.g. Glue, Athena, DBT. Should exist in datahub"),
         examples=[EntityRef(urn="urn:li:dataPlatform:kafka", display_name="Kafka")],
     )
     custom_properties: CustomEntityProperties = Field(
@@ -650,9 +612,7 @@ class Entity(BaseModel):
     )
 
     def model_post_init(self, __context):
-        self.tags_to_display = [
-            tag.display_name for tag in self.tags if tag in ALL_FILTERABLE_TAGS
-        ]
+        self.tags_to_display = [tag.display_name for tag in self.tags if tag in ALL_FILTERABLE_TAGS]
 
 
 class Database(Entity):
@@ -671,9 +631,7 @@ class Schema(Entity):
         description="Unique identifier for the entity. Relates to Datahub's urn",
         examples=["urn:li:container:my_schema"],
     )
-    readable_name: str | None = Field(
-        description="Readable name of the entity", examples=["Absconds"]
-    )
+    readable_name: str | None = Field(description="Readable name of the entity", examples=["Absconds"])
 
 
 class PublicationCollection(Entity):
@@ -712,8 +670,7 @@ class Table(Entity):
 
     subtypes: list[str] = Field(
         description=(
-            "List of datahub subtypes. If a subtype is set, we still model the entity "
-            "as a table in Find MoJ data."
+            "List of datahub subtypes. If a subtype is set, we still model the entity as a table in Find MoJ data."
         ),
         examples=[["Metric"]],
         default=[],
@@ -738,9 +695,7 @@ class Table(Entity):
             ]
         ],
     )
-    last_datajob_run_date: Annotated[
-        Optional[datetime], AfterValidator(check_timestamp_is_in_the_past)
-    ] = Field(
+    last_datajob_run_date: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
         description="Indicates the time when the data were last refreshed (eg pipeline run with dbt).",
         default=None,
         examples=[datetime(2011, 10, 2, 3, 0, 0)],

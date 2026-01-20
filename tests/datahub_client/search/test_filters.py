@@ -3,9 +3,7 @@ from datahub_client.search.search_types import MultiSelectFilter
 
 
 def test_map_filters_with_defaults():
-    assert map_filters([], []) == [
-        {"and": [{"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]}]}
-    ]
+    assert map_filters([], []) == [{"and": [{"field": "tags", "values": ["urn:li:tag:dc_display_in_catalogue"]}]}]
 
 
 def test_map_filters_with_entity_type():

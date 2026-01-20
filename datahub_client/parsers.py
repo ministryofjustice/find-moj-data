@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 from datetime import datetime
-from typing import Any, Tuple
+from typing import Any
 
 from datahub_client.entities import (
     AccessInformation,
@@ -59,15 +59,11 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
             display_name = assertion["info"]["datasetAssertion"]["nativeType"]
             if display_name.startswith("column_completeness_"):
                 assertion_type = ColumnAssertionType.COMPLETENESS
-                assertion_level = assertion["info"]["datasetAssertion"][
-                    "nativeType"
-                ].split("column_completeness_")[1]
+                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             elif display_name.startswith("consistency"):
                 assertion_type = ColumnAssertionType.CONSISTENCY
-                assertion_level = assertion["info"]["datasetAssertion"][
-                    "nativeType"
-                ].split("consistency_")[1]
+                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("consistency_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             else:
                 continue
@@ -84,15 +80,12 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
             for parameter in assertion["info"]["datasetAssertion"]["nativeParameters"]:
                 if parameter["key"] == "column_name":
                     column_name = parameter["value"]
-                    assertions_map.setdefault(column_name, {}).setdefault(
-                        assertion_type, {}
-                    )[assertion_level] = result
+                    assertions_map.setdefault(column_name, {}).setdefault(assertion_type, {})[assertion_level] = result
 
     return assertions_map
 
 
 class EntityParser:
-
     def parse(self, search_response) -> SearchResult:
         """Parse graphql response to a SearchResult object"""
         raise NotImplementedError
@@ -102,9 +95,7 @@ class EntityParser:
         raise NotImplementedError
 
     @staticmethod
-    def parse_names(
-        entity: dict[str, Any], properties: dict[str, Any]
-    ) -> Tuple[str, str, str]:
+    def parse_names(entity: dict[str, Any], properties: dict[str, Any]) -> tuple[str, str, str]:
         """
         Returns a tuple of 3 name values.
 
@@ -153,16 +144,10 @@ class EntityParser:
             # This is needed because tags created by dbt seemingly don't have properties
             # populated
             if not properties and tag.get("tag", {}).get("urn"):
-                properties = {
-                    "name": tag.get("tag", {}).get("urn").replace("urn:li:tag:", "")
-                }
+                properties = {"name": tag.get("tag", {}).get("urn").replace("urn:li:tag:", "")}
 
             name = properties.get("name", "")
-            if (
-                properties
-                and not SubjectAreaTaxonomy.is_subject_area(name)
-                and name not in seen_tags
-            ):
+            if properties and not SubjectAreaTaxonomy.is_subject_area(name) and name not in seen_tags:
                 seen_tags.add(name)
                 tags.append(
                     TagRef(
@@ -191,12 +176,14 @@ class EntityParser:
     @staticmethod
     def get_refresh_period_from_cadet_tags(
         tags: list[TagRef],
-        refresh_schedules: dict[str, str] = {
-            "daily": "Every day",
-            "weekly": "Every week",
-            "monthly": "Every month",
-        },
+        refresh_schedules: dict[str, str] | None = None,
     ) -> str | None:
+        if refresh_schedules is None:
+            refresh_schedules = {
+                "daily": "Every day",
+                "weekly": "Every week",
+                "monthly": "Every month",
+            }
         relevant_refresh_schedules = [
             schedule_new
             for tag_ref in tags
@@ -210,9 +197,7 @@ class EntityParser:
             return refresh_schedule
         return None
 
-    def parse_properties(
-        self, entity: dict[str, Any]
-    ) -> Tuple[dict[str, Any], CustomEntityProperties]:
+    def parse_properties(self, entity: dict[str, Any]) -> tuple[dict[str, Any], CustomEntityProperties]:
         """
         Parse properties and editableProperties into a single dictionary.
         """
@@ -226,21 +211,17 @@ class EntityParser:
             except KeyError:
                 pass
 
-        custom_properties_dict = {
-            i["key"]: i["value"] or "" for i in properties.get("customProperties", [])
-        }
+        custom_properties_dict = {i["key"]: i["value"] or "" for i in properties.get("customProperties", [])}
 
         if "dpia_required" in custom_properties_dict:
-            custom_properties_dict["dpia_required"] = (
-                custom_properties_dict["dpia_required"] == "True"
-            )
+            custom_properties_dict["dpia_required"] = custom_properties_dict["dpia_required"] == "True"
 
         properties.pop("customProperties", None)
         # Some urls come in with a trailing newline
         if custom_properties_dict.get("dc_access_requirements"):
-            custom_properties_dict["dc_access_requirements"] = (
-                custom_properties_dict.get("dc_access_requirements", "").rstrip()
-            )
+            custom_properties_dict["dc_access_requirements"] = custom_properties_dict.get(
+                "dc_access_requirements", ""
+            ).rstrip()
         access_information = AccessInformation.model_validate(custom_properties_dict)
         usage_restrictions = UsageRestrictions.model_validate(custom_properties_dict)
         data_summary = DataSummary.model_validate(custom_properties_dict)
@@ -274,11 +255,7 @@ class EntityParser:
         If no owner information exists, return an OwnerRef populated with blank strings
         """
         ownership = entity.get("ownership") or {}
-        owners = [
-            i["owner"]
-            for i in ownership.get("owners", [])
-            if i["ownershipType"]["urn"] == DATA_OWNER
-        ]
+        owners = [i["owner"] for i in ownership.get("owners", []) if i["ownershipType"]["urn"] == DATA_OWNER]
 
         if owners:
             return self._parse_owner_object(owners[0])
@@ -402,9 +379,7 @@ class EntityParser:
 
             display_name = foreign_path.split(".")[-1]
             foreign_keys[source_path].append(
-                ColumnRef(
-                    name=foreign_path, display_name=display_name, table=foreign_table
-                )
+                ColumnRef(name=foreign_path, display_name=display_name, table=foreign_table)
             )
 
         all_column_assertions = parse_assertions(entity.get("assertions", {}))
@@ -414,9 +389,7 @@ class EntityParser:
             is_primary_key = field["fieldPath"] in primary_keys
             field_path = field["fieldPath"]
             display_name = field_path.split(".")[-1]
-            quality_metrics = self.form_column_quality_metrics(
-                all_column_assertions, display_name
-            )
+            quality_metrics = self.form_column_quality_metrics(all_column_assertions, display_name)
 
             result.append(
                 Column(
@@ -464,11 +437,7 @@ class EntityParser:
         If no owner information exists, the list will be empty.
         """
         ownership = entity.get("ownership") or {}
-        owners = [
-            i["owner"]
-            for i in ownership.get("owners", [])
-            if i["ownershipType"]["urn"] == ownership_type_urn
-        ]
+        owners = [i["owner"] for i in ownership.get("owners", []) if i["ownershipType"]["urn"] == ownership_type_urn]
 
         return [self._parse_owner_object(owner) for owner in owners]
 
@@ -542,11 +511,7 @@ class EntityParser:
                         description=description,
                         entity_type=entity_type,
                         tags=tags,
-                        data_last_modified=(
-                            self.parse_data_last_modified(properties)
-                            if properties
-                            else None
-                        ),
+                        data_last_modified=(self.parse_data_last_modified(properties) if properties else None),
                     )
                 )
 
@@ -563,10 +528,7 @@ class EntityParser:
 
         for key, value in relations.items():
             relations_to_display[key] = [
-                entity
-                for entity in value
-                if "urn:li:tag:dc_display_in_catalogue"
-                in [tag.urn for tag in entity.tags]
+                entity for entity in value if "urn:li:tag:dc_display_in_catalogue" in [tag.urn for tag in entity.tags]
             ]
 
         return relations_to_display
@@ -616,8 +578,8 @@ class DatasetParser(EntityParser):
 
         container = entity.get("container")
         if container:
-            _container_name, container_display_name, _container_qualified_name = (
-                self.parse_names(container, container.get("properties") or {})
+            _container_name, container_display_name, _container_qualified_name = self.parse_names(
+                container, container.get("properties") or {}
             )
 
         metadata = {
@@ -641,9 +603,7 @@ class DatasetParser(EntityParser):
             display_name=display_name,
             fully_qualified_name=qualified_name,
             parent_entity=(
-                EntityRef(urn=container.get("urn"), display_name=container_display_name)
-                if container
-                else None
+                EntityRef(urn=container.get("urn"), display_name=container_display_name) if container else None
             ),
             description=properties.get("description", ""),
             metadata=metadata,
@@ -693,9 +653,7 @@ class DatasetParser(EntityParser):
             description=properties.get("description", ""),
             relationships={**lineage_relations, **parent_relations_to_display},
             subject_areas=subject_areas,
-            governance=Governance(
-                data_owner=owner, data_stewards=stewards, data_custodians=custodians
-            ),
+            governance=Governance(data_owner=owner, data_stewards=stewards, data_custodians=custodians),
             subtypes=subtypes,
             tags=tags,
             glossary_terms=glossary_terms,
@@ -723,9 +681,7 @@ class ChartParser(DatasetParser):
     def parse_to_entity_object(self, response, urn):
         properties, custom_properties = self.parse_properties(response)
         name, display_name, qualified_name = self.parse_names(response, properties)
-        parent_relations = self.parse_relations(
-            RelationshipType.PARENT, [response.get("relationships", {})]
-        )
+        parent_relations = self.parse_relations(RelationshipType.PARENT, [response.get("relationships", {})])
 
         return Chart(
             urn=urn,
@@ -891,9 +847,7 @@ class PublicationCollectionParser(ContainerParser):
         super().__init__()
         self.mapper = PublicationCollectionEntityMapping
 
-    def parse_to_entity_object(
-        self, response: dict[str, Any], urn: str
-    ) -> PublicationCollection:
+    def parse_to_entity_object(self, response: dict[str, Any], urn: str) -> PublicationCollection:
         properties, custom_properties = self.parse_properties(response)
         name, display_name, qualified_name = self.parse_names(response, properties)
 
@@ -989,9 +943,7 @@ class DashboardParser(ContainerParser):
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
             relationships=self.list_relations_to_display(
-                self.parse_relations(
-                    RelationshipType.CHILD, [response["relationships"]]
-                )
+                self.parse_relations(RelationshipType.CHILD, [response["relationships"]])
             ),
             subject_areas=self.parse_subject_areas(response),
             governance=Governance(
@@ -1023,9 +975,7 @@ class GlossaryTermParser(EntityParser):
         properties, _ = self.parse_properties(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
         description = self.parse_description(entity)
-        return GlossaryTermRef(
-            display_name=display_name, urn=urn, description=description
-        )
+        return GlossaryTermRef(display_name=display_name, urn=urn, description=description)
 
     def parse(self, entity) -> SearchResult:
         properties, _ = self.parse_properties(entity)
@@ -1052,9 +1002,7 @@ class EntityParserFactory:
         entity = result["entity"]
         entity_type = entity["type"]
         entity_subtype = (
-            entity.get("subTypes", {}).get("typeNames", [None])[0]
-            if entity.get("subTypes") is not None
-            else None
+            entity.get("subTypes", {}).get("typeNames", [None])[0] if entity.get("subTypes") is not None else None
         )
 
         if entity_type == DatahubEntityType.DATASET.value:
