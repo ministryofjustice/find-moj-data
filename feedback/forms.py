@@ -51,14 +51,11 @@ class IssueForm(forms.ModelForm):
         coerce=lambda x: x == "Yes",
         required=True,
         label="Would you like an emailed copy of your report?",
-        error_messages={
-            "required": "Select if you want us to email you a copy of this report"
-        },
+        error_messages={"required": "Select if you want us to email you a copy of this report"},
     )
 
 
 class FeedbackYesForm(forms.ModelForm):
-
     class Meta:
         model = FeedBackYes
         fields = [
@@ -70,15 +67,9 @@ class FeedbackYesForm(forms.ModelForm):
             "url_path",
         ]
         widgets = {
-            "easy_to_find": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
-            "information_useful": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
-            "information_easy_to_understand": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
+            "easy_to_find": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+            "information_useful": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+            "information_easy_to_understand": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
             "additional_information": Textarea(
                 attrs={
                     "class": "govuk-textarea",
@@ -88,9 +79,7 @@ class FeedbackYesForm(forms.ModelForm):
                 }
             ),
             "url_path": forms.HiddenInput(),
-            "interested_in_research": RadioSelect(
-                attrs={"class": "govuk-radios__input"}
-            ),
+            "interested_in_research": RadioSelect(attrs={"class": "govuk-radios__input"}),
         }
 
     def clean(self):
@@ -109,7 +98,6 @@ class FeedbackYesForm(forms.ModelForm):
 
 
 class FeedbackNoForm(forms.ModelForm):
-
     class Meta:
         model = FeedBackNo
         fields = [
@@ -122,18 +110,10 @@ class FeedbackNoForm(forms.ModelForm):
             "url_path",
         ]
         widgets = {
-            "not_clear": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
-            "information_not_available": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
-            "incomplete_information": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
-            "difficult_to_understand": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
+            "not_clear": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+            "information_not_available": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+            "incomplete_information": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+            "difficult_to_understand": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
             "additional_information": Textarea(
                 attrs={
                     "class": "govuk-textarea",
@@ -143,9 +123,7 @@ class FeedbackNoForm(forms.ModelForm):
                 }
             ),
             "url_path": forms.HiddenInput(),
-            "interested_in_research": RadioSelect(
-                attrs={"class": "govuk-radios__input"}
-            ),
+            "interested_in_research": RadioSelect(attrs={"class": "govuk-radios__input"}),
         }
 
     def clean(self):
@@ -165,7 +143,6 @@ class FeedbackNoForm(forms.ModelForm):
 
 
 class FeedbackReportForm(forms.ModelForm):
-
     class Meta:
         model = FeedBackReport
         fields = [
@@ -176,15 +153,9 @@ class FeedbackReportForm(forms.ModelForm):
             "url_path",
         ]
         widgets = {
-            "not_working": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
-            "needs_fixing": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
-            "something_else": forms.CheckboxInput(
-                attrs={"class": "govuk-checkboxes__input"}
-            ),
+            "not_working": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+            "needs_fixing": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+            "something_else": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
             "additional_information": Textarea(
                 attrs={
                     "class": "govuk-textarea",

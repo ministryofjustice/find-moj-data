@@ -1,6 +1,6 @@
 # from https://github.com/datahub-project/datahub/blob/master/metadata-ingestion/tests/test_helpers/type_helpers.py
 
-from typing import Optional, TypeVar
+from typing import TypeVar
 
 # The current PytestConfig solution is somewhat ugly and not ideal.
 # However, it is currently the best solution available, as the type itself is not
@@ -12,6 +12,6 @@ from _pytest.config import Config as PytestConfig  # noqa: F401
 _T = TypeVar("_T")
 
 
-def assert_not_null(value: Optional[_T]) -> _T:
+def assert_not_null(value: _T | None) -> _T:
     assert value is not None, "value is unexpectedly None"
     return value

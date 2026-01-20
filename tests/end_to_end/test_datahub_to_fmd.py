@@ -24,21 +24,15 @@ class TestDatahubToFindMoJdata:
         """
         self.navigate_to_table()
 
-        breadcrumbs = self.selenium.find_elements(
-            By.CLASS_NAME, "govuk-breadcrumbs__link"
-        )
+        breadcrumbs = self.selenium.find_elements(By.CLASS_NAME, "govuk-breadcrumbs__link")
         assert len(breadcrumbs) == 3
 
         search_breadcrumb, database_breadcrumb, current_breadcrumb = breadcrumbs
 
         assert search_breadcrumb.text == "Search"
-        assert urlparse(search_breadcrumb.get_attribute("href")).path.startswith(
-            "/search"
-        )
+        assert urlparse(search_breadcrumb.get_attribute("href")).path.startswith("/search")
 
-        assert urlparse(database_breadcrumb.get_attribute("href")).path.startswith(
-            "/details/database/"
-        )
+        assert urlparse(database_breadcrumb.get_attribute("href")).path.startswith("/details/database/")
         assert current_breadcrumb.get_attribute("href") == self.selenium.current_url
 
         database_breadcrumb.click()

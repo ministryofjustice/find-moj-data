@@ -640,9 +640,7 @@ def test_result_with_owner(mock_graph, searcher):
                                             "email": "shannon@longtail.com",
                                         },
                                     },
-                                    "ownershipType": {
-                                        "urn": "urn:li:ownershipType:__system__dataowner"
-                                    },
+                                    "ownershipType": {"urn": "urn:li:ownershipType:__system__dataowner"},
                                 }
                             ]
                         },
@@ -742,9 +740,7 @@ def test_search_results_with_facets(searcher, mock_graph):
                 {
                     "field": "_entityType",
                     "displayName": "Type",
-                    "aggregations": [
-                        {"value": "DATASET", "count": 1505, "entity": None}
-                    ],
+                    "aggregations": [{"value": "DATASET", "count": 1505, "entity": None}],
                 },
                 {
                     "field": "glossaryTerms",
@@ -1020,9 +1016,7 @@ def test_search_for_container(mock_graph, searcher):
                                             "email": "shannon@longtail.com",
                                         },
                                     },
-                                    "ownershipType": {
-                                        "urn": "urn:li:ownershipType:__system__dataowner"
-                                    },
+                                    "ownershipType": {"urn": "urn:li:ownershipType:__system__dataowner"},
                                 }
                             ]
                         },
@@ -1200,13 +1194,7 @@ def test_dynamic_tags(mock_graph, searcher):
     expected = SearchResponse(
         total_results=4,
         page_results=[],
-        facets=SearchFacets(
-            facets={
-                "tags": [
-                    FacetOption(value="urn:li:tag:Prison", label="Prison", count=4)
-                ]
-            }
-        ),
+        facets=SearchFacets(facets={"tags": [FacetOption(value="urn:li:tag:Prison", label="Prison", count=4)]}),
         tags=[tag],
     )
     print("response", response)

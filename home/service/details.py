@@ -65,12 +65,9 @@ class DatabaseDetailsService(GenericService):
             raise ObjectDoesNotExist(urn)
 
         self.is_esda = any(
-            term.display_name == "Essential Shared Data Asset (ESDA)"
-            for term in self.database_metadata.glossary_terms
+            term.display_name == "Essential Shared Data Asset (ESDA)" for term in self.database_metadata.glossary_terms
         )
-        self.entities_in_database = self.database_metadata.relationships[
-            RelationshipType.CHILD
-        ]
+        self.entities_in_database = self.database_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()
         self.template = "details_database.html"
 
@@ -103,9 +100,7 @@ class SchemaDetailsService(GenericService):
         if not self.schema_metadata:
             raise ObjectDoesNotExist(urn)
 
-        self.entities_in_database = self.schema_metadata.relationships[
-            RelationshipType.CHILD
-        ]
+        self.entities_in_database = self.schema_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()
         self.template = "details_schema.html"
 
@@ -147,9 +142,7 @@ class DatasetDetailsService(GenericService):
         self.template = self._get_template()
 
     def _get_context(self):
-        split_datahub_url = urlsplit(
-            os.getenv("CATALOGUE_URL", "https://test-catalogue.gov.uk")
-        )
+        split_datahub_url = urlsplit(os.getenv("CATALOGUE_URL", "https://test-catalogue.gov.uk"))
 
         return {
             "entity": self.table_metadata,
@@ -166,23 +159,14 @@ class DatasetDetailsService(GenericService):
         }
 
     def _get_template(self):
-        return (
-            "details_metric.html"
-            if "Metric" in self.table_metadata.subtypes
-            else "details_table.html"
-        )
+        return "details_metric.html" if "Metric" in self.table_metadata.subtypes else "details_table.html"
 
     def has_lineage(self) -> bool:
         """
         Inspects the relationships property of the Table model to establish if a
         Dataset has any lineage recorded in datahub.
         """
-        has_lineage = (
-            len(
-                self.table_metadata.relationships.get(RelationshipType.DATA_LINEAGE, [])
-            )
-            > 0
-        )
+        has_lineage = len(self.table_metadata.relationships.get(RelationshipType.DATA_LINEAGE, [])) > 0
         return has_lineage
 
 
@@ -198,9 +182,7 @@ class ChartDetailsService(GenericService):
         return {
             "entity": self.chart_metadata,
             "entity_type": "Chart",
-            "platform_name": friendly_platform_name(
-                self.chart_metadata.platform.display_name
-            ),
+            "platform_name": friendly_platform_name(self.chart_metadata.platform.display_name),
             "parent_entity": self.parent_entity,
             "parent_type": DashboardEntityMapping.url_formatted,
             "h1_value": self.chart_metadata.name,
@@ -220,14 +202,11 @@ class DashboardDetailsService(GenericService):
         self.template = "details_dashboard.html"
 
     def _get_context(self):
-
         return {
             "entity": self.dashboard_metadata,
             "entity_type": "Dashboard",
             "h1_value": self.dashboard_metadata.name,
-            "platform_name": friendly_platform_name(
-                self.dashboard_metadata.platform.display_name
-            ),
+            "platform_name": friendly_platform_name(self.dashboard_metadata.platform.display_name),
             "charts": sorted(
                 self.children,
                 key=lambda d: d.entity_ref.display_name,
@@ -244,16 +223,12 @@ class PublicationCollectionDetailsService(GenericService):
         self.urn = urn
         self.client = self._get_catalogue_client()
 
-        self.publication_collection_metadata = (
-            self.client.get_publication_collection_details(self.urn)
-        )
+        self.publication_collection_metadata = self.client.get_publication_collection_details(self.urn)
 
         if not self.publication_collection_metadata:
             raise ObjectDoesNotExist(urn)
 
-        self.entities_in_container = self.publication_collection_metadata.relationships[
-            RelationshipType.CHILD
-        ]
+        self.entities_in_container = self.publication_collection_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()
         self.template = "details_publication_collection.html"
 
@@ -261,9 +236,7 @@ class PublicationCollectionDetailsService(GenericService):
         context = {
             "entity": self.publication_collection_metadata,
             "entity_type": PublicationCollectionEntityMapping.find_moj_data_type.value,
-            "platform_name": friendly_platform_name(
-                self.publication_collection_metadata.platform.display_name
-            ),
+            "platform_name": friendly_platform_name(self.publication_collection_metadata.platform.display_name),
             "publications": sorted(
                 self.entities_in_container,
                 key=lambda d: d.data_last_modified,
@@ -284,9 +257,7 @@ class PublicationDatasetDetailsService(GenericService):
         self.urn = urn
         self.client = self._get_catalogue_client()
 
-        self.publication_dataset_metadata = self.client.get_publication_dataset_details(
-            self.urn
-        )
+        self.publication_dataset_metadata = self.client.get_publication_dataset_details(self.urn)
 
         if not self.publication_dataset_metadata:
             raise ObjectDoesNotExist(urn)
@@ -297,14 +268,11 @@ class PublicationDatasetDetailsService(GenericService):
         self.template = "details_public_domain_data.html"
 
     def _get_context(self):
-
         return {
             "entity": self.publication_dataset_metadata,
             "entity_type": PublicationDatasetEntityMapping.find_moj_data_type.value,
             "parent_entity": self.parent_entity,
-            "platform_name": friendly_platform_name(
-                self.publication_dataset_metadata.platform.display_name
-            ),
+            "platform_name": friendly_platform_name(self.publication_dataset_metadata.platform.display_name),
             "parent_type": PublicationCollectionEntityMapping.url_formatted,
             "h1_value": self.publication_dataset_metadata.name,
             # noqa: E501
