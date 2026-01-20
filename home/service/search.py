@@ -42,7 +42,7 @@ class SearchService(GenericService):
         self.results, self.entity_type_counts = self._get_search_results(page, items_per_page)
         self.highlighted_results = self._highlight_results()
         self.paginator = self._get_paginator(items_per_page)
-        self.context = self._get_context(items_per_page)
+        self.context = self._get_context()
 
     @staticmethod
     def _build_custom_property_filter(filter_param: str, filter_value_list: list[str]) -> list[str]:
@@ -165,7 +165,7 @@ class SearchService(GenericService):
 
         return {label: (self.form.encode_without_filter(filter_name="subject_area", filter_value=subject_area))}
 
-    def _get_context(self, items_per_page: int) -> dict[str, Any]:
+    def _get_context(self) -> dict[str, Any]:
         if self.results.total_results >= settings.MAX_RESULTS:
             total_results = f"{settings.MAX_RESULTS}+"
         else:
