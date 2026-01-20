@@ -75,7 +75,7 @@ jobs:
           echo "image_path=$IMAGE_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Download artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: fmd-image
           path: /tmp
