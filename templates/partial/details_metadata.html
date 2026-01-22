@@ -17,7 +17,7 @@
       {% endif %}
     </dd>
   </div>
-  {% if entity_type == 'Table' %}
+  {% if entity_type == 'Table' and parent_entity and parent_entity.urn %}
     <div class="app-metadata-list__row">
       <dt class="app-metadata-list__key">
         Database
@@ -27,6 +27,7 @@
           href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{ parent_entity.display_name }}</a>
       </dd>
     </div>
+
   {% endif %}
   {% if entity.custom_properties.security_classification %}
     <div class="app-metadata-list__row">
@@ -47,6 +48,7 @@
         <dd class="app-metadata-list__value">
           {% for tag in entity.tags_to_display %}
             <a aria-label="link to search results for all entities tagged {{ tag }}" href="
+
               {% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>
             {% if not forloop.last %}, {% endif %}
           {% endfor %}
