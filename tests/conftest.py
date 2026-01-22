@@ -383,7 +383,18 @@ def generate_table_metadata(
         name=name,
         fully_qualified_name=f"Foo.{name}",
         description=description,
-        relationships=relations or {RelationshipType.PARENT: [], RelationshipType.DATA_LINEAGE: []},
+        relationships=relations
+        or {
+            RelationshipType.PARENT: [
+                EntitySummary(
+                    entity_ref=EntityRef(urn="urn:li:container:parent", display_name="parent"),
+                    description="parent description",
+                    tags=[],
+                    entity_type="DATABASE",
+                )
+            ],
+            RelationshipType.DATA_LINEAGE: [],
+        },
         subject_areas=[TagRef(display_name="LAA", urn="LAA")],
         governance=Governance(
             data_owner=OwnerRef(display_name="", email="lorem@ipsum.com", urn=""),
