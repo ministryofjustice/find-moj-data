@@ -642,7 +642,9 @@ class DatasetParser(EntityParser):
             RelationshipType.PARENT,
             [response.get("parent_container_relations", {})],
         )
+        print(f"\n\nParent Relations: {parent_relations}")
         parent_relations_to_display = self.list_relations_to_display(parent_relations)
+        print(f"\n\nParent Relations to Display: {parent_relations_to_display}")
         subtypes = self.parse_subtypes(response)
 
         return Table(
@@ -767,6 +769,7 @@ class DatabaseParser(ContainerParser):
             relations_list=[response["relationships"]],
             entity_type_of_relations="TABLE",
         )
+
         relations_to_display = self.list_relations_to_display(child_relations)
 
         return Database(
@@ -800,9 +803,25 @@ class SchemaParser(ContainerParser):
         super().__init__()
         self.mapper = SchemaEntityMapping
 
+    def parse_schema_parent_relations(self, parent_relations):
+        """_summary_
+
+        Args:
+            parent_relations (_type_): _description_
+        """
+        pass
+
     def parse_to_entity_object(self, response, urn):
         properties, custom_properties = self.parse_properties(response)
         name, display_name, qualified_name = self.parse_names(response, properties)
+
+        parent_relations = self.parse_relations(
+            relationship_type=RelationshipType.PARENT,
+            relations_list=[response.get("parentContainers", {})],
+            relation_key="",
+            entity_type_of_relations="CONTAINER",
+        )
+        print(f"\n\nParent Relations: {parent_relations}")
 
         child_relations = self.parse_relations(
             relationship_type=RelationshipType.CHILD,

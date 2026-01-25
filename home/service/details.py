@@ -129,11 +129,13 @@ class DatasetDetailsService(GenericService):
         self.client = self._get_catalogue_client()
 
         self.table_metadata = self.client.get_table_details(urn)
+        # print(f"\n\nTable Metadata: {self.table_metadata}")
 
         if not self.table_metadata:
             raise ObjectDoesNotExist(urn)
 
         relationships = self.table_metadata.relationships or {}
+        # print(f"\n\nRelationships: {relationships}")
 
         self.parent_entity = _parse_parent(relationships)
 
