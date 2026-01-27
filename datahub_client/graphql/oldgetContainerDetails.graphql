@@ -32,7 +32,13 @@ query getContainer($urn: String!) {
       typeNames
     }
     relationships(
-      input: {types: ["IsPartOf"], direction: INCOMING, start: 0, count: 500, includeSoftDelete: false}
+      input: {
+        types: ["IsPartOf"]
+        direction: INCOMING
+        start: 0
+        count: 500
+        includeSoftDelete: false
+      }
     ) {
       total
       relationships {
@@ -46,25 +52,6 @@ query getContainer($urn: String!) {
               lastModified {
                 time
               }
-            }
-            tags {
-              tags {
-                tag {
-                  urn
-                }
-              }
-            }
-            subTypes {
-              typeNames
-            }
-          }
-          ... on Container {
-            urn
-            properties {
-              name
-              description
-              qualifiedName
-              externalUrl
             }
             tags {
               tags {
@@ -94,6 +81,7 @@ query getContainer($urn: String!) {
     }
   }
 }
+
 fragment platformFields on DataPlatform {
   urn
   type
@@ -221,7 +209,6 @@ fragment parentContainerFields on Container {
   urn
   properties {
     name
-    description
   }
   subTypes {
     typeNames
