@@ -7,6 +7,7 @@ from django.core.validators import URLValidator
 from datahub_client.entities import (
     DashboardEntityMapping,
     DatabaseEntityMapping,
+    DatahubSubtype,
     EntityRef,
     PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
@@ -72,13 +73,18 @@ class DatabaseDetailsService(GenericService):
         self.template = "details_database.html"
 
     def _get_context(self):
+        sorted_entities = sorted(
+            self.entities_in_database,
+            key=lambda d: d.entity_ref.display_name,
+        )
+
+        # Determine if children are schemas or tables
+        has_schemas = all(entity.entity_type == DatahubSubtype.SCHEMA.value for entity in self.entities_in_database)
+
         context = {
             "entity": self.database_metadata,
             "entity_type": "Database",
-            "tables": sorted(
-                self.entities_in_database,
-                key=lambda d: d.entity_ref.display_name,
-            ),
+            "schemas" if has_schemas else "tables": sorted_entities,
             "h1_value": self.database_metadata.name,
             "is_esda": self.is_esda,
             "is_access_requirements_a_url": is_access_requirements_a_url(

@@ -493,7 +493,6 @@ class EntityParser:
                     )
                 else:
                     entity_type = entity_type_of_relations
-
                 display_name = (
                     relation.get("entity").get("properties").get("name")
                     if relation.get("entity", {}).get("properties") is not None
@@ -765,7 +764,7 @@ class DatabaseParser(ContainerParser):
         child_relations = self.parse_relations(
             relationship_type=RelationshipType.CHILD,
             relations_list=[response["relationships"]],
-            entity_type_of_relations="TABLE",
+            entity_type_of_relations=None,
         )
         relations_to_display = self.list_relations_to_display(child_relations)
 
