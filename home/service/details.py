@@ -106,6 +106,8 @@ class SchemaDetailsService(GenericService):
         if not self.schema_metadata:
             raise ObjectDoesNotExist(urn)
 
+        self.parent_entity = _parse_parent(self.schema_metadata.relationships or {})
+
         self.entities_in_database = self.schema_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()
         self.template = "details_schema.html"
@@ -114,6 +116,8 @@ class SchemaDetailsService(GenericService):
         context = {
             "entity": self.schema_metadata,
             "entity_type": "Schema",
+            "parent_entity": self.parent_entity,
+            "parent_type": DatabaseEntityMapping.url_formatted,
             "tables": sorted(
                 self.entities_in_database,
                 key=lambda d: d.entity_ref.display_name,

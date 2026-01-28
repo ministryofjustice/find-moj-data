@@ -478,9 +478,6 @@ class EntityParser:
         # relations and need to paginate through relations - 10 relations returned as is
         # There may be more than 10 lineage entities but since we currently only care
         # if lineage exists for a dataset we don't need to capture everything
-
-        # We allow only schema subtypes for child relations, otherwise we apply 'Table'
-        # allowed_subtypes = [DatahubSubtype.SCHEMA.value]
         related_entities = []
         for all_relations in relations_list:
             for relation in all_relations.get(relation_key, []):
@@ -494,7 +491,7 @@ class EntityParser:
                         if relation.get("entity").get("subTypes") is not None
                         else [relation.get("entity").get("type")][0]
                     )
-                    # Convert tables subtypes to 'Table' entity type
+                    # Convert subtypes of table to table, else keep original type
                     entity_type = (
                         TableEntityMapping.datahub_type
                         if entity_type in TableEntityMapping.datahub_subtypes
@@ -824,7 +821,6 @@ class SchemaParser(ContainerParser):
             [response.get("parent_container_relations", {})],
         )
         parent_relations_to_display = self.list_relations_to_display(parent_relations)
-
         display_name = custom_properties.readable_name or display_name
         name = custom_properties.readable_name or name
         readable_name = display_name
