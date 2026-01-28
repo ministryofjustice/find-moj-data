@@ -480,7 +480,7 @@ class EntityParser:
         # if lineage exists for a dataset we don't need to capture everything
 
         # We allow only schema subtypes for child relations, otherwise we apply 'Table'
-        allowed_subtypes = [DatahubSubtype.SCHEMA.value]
+        # allowed_subtypes = [DatahubSubtype.SCHEMA.value]
         related_entities = []
         for all_relations in relations_list:
             for relation in all_relations.get(relation_key, []):
@@ -494,8 +494,12 @@ class EntityParser:
                         if relation.get("entity").get("subTypes") is not None
                         else [relation.get("entity").get("type")][0]
                     )
-                    # restrict to allowed subtypes only, default to table
-                    entity_type = entity_type if entity_type in allowed_subtypes else DatahubSubtype.TABLE
+                    # Convert tables subtypes to 'Table' entity type
+                    entity_type = (
+                        TableEntityMapping.datahub_type
+                        if entity_type in TableEntityMapping.datahub_subtypes
+                        else entity_type
+                    )
                 else:
                     entity_type = entity_type_of_relations
                 display_name = (
@@ -813,7 +817,13 @@ class SchemaParser(ContainerParser):
             relations_list=[response["relationships"]],
             entity_type_of_relations="TABLE",
         )
-        relations_to_display = self.list_relations_to_display(child_relations)
+        child_relations_to_display = self.list_relations_to_display(child_relations)
+
+        parent_relations = self.parse_relations(
+            RelationshipType.PARENT,
+            [response.get("parent_container_relations", {})],
+        )
+        parent_relations_to_display = self.list_relations_to_display(parent_relations)
 
         display_name = custom_properties.readable_name or display_name
         name = custom_properties.readable_name or name
@@ -826,7 +836,7 @@ class SchemaParser(ContainerParser):
             name=name,
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
-            relationships=relations_to_display,
+            relationships={**child_relations_to_display, **parent_relations_to_display},
             subject_areas=self.parse_subject_areas(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),
