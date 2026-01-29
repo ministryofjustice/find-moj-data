@@ -80,40 +80,6 @@ query getContainer($urn: String!) {
         }
       }
     }
-    parent_container_relations: relationships(
-      input: {
-        types: ["IsPartOf"]
-        direction: OUTGOING
-        count: 10
-        includeSoftDelete: false
-      }
-    ) {
-      total
-      relationships {
-        entity {
-          urn
-          type
-          ... on Container {
-            subTypes {
-              typeNames
-            }
-            properties {
-              name
-            }
-            tags {
-              tags {
-                tag {
-                  urn
-                }
-              }
-            }
-            subTypes {
-              typeNames
-            }
-          }
-        }
-      }
-    }
     container {
       ...entityContainer
     }
