@@ -105,6 +105,7 @@ class DataHubCatalogueClient:
         self.search_client = SearchClient(self.graph)
 
         self.database_query = get_graphql_query("getContainerDetails")
+        self.schema_query = get_graphql_query("getSchemaDetails")
         self.dataset_query = get_graphql_query("getDatasetDetails")
         self.chart_query = get_graphql_query("getChartDetails")
         self.dashboard_query = get_graphql_query("getDashboardDetails")
@@ -188,7 +189,7 @@ class DataHubCatalogueClient:
 
     def get_schema_details(self, urn: str) -> Schema:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.database_query, {"urn": urn})["container"]
+            response = self.graph.execute_graphql(self.schema_query, {"urn": urn})["container"]
             database_object = SchemaParser().parse_to_entity_object(response, urn)
             return database_object
 
