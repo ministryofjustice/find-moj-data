@@ -491,9 +491,14 @@ class EntityParser:
                         if relation.get("entity").get("subTypes") is not None
                         else [relation.get("entity").get("type")][0]
                     )
+                    # Convert subtypes of table to table, else keep original type
+                    entity_type = (
+                        TableEntityMapping.datahub_type
+                        if entity_type in TableEntityMapping.datahub_subtypes
+                        else entity_type
+                    )
                 else:
                     entity_type = entity_type_of_relations
-
                 display_name = (
                     relation.get("entity").get("properties").get("name")
                     if relation.get("entity", {}).get("properties") is not None
@@ -765,7 +770,7 @@ class DatabaseParser(ContainerParser):
         child_relations = self.parse_relations(
             relationship_type=RelationshipType.CHILD,
             relations_list=[response["relationships"]],
-            entity_type_of_relations="TABLE",
+            entity_type_of_relations=None,
         )
         relations_to_display = self.list_relations_to_display(child_relations)
 
@@ -809,8 +814,13 @@ class SchemaParser(ContainerParser):
             relations_list=[response["relationships"]],
             entity_type_of_relations="TABLE",
         )
-        relations_to_display = self.list_relations_to_display(child_relations)
+        child_relations_to_display = self.list_relations_to_display(child_relations)
 
+        parent_relations = self.parse_relations(
+            RelationshipType.PARENT,
+            [response.get("parent_container_relations", {})],
+        )
+        parent_relations_to_display = self.list_relations_to_display(parent_relations)
         display_name = custom_properties.readable_name or display_name
         name = custom_properties.readable_name or name
         readable_name = display_name
@@ -822,7 +832,7 @@ class SchemaParser(ContainerParser):
             name=name,
             fully_qualified_name=qualified_name,
             description=properties.get("description", ""),
-            relationships=relations_to_display,
+            relationships={**child_relations_to_display, **parent_relations_to_display},
             subject_areas=self.parse_subject_areas(response),
             governance=Governance(
                 data_owner=self.parse_data_owner(response),

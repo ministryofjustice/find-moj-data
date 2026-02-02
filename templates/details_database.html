@@ -10,10 +10,15 @@
       {% endif %}
       </div>
     <div class="govuk-grid-column-full">
-      {% if tables %}
-      <div class="govuk-heading-m">Database content</div>
-        {% include "partial/download_button.html" with entity_type='database' title="table descriptions" %}
-        {% include "partial/details_container.html" with items=tables title="Database content" name_column="Table name" description_column="Description" %}
+      {% if tables or schemas %}
+        <h2 class="govuk-heading-m">Database content</h2>
+        {% if tables %}
+          {% include "partial/download_button.html" with entity_type='database' title="table descriptions" %}
+          {% include "partial/details_container.html" with items=tables title="Database content" name_column="Table name" description_column="Description" %}
+        {% else %}
+          {% include "partial/download_button.html" with entity_type='database' title="schema descriptions" %}
+          {% include "partial/details_container.html" with items=schemas title="Database content" name_column="Schema name" description_column="Description" %}
+        {% endif %}
       {% else %}
         <h2 class="govuk-heading-m">Database content</h2>
         <p class="govuk-body">This database is missing table information.</p>
