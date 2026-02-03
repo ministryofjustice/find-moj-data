@@ -5,8 +5,8 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       {% if charts %}
-        {% include "partial/download_button.html" with entity_type='dashboard' title="chart descriptions" %}
         <div class="govuk-heading-m">Dashboard content</div>
+        {% include "partial/download_button.html" with entity_type='dashboard' title="chart descriptions" %}
         {% include "partial/details_container.html" with items=charts title="Dashboard content" name_column="Chart name" description_column="Description" %}
       {% else %}
         <h2 class="govuk-heading-m">Dashboard content</h2>
