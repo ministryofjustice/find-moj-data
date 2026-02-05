@@ -17,7 +17,7 @@
       {% endif %}
     </dd>
   </div>
-  {% if entity_type == 'Table' %}
+  {% if entity_type == 'Table' or entity_type == "Schema" %}
     <div class="app-metadata-list__row">
       <dt class="app-metadata-list__key">
         Database
@@ -27,7 +27,6 @@
           href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{ parent_entity.display_name }}</a>
       </dd>
     </div>
-
   {% endif %}
   {% if entity.custom_properties.security_classification %}
     <div class="app-metadata-list__row">
