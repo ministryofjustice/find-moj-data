@@ -133,8 +133,8 @@ def get_entity_type_counts_from_datahub(
     Map DataHub entity type and subtype counts to FindMoJdata entity type counts.
 
     For entity types that have subtypes (DATASET, CONTAINER), we sum the
-    subtype counts. For entity types without subtypes (CHART, DASHBOARD,
-    GLOSSARY_TERM), we use the entity type count directly.
+    subtype counts. For entity types without subtypes (CHART, DASHBOARD),
+    we use the entity type count directly.
 
     Args:
         entity_type_counts: Dict mapping DataHub entity type names to counts

@@ -4,6 +4,7 @@ from urllib.parse import quote
 
 import pytest
 
+from datahub_client.entities import FindMoJdataEntityType
 from home.forms.search import SearchForm
 from home.service.search import SearchService
 
@@ -27,16 +28,16 @@ class TestSearchService:
 
     def test_get_context_entity_type_counts(self, search_context):
         """Entity type counts should be in context keyed by enum name."""
-        entity_type_counts = search_context["entity_type_counts"]
+        entity_type_counts = dict(search_context["entity_type_counts"])
         assert entity_type_counts is not None
-        # Verify the counts are keyed by enum name (string)
-        assert "TABLE" in entity_type_counts
-        assert "DATABASE" in entity_type_counts
-        assert "CHART" in entity_type_counts
+        # Verify the counts are keyed by FindMoJdataEntityType enum members
+        assert FindMoJdataEntityType.TABLE in entity_type_counts
+        assert FindMoJdataEntityType.DATABASE in entity_type_counts
+        assert FindMoJdataEntityType.CHART in entity_type_counts
         # Verify the values match the mock
-        assert entity_type_counts["TABLE"] == 50
-        assert entity_type_counts["DATABASE"] == 10
-        assert entity_type_counts["CHART"] == 5
+        assert entity_type_counts[FindMoJdataEntityType.TABLE] == 50
+        assert entity_type_counts[FindMoJdataEntityType.DATABASE] == 10
+        assert entity_type_counts[FindMoJdataEntityType.CHART] == 5
 
     def test_get_context_remove_filter_hrefs(self, search_context, valid_subject_area_choice):
         assert search_context["remove_filter_hrefs"]["Subject area"] == {

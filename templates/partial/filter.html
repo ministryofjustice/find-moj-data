@@ -29,9 +29,9 @@
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
               {% for entity_type, count in entity_type_counts %}
                   <div aria-label="selection will trigger the filter and refresh the search results" class="govuk-checkboxes__item">
-                    <input type="checkbox" name="entity_types" value="{{ entity_type.name }}"class="govuk-checkboxes__input" form="searchform"
+                    <input type="checkbox" name="entity_types" value="{{ entity_type.name }}" class="govuk-checkboxes__input" form="searchform"
                             id="id_entity_types_{{ forloop.counter0 }}" {% if entity_type.name in request.GET|getlist:"entity_types" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="{{ entity_type.id_for_label }}">{{ entity_type.value }} ({{ count }})</label>
+                    <label class="govuk-label govuk-checkboxes__label" for="id_entity_types_{{ forloop.counter0 }}">{{ entity_type.value }} ({{ count }})</label>
                   </div>
               {% endfor %}
             </div>

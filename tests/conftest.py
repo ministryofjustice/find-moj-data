@@ -222,7 +222,7 @@ class SearchPage(Page):
     def checked_sort_option(self) -> WebElement:
         return self.selenium.find_element(By.CSS_SELECTOR, "input:checked[name='sort']")
 
-    def subject_area_select(self) -> WebElement:
+    def subject_area_select(self) -> Select:
         return Select(self.selenium.find_element(By.ID, "id_subject_area"))
 
     def select_subject_area(self, subject_area) -> WebElement:
@@ -823,7 +823,6 @@ def mock_entity_type_counts_response(mock_catalogue, entity_type_counts=None):
             FindMoJdataEntityType.DASHBOARD: 3,
             FindMoJdataEntityType.PUBLICATION_DATASET: 8,
             FindMoJdataEntityType.PUBLICATION_COLLECTION: 2,
-            FindMoJdataEntityType.GLOSSARY_TERM: 20,
         }
     mock_catalogue.get_entity_type_counts.return_value = entity_type_counts
 
