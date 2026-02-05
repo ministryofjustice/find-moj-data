@@ -1,6 +1,7 @@
 name: Create issue for periodic database housekeeping
 permissions:
     issues: write
+    projects: write
 
 on:
     workflow_dispatch:
@@ -20,9 +21,8 @@ jobs:
                   now=$(date +'%Y-%m-%d')
                   title=" :construction: Periodic Database Housekeeping Tasks"
                   label="House Keeping"
-                  project="Data Catalogue"
                   assignee="DeanWillicombe82,mkjmckinlay,kmalik-justice-digital"
                   body="It's time to perform the scheduled database housekeeping tasks to ensure optimal performance and maintenance.
                   Please remember to follow the steps outlined [here](https://runbooks.find-moj-data.service.justice.gov.uk/documentation/runbooks/020-house-keeping.html#house-keeping)."
 
-                  gh issue create --title "${title}" --body "${body}" --label "${label}" --assignee "${assignee}" --project "${project}"
+                  gh issue create --title "${title}" --body "${body}" --label "${label}" --assignee "${assignee}"
