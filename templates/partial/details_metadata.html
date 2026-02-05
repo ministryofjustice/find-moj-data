@@ -6,53 +6,68 @@
 
   <div class="app-metadata-list__row">
     <dt class="app-metadata-list__key">
-      Subject area{{entity.subject_areas|length|pluralize}}
+      Subject area{{ entity.subject_areas|length|pluralize }}
     </dt>
     <dd class="app-metadata-list__value">
       {% for subject_area in entity.subject_areas %}
-      {{ subject_area.display_name }}{% if not forloop.last %}, {% endif %}
+        {{ subject_area.display_name }}{% if not forloop.last %}, {% endif %}
       {% endfor %}
       {% if not entity.subject_areas %}
-      Not provided
+        Not provided
       {% endif %}
     </dd>
   </div>
-
+  {% if entity_type == 'Table' or entity_type == "Schema" %}
+    <div class="app-metadata-list__row">
+      <dt class="app-metadata-list__key">
+        Database
+      </dt>
+      <dd class="app-metadata-list__value">
+        <a
+          href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{ parent_entity.display_name }}</a>
+      </dd>
+    </div>
+  {% endif %}
   {% if entity.custom_properties.security_classification %}
-  <div class="app-metadata-list__row">
-    <dt class="app-metadata-list__key">
-      Security classification
-    </dt>
-    <dd class="app-metadata-list__value">
-      {{entity.custom_properties.security_classification}}
-    </dd>
-  </div>
+    <div class="app-metadata-list__row">
+      <dt class="app-metadata-list__key">
+        Security classification
+      </dt>
+      <dd class="app-metadata-list__value">
+        {{ entity.custom_properties.security_classification }}
+      </dd>
+    </div>
   {% endif %}
   {% switch 'display-result-tags' %}
-  {% if entity.tags_to_display %}
-  <div class="app-metadata-list__row">
-    <dt class="app-metadata-list__key">
-      Tags
-    </dt>
-    <dd class="app-metadata-list__value">
-      {% for tag in entity.tags_to_display %}
-      <a aria-label="link to search results for all entities tagged {{ tag }}" href="{% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
-      {% endfor %}
-    </dd>
-  </div>
-  {% endif %}
+    {% if entity.tags_to_display %}
+      <div class="app-metadata-list__row">
+        <dt class="app-metadata-list__key">
+          Tags
+        </dt>
+        <dd class="app-metadata-list__value">
+          {% for tag in entity.tags_to_display %}
+            <a aria-label="link to search results for all entities tagged {{ tag }}" href="
+
+              {% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>
+            {% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </dd>
+      </div>
+    {% endif %}
   {% endswitch %}
 
   {% if entity.glossary_terms %}
-  <div class="app-metadata-list__row">
-    <dt class="app-metadata-list__key">
-      Glossary terms
-    </dt>
-    <dd class="app-metadata-list__value">
-      {% for term in entity.glossary_terms %}
-      <a aria-label="definition for glossary term {{ term }}" href="{% url 'home:glossary_term' urn=term.urn %}">{{ term.display_name }}</a>{% if not forloop.last %}, {% endif %}
-      {% endfor %}
-    </dd>
-  </div>
+    <div class="app-metadata-list__row">
+      <dt class="app-metadata-list__key">
+        Glossary terms
+      </dt>
+      <dd class="app-metadata-list__value">
+        {% for term in entity.glossary_terms %}
+          <a aria-label="definition for glossary term {{ term }}"
+             href="{% url 'home:glossary_term' urn=term.urn %}">{{ term.display_name }}</a>{% if not forloop.last %},
+        {% endif %}
+        {% endfor %}
+      </dd>
+    </div>
   {% endif %}
 </dl>
