@@ -1,0 +1,18 @@
+query agrregateTypes($query: String!, $types: [EntityType!], $filters: [AndFilterInput!]) {
+  aggregateAcrossEntities(
+  input: {
+    query: $query
+    orFilters: $filters
+    types: $types
+    facets: ["typeNames", "_entityType"]
+     }) {
+       facets {
+         field
+         displayName
+         aggregations {
+           value
+           count
+         }
+       }
+     }
+   }

@@ -15,6 +15,7 @@ from datahub_client.entities import (
     DatabaseEntityMapping,
     EntitySummary,
     FindMoJdataEntityMapper,
+    FindMoJdataEntityType,
     GlossaryTermRef,
     PublicationCollection,
     PublicationDataset,
@@ -23,6 +24,7 @@ from datahub_client.entities import (
     SchemaEntityMapping,
     Table,
     TableEntityMapping,
+    get_entity_type_counts_from_datahub,
 )
 from datahub_client.exceptions import ConnectivityError, EntityDoesNotExist
 from datahub_client.graphql.loader import get_graphql_query
@@ -118,6 +120,29 @@ class DataHubCatalogueClient:
             exists = False
 
         return exists
+
+    def get_entity_type_counts(
+        self,
+        query: str = "*",
+        filters: Sequence[MultiSelectFilter] | None = None,
+    ) -> dict[FindMoJdataEntityType, int]:
+        """
+        Get entity type counts for the given query and filters.
+
+        Returns a dict mapping FindMoJdataEntityType to counts.
+        """
+        if filters is None:
+            filters = []
+
+        datahub_entity_type_counts, datahub_subtype_counts = self.search_client.get_entity_type_counts(
+            query=query,
+            filters=filters,
+        )
+
+        return get_entity_type_counts_from_datahub(
+            datahub_entity_type_counts,
+            datahub_subtype_counts,
+        )
 
     def search(
         self,
