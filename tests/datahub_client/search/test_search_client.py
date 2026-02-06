@@ -1197,5 +1197,125 @@ def test_dynamic_tags(mock_graph, searcher):
         facets=SearchFacets(facets={"tags": [FacetOption(value="urn:li:tag:Prison", label="Prison", count=4)]}),
         tags=[tag],
     )
-    print("response", response)
     assert response == expected
+
+
+class TestGetEntityTypeCounts:
+    """Tests for the get_entity_type_counts method on SearchClient."""
+
+    def test_get_entity_type_counts_returns_both_dicts(self, mock_graph, searcher):
+        """Test that get_entity_type_counts returns entity type and subtype counts."""
+        datahub_response = {
+            "aggregateAcrossEntities": {
+                "facets": [
+                    {
+                        "field": "_entityType",
+                        "displayName": "Type",
+                        "aggregations": [
+                            {"value": "DATASET", "count": 100},
+                            {"value": "CONTAINER", "count": 50},
+                            {"value": "CHART", "count": 25},
+                        ],
+                    },
+                    {
+                        "field": "typeNames",
+                        "displayName": "Sub Types",
+                        "aggregations": [
+                            {"value": "Table", "count": 60},
+                            {"value": "Model", "count": 40},
+                            {"value": "Database", "count": 30},
+                            {"value": "Schema", "count": 20},
+                        ],
+                    },
+                ]
+            }
+        }
+        mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        entity_type_counts, subtype_counts = searcher.get_entity_type_counts()
+
+        assert entity_type_counts == {"DATASET": 100, "CONTAINER": 50, "CHART": 25}
+        assert subtype_counts == {
+            "Table": 60,
+            "Model": 40,
+            "Database": 30,
+            "Schema": 20,
+        }
+
+    def test_get_entity_type_counts_empty_response(self, mock_graph, searcher):
+        """Test handling of empty facets response."""
+        datahub_response = {"aggregateAcrossEntities": {"facets": []}}
+        mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        entity_type_counts, subtype_counts = searcher.get_entity_type_counts()
+
+        assert entity_type_counts == {}
+        assert subtype_counts == {}
+
+    def test_get_entity_type_counts_with_query(self, mock_graph, searcher):
+        """Test that query parameter is passed to the GraphQL query."""
+        datahub_response = {"aggregateAcrossEntities": {"facets": []}}
+        mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        searcher.get_entity_type_counts(query="test search")
+
+        # Verify the query was passed in the variables
+        call_args = mock_graph.execute_graphql.call_args
+        # call_args is (args, kwargs) - variables are passed as second positional arg
+        variables = call_args[0][1]
+        assert variables["query"] == "test search"
+
+    def test_get_entity_type_counts_with_filters(self, mock_graph, searcher):
+        """Test that filters are passed to the GraphQL query."""
+        datahub_response = {"aggregateAcrossEntities": {"facets": []}}
+        mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        filters = [MultiSelectFilter("tags", ["urn:li:tag:test"])]
+        searcher.get_entity_type_counts(filters=filters)
+
+        # Verify execute_graphql was called
+        assert mock_graph.execute_graphql.called
+
+    def test_get_entity_type_counts_only_entity_type_facet(self, mock_graph, searcher):
+        """Test when only entity type facet is returned."""
+        datahub_response = {
+            "aggregateAcrossEntities": {
+                "facets": [
+                    {
+                        "field": "_entityType",
+                        "displayName": "Type",
+                        "aggregations": [
+                            {"value": "CHART", "count": 10},
+                        ],
+                    },
+                ]
+            }
+        }
+        mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        entity_type_counts, subtype_counts = searcher.get_entity_type_counts()
+
+        assert entity_type_counts == {"CHART": 10}
+        assert subtype_counts == {}
+
+    def test_get_entity_type_counts_only_subtype_facet(self, mock_graph, searcher):
+        """Test when only subtype facet is returned."""
+        datahub_response = {
+            "aggregateAcrossEntities": {
+                "facets": [
+                    {
+                        "field": "typeNames",
+                        "displayName": "Sub Types",
+                        "aggregations": [
+                            {"value": "Table", "count": 50},
+                        ],
+                    },
+                ]
+            }
+        }
+        mock_graph.execute_graphql = MagicMock(return_value=datahub_response)
+
+        entity_type_counts, subtype_counts = searcher.get_entity_type_counts()
+
+        assert entity_type_counts == {}
+        assert subtype_counts == {"Table": 50}
