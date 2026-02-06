@@ -29,6 +29,7 @@ from datahub_client.entities import (
     EntityRef,
     EntitySummary,
     FindMoJdataEntityMapper,
+    FindMoJdataEntityType,
     GlossaryTermEntityMapping,
     GlossaryTermRef,
     Governance,
@@ -221,7 +222,7 @@ class SearchPage(Page):
     def checked_sort_option(self) -> WebElement:
         return self.selenium.find_element(By.CSS_SELECTOR, "input:checked[name='sort']")
 
-    def subject_area_select(self) -> WebElement:
+    def subject_area_select(self) -> Select:
         return Select(self.selenium.find_element(By.ID, "id_subject_area"))
 
     def select_subject_area(self, subject_area) -> WebElement:
@@ -779,6 +780,7 @@ def mock_catalogue(
     mock_get_tags_response(mock_catalogue)
     mock_get_publication_collection_details_response(mock_catalogue, example_publication_collection)
     mock_get_publication_dataset_details_response(mock_catalogue, example_publication_dataset)
+    mock_entity_type_counts_response(mock_catalogue)
 
     yield mock_catalogue
 
@@ -809,6 +811,20 @@ def mock_get_database_details_response(mock_catalogue, example_database):
 def mock_search_response(mock_catalogue, total_results=0, page_results=()):
     search_response = SearchResponse(total_results=total_results, page_results=page_results)
     mock_catalogue.search.return_value = search_response
+
+
+def mock_entity_type_counts_response(mock_catalogue, entity_type_counts=None):
+    if entity_type_counts is None:
+        entity_type_counts = {
+            FindMoJdataEntityType.TABLE: 50,
+            FindMoJdataEntityType.DATABASE: 10,
+            FindMoJdataEntityType.SCHEMA: 15,
+            FindMoJdataEntityType.CHART: 5,
+            FindMoJdataEntityType.DASHBOARD: 3,
+            FindMoJdataEntityType.PUBLICATION_DATASET: 8,
+            FindMoJdataEntityType.PUBLICATION_COLLECTION: 2,
+        }
+    mock_catalogue.get_entity_type_counts.return_value = entity_type_counts
 
 
 def mock_list_subject_areas_response(mock_catalogue, subject_areas):
