@@ -27,7 +27,7 @@ dependencies = [
     "acryl-datahub[datahub-rest]>=1.1.0.4,<2",
     "deepdiff>=8.6.0,<9",
     "boto3>=1.38.46,<2",
-    "setuptools==80.10.2",
+    "setuptools==81.0.0",
     "cffi==2.0.0",
     "django==5.2.11",
 ]
