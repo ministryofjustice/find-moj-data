@@ -142,11 +142,13 @@ class TestSearchInteractions:
 
         filters = self.search_page.get_all_filter_names()
         self.select_subject_area(subject_area)
-        for filter in filters:
-            self.click_option(filter)
-            self.search_page.sleep()
-            self.click_on_the_apply_filters_button()
 
+        for _filter in filters:
+            self.click_option(_filter)
+            self.search_page.sleep()
+
+        self.click_on_the_apply_filters_button()
+        self.search_page.sleep(1)
         self.verify_subject_area_selected(subject_area)
         self.verify_checkbox_filters_selected(filters)
         self.click_clear_filters()
