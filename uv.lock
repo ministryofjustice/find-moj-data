@@ -574,7 +574,7 @@ requires-dist = [
     { name = "django-prometheus", specifier = ">=2.4.1,<3" },
     { name = "django-waffle", specifier = ">=5.0.0,<6" },
     { name = "email-validator", specifier = "==2.3.0" },
-    { name = "gunicorn", specifier = ">=23.0.0,<24" },
+    { name = "gunicorn", specifier = ">=23.0.0,<26" },
     { name = "markdown", specifier = "~=3.8" },
     { name = "markdown-headdown", specifier = ">=0.1.3,<0.2" },
     { name = "nltk", specifier = ">=3.9.1,<4" },
