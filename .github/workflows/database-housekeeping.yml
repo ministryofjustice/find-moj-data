@@ -1,6 +1,7 @@
 name: Create issue for periodic database housekeeping
 permissions:
     issues: write
+    projects: write
 
 on:
     workflow_dispatch:
