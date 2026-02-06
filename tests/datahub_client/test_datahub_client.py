@@ -645,6 +645,7 @@ class TestCatalogueClientWithDatahub:
                                         }
                                     ]
                                 },
+                                "subTypes": {"typeNames": ["TABLE"]},
                             }
                         },
                         {
@@ -656,6 +657,7 @@ class TestCatalogueClientWithDatahub:
                                     "description": "Dataset to hide",
                                 },
                                 "tags": {"tags": []},
+                                "subTypes": {"typeNames": ["TABLE"]},
                             }
                         },
                     ],

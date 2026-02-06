@@ -58,13 +58,28 @@ query getContainer($urn: String!) {
               typeNames
             }
           }
+        }
+      }
+    }
+    parent_container_relations: relationships(
+      input: {
+        types: ["IsPartOf"]
+        direction: OUTGOING
+        count: 10
+        includeSoftDelete: false
+      }
+    ) {
+      total
+      relationships {
+        entity {
+          urn
+          type
           ... on Container {
-            urn
+            subTypes {
+              typeNames
+            }
             properties {
               name
-              description
-              qualifiedName
-              externalUrl
             }
             tags {
               tags {
