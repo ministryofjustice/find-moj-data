@@ -12,7 +12,7 @@ repos:
       - id: check-merge-conflict
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.14
+    rev: v0.15.0
     hooks:
       - id: ruff
         name: ruff lint
@@ -28,6 +28,6 @@ repos:
         exclude: 'base\.html|package-lock\.json'
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.27
+    rev: 0.10.0
     hooks:
       - id: uv-lock

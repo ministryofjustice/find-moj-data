@@ -17,12 +17,11 @@ updates:
       dev-dependencies:
         applies-to: version-updates
         patterns:
-          - "black"
           - "faker"
-          - "flake8"
-          - "isort"
+          - "freezegun"
           - "pre-commit"
           - "pytest*"
+          - "ruff"
           - "selenium"
       django-dependencies:
         applies-to: version-updates
