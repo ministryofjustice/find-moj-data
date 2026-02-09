@@ -493,7 +493,7 @@ class EntityParser:
                     )
                     # Convert subtypes of table to table, else keep original type
                     entity_type = (
-                        TableEntityMapping.datahub_type
+                        TableEntityMapping.find_moj_data_type
                         if entity_type in TableEntityMapping.datahub_subtypes
                         else entity_type
                     )
