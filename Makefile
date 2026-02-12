@@ -79,7 +79,7 @@ unit:
 
 # Run integration tests. Requires chromedriver - version works with chromedriver 127.0.1 use - `npm install -g chromedriver@127.0.1`
 integration:
-	TESTING=true $(BUILD_COMMAND)  pytest tests/integration --axe-version 4.9.1 --chromedriver-path $$(which chromedriver)
+	TESTING=true $(BUILD_COMMAND)  pytest tests/integration --axe-version 4.11.1 --chromedriver-path $$(which chromedriver)
 
 end_to_end:
 	TESTING=true $(BUILD_COMMAND)  pytest tests/end_to_end --chromedriver-path $$(which chromedriver)
