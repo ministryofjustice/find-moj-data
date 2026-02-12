@@ -7,7 +7,7 @@
     "govuk-frontend": "^5.14.0",
     "jest-environment-jsdom": "^30.2.0",
     "sass": "^1.97.3",
-    "glob": "^13.0.1"
+    "glob": "^13.0.2"
   },
   "scripts": {
     "dependencies": "bash scripts/import-static.sh",
@@ -17,6 +17,6 @@
     "@testing-library/jest-dom": "^6.9.1",
     "axe": "^12.1.0",
     "jest": "^30.2.0",
-    "glob": "^13.0.1"
+    "glob": "^13.0.2"
   }
 }
