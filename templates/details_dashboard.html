@@ -6,8 +6,8 @@
     <div class="govuk-grid-column-full">
       {% if charts %}
         <div class="govuk-heading-m">Dashboard content</div>
-        {% include "partial/details_container.html" with items=charts title="Dashboard content" name_column="Chart name" description_column="Description" %}
         {% include "partial/download_button.html" with entity_type='dashboard' title="chart descriptions" %}
+        {% include "partial/details_container.html" with items=charts title="Dashboard content" name_column="Chart name" description_column="Description" %}
       {% else %}
         <h2 class="govuk-heading-m">Dashboard content</h2>
         <p class="govuk-body">This dashboard is missing chart information.</p>
