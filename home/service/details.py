@@ -64,7 +64,6 @@ class DatabaseDetailsService(GenericService):
 
         if not self.database_metadata:
             raise ObjectDoesNotExist(urn)
-
         self.is_esda = any(
             term.display_name == "Essential Shared Data Asset (ESDA)" for term in self.database_metadata.glossary_terms
         )
@@ -80,12 +79,15 @@ class DatabaseDetailsService(GenericService):
 
         # Determine if children are schemas or tables
         has_schemas = all(entity.entity_type == DatahubSubtype.SCHEMA.value for entity in self.entities_in_database)
-
+        if self.database_metadata.custom_properties.readable_name:
+            h1_value = self.database_metadata.custom_properties.readable_name
+        else:
+            h1_value = self.database_metadata.name
         context = {
             "entity": self.database_metadata,
             "entity_type": "Database",
             "schemas" if has_schemas else "tables": sorted_entities,
-            "h1_value": self.database_metadata.name,
+            "h1_value": h1_value,
             "is_esda": self.is_esda,
             "is_access_requirements_a_url": is_access_requirements_a_url(
                 self.database_metadata.custom_properties.access_information.dc_access_requirements
@@ -135,7 +137,6 @@ class SchemaDetailsService(GenericService):
 class DatasetDetailsService(GenericService):
     def __init__(self, urn: str):
         super().__init__()
-
         self.client = self._get_catalogue_client()
 
         self.table_metadata = self.client.get_table_details(urn)
