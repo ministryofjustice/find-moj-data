@@ -48,7 +48,13 @@
       <span class="govuk-caption-l">{{ entity_type }}</span>
       <h1 class="govuk-heading-l">{{ h1_value }}</h1>
     </div>
+
   </div>
+  {% if entity.display_name != h1_value %}
+        <div class="govuk-body">
+        System Name: {{ entity.display_name }}
+        </div>
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-body" style="background: #f4f8fb">
