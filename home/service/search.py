@@ -59,11 +59,11 @@ class SearchService(GenericService):
 
     @staticmethod
     def _format_query_value(query: str) -> str:
-        query_pattern: str = r"^[\"'].+[\"']$"
-        # Datahub treats any query with underscores as exact, so if the string is not quoted,
-        # we convert underscores to spaces so that we get partial matches as well.
-        if not re.match(query_pattern, query):
-            query = query.replace("_", " ")
+        # query_pattern: str = r"^[\"'].+[\"']$"
+        # # Datahub treats any query with underscores as exact, so if the string is not quoted,
+        # # we convert underscores to spaces so that we get partial matches as well.
+        # if not re.match(query_pattern, query):
+        #     query = query.replace("_", " ")
         return query
 
     def _get_search_results(
