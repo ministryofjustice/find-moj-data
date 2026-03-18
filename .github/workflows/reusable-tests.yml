@@ -61,7 +61,7 @@ jobs:
 
       - name: Set up chromedriver
         # https://github.com/marketplace/actions/setup-chromedriver
-        uses: nanasess/setup-chromedriver@v2.3.0
+        uses: nanasess/setup-chromedriver@v2.4.0
 
       - name: Run integration tests
         id: slow-tests
