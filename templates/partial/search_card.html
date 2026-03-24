@@ -11,7 +11,7 @@
           {{ result.result_type.find_moj_data_type.value }}
         </strong>
         <a href="{% url 'home:details' result_type=result_type urn=result.urn %}"
-           class="govuk-link">{% firstof result.metadata.readable_name result.name %}</a>
+           class="govuk-link" style="padding-left: 5px">{% firstof result.metadata.readable_name result.name %}</a>
       {% endwith %}
     </h3>
     {% if result.description %}
