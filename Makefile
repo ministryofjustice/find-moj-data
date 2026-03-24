@@ -37,13 +37,6 @@ install_deps: install_npm_deps install_python_deps
 		exit 1; \
 	fi
 
-# Install trivy for scanning docker images
-install_trivy:
-	if ! command -v trivy >/dev/null 2>&1; then \
-		echo "Trivy is not installed. Please install it from https://trivy.dev/latest/getting-started/installation/"; \
-		exit 1; \
-	fi
-
 # Generate .env file
 $(ENV_FILE): .env.tpl
 	@echo "Setting ENV to ${ENV}"
@@ -127,8 +120,7 @@ update-hooks:
 build-image:
 	docker build  -t $(LOCAL_IMAGE_TAG) .
 
-scan: install_trivy build-image
-	trivy image --scanners vuln $(LOCAL_IMAGE_TAG)
+scan: build-image
+	echo "image scanner needs to be installed and configured to run this command. Previously, Trivy was used for scanning but has been removed due to security concerns."
 
-
-.PHONY: all build install_deps set_env assets migrate setup_waffle_switches run test unit integration clean lint format format-check lint-check lint-fix install-hooks update-hooks build-image scan install_trivy
+.PHONY: all build install_deps set_env assets migrate setup_waffle_switches run test unit integration clean lint format format-check lint-check lint-fix install-hooks update-hooks build-image scan
