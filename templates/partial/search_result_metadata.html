@@ -6,10 +6,11 @@
   {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
     <div class="app-metadata-list__row">
       <dt class="app-metadata-list__key">
-        Database
+        Database:
       </dt>
       <dd class="app-metadata-list__value">
-        {{ result.parent_entity.display_name }}
+        <a
+          href="{% url 'home:details' result_type='database' urn=result.parent_entity.urn %}">{{ result.parent_entity.display_name }}</a>
       </dd>
     </div>
   {% endif %}
@@ -19,7 +20,7 @@
     {% if result.tags_to_display %}
       <div class="app-metadata-list__row">
         <dt class="app-metadata-list__key">
-          Tags
+          Tags:
         </dt>
         <dd class="app-metadata-list__value">
           {% for tag in result.tags_to_display %}
