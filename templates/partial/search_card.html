@@ -1,13 +1,13 @@
 {% load markdown %}
 {% load humanize %}
-
+{% load tag_colour %}
 <div class="govuk-grid-row govuk-summary-card govuk-!-padding-4">
 <p class="govuk-body govuk-!-margin-0">
     {{ result.subject_areas.0.display_name }}
 </p>
     <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
       {% with result_type=result.result_type.url_formatted %}
-        <strong class="govuk-tag">
+        <strong class="govuk-tag {{ result.result_type.find_moj_data_type.value|tag_colour }}">
           {{ result.result_type.find_moj_data_type.value }}
         </strong>
         <a href="{% url 'home:details' result_type=result_type urn=result.urn %}"
