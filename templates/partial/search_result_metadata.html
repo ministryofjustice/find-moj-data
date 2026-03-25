@@ -1,12 +1,13 @@
 {% load waffle_tags %}
 {% load lookup %}
+{% load humanize %}
 <dl class="app-metadata-list">
 
 
   {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
 
     <div class="app-metadata-list__row">
-      <strong>Database:</strong>
+      <strong>Database: </strong>
         <a
           href="{% url 'home:details' result_type='database' urn=result.parent_entity.urn %}">{{ result.parent_entity.display_name }}</a>
     </div>
@@ -17,11 +18,11 @@
     {% if result.tags_to_display %}
       <div class="app-metadata-list__row">
 
-          <strong>Tags:</strong>
+          <strong>Tags: </strong>
 
           {% for tag in result.tags_to_display %}
             <a aria-label="link to search results for all entities tagged {{ tag }}" href="
-              {% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag }}</a>
+              {% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag|lower }}</a>
             {% if not forloop.last %}, {% endif %}
           {% endfor %}
       </div>
