@@ -1,11 +1,10 @@
 {% load waffle_tags %}
 {% load lookup %}
 {% load humanize %}
+
+{% if result.parent_entity or result.tags_to_display %}
 <dl class="app-metadata-list">
-
-
   {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
-
     <div class="app-metadata-list__row">
       <strong>Database: </strong>
         <a aria-label="link to to database {{ result.parent_entity.display_name }}"
@@ -29,3 +28,4 @@
     {% endif %}
   {% endswitch %}
 </dl>
+{% endif %}
