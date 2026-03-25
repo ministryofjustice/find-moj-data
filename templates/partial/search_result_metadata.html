@@ -8,7 +8,7 @@
 
     <div class="app-metadata-list__row">
       <strong>Database: </strong>
-        <a
+        <a aria-label="link to to database {{ result.parent_entity.display_name }}"
           href="{% url 'home:details' result_type='database' urn=result.parent_entity.urn %}">{{ result.parent_entity.display_name }}</a>
     </div>
   {% endif %}
