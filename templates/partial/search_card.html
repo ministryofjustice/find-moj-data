@@ -5,7 +5,7 @@
 <p class="govuk-body-m govuk-!-margin-0" style="color:#505a5f">
     {{ result.subject_areas.0.display_name }}
 </p>
-    <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+    <h3 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-padding-top-0" style="line-height: 1.5">
       {% with result_type=result.result_type.url_formatted %}
         <strong class="govuk-tag {{ result.result_type.find_moj_data_type.value|tag_colour }}">
           {{ result.result_type.find_moj_data_type.value }}
