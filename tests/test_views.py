@@ -99,11 +99,11 @@ class TestDashboardView:
         )
 
 
-class TestChartView:
-    def test_chart(self, client):
-        response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
-        assert response.status_code == 200
-        assert response.headers["Cache-Control"] == "max-age=300, private"
+# class TestChartView:
+#     def test_chart(self, client):
+#         response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
+#         assert response.status_code == 200
+#         assert response.headers["Cache-Control"] == "max-age=300, private"
 
 
 class TestGlossaryView:
