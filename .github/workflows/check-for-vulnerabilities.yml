@@ -1,20 +1,20 @@
-name: 'Check for Vulnerabilities'
+# name: 'Check for Vulnerabilities'
 
-on:
-  schedule:
-    - cron: '0 0 * * 1-5' # every weekday at midnight
+# on:
+#   schedule:
+#     - cron: '0 0 * * 1-5' # every weekday at midnight
 
-permissions: read-all
+# permissions: read-all
 
-jobs:
-  main:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      security-events: write
-    steps:
-      - uses: kunalnagarco/action-cve@v1.14.23
-        with:
-          token: ${{ secrets.VULN_CHECK_PERSONAL_ACCESS_TOKEN }}
-          slack_webhook: ${{ secrets.VULN_CHECK_SLACK_WEBHOOK }}
-          severity: high,critical
+# jobs:
+#   main:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       id-token: write
+#       security-events: write
+#     steps:
+#       - uses: kunalnagarco/action-cve@v1.14.23
+#         with:
+#           token: ${{ secrets.VULN_CHECK_PERSONAL_ACCESS_TOKEN }}
+#           slack_webhook: ${{ secrets.VULN_CHECK_SLACK_WEBHOOK }}
+#           severity: high,critical
