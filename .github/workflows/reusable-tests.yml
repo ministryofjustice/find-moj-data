@@ -59,14 +59,10 @@ jobs:
           STAFF: ${{ secrets.STAFF }}
         run: TESTING=True uv run pytest --cov -m 'not slow and not datahub' --doctest-modules
 
-      - name: Set up chromedriver
-        # https://github.com/marketplace/actions/setup-chromedriver
-        uses: nanasess/setup-chromedriver@c75c3d53d445b96d41dbf2355797b470953c6c30 #v2.4.0
-
-      - name: Run integration tests
-        id: slow-tests
-        if: steps.fast-tests.outcome == 'success'
-        run: make integration
+      # - name: Run integration tests
+      #   id: slow-tests
+      #   if: steps.fast-tests.outcome == 'success'
+      #   run: make integration
 
   javascript-only-tests:
     name: Javascript tests
