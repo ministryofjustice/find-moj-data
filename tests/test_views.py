@@ -100,6 +100,7 @@ class TestDashboardView:
 
 
 class TestChartView:
+    @pytest.mark.django_db
     def test_chart(self, client):
         response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
         assert response.status_code == 200
