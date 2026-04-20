@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.13.5, <3.14"
 
 [[package]]
@@ -563,7 +563,7 @@ requires-dist = [
     { name = "acryl-datahub", extras = ["datahub-rest"], specifier = ">=1.1.0.4,<2" },
     { name = "boto3", specifier = ">=1.38.46,<2" },
     { name = "cffi", specifier = "==2.0.0" },
-    { name = "deepdiff", specifier = ">=8.6.0,<9" },
+    { name = "deepdiff", specifier = ">=8.6.0,<10" },
     { name = "django", specifier = "==5.2.13" },
     { name = "django-azure-auth", specifier = "==2.4.0" },
     { name = "django-debug-toolbar", specifier = ">=5.2.0,<7" },
