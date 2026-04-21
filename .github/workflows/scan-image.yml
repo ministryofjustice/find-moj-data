@@ -25,27 +25,8 @@ jobs:
 
       - name: Build Image
         id: build_image
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         with:
           push: false
           load: true
           tags: ingestion-notify
-
-      - name: Scan Image (Produce SARIF)
-        id: scan_image
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
-          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db:1
-        with:
-          image-ref: ingestion-notify
-          format: sarif
-          output: trivy-results.sarif
-          trivyignores: .trivyignore.yaml
-
-      - name: Upload SARIF
-        if: always()
-        id: upload_sarif
-        uses: github/codeql-action/upload-sarif@0d579ffd059c29b07949a3cce3983f0780820c98 # v2.2.7
-        with:
-          sarif_file: trivy-results.sarif

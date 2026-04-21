@@ -6,13 +6,22 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
+    commit-message:
+      include: "scope"
+      prefix: ":dependabot: github-actions"
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: "daily"
+
   - package-ecosystem: "pip"
+    commit-message:
+      include: "scope"
+      prefix: ":dependabot: pip"
+    cooldown:
+      default-days: 7
     directory: "/"
-    schedule:
-      interval: "daily"
     groups: # see https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
       dev-dependencies:
         applies-to: version-updates
@@ -27,12 +36,25 @@ updates:
         applies-to: version-updates
         patterns:
           - "django*"
+    schedule:
+      interval: "daily"
 
   - package-ecosystem: "npm"
+    commit-message:
+      include: "scope"
+      prefix: ":dependabot: npm"
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: "daily"
+
   - package-ecosystem: "docker"
+    commit-message:
+      include: "scope"
+      prefix: ":dependabot: docker"
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: "daily"

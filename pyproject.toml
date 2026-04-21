@@ -25,11 +25,11 @@ dependencies = [
     "pydantic[email]>=2.11.7,<3",
     "email-validator==2.3.0",
     "acryl-datahub[datahub-rest]>=1.1.0.4,<2",
-    "deepdiff>=8.6.0,<9",
+    "deepdiff>=8.6.0,<10",
     "boto3>=1.38.46,<2",
     "setuptools==82.0.1",
     "cffi==2.0.0",
-    "django==5.2.12",
+    "django==5.2.13",
     "pyjwt==2.12.1",
 ]
 
