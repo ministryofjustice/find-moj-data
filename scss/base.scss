@@ -3,7 +3,7 @@
 @use "node_modules/govuk-frontend/dist/govuk" as * with (
   $govuk-assets-path: vars.$assets-path,
   $govuk-global-styles: vars.$govuk-global-styles,
-  $govuk-new-typography-scale: vars.$govuk-new-typography-scale,
+  //$govuk-new-typography-scale: vars.$govuk-new-typography-scale,
 );
 
 @forward "node_modules/@ministryofjustice/frontend/moj/all"  with (
