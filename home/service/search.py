@@ -184,6 +184,7 @@ class SearchService(GenericService):
             "readable_match_reasons": self._get_match_reason_display_names(),
             "tags": self.results.tags,
             "entity_type_counts": self.entity_type_counts.items(),
+            "excluded_values": ["description", "_index", "fieldPaths", "fieldDescriptions", "id"],
         }
 
         return context

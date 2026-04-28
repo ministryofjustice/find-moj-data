@@ -15,8 +15,10 @@
       {% endwith %}
     </h3>
     {% if result.description %}
-      <div class="govuk-body-m govuk-!-margin-bottom-3">
-        {{ result.description|truncate_snippet:300|markdown:3 }}
+
+      <div class="govuk-body-m govuk-!-margin-bottom-3 govuk-summary-card govuk-!-padding-1">
+      Found in description<br>
+        {{ result.description|truncate_snippet:300|safe }}
       </div>
     {% endif %}
     {% include 'partial/search_result_metadata.html' %}

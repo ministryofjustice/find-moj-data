@@ -3,19 +3,19 @@
 {% load humanize %}
 
 {% if result.parent_entity or result.tags_to_display %}
-<dl class="app-metadata-list">
-  {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
-    <div class="app-metadata-list__row">
-      <strong>Database: </strong>
-        <a aria-label="link to to database {{ result.parent_entity.display_name }}"
-          href="{% url 'home:details' result_type='database' urn=result.parent_entity.urn %}">{{ result.parent_entity.display_name }}</a>
-    </div>
-  {% endif %}
-
-
-  {% switch 'display-result-tags' %}
-    {% if result.tags_to_display %}
+  <dl class="app-metadata-list">
+    {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
       <div class="app-metadata-list__row">
+        <strong>Database: </strong>
+        <a aria-label="link to to database {{ result.parent_entity.display_name }}"
+           href="{% url 'home:details' result_type='database' urn=result.parent_entity.urn %}">{{ result.parent_entity.display_name }}</a>
+      </div>
+    {% endif %}
+
+
+    {% switch 'display-result-tags' %}
+      {% if result.tags_to_display %}
+        <div class="app-metadata-list__row">
 
           <strong>Tags: </strong>
 
@@ -24,8 +24,24 @@
               {% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag|lower }}</a>
             {% if not forloop.last %}, {% endif %}
           {% endfor %}
-      </div>
-    {% endif %}
-  {% endswitch %}
-</dl>
+        </div>
+      {% endif %}
+    {% endswitch %}
+
+    {% with match_reasons=result.matches|lookup:readable_match_reasons|join:", " %}
+      {% if match_reasons %}
+
+        <dd class="app-metadata-list__value">
+          {% for reason in result.matches %}
+          {% if reason not in excluded_values %}
+              <div class="govuk-summary-card govuk-!-padding-1">
+                Found in {{ reason }} (<strong>xxx</strong>)
+              </div>
+            {% endif %}
+          {% endfor %}
+
+        </dd>
+      {% endif %}
+    {% endwith %}
+  </dl>
 {% endif %}
