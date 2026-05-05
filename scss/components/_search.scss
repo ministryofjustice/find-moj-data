@@ -82,3 +82,8 @@
     }
   }
 }
+
+.govuk-tag-search {
+  @extend .govuk-tag--grey;
+  background-color: govuk-colour("black", $variant: "tint-95");
+}
