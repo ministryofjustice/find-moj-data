@@ -1,7 +1,7 @@
 {% if entity.urn %}
   <form action="{% url 'home:details_csv' result_type=entity_type urn=entity.urn %}">
     <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-      Download {{ title }} (CSV format)
+      Export as CSV
     </button>
   </form>
 {% endif %}

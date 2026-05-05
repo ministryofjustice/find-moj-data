@@ -6,7 +6,11 @@ from django.conf import settings
 from django.core.paginator import Paginator
 from nltk.stem import PorterStemmer
 
-from datahub_client.entities import FindMoJdataEntityMapper, Mappers
+from datahub_client.entities import (
+    FindMoJdataEntityMapper,
+    FindMoJdataEntityType,
+    Mappers,
+)
 from datahub_client.search.search_types import (
     MultiSelectFilter,
     SearchResponse,
@@ -35,10 +39,10 @@ class SearchService(GenericService):
             self.form_data = {}
         self.page = page
         self.client = self._get_catalogue_client()
-        self.results = self._get_search_results(page, items_per_page)
+        self.results, self.entity_type_counts = self._get_search_results(page, items_per_page)
         self.highlighted_results = self._highlight_results()
         self.paginator = self._get_paginator(items_per_page)
-        self.context = self._get_context(items_per_page)
+        self.context = self._get_context()
 
     @staticmethod
     def _build_custom_property_filter(filter_param: str, filter_value_list: list[str]) -> list[str]:
@@ -62,7 +66,9 @@ class SearchService(GenericService):
             query = query.replace("_", " ")
         return query
 
-    def _get_search_results(self, page: str, items_per_page: int) -> SearchResponse:
+    def _get_search_results(
+        self, page: str, items_per_page: int
+    ) -> tuple[SearchResponse, dict[FindMoJdataEntityType, int]]:
         form_data = self.form_data
         query = self._format_query_value(form_data.get("query", ""))
 
@@ -102,7 +108,13 @@ class SearchService(GenericService):
             count=items_per_page,
         )
 
-        return results
+        # Get entity type counts (without entity type filter applied)
+        entity_type_counts = self.client.get_entity_type_counts(
+            query=query,
+            filters=filter_value,
+        )
+
+        return results, entity_type_counts
 
     def _get_paginator(self, items_per_page: int) -> Paginator:
         pages_list = list(range(self.results.total_results))
@@ -153,7 +165,7 @@ class SearchService(GenericService):
 
         return {label: (self.form.encode_without_filter(filter_name="subject_area", filter_value=subject_area))}
 
-    def _get_context(self, items_per_page: int) -> dict[str, Any]:
+    def _get_context(self) -> dict[str, Any]:
         if self.results.total_results >= settings.MAX_RESULTS:
             total_results = f"{settings.MAX_RESULTS}+"
         else:
@@ -171,6 +183,7 @@ class SearchService(GenericService):
             "remove_filter_hrefs": self._generate_remove_filter_hrefs(),
             "readable_match_reasons": self._get_match_reason_display_names(),
             "tags": self.results.tags,
+            "entity_type_counts": self.entity_type_counts.items(),
         }
 
         return context

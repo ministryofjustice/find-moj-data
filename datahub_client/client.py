@@ -15,6 +15,7 @@ from datahub_client.entities import (
     DatabaseEntityMapping,
     EntitySummary,
     FindMoJdataEntityMapper,
+    FindMoJdataEntityType,
     GlossaryTermRef,
     PublicationCollection,
     PublicationDataset,
@@ -23,6 +24,7 @@ from datahub_client.entities import (
     SchemaEntityMapping,
     Table,
     TableEntityMapping,
+    get_entity_type_counts_from_datahub,
 )
 from datahub_client.exceptions import ConnectivityError, EntityDoesNotExist
 from datahub_client.graphql.loader import get_graphql_query
@@ -105,6 +107,7 @@ class DataHubCatalogueClient:
         self.search_client = SearchClient(self.graph)
 
         self.database_query = get_graphql_query("getContainerDetails")
+        self.schema_query = get_graphql_query("getSchemaDetails")
         self.dataset_query = get_graphql_query("getDatasetDetails")
         self.chart_query = get_graphql_query("getChartDetails")
         self.dashboard_query = get_graphql_query("getDashboardDetails")
@@ -117,6 +120,29 @@ class DataHubCatalogueClient:
             exists = False
 
         return exists
+
+    def get_entity_type_counts(
+        self,
+        query: str = "*",
+        filters: Sequence[MultiSelectFilter] | None = None,
+    ) -> dict[FindMoJdataEntityType, int]:
+        """
+        Get entity type counts for the given query and filters.
+
+        Returns a dict mapping FindMoJdataEntityType to counts.
+        """
+        if filters is None:
+            filters = []
+
+        datahub_entity_type_counts, datahub_subtype_counts = self.search_client.get_entity_type_counts(
+            query=query,
+            filters=filters,
+        )
+
+        return get_entity_type_counts_from_datahub(
+            datahub_entity_type_counts,
+            datahub_subtype_counts,
+        )
 
     def search(
         self,
@@ -188,7 +214,7 @@ class DataHubCatalogueClient:
 
     def get_schema_details(self, urn: str) -> Schema:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.database_query, {"urn": urn})["container"]
+            response = self.graph.execute_graphql(self.schema_query, {"urn": urn})["container"]
             database_object = SchemaParser().parse_to_entity_object(response, urn)
             return database_object
 

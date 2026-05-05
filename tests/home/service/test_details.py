@@ -163,13 +163,79 @@ class TestDatabaseDetailsService:
         assert context["entity"].custom_properties == custom_properties
         assert context["entity"].custom_properties.further_information.dc_slack_channel_name == "test"
 
-    def test_database_entities_in_context(self, example_database: Database):
+    def test_database_with_table_children_has_tables_in_context(self, example_database: Database):
+        """
+        Tests that when a database has TABLE children, the context contains 'tables' key.
+        """
         service = DatabaseDetailsService("example_database")
         context = service.context
 
         expected = example_database.relationships[RelationshipType.CHILD]
 
+        assert "tables" in context
+        assert "schemas" not in context
         assert context["tables"] == expected
+
+    def test_database_with_schema_children_has_schemas_in_context(self, mock_catalogue):
+        """
+        Tests that when a database has SCHEMA children, the context contains 'schemas' key
+        instead of 'tables'.
+        """
+        schema_relations = {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(urn="urn:li:container:fake_schema", display_name="fake_schema"),
+                    description="schema description",
+                    tags=[],
+                    entity_type="Schema",
+                )
+            ]
+        }
+        mock_database = generate_database_metadata(
+            name="database_with_schemas",
+            relations=schema_relations,
+        )
+        mock_catalogue.get_database_details.return_value = mock_database
+
+        service = DatabaseDetailsService("database_with_schemas")
+        context = service.context
+
+        assert "schemas" in context
+        assert "tables" not in context
+        assert context["schemas"] == schema_relations[RelationshipType.CHILD]
+
+    def test_database_with_multiple_schema_children(self, mock_catalogue):
+        """
+        Tests that when a database has multiple SCHEMA children, all are included in context.
+        """
+        schema_relations = {
+            RelationshipType.CHILD: [
+                EntitySummary(
+                    entity_ref=EntityRef(urn="urn:li:container:schema_a", display_name="schema_a"),
+                    description="schema A description",
+                    tags=[],
+                    entity_type="Schema",
+                ),
+                EntitySummary(
+                    entity_ref=EntityRef(urn="urn:li:container:schema_b", display_name="schema_b"),
+                    description="schema B description",
+                    tags=[],
+                    entity_type="Schema",
+                ),
+            ]
+        }
+        mock_database = generate_database_metadata(
+            name="database_with_multiple_schemas",
+            relations=schema_relations,
+        )
+        mock_catalogue.get_database_details.return_value = mock_database
+
+        service = DatabaseDetailsService("database_with_multiple_schemas")
+        context = service.context
+
+        assert "schemas" in context
+        assert "tables" not in context
+        assert len(context["schemas"]) == 2
 
 
 class TestChartDetailsService:

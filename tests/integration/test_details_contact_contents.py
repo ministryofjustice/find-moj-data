@@ -51,7 +51,7 @@ class TestDetailsPageContactDetails:
         [
             (
                 "",
-                "Learn how to access this data in the Analytical Platform (opens in new tab)",
+                "This asset is available on the Analytical Platform. You may need to request access.\nLearn how to access this data in the Analytical Platform (opens in new tab)",
             ),
             # ( commented out as we're hiding references to data custodians for now
             #     "To access these data you need to seek permission from the data custodian by email",
@@ -101,7 +101,7 @@ class TestDetailsPageContactDetails:
                 "",
                 "",
                 "",
-                "Learn how to access this data in the Analytical Platform (opens in new tab)",
+                "This asset is available on the Analytical Platform. You may need to request access.\nLearn how to access this data in the Analytical Platform (opens in new tab)",
             ),
         ],
     )

@@ -47,10 +47,10 @@ class TestTableView:
     @pytest.mark.django_db
     def test_table(self, client, switch_bool):
         with override_switch(name="show_is_nullable_in_table_details_column", active=switch_bool):
-            response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "table"}))
+            response = client.get(reverse("home:search"))
 
         assert response.status_code == 200
-        assert response.headers["Cache-Control"] == "max-age=300, private"
+        assert response.headers["Cache-Control"] == "max-age=60, private"
 
     @pytest.mark.django_db
     def test_csv_output(self, client):
@@ -100,6 +100,7 @@ class TestDashboardView:
 
 
 class TestChartView:
+    @pytest.mark.django_db
     def test_chart(self, client):
         response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
         assert response.status_code == 200

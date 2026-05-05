@@ -17,16 +17,7 @@
   <nav class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="{% url 'home:search' %}?{{ request.session.last_search|default:'' }}">Search</a>
-      </li>
-      {% if parent_entity %}
-        <li class="govuk-breadcrumbs__list-item">
-          <a class="govuk-breadcrumbs__link"
-             href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{ parent_entity.display_name }}</a>
-        </li>
-      {% endif %}
-      <li class="govuk-breadcrumbs__list-item" aria-current="page">
-        <a class="govuk-breadcrumbs__link" href="{{ request.path }}">{{ entity.name }}</a>
+        <a class="govuk-back-link" href="{% url 'home:search' %}?{{ request.session.last_search|default:'' }}">Back to search results</a>
       </li>
     </ol>
   </nav>
@@ -53,26 +44,28 @@
     </div>
   {% endif %}
   <div class="govuk-grid-row app-header-negative-padding">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-column-full govuk-heading-l">
       <span class="govuk-caption-l">{{ entity_type }}</span>
-      <h1 class="govuk-heading-l">{{ h1_value }}</h1>
+      <h1 class="govuk-heading-l govuk-!-margin-0">{{ h1_value }}</h1>
+      {% if entity.display_name != h1_value %}
+        <div class="govuk-body">
+          <span style="color:#505a5f">System name:</span> {{ entity.display_name }}
+        </div>
+  {% endif %}
     </div>
   </div>
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-body" style="background: #f4f8fb">
         <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-4">
-          <div class="govuk-grid-column-one-third">
+          <div class="govuk-grid-column-one-half">
             <h1 class="govuk-heading-s govuk-!-margin-0">Data last updated</h1>
             <div class="govuk-body-s">{{ entity.data_last_modified | date:"j F Y" | default:'Check source'}}</div>
           </div>
-          <div class="govuk-grid-column-one-third">
+          <div class="govuk-grid-column-one-half">
             <h1 class="govuk-heading-s govuk-!-margin-0">Refresh period</h1>
             <div class="govuk-body-s">{{ entity.custom_properties.data_summary.refresh_period | default:'Check source' }}</div>
-          </div>
-          <div class="govuk-grid-column-one-third">
-            <h1 class="govuk-heading-s govuk-!-margin-0">Entry last synced</h1>
-            <div class="govuk-body-s">{{ entity.metadata_last_ingested|timesince|format_timesince }} ago</div>
           </div>
         </div>
 

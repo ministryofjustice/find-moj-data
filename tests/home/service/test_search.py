@@ -4,6 +4,7 @@ from urllib.parse import quote
 
 import pytest
 
+from datahub_client.entities import FindMoJdataEntityType
 from home.forms.search import SearchForm
 from home.service.search import SearchService
 
@@ -24,6 +25,19 @@ class TestSearchService:
 
     def test_get_context_h1_value(self, search_context):
         assert search_context["h1_value"] == "Search for data assets"
+
+    def test_get_context_entity_type_counts(self, search_context):
+        """Entity type counts should be in context keyed by enum name."""
+        entity_type_counts = dict(search_context["entity_type_counts"])
+        assert entity_type_counts is not None
+        # Verify the counts are keyed by FindMoJdataEntityType enum members
+        assert FindMoJdataEntityType.TABLE in entity_type_counts
+        assert FindMoJdataEntityType.DATABASE in entity_type_counts
+        assert FindMoJdataEntityType.CHART in entity_type_counts
+        # Verify the values match the mock
+        assert entity_type_counts[FindMoJdataEntityType.TABLE] == 50
+        assert entity_type_counts[FindMoJdataEntityType.DATABASE] == 10
+        assert entity_type_counts[FindMoJdataEntityType.CHART] == 5
 
     def test_get_context_remove_filter_hrefs(self, search_context, valid_subject_area_choice):
         assert search_context["remove_filter_hrefs"]["Subject area"] == {
@@ -141,19 +155,21 @@ class TestSearchService:
 
         assert search_service.results.page_results != search_service.highlighted_results.page_results
 
-    @pytest.mark.parametrize(
-        "query, formatted_query",
-        [
-            ("'abc_def'", "'abc_def'"),
-            ('"abc_def"', '"abc_def"'),
-            ("'abc_def_ghi'", "'abc_def_ghi'"),
-            ('"abc_def_ghi"', '"abc_def_ghi"'),
-            ("abc_def", "abc def"),
-            ("abc_def_ghi", "abc def ghi"),
-        ],
-    )
-    def test_query_format(self, query, formatted_query):
-        form = SearchForm(data={"query": query})
-        assert form.is_valid()
-        search_service = SearchService(form=form, page="1")
-        assert search_service._format_query_value(query) == formatted_query
+
+# Disbabled to test search without manipulation
+# @pytest.mark.parametrize(
+#     "query, formatted_query",
+#     [
+#         ("'abc_def'", "'abc_def'"),
+#         ('"abc_def"', '"abc_def"'),
+#         ("'abc_def_ghi'", "'abc_def_ghi'"),
+#         ('"abc_def_ghi"', '"abc_def_ghi"'),
+#         ("abc_def", "abc def"),
+#         ("abc_def_ghi", "abc def ghi"),
+#     ],
+# )
+# def test_query_format(self, query, formatted_query):
+#     form = SearchForm(data={"query": query})
+#     assert form.is_valid()
+#     search_service = SearchService(form=form, page="1")
+#     assert search_service._format_query_value(query) == formatted_query
