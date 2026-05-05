@@ -17,7 +17,7 @@
     {% if result.description %}
 
       <div class="govuk-body-m govuk-!-margin-bottom-3 govuk-summary-card govuk-!-padding-1">
-      Found in description<br>
+        <div class="found-in">Found in description</div>
         {{ result.description|truncate_snippet:300|safe }}
       </div>
     {% endif %}

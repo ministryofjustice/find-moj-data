@@ -197,6 +197,9 @@ class SearchService(GenericService):
                 "name",
                 "database",
                 "tags",
+                "customProperties",
+                "Location",
+                "qualifiedName",
             ],
         }
 

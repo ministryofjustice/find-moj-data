@@ -34,7 +34,7 @@
         <dd class="app-metadata-list__value">
           {% for reason, value in result.matches.items %}
           {% if reason not in excluded_values %}
-              <div class="govuk-summary-card govuk-!-padding-1">
+              <div class="govuk-summary-card govuk-!-padding-1 found-in">
                 Found in {{ reason }} (<strong>{{ value }}</strong>)
               </div>
             {% endif %}
