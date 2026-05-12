@@ -8,7 +8,7 @@ FROM ${ecr_path}${node_version}-${alpine_version} AS node_builder
 WORKDIR /app
 
 # Install dependencies for npm install command
-RUN apk update && apk upgrade --no-cache && apk add --no-cache bash
+RUN apk add --no-cache bash
 
 # Compile static assets
 COPY package.json package-lock.json ./
@@ -22,7 +22,7 @@ RUN npm install --omit=dev
 FROM ${ecr_path}${python_version}-${alpine_version} AS python_builder
 WORKDIR /app
 
-RUN apk update && apk upgrade --no-cache && apk add --no-cache gcc musl-dev libffi-dev
+RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -33,18 +33,59 @@ ENV UV_CACHE_DIR="/tmp/uv_cache"
 
 # Install UV and Python dependencies to a virtualenv
 COPY pyproject.toml uv.lock ./
-RUN pip install --upgrade pip setuptools wheel
 RUN pip install uv==0.7.17
 RUN uv sync --no-dev --locked && rm -rf $UV_CACHE_DIR
-RUN uv pip install 'aiohttp>=3.12.15' 'urllib3>=2.5.0' 'pip>=25.3'
+RUN uv pip install 'aiohttp>=3.12.15' 'urllib3>=2.5.0'
 
 #### FINAL RUNTIME IMAGE
 FROM ${ecr_path}${python_version}-${alpine_version} AS runtime
 
-# Upgrade Python packaging tooling to mitigate known pip/setuptools vulnerabilities
-RUN pip install --upgrade pip setuptools wheel
+# Workaround for CVE-2024-6345 upgrade the installed version of setuptools to the latest version
+RUN pip install -U setuptools
 
 # Install dependencies for the runtime image
-RUN apk update \
-  && apk upgrade --no-cache \
-  && apk add --no-cache bash make netcat-openbsd gettext
+RUN apk add --no-cache bash make netcat-openbsd gettext
+# Upgrade vulnerable packages to mitigate CVE-2025-9230, CVE-2025-9231, CVE-2025-9232, CVE-2025-6965, CVE-2025-29088
+RUN apk upgrade libcrypto3 libssl3 sqlite-libs
+
+# Use a non-root user
+ENV CONTAINER_USER=appuser \
+  CONTAINER_GROUP=appuser \
+  CONTAINER_UID=31337 \
+  CONTAINER_GID=31337
+
+RUN addgroup --gid ${CONTAINER_GID} --system ${CONTAINER_GROUP} \
+  && adduser --uid ${CONTAINER_UID} --system ${CONTAINER_USER} --ingroup ${CONTAINER_GROUP}
+
+USER ${CONTAINER_UID}
+WORKDIR /app
+
+ENV VIRTUAL_ENV=/app/.venv \
+  PATH="/app/.venv/bin:$PATH"
+
+# Copy entrypoints
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} scripts/app-entrypoint.sh ./scripts/app-entrypoint.sh
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
+RUN chmod +x ./scripts/app-entrypoint.sh
+
+# Copy compiled assets
+COPY --from=node_builder --chown=${CONTAINER_USER}:${CONTAINER_GROUP} /app/static ./static
+COPY --from=python_builder --chown=${CONTAINER_USER}:${CONTAINER_GROUP} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} manage.py ./
+
+# Copy application code
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} core ./core
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} users ./users
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} feedback ./feedback
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} datahub_client ./datahub_client
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} home ./home
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} templates ./templates
+COPY --chown=${CONTAINER_USER}:${CONTAINER_GROUP} userguide ./userguide
+
+
+# Run django commands
+RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
+ENTRYPOINT [ "./scripts/app-entrypoint.sh" ]
