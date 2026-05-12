@@ -1,6 +1,6 @@
 ARG ecr_path=public.ecr.aws/docker/library/
 ARG alpine_version=alpine3.23
-ARG python_version=python:3.13.5
+ARG python_version=python:3.13.8
 ARG node_version=node:24.3
 
 #### NODE.JS BUILD
