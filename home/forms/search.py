@@ -50,7 +50,7 @@ class SearchForm(forms.Form):
     """Django form to represent search page inputs"""
 
     subject_area_translate = "Subject area"
-    select_filter_translate = "selection will trigger the filter and refresh the search results"
+    select_filter_translate = "Select the subject area filter"
 
     query = forms.CharField(
         strip=False,
@@ -64,7 +64,7 @@ class SearchForm(forms.Form):
             attrs={
                 "form": "searchform",
                 "class": "govuk-select",
-                "aria-label": f"{subject_area_translate} - {select_filter_translate}",
+                "aria-label": f"{select_filter_translate}",
             }
         ),
     )
