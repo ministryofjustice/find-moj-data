@@ -53,14 +53,14 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
-      - uses: aws-actions/configure-aws-credentials@ec61189d14ec14c8efccab744f656cffd0e33f37 #v6.1.0
+      - uses: aws-actions/configure-aws-credentials@d979d5b3a71173a29b74b5b88418bfda9437d885 #v6.1.1
         with:
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.ECR_REGION }}
 
       - name: Login to ECR
         id: login-to-ecr
-        uses: aws-actions/amazon-ecr-login@19d944daaa35f0fa1d3f7f8af1d3f2e5de25c5b7 #v2.1.4
+        uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 #v2.1.5
 
       - name: Generate, mask, output image path
         id: image-path
@@ -165,7 +165,7 @@ jobs:
 
       - name: Slack failure notification
         if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        uses: slackapi/slack-github-action@03ea5433c137af7c0495bc0cad1af10403fc800c # v3.0.2
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           payload: |
             {"blocks":[{"type": "section","text": {"type": "mrkdwn","text": ":no_entry: Failed GitHub Action:"}},{"type": "section","fields":[{"type": "mrkdwn","text": "*Workflow:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }}>"},{"type": "mrkdwn","text": "*Job:*\n${{ github.job }}"},{"type": "mrkdwn","text": "*Repo:*\n${{ github.repository }}"}]}]}
