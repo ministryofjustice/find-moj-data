@@ -118,11 +118,8 @@ class SearchService(GenericService):
         )
 
         # Filter out entities with excluded patterns in their names
-        filtered_results = [
-            result for result in results.page_results
-            if not self._should_exclude_entity(result.name)
-        ]
-        
+        filtered_results = [result for result in results.page_results if not self._should_exclude_entity(result.name)]
+
         # Update the total results count to reflect filtering
         total_excluded = len(results.page_results) - len(filtered_results)
         results.page_results = filtered_results

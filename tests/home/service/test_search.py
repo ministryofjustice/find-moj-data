@@ -5,9 +5,8 @@ from urllib.parse import quote
 import pytest
 
 from datahub_client.entities import FindMoJdataEntityType
-from datahub_client.search.search_types import SearchResult
 from home.forms.search import SearchForm
-from home.service.search import SearchService, EXCLUDED_ENTITY_PATTERNS
+from home.service.search import EXCLUDED_ENTITY_PATTERNS, SearchService
 
 dev_env = True if os.environ.get("ENV") == "dev" else False
 
