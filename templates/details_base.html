@@ -61,7 +61,13 @@
         <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-4">
           <div class="govuk-grid-column-one-half">
             <h1 class="govuk-heading-s govuk-!-margin-0">Data last updated</h1>
-            <div class="govuk-body-s">{{ entity.data_last_modified | date:"j F Y" | default:'Check source'}}</div>
+            <div class="govuk-body-s">
+              {% if entity.custom_properties.data_summary.latest_file_timestamp %}
+                {{ entity.custom_properties.data_summary.latest_file_timestamp | date:"j F Y H:i" }}
+              {% else %}
+                {{ entity.data_last_modified | date:"j F Y" | default:'Check source'}}
+              {% endif %}
+            </div>
           </div>
           <div class="govuk-grid-column-one-half">
             <h1 class="govuk-heading-s govuk-!-margin-0">Refresh period</h1>
