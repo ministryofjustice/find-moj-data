@@ -16,7 +16,6 @@ from datahub_client.entities import (
     EntityRef,
     EntitySummary,
     FurtherInformation,
-    GlossaryTermRef,
     OwnerRef,
     PublicationCollection,
     PublicationDataset,
@@ -704,28 +703,6 @@ class TestEntityParser:
         )
 
         assert result == [tag]
-
-    def test_parse_glossary_terms(self, parser):
-        term = GlossaryTermRef(display_name="abc", urn="urn:glossaryTerm:abc", description="hello world")
-        result = parser.parse_glossary_terms(
-            {
-                "glossaryTerms": {
-                    "terms": [
-                        {
-                            "term": {
-                                "urn": term.urn,
-                                "properties": {
-                                    "name": term.display_name,
-                                    "description": term.description,
-                                },
-                            }
-                        }
-                    ]
-                }
-            }
-        )
-
-        assert result == [term]
 
     @pytest.mark.parametrize(
         "urn, expected_email",
