@@ -24,8 +24,6 @@ from datahub_client.entities import (
     EntityRef,
     EntitySummary,
     FurtherInformation,
-    GlossaryTermEntityMapping,
-    GlossaryTermRef,
     Governance,
     OwnerRef,
     PublicationCollection,
@@ -261,26 +259,6 @@ class EntityParser:
             return self._parse_owner_object(owners[0])
         else:
             return OwnerRef(display_name="", email="", urn="")
-
-    @staticmethod
-    def parse_glossary_terms(entity: dict[str, Any]) -> list[GlossaryTermRef]:
-        """
-        Parse glossary_term information into a list of TagRef for displaying
-        as part of the search result.
-        """
-        outer_terms = entity.get("glossaryTerms") or {}
-        terms = []
-        for term in outer_terms.get("terms", []):
-            properties = term.get("term", {}).get("properties", {})
-            if properties:
-                terms.append(
-                    GlossaryTermRef(
-                        display_name=properties.get("name", ""),
-                        urn=term.get("term", {}).get("urn", ""),
-                        description=properties.get("description", ""),
-                    )
-                )
-        return terms
 
     @staticmethod
     def parse_data_last_modified(properties: dict[str, Any]) -> datetime | None:
@@ -614,7 +592,6 @@ class DatasetParser(EntityParser):
             metadata=metadata,
             tags=tags,
             subject_areas=subject_areas,
-            glossary_terms=self.parse_glossary_terms(entity),
             last_modified=modified,
         )
 
@@ -631,7 +608,6 @@ class DatasetParser(EntityParser):
         stewards = self.parse_stewards(response)
         custodians = self.parse_custodians(response)
         tags = self.parse_tags(response)
-        glossary_terms = self.parse_glossary_terms(response)
         created = self.parse_data_created(properties)
         name, display_name, qualified_name = self.parse_names(response, properties)
 
@@ -661,7 +637,6 @@ class DatasetParser(EntityParser):
             governance=Governance(data_owner=owner, data_stewards=stewards, data_custodians=custodians),
             subtypes=subtypes,
             tags=tags,
-            glossary_terms=glossary_terms,
             metadata_last_ingested=self.parse_metadata_last_ingested(response),
             last_datajob_run_date=self.parse_last_datajob_run_date(response),
             created=created,
@@ -703,7 +678,6 @@ class ChartParser(DatasetParser):
             ),
             relationships=self.list_relations_to_display(parent_relations),
             tags=self.parse_tags(response),
-            glossary_terms=self.parse_glossary_terms(response),
             created=self.parse_data_created(properties),
             data_last_modified=self.parse_data_last_modified(properties),
             metadata_last_ingested=self.parse_metadata_last_ingested(response),
@@ -726,7 +700,6 @@ class ContainerParser(EntityParser):
         entity = result["entity"]
         owner = self.parse_data_owner(entity)
         properties, custom_properties = self.parse_properties(entity)
-        terms = self.parse_glossary_terms(entity)
         name, display_name, qualified_name = self.parse_names(entity, properties)
         modified = self.parse_data_last_modified(properties)
         subject_areas = self.parse_subject_areas(entity)
@@ -749,7 +722,6 @@ class ContainerParser(EntityParser):
             metadata=metadata,
             tags=self.parse_tags(entity),
             subject_areas=subject_areas,
-            glossary_terms=terms,
             last_modified=modified,
         )
 
@@ -788,7 +760,6 @@ class DatabaseParser(ContainerParser):
                 data_stewards=self.parse_stewards(response),
             ),
             tags=self.parse_tags(response),
-            glossary_terms=self.parse_glossary_terms(response),
             metadata_last_ingested=self.parse_metadata_last_ingested(response),
             created=self.parse_data_created(properties),
             data_last_modified=self.parse_data_last_modified(properties),
@@ -840,7 +811,6 @@ class SchemaParser(ContainerParser):
                 data_stewards=self.parse_stewards(response),
             ),
             tags=self.parse_tags(response),
-            glossary_terms=self.parse_glossary_terms(response),
             metadata_last_ingested=self.parse_metadata_last_ingested(response),
             created=self.parse_data_created(properties),
             data_last_modified=self.parse_data_last_modified(properties),
@@ -883,7 +853,6 @@ class PublicationCollectionParser(ContainerParser):
                 data_stewards=self.parse_stewards(response),
             ),
             tags=self.parse_tags(response),
-            glossary_terms=self.parse_glossary_terms(response),
             metadata_last_ingested=self.parse_metadata_last_ingested(response),
             created=self.parse_data_created(properties),
             data_last_modified=self.parse_data_last_modified(properties),
@@ -925,7 +894,6 @@ class PublicationDatasetParser(ContainerParser):
                 data_stewards=self.parse_stewards(response),
             ),
             tags=self.parse_tags(response),
-            glossary_terms=self.parse_glossary_terms(response),
             metadata_last_ingested=self.parse_metadata_last_ingested(response),
             created=self.parse_data_created(properties),
             data_last_modified=self.parse_data_last_modified(properties),
@@ -963,7 +931,6 @@ class DashboardParser(ContainerParser):
             ),
             external_url=properties.get("externalUrl", ""),
             tags=self.parse_tags(response),
-            glossary_terms=self.parse_glossary_terms(response),
             metadata_last_ingested=self.parse_metadata_last_ingested(response),
             created=self.parse_data_created(properties),
             data_last_modified=self.parse_data_last_modified(properties),
@@ -972,37 +939,6 @@ class DashboardParser(ContainerParser):
                 display_name=response["platform"]["name"],
                 urn=response["platform"]["name"],
             ),
-        )
-
-
-class GlossaryTermParser(EntityParser):
-    def __init__(self):
-        super().__init__()
-        self.mapper = GlossaryTermEntityMapping
-
-    def parse_to_entity_object(self, response, urn):
-        entity = response["glossaryTerm"]
-        properties, _ = self.parse_properties(entity)
-        name, display_name, qualified_name = self.parse_names(entity, properties)
-        description = self.parse_description(entity)
-        return GlossaryTermRef(display_name=display_name, urn=urn, description=description)
-
-    def parse(self, entity) -> SearchResult:
-        properties, _ = self.parse_properties(entity)
-        metadata = {"parentNodes": entity["parentNodes"]["nodes"]}
-        name, display_name, qualified_name = self.parse_names(entity, properties)
-
-        return SearchResult(
-            urn=entity["urn"],
-            result_type=self.mapper,
-            matches={},
-            name=name,
-            display_name=display_name,
-            fully_qualified_name=qualified_name,
-            description=properties.get("description", ""),
-            metadata=metadata,
-            tags=[],
-            last_modified=None,
         )
 
 
