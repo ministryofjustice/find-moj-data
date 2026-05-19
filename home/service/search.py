@@ -22,6 +22,9 @@ from home.forms.search import SearchForm
 from .base import GenericService
 from .subject_area_fetcher import SubjectAreaFetcher
 
+# Patterns for entity names to exclude from search results
+EXCLUDED_ENTITY_PATTERNS = ["stg", "staging", "int", "dummy", "intermediate", "dev", "test", "temp", "example"]
+
 
 class SearchService(GenericService):
     def __init__(self, form: SearchForm, page: str, items_per_page: int = 20):
@@ -43,6 +46,12 @@ class SearchService(GenericService):
         self.highlighted_results = self._highlight_results()
         self.paginator = self._get_paginator(items_per_page)
         self.context = self._get_context()
+
+    @staticmethod
+    def _should_exclude_entity(entity_name: str) -> bool:
+        """Check if an entity name matches any excluded patterns."""
+        name_lower = entity_name.lower()
+        return any(pattern in name_lower for pattern in EXCLUDED_ENTITY_PATTERNS)
 
     @staticmethod
     def _build_custom_property_filter(filter_param: str, filter_value_list: list[str]) -> list[str]:
@@ -107,6 +116,14 @@ class SearchService(GenericService):
             sort=sort_option,
             count=items_per_page,
         )
+
+        # Filter out entities with excluded patterns in their names
+        filtered_results = [result for result in results.page_results if not self._should_exclude_entity(result.name)]
+
+        # Update the total results count to reflect filtering
+        total_excluded = len(results.page_results) - len(filtered_results)
+        results.page_results = filtered_results
+        results.total_results = max(0, results.total_results - total_excluded)
 
         # Get entity type counts (without entity type filter applied)
         entity_type_counts = self.client.get_entity_type_counts(
