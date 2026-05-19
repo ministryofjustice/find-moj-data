@@ -6,7 +6,7 @@ import pytest
 
 from datahub_client.entities import FindMoJdataEntityType
 from home.forms.search import SearchForm
-from home.service.search import SearchService
+from home.service.search import EXCLUDED_ENTITY_PATTERNS, SearchService
 
 dev_env = True if os.environ.get("ENV") == "dev" else False
 
@@ -154,6 +154,36 @@ class TestSearchService:
         search_service = SearchService(form=form, page="1")
 
         assert search_service.results.page_results != search_service.highlighted_results.page_results
+
+    @pytest.mark.parametrize(
+        "entity_name, should_exclude",
+        [
+            ("stg_my_table", True),
+            ("staging_data", True),
+            ("int_table", True),
+            ("dummy_dataset", True),
+            ("intermediate_result", True),
+            ("dev_table", True),
+            ("test_data", True),
+            ("temp_file", True),
+            ("example_dataset", True),
+            ("my_production_table", False),
+            ("customer_data", False),
+            ("sales_report", False),
+            ("STG_MY_TABLE", True),  # Case insensitive
+            ("Staging_Data", True),  # Case insensitive
+        ],
+    )
+    def test_should_exclude_entity(self, entity_name, should_exclude):
+        assert SearchService._should_exclude_entity(entity_name) == should_exclude
+
+    def test_excluded_entity_patterns_defined(self):
+        """Verify that excluded patterns are defined."""
+        assert EXCLUDED_ENTITY_PATTERNS
+        assert len(EXCLUDED_ENTITY_PATTERNS) > 0
+        assert "stg" in EXCLUDED_ENTITY_PATTERNS
+        assert "staging" in EXCLUDED_ENTITY_PATTERNS
+        assert "int" in EXCLUDED_ENTITY_PATTERNS
 
 
 # Disbabled to test search without manipulation
