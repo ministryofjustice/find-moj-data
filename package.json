@@ -3,9 +3,9 @@
     "@babel/preset-env": "^7.29.5",
     "@ministryofjustice/frontend": "^9.0.0",
     "@x-govuk/govuk-prototype-components": "^6.0.0",
-    "babel-jest": "^30.3.0",
+    "babel-jest": "^30.4.1",
     "govuk-frontend": "^6.1.0",
-    "jest-environment-jsdom": "^30.3.0",
+    "jest-environment-jsdom": "^30.4.1",
     "sass": "^1.99.0",
     "glob": "^13.0.6"
   },
@@ -16,7 +16,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "axe": "^12.1.0",
-    "jest": "^30.3.0",
+    "jest": "^30.4.2",
     "glob": "^13.0.6"
   }
 }
