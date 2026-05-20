@@ -246,12 +246,12 @@ class TestFeedbackForms:
         button.click()
 
     def click_search_page_feedback_button(self, id):
-        assert "Did you find what you where looking for today?" in self.selenium.page_source
+        assert "Did you find what you were looking for today?" in self.selenium.page_source
         button = self.selenium.find_element(By.ID, id)
         button.click()
 
     def click_details_page_feedback_button(self, id):
-        assert "Did you find what you where looking for today?" in self.selenium.page_source
+        assert "Did you find what you were looking for today?" in self.selenium.page_source
         button = self.selenium.find_element(By.ID, id)
         button.click()
 
