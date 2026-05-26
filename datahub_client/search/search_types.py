@@ -8,7 +8,6 @@ from datahub_client.entities import (
     ALL_FILTERABLE_TAGS,
     EntityRef,
     FindMoJdataEntityMapper,
-    GlossaryTermRef,
     TagRef,
 )
 
@@ -75,7 +74,6 @@ class SearchResult:
     metadata: dict[str, Any] = field(default_factory=dict)
     tags: list[TagRef] = field(default_factory=list)
     subject_areas: list[TagRef] = field(default_factory=list)
-    glossary_terms: list[GlossaryTermRef] = field(default_factory=list)
     last_modified: datetime | None = None
     created: datetime | None = None
     parent_entity: EntityRef | None = None

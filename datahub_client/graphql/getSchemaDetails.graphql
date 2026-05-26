@@ -25,9 +25,7 @@ query getContainer($urn: String!) {
     tags {
       ...globalTagsFields
     }
-    glossaryTerms {
-      ...glossaryTerms
-    }
+
     subTypes {
       typeNames
     }
@@ -185,33 +183,6 @@ fragment globalTagsFields on GlobalTags {
       }
     }
     associatedUrn
-  }
-}
-
-fragment glossaryTerms on GlossaryTerms {
-  terms {
-    term {
-      ...glossaryTerm
-    }
-    associatedUrn
-  }
-}
-
-fragment glossaryTerm on GlossaryTerm {
-  urn
-  type
-  hierarchicalName
-  properties {
-    name
-    description
-    termSource
-    customProperties {
-      key
-      value
-    }
-  }
-  ownership {
-    ...ownershipFields
   }
 }
 

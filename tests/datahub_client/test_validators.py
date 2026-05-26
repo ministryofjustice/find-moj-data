@@ -10,7 +10,6 @@ from datahub_client.entities import (
     EntityRef,
     EntitySummary,
     FurtherInformation,
-    GlossaryTermRef,
     Governance,
     OwnerRef,
     RelationshipType,
@@ -64,13 +63,6 @@ def test_entity_timestamps_in_future_validation():
                 )
             ],
         ),
-        "glossary_terms": [
-            GlossaryTermRef(
-                display_name="Essential Shared Data Asset (ESDA)",
-                urn="urn:li:glossaryTerm:ESDA",
-                description="An ESDA is...",
-            )
-        ],
         "metadata_last_ingested": future_timestamp,
         "created": future_timestamp,
         "data_last_modified": future_timestamp,
