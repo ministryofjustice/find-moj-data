@@ -13,9 +13,6 @@ query getDashboard($urn: String!) {
     tags {
       ...globalTagsFields
     }
-    glossaryTerms {
-      ...glossaryTermFields
-    }
     properties {
       name
       description
@@ -99,19 +96,6 @@ fragment ownershipFields on Ownership {
       type
       info {
         name
-      }
-    }
-  }
-}
-
-fragment glossaryTermFields on GlossaryTerms {
-  terms {
-    term {
-      urn
-      type
-      properties {
-        name
-        description
       }
     }
   }

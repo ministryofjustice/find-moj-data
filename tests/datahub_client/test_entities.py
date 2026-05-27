@@ -80,13 +80,11 @@ class TestGetEntityTypeCountsFromDatahub:
         assert result[FindMoJdataEntityType.TABLE] == 50
 
     def test_all_entity_types_present_in_result(self):
-        """All FindMoJdataEntityType values should be present in the result except GLOSSARY_TERM."""
+        """All FindMoJdataEntityType values should be present in the result."""
         result = get_entity_type_counts_from_datahub({}, {})
 
         for entity_type in FindMoJdataEntityType:
-            assert (
-                entity_type in result if entity_type != FindMoJdataEntityType.GLOSSARY_TERM else True
-            )  # GLOSSARY_TERM is not derived from counts
+            assert entity_type in result
 
     def test_realistic_scenario(self):
         """Test with realistic data matching what DataHub might return."""

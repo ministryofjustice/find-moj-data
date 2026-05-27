@@ -24,11 +24,6 @@ query Facets(
               name
             }
           }
-          ... on GlossaryTerm {
-            properties {
-              name
-            }
-          }
         }
       }
     }

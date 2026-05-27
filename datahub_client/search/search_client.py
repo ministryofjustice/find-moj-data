@@ -17,7 +17,7 @@ from datahub_client.entities import (
 )
 from datahub_client.exceptions import CatalogueError
 from datahub_client.graphql.loader import get_graphql_query
-from datahub_client.parsers import EntityParser, EntityParserFactory, GlossaryTermParser
+from datahub_client.parsers import EntityParser, EntityParserFactory
 from datahub_client.search.filters import map_filters
 from datahub_client.search.search_types import (
     FacetOption,
@@ -39,7 +39,6 @@ class SearchClient:
         self.search_query = get_graphql_query("search")
         self.facets_query = get_graphql_query("facets")
         self.list_subject_areas_query = get_graphql_query("listSubjectAreas")
-        self.get_glossary_terms_query = get_graphql_query("getGlossaryTerms")
         self.get_tags_query = get_graphql_query("getTags")
         self.get_entity_types_counts_query = get_graphql_query("getEntityTypeCounts")
 
@@ -249,7 +248,7 @@ class SearchClient:
         results = {}
         for facet in facets:
             field = facet["field"]
-            if field not in ("domains", "tags", "customProperties", "glossaryTerms"):
+            if field not in ("domains", "tags", "customProperties"):
                 continue
 
             options = []
@@ -264,24 +263,6 @@ class SearchClient:
             results[field] = options
 
         return SearchFacets(results)
-
-    def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
-        "Get some number of glossary terms from DataHub"
-        variables = {"count": count}
-        try:
-            response = self.graph.execute_graphql(self.get_glossary_terms_query, variables)
-        except GraphError as e:
-            raise CatalogueError("Unable to execute getGlossaryTerms query") from e
-
-        page_results = []
-        response = response["searchAcrossEntities"]
-        logger.debug(json.dumps(response, indent=2))
-        parser = GlossaryTermParser()
-
-        for result in response["searchResults"]:
-            page_results.append(parser.parse(entity=result["entity"]))
-
-        return SearchResponse(total_results=response["total"], page_results=page_results)
 
     def get_tags(self, count: int = 2000):
         """
