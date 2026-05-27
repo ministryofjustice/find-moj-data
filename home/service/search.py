@@ -52,7 +52,7 @@ class SearchService(GenericService):
     def _build_entity_types(
         entity_types: list[str],
     ) -> tuple[FindMoJdataEntityMapper, ...]:
-        default_entities = tuple(Mapper for Mapper in Mappers if Mapper.datahub_type.value != "GLOSSARY_TERM")
+        default_entities = tuple(Mapper for Mapper in Mappers)
         chosen_entities = tuple(Mapper for Mapper in Mappers if Mapper.find_moj_data_type.name in entity_types)
 
         return chosen_entities if chosen_entities else default_entities

@@ -93,4 +93,7 @@
 .found-in {
   color: $govuk-secondary-text-colour;
   margin-bottom: 10px;
+.govuk-tag-search {
+  @extend .govuk-tag--grey;
+  background-color: govuk-colour("black", $variant: "tint-95");
 }
