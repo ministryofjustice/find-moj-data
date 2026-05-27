@@ -38,7 +38,7 @@ def get_where_to_access_choices():
 
 
 def get_entity_types():
-    return sorted([(entity.name, entity.value) for entity in FindMoJdataEntityType if entity.name != "GLOSSARY_TERM"])
+    return sorted([(entity.name, entity.value) for entity in FindMoJdataEntityType])
 
 
 def get_tags():
