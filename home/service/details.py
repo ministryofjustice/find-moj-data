@@ -65,7 +65,7 @@ class DatabaseDetailsService(GenericService):
         if not self.database_metadata:
             raise ObjectDoesNotExist(urn)
         self.is_esda = any(
-            term.display_name == "Essential Shared Data Asset (ESDA)" for term in self.database_metadata.glossary_terms
+            term.display_name == "Essential Shared Data Asset (ESDA)" for term in self.database_metadata.tags
         )
         self.entities_in_database = self.database_metadata.relationships[RelationshipType.CHILD]
         self.context = self._get_context()

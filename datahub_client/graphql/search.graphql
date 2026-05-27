@@ -39,11 +39,6 @@ query Search(
               name
             }
           }
-          ... on GlossaryTerm {
-            properties {
-              name
-            }
-          }
         }
       }
     }
@@ -69,17 +64,7 @@ query Search(
           tags {
             ...globalTagsFields
           }
-          glossaryTerms {
-            terms {
-              term {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
-          }
+
           properties {
             name
             description
@@ -110,17 +95,6 @@ query Search(
           }
           tags {
             ...globalTagsFields
-          }
-          glossaryTerms {
-            terms {
-              term {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
           }
         }
         ... on Dataset {
@@ -194,17 +168,6 @@ query Search(
           }
           tags {
             ...globalTagsFields
-          }
-          glossaryTerms {
-            terms {
-              term {
-                urn
-                properties {
-                  name
-                  description
-                }
-              }
-            }
           }
         }
       }

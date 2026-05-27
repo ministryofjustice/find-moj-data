@@ -16,7 +16,6 @@ from datahub_client.entities import (
     EntitySummary,
     FindMoJdataEntityMapper,
     FindMoJdataEntityType,
-    GlossaryTermRef,
     PublicationCollection,
     PublicationDataset,
     RelationshipType,
@@ -32,7 +31,6 @@ from datahub_client.parsers import (
     ChartParser,
     DashboardParser,
     DatabaseParser,
-    GlossaryTermParser,
     PublicationCollectionParser,
     PublicationDatasetParser,
     SchemaParser,
@@ -111,7 +109,6 @@ class DataHubCatalogueClient:
         self.dataset_query = get_graphql_query("getDatasetDetails")
         self.chart_query = get_graphql_query("getChartDetails")
         self.dashboard_query = get_graphql_query("getDashboardDetails")
-        self.glossary_term_query = get_graphql_query("getGlossaryTermDetails")
 
     def check_entity_exists_by_urn(self, urn: str | None):
         if urn is not None:
@@ -180,10 +177,6 @@ class DataHubCatalogueClient:
     ) -> list[SubjectAreaOption]:
         return self.search_client.list_subject_areas(query=query, filters=filters, count=count)
 
-    def get_glossary_terms(self, count: int = 1000) -> SearchResponse:
-        """Wraps the client's glossary terms query"""
-        return self.search_client.get_glossary_terms(count)
-
     def get_tags(self, count: int = 2000):
         """Wraps the client's get tags query"""
         return self.search_client.get_tags(count)
@@ -242,14 +235,6 @@ class DataHubCatalogueClient:
             return dashboard_object
 
         raise EntityDoesNotExist(f"Dashboard with urn: {urn} does not exist")
-
-    def get_glossary_term_details(self, urn: str) -> GlossaryTermRef:
-        if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.glossary_term_query, {"urn": urn})
-            glossary_term = GlossaryTermParser().parse_to_entity_object(response, urn)
-            return glossary_term
-
-        raise EntityDoesNotExist(f"Glossary term with urn: {urn} does not exist")
 
     def _get_custom_property_key_value_pairs(
         self,

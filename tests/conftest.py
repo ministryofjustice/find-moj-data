@@ -30,8 +30,6 @@ from datahub_client.entities import (
     EntitySummary,
     FindMoJdataEntityMapper,
     FindMoJdataEntityType,
-    GlossaryTermEntityMapping,
-    GlossaryTermRef,
     Governance,
     OwnerRef,
     PublicationCollection,
@@ -402,13 +400,6 @@ def generate_table_metadata(
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        glossary_terms=[
-            GlossaryTermRef(
-                display_name="some-term",
-                urn="urn:li:glossaryTerm:Entity",
-                description="some description",
-            )
-        ],
         metadata_last_ingested=1710426920000,
         created=None,
         column_details=[
@@ -460,13 +451,6 @@ def generate_chart_metadata(
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        glossary_terms=[
-            GlossaryTermRef(
-                display_name="some-term",
-                urn="urn:li:glossaryTerm:Entity",
-                description="some description",
-            )
-        ],
         metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
@@ -512,13 +496,6 @@ def generate_database_metadata(
             data_custodians=[OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        glossary_terms=[
-            GlossaryTermRef(
-                display_name="some-term",
-                urn="urn:li:glossaryTerm:Entity",
-                description="some description",
-            )
-        ],
         metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
@@ -564,13 +541,6 @@ def generate_dashboard_metadata(
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        glossary_terms=[
-            GlossaryTermRef(
-                display_name="some-term",
-                urn="urn:li:glossaryTerm:Entity",
-                description="some description",
-            )
-        ],
         metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
@@ -620,13 +590,6 @@ def generate_publication_collection_metadata(
             data_custodians=[OwnerRef(display_name="", email="custodian@justice.gov.uk", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        glossary_terms=[
-            GlossaryTermRef(
-                display_name="some-term",
-                urn="urn:li:glossaryTerm:Entity",
-                description="some description",
-            )
-        ],
         metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:justice-data", display_name="justice-data"),
@@ -658,13 +621,6 @@ def generate_publication_dataset_metadata(
             data_stewards=[OwnerRef(display_name="", email="lorem@ipsum.com", urn="")],
         ),
         tags=[TagRef(display_name="some-tag", urn="urn:li:tag:Entity")],
-        glossary_terms=[
-            GlossaryTermRef(
-                display_name="some-term",
-                urn="urn:li:glossaryTerm:Entity",
-                description="some description",
-            )
-        ],
         metadata_last_ingested=1710426920000,
         created=None,
         platform=EntityRef(urn="urn:li:dataPlatform:athena", display_name="athena"),
@@ -772,7 +728,6 @@ def mock_catalogue(
             ),
         ],
     )
-    mock_get_glossary_terms_response(mock_catalogue)
     mock_get_chart_details_response(mock_catalogue)
     mock_get_table_details_response(mock_catalogue, example_table)
     mock_get_database_details_response(mock_catalogue, example_database)
@@ -837,62 +792,6 @@ def mock_get_tags_response(mock_catalogue):
         ("tag-2", "urn:li:tag:tag-2"),
         ("tag-3", "urn:li:tag:tag-3"),
     ]
-
-
-def mock_get_glossary_terms_response(mock_catalogue):
-    mock_catalogue.get_glossary_terms.return_value = SearchResponse(
-        total_results=3,
-        page_results=[
-            SearchResult(
-                urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
-                name="NOMIS",
-                description="NOMIS",
-                metadata={
-                    "parentNodes": [
-                        {
-                            "properties": {
-                                "name": "Data sources",
-                                "description": "Data sources",
-                            }
-                        }
-                    ]
-                },
-                result_type=GlossaryTermEntityMapping,
-            ),
-            SearchResult(
-                urn="urn:li:glossaryTerm:022b9b68-c211-47ae-aef0-2db13acfeca8",
-                name="XHIBIT",
-                description="XHIBIT",
-                metadata={
-                    "parentNodes": [
-                        {
-                            "properties": {
-                                "name": "Data sources",
-                                "description": "Data sources",
-                            }
-                        }
-                    ]
-                },
-                result_type=GlossaryTermEntityMapping,
-            ),
-            SearchResult(
-                urn="urn:li:glossaryTerm:0eb7af28-62b4-4149-a6fa-72a8f1fea1e6",
-                name="Asset",
-                description="Asset",
-                metadata={
-                    "parentNodes": [
-                        {
-                            "properties": {
-                                "name": "Other technical terms",
-                                "description": "Other technical terms",
-                            }
-                        }
-                    ]
-                },
-                result_type=GlossaryTermEntityMapping,
-            ),
-        ],
-    )
 
 
 def mock_get_publication_collection_details_response(mock_catalogue, example_publication_collection):
