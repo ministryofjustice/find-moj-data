@@ -27,21 +27,21 @@ class TestFeedbackForms:
         self.page_titles = page_titles
         self.axe_version = axe_version
 
-    def test_succesfull_submission_of_yes_feedback_form_on_home_page(self):
+    def test_successful_submission_of_yes_feedback_form_on_home_page(self):
         self.start_on_the_home_page()
         self.click_home_page_feedback_button("feedback-yes-button")
         self.verify_yes_feedback_form_rendered()
         self.populate_yes_feedback_form()
         self.verify_successful_feedback_submission()
 
-    def test_succesfull_submission_of_no_feedback_form_on_home_page(self):
+    def test_successful_submission_of_no_feedback_form_on_home_page(self):
         self.start_on_the_home_page()
         self.click_home_page_feedback_button("feedback-no-button")
         self.verify_no_feedback_form_rendered()
         self.populate_no_feedback_form()
         self.verify_successful_feedback_submission()
 
-    def test_successfull_submission_of_report_problem_form_on_home_page(self):
+    def test_successful_submission_of_report_problem_form_on_home_page(self):
         self.start_on_the_home_page()
         self.click_home_page_feedback_button("feedback-report-button")
         self.verify_problem_feedback_form_rendered()
@@ -69,21 +69,21 @@ class TestFeedbackForms:
         self.populate_problem_feedback_form(invalid=True)
         self.verify_invalid_feedback_submission_shows_errors()
 
-    def test_succesfull_submission_of_yes_feedback_form_on_search_page(self):
+    def test_successful_submission_of_yes_feedback_form_on_search_page(self):
         self.start_on_the_search_page()
         self.click_search_page_feedback_button("feedback-yes-button")
         self.verify_yes_feedback_form_rendered()
         self.populate_yes_feedback_form()
         self.verify_successful_feedback_submission()
 
-    def test_succesfull_submission_of_no_feedback_form_on_search_page(self):
+    def test_successful_submission_of_no_feedback_form_on_search_page(self):
         self.start_on_the_search_page()
         self.click_search_page_feedback_button("feedback-no-button")
         self.verify_no_feedback_form_rendered()
         self.populate_no_feedback_form()
         self.verify_successful_feedback_submission()
 
-    def test_successfull_submission_of_report_problem_form_on_search_page(self):
+    def test_successful_submission_of_report_problem_form_on_search_page(self):
         self.start_on_the_search_page()
         self.click_search_page_feedback_button("feedback-report-button")
         self.verify_problem_feedback_form_rendered()
@@ -111,7 +111,7 @@ class TestFeedbackForms:
         self.populate_problem_feedback_form(invalid=True)
         self.verify_invalid_feedback_submission_shows_errors()
 
-    def test_succesfull_submission_of_yes_feedback_form_on_details_page(self):
+    def test_successful_submission_of_yes_feedback_form_on_details_page(self):
         self.start_on_the_search_page()
         self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page()
@@ -120,7 +120,7 @@ class TestFeedbackForms:
         self.populate_yes_feedback_form()
         self.verify_successful_feedback_submission()
 
-    def test_succesfull_submission_of_no_feedback_form_on_details_page(self):
+    def test_successful_submission_of_no_feedback_form_on_details_page(self):
         self.start_on_the_search_page()
         self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page()
@@ -133,7 +133,7 @@ class TestFeedbackForms:
         self.start_on_the_search_page()
         self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page()
-        self.click_search_page_feedback_button("feedback-yes-button")
+        self.click_details_page_feedback_button("feedback-yes-button")
         self.verify_yes_feedback_form_rendered()
         self.populate_yes_feedback_form(invalid=True)
         self.verify_invalid_feedback_submission_shows_errors()
@@ -142,7 +142,7 @@ class TestFeedbackForms:
         self.start_on_the_search_page()
         self.click_on_the_first_result()
         self.verify_i_am_on_the_details_page()
-        self.click_search_page_feedback_button("feedback-no-button")
+        self.click_details_page_feedback_button("feedback-no-button")
         self.verify_no_feedback_form_rendered()
         self.populate_no_feedback_form(invalid=True)
         self.verify_invalid_feedback_submission_shows_errors()
