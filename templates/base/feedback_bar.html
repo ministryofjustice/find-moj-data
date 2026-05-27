@@ -1,10 +1,14 @@
+{% load static %}
+
+<div id="feedback-announcement" class="govuk-visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
 <div id="feedback-widget" class="gem-c-feedback govuk-!-display-none-print">
   <div class="gem-c-feedback__prompt" tabindex="-1">
     <div class="gem-c-feedback__prompt-content">
       <div class="gem-c-feedback__prompt-questions">
         <div class="gem-c-feedback__prompt-question-answer">
           {% if 'search' in request.path or 'details' in request.path %}
-            <h2 class="gem-c-feedback__prompt-question">Did you find what you where looking for today?</h2>
+            <h2 class="gem-c-feedback__prompt-question">Did you find what you were looking for today?</h2>
           {% else %}
             <h2 class="gem-c-feedback__prompt-question">Was this page useful?</h2>
           {% endif %}
@@ -13,6 +17,7 @@
               <button
                 class="govuk-button gem-c-feedback__prompt-link"
                 id="feedback-yes-button"
+                data-feedback-announcement="You have selected Yes. There are new questions to answer."
                 hx-get="{% url 'feedback:yes' %}?url_path={{ request.get_full_path }}"
                 hx-target="#feedback-widget"
                 hx-swap="innerHTML"
@@ -24,22 +29,24 @@
               <button
                 class="govuk-button gem-c-feedback__prompt-link"
                 id="feedback-no-button"
+                data-feedback-announcement="You have selected No. There are new questions to answer."
                 hx-get="{% url 'feedback:no' %}?url_path={{ request.get_full_path }}"
                 hx-target="#feedback-widget"
                 hx-swap="innerHTML"
-              >No <span class="govuk-visually-hidden">this page is not useful</span>
+              >
+                No <span class="govuk-visually-hidden">this page is not useful</span>
               </button>
             </li>
           </ul>
         </div>
       </div>
       {% if 'details' not in request.path %}
-        <div
-          class="gem-c-feedback__prompt-questions">
+        <div class="gem-c-feedback__prompt-questions">
           <button
             class="govuk-button gem-c-feedback__prompt-link"
             id="feedback-report-button"
-            hx-get="{% url 'feedback:report' %}?url_path={{request.get_full_path}}"
+            data-feedback-announcement="You have selected Report an issue with this page. There are new questions to answer."
+            hx-get="{% url 'feedback:report' %}?url_path={{ request.get_full_path }}"
             hx-target="#feedback-widget"
             hx-swap="innerHTML"
           >
@@ -50,3 +57,5 @@
     </div>
   </div>
 </div>
+
+<script src="{% static 'assets/js/feedback-announcement.js' %}"></script>
