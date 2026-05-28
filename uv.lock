@@ -574,7 +574,7 @@ requires-dist = [
     { name = "markdown", specifier = "~=3.8" },
     { name = "markdown-headdown", specifier = ">=0.1.3,<0.2" },
     { name = "nltk", specifier = ">=3.9.1,<4" },
-    { name = "notifications-python-client", specifier = ">=10.0.1,<11" },
+    { name = "notifications-python-client", specifier = ">=10.0.1,<13" },
     { name = "psycopg", specifier = ">=3.2.9,<4" },
     { name = "psycopg-binary", specifier = ">=3.2.9,<4" },
     { name = "pydantic", extras = ["email"], specifier = ">=2.11.7,<3" },
