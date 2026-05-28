@@ -6,7 +6,7 @@ authors = [{ name = "Mitch Dawson", email = "Mitchell.Dawson@justice.gov.uk" }]
 requires-python = "~=3.13.5"
 readme = "README.md"
 dependencies = [
-    "django~=6.0.1",
+    "django~=6.0",
     "django-prometheus>=2.5.0,<3",
     "pyyaml>=6.0.2,<7",
     "gunicorn>=23.0.0,<27",
