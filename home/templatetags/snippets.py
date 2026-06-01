@@ -51,23 +51,36 @@ def _drop_unmarked_paragraphs(value):
 
 def _align_snippet(snippet, max_chars):
     """
-    Align a snippet to a few words before start_mark_idx
+    Centre the snippet on the first match (the first <mark>…</mark>).
+
+    The returned snippet is at most `max_chars` characters long and tries to
+    place the first match in the middle. If the match is too close to the
+    start of the snippet to be centred, we fall back to simply returning the
+    first `max_chars` characters.
     """
     start_mark_idx = snippet.find("<mark>")
-    end_mark_idx = snippet[start_mark_idx + 1 :].find("</mark>")
+    end_mark_idx = snippet.find("</mark>") + len("</mark>")
 
-    # If the mark is at the beginning of the first remaining paragraph,
-    # no further alignment is required.
-    if start_mark_idx < end_mark_idx < max_chars - 1:
-        return "…" + truncatechars_html(snippet, arg=max_chars - 1)
+    match_length = end_mark_idx - start_mark_idx
 
-    # Split the snippet at the first <mark>
+    # How much context we can show either side of the match to centre it.
+    context = max(max_chars - match_length, 0)
+    before = context // 2
+
+    # If there isn't enough text before the match to centre it, just return
+    # the first `max_chars` characters of the snippet.
+    if start_mark_idx <= before:
+        return truncatechars_html(snippet, arg=max_chars)
+
+    # Split the snippet just before the desired amount of leading context,
+    # preserving whole words at the start.
     prefix = snippet[:start_mark_idx]
     from_mark = snippet[start_mark_idx:]
 
-    # Remove all but a few words for context
-    _, *rest = prefix.rsplit(" ", maxsplit=25)
-    short_prefix = " ".join(rest)
+    short_prefix = prefix[-before:]
+    # Preserve whole words at the start of the snippet.
+    _, _, short_prefix = short_prefix.partition(" ")
+
     used_length = len(short_prefix) + 1
     new_max_chars = max(max_chars - 1, used_length)
 
