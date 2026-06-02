@@ -12,22 +12,6 @@
       </div>
     {% endif %}
 
-
-    {% switch 'display-result-tags' %}
-      {% if result.tags_to_display %}
-        <div class="app-metadata-list__row">
-
-          <strong>Tags: </strong>
-
-          {% for tag in result.tags_to_display %}
-            <a aria-label="link to search results for all entities tagged {{ tag }}" href="
-              {% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag|lower }}</a>
-            {% if not forloop.last %}, {% endif %}
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endswitch %}
-
     {% with match_reasons=result.matches|lookup:readable_match_reasons|join:", " %}
       {% if match_reasons %}
 
@@ -43,5 +27,20 @@
         </dd>
       {% endif %}
     {% endwith %}
+
+  {% switch 'display-result-tags' %}
+      {% if result.tags_to_display %}
+        <div class="app-metadata-list__row">
+
+          <strong>Tags: </strong>
+
+          {% for tag in result.tags_to_display %}
+            <a aria-label="link to search results for all entities tagged {{ tag }}" href="
+              {% url 'home:search' %}{% querystring clear_label=None clear_filter=None new=None tags=tag %}">{{ tag|lower }}</a>
+            {% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endswitch %}
   </dl>
 {% endif %}
