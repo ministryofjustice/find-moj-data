@@ -30,7 +30,7 @@ dependencies = [
     "boto3>=1.38.46,<2",
     "setuptools==82.0.1",
     "cffi==2.0.0",
-    "pyjwt==2.12.1",
+    "pyjwt==2.13.0",
 ]
 
 [dependency-groups]
