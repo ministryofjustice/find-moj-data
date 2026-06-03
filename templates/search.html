@@ -54,7 +54,7 @@
         {% endif %}
         {% if results %}
           <h2 class="govuk-heading-m govuk-!-display-inline-block" id="result-count">{{ total_results_str|intcomma }}
-            results</h2>
+            result{% if total_results_str != '1' %}s{% endif %}</h2>
         {% else %}
           {% include "partial/no_results.html" %}
         {% endif %}
