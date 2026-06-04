@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -532,7 +532,7 @@ class TestEntityParser:
             data_summary=DataSummary(
                 row_count=100,
                 refresh_period="Weekly",
-                latest_file_timestamp=datetime(2026, 5, 14, 10, 20, 30, tzinfo=timezone.utc),
+                latest_file_timestamp=datetime(2026, 5, 14, 10, 20, 30, tzinfo=UTC),
             ),
             further_information=FurtherInformation(
                 dc_slack_channel_name="test-channel", dc_slack_channel_url="test-url"
