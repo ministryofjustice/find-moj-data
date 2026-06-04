@@ -14,7 +14,7 @@
                 <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
             {% else %}
                 {% if page_obj.number == p.number %}
-                    <li class="govuk-pagination__item govuk-pagination__item--current">
+                    <li class="govuk-pagination__item govuk-pagination__item--current" aria-current="page">
                         <a class="govuk-link govuk-pagination__link" href="{{p.url}}{% querystring clear_label=None clear_filter=None new=None %}" aria-label="Page {{ p.number }}">{{ p.number }}</a>
                     </li>
                 {% else %}
