@@ -22,7 +22,6 @@ class DatahubEntityType(Enum):
     DATASET = "DATASET"
     DASHBOARD = "DASHBOARD"
     CHART = "CHART"
-    GLOSSARY_TERM = "GLOSSARY_TERM"
 
 
 class DatahubSubtype(Enum):
@@ -39,7 +38,6 @@ class DatahubSubtype(Enum):
 
 class FindMoJdataEntityType(Enum):
     TABLE = "Table"
-    GLOSSARY_TERM = "Glossary term"
     CHART = "Chart"
     DATABASE = "Database"
     DASHBOARD = "Dashboard"
@@ -69,13 +67,6 @@ TableEntityMapping = FindMoJdataEntityMapper(
 )
 
 ChartEntityMapping = FindMoJdataEntityMapper(FindMoJdataEntityType.CHART, DatahubEntityType.CHART, [], "chart")
-
-GlossaryTermEntityMapping = FindMoJdataEntityMapper(
-    FindMoJdataEntityType.GLOSSARY_TERM,
-    DatahubEntityType.GLOSSARY_TERM,
-    [],
-    "glossary_term",
-)
 
 DatabaseEntityMapping = FindMoJdataEntityMapper(
     FindMoJdataEntityType.DATABASE,
@@ -116,7 +107,6 @@ PublicationCollectionEntityMapping = FindMoJdataEntityMapper(
 Mappers = [
     TableEntityMapping,
     ChartEntityMapping,
-    GlossaryTermEntityMapping,
     DatabaseEntityMapping,
     SchemaEntityMapping,
     DashboardEntityMapping,
@@ -145,7 +135,7 @@ def get_entity_type_counts_from_datahub(
     """
     result: dict[FindMoJdataEntityType, int] = {}
 
-    mappers = [mapper for mapper in Mappers if mapper.datahub_type.value != "GLOSSARY_TERM"]
+    mappers = Mappers
 
     for mapper in mappers:
         if mapper.datahub_subtypes:
@@ -223,7 +213,6 @@ class EntityRef(BaseModel):
         description="The identifier of the entity being linked to.",
         examples=[
             "urn:li:chart:(justice-data,absconds)",
-            "urn:li:glossaryTerm:f045591e-182a-45fd-9b06-ebbc222606d6",
         ],
     )
     display_name: str = Field(
@@ -370,25 +359,6 @@ class TagRef(BaseModel):
     urn: str = Field(
         description="The identifier of the tag",
         examples=["urn:li:tag:PII"],
-    )
-
-
-class GlossaryTermRef(BaseModel):
-    """
-    Reference to a Glossary term
-    """
-
-    display_name: str = Field(
-        description="Glossary term name",
-        examples=["PII"],
-    )
-    urn: str = Field(
-        description="The identifier of the glossary term",
-        examples=["urn:li:glossaryTerm:ESDA"],
-    )
-    description: str = Field(
-        description="The definition of the glossary term",
-        examples=["Essential Shared Data Asset"],
     )
 
 
@@ -611,19 +581,6 @@ class Entity(BaseModel):
         default_factory=list,
         description="Additional tags to add.",
         examples=[[TagRef(display_name="ESDA", urn="urn:li:tag:ESDA")]],
-    )
-    glossary_terms: list[GlossaryTermRef] = Field(
-        default_factory=list,
-        description="Glossary Terms the entity relates to.",
-        examples=[
-            [
-                GlossaryTermRef(
-                    display_name="Essential Shared Data Asset (ESDA)",
-                    urn="urn:li:glossaryTerm:ESDA",
-                    description="An ESDA is...",
-                )
-            ]
-        ],
     )
     metadata_last_ingested: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
         description="When the metadata was last updated in the catalogue",

@@ -105,13 +105,3 @@ class TestChartView:
         response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
         assert response.status_code == 200
         assert response.headers["Cache-Control"] == "max-age=300, private"
-
-
-class TestGlossaryView:
-    def test_list(self, client):
-        response = client.get(reverse("home:glossary"))
-        assert response.status_code == 200
-
-    def test_details(self, client):
-        response = client.get(reverse("home:glossary_term", kwargs={"urn": "fake"}))
-        assert response.status_code == 200

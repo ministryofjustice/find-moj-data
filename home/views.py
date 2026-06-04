@@ -37,7 +37,6 @@ from home.service.details_csv import (
     DatabaseDetailsCsvFormatter,
     DatasetDetailsCsvFormatter,
 )
-from home.service.glossary import GlossaryService, GlossaryTermService
 from home.service.metadata_specification import MetadataSpecificationService
 from home.service.search import SearchService
 from home.service.subject_area_fetcher import SubjectAreaFetcher
@@ -123,16 +122,6 @@ def search_view(request, page: str = "1"):
 
     search_service = SearchService(form=form, page=page)
     return render(request, "search.html", search_service.context)
-
-
-def glossary_view(request):
-    glossary_service = GlossaryService()
-    return render(request, "glossary.html", glossary_service.context)
-
-
-def glossary_term_view(request, urn, page="1"):
-    service = GlossaryTermService(page, urn)
-    return render(request, "glossary_term.html", service.context)
 
 
 def metadata_specification_view(request):

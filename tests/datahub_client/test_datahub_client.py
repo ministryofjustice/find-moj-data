@@ -601,7 +601,6 @@ class TestCatalogueClientWithDatahub:
                 data_custodians=[],
             ),
             tags=[],
-            glossary_terms=[],
             metadata_last_ingested=None,
             created=None,
             data_last_modified=None,
