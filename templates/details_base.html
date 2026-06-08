@@ -63,7 +63,7 @@
             <h2 class="govuk-heading-s govuk-!-margin-0">Data last updated</h2>
             <div class="govuk-body-s">
               {% if entity.custom_properties.data_summary.latest_file_timestamp %}
-                {{ entity.custom_properties.data_summary.latest_file_timestamp | date:"j F Y H:i" }}
+                {{ entity.custom_properties.data_summary.latest_file_timestamp | date:"j F Y" }}
               {% else %}
                 {{ entity.data_last_modified | date:"j F Y" | default:'Check source'}}
               {% endif %}

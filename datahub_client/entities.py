@@ -486,7 +486,7 @@ class DataSummary(BaseModel):
     latest_file_timestamp: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
         description="Timestamp of the latest file found in the backing storage location",
         default=None,
-        examples=[datetime(2011, 10, 2, 3, 0, 0)],
+        examples=[datetime(2026, 5, 2, 3, 0, 0)],
     )
 
 
