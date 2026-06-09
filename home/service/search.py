@@ -195,6 +195,7 @@ class SearchService(GenericService):
                 "dbt_file_path",
                 "dbt_unique_id",
                 "name",
+                "domain",
                 "database",
                 "tags",
                 "customProperties",
