@@ -200,6 +200,7 @@ class SearchService(GenericService):
                 "customProperties",
                 "Location",
                 "qualifiedName",
+                "platform",
             ],
         }
 
