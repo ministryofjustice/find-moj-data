@@ -483,6 +483,11 @@ class DataSummary(BaseModel):
         default="",
         examples=["Every month", "Every week", "Every day"],
     )
+    latest_file_timestamp: Annotated[datetime | None, AfterValidator(check_timestamp_is_in_the_past)] = Field(
+        description="Timestamp of the latest file found in the backing storage location",
+        default=None,
+        examples=[datetime(2026, 5, 2, 3, 0, 0)],
+    )
 
 
 class CustomEntityProperties(BaseModel):
