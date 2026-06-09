@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 import pytest
 
 from datahub_client.entities import (
@@ -502,6 +504,7 @@ class TestEntityParser:
                         "value": SecurityClassification.OFFICIAL_SENSITIVE.value,
                     },
                     {"key": "refresh_period", "value": "Weekly"},
+                    {"key": "latest_file_timestamp", "value": "2026-05-14T10:20:30+00:00"},
                 ],
                 "name": "test",
                 "description": "test description",
@@ -526,7 +529,11 @@ class TestEntityParser:
                 source_dataset_name="",
                 s3_location="s3://databucket/",
             ),
-            data_summary=DataSummary(row_count=100, refresh_period="Weekly"),
+            data_summary=DataSummary(
+                row_count=100,
+                refresh_period="Weekly",
+                latest_file_timestamp=datetime(2026, 5, 14, 10, 20, 30, tzinfo=UTC),
+            ),
             further_information=FurtherInformation(
                 dc_slack_channel_name="test-channel", dc_slack_channel_url="test-url"
             ),
