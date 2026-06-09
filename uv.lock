@@ -587,7 +587,7 @@ requires-dist = [
     { name = "pyjwt", specifier = "==2.13.0" },
     { name = "python-dotenv", specifier = ">=1.2.2,<2" },
     { name = "pyyaml", specifier = ">=6.0.2,<7" },
-    { name = "redis", extras = ["hiredis"], specifier = ">=6.2.0,<8" },
+    { name = "redis", extras = ["hiredis"], specifier = ">=6.2.0,<9" },
     { name = "sentry-sdk", extras = ["django"], specifier = ">=2.32.0,<3" },
     { name = "setuptools", specifier = "==82.0.1" },
     { name = "whitenoise", specifier = ">=6.9.0,<7" },
