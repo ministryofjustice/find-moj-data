@@ -14,3 +14,9 @@
   @extend .contact-card;
   border-color:#0282A5;
 }
+
+// Prevents long email addresses from overflowing the side column at large text sizes/magnification
+#contact_channels_team_email {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
