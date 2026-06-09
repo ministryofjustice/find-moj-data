@@ -21,7 +21,7 @@ dependencies = [
     "psycopg>=3.2.9,<4",
     "psycopg-binary>=3.2.9,<4",
     "django-debug-toolbar>=5.2.0,<7",
-    "redis[hiredis]>=6.2.0,<8",
+    "redis[hiredis]>=6.2.0,<9",
     "notifications-python-client>=10.0.1,<13",
     "pydantic[email]>=2.11.7,<3",
     "email-validator==2.3.0",
@@ -30,7 +30,7 @@ dependencies = [
     "boto3>=1.38.46,<2",
     "setuptools==82.0.1",
     "cffi==2.0.0",
-    "pyjwt==2.12.1",
+    "pyjwt==2.13.0",
 ]
 
 [dependency-groups]
