@@ -3,15 +3,6 @@
 {% load humanize %}
 
 {% if result.parent_entity or result.tags_to_display %}
-  <dl class="app-metadata-list">
-    {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
-      <div class="app-metadata-list__row">
-        <strong>Database: </strong>
-        <a aria-label="link to to database {{ result.parent_entity.display_name }}"
-           href="{% url 'home:details' result_type='database' urn=result.parent_entity.urn %}">{{ result.parent_entity.display_name }}</a>
-      </div>
-    {% endif %}
-
     {% with match_reasons=result.matches|lookup:readable_match_reasons|join:", " %}
       {% if match_reasons %}
 
@@ -25,7 +16,14 @@
 
       {% endif %}
     {% endwith %}
-
+  <dl class="app-metadata-list">
+    {% if result.result_type.find_moj_data_type.name == "TABLE" and result.parent_entity %}
+      <div class="app-metadata-list__row">
+        <strong>Database: </strong>
+        <a aria-label="link to to database {{ result.parent_entity.display_name }}"
+           href="{% url 'home:details' result_type='database' urn=result.parent_entity.urn %}">{{ result.parent_entity.display_name }}</a>
+      </div>
+    {% endif %}
   {% switch 'display-result-tags' %}
       {% if result.tags_to_display %}
         <div class="app-metadata-list__row">
