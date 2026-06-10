@@ -215,11 +215,14 @@ class SearchService(GenericService):
         if query in ("", "*"):
             return highlighted_results
 
-        else:
-            query_word_highlighting_pattern = self._compile_query_word_highlighting_pattern(query)
-            for result in highlighted_results.page_results:
-                result.description = self._add_mark_tags(result.description or "", query_word_highlighting_pattern)
-            return highlighted_results
+        query_word_highlighting_pattern = self._compile_query_word_highlighting_pattern(query)
+        for result in highlighted_results.page_results:
+            if result.description and query_word_highlighting_pattern.search(result.description):
+                result.description = self._add_mark_tags(result.description, query_word_highlighting_pattern)
+            else:
+                result.description = ""
+
+        return highlighted_results
 
     def _compile_query_word_highlighting_pattern(self, query: str) -> re.Pattern:
         terms = [self.stemmer.stem(term) for term in query.split()]
