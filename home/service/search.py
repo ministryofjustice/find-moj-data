@@ -187,7 +187,7 @@ class SearchService(GenericService):
             "excluded_values": [
                 "description",
                 "_index",
-                "fieldPaths",
+                # "fieldPaths",
                 "fieldDescriptions",
                 "id",
                 "urn",
