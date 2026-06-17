@@ -23,8 +23,11 @@
         Database
       </dt>
       <dd class="app-metadata-list__value">
-        <a
-          href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{ parent_entity.display_name }}</a>
+        {% if parent_entity and parent_entity.urn %}
+          <a href="{% url 'home:details' result_type=parent_type urn=parent_entity.urn %}">{{ parent_entity.display_name }}</a>
+        {% else %}
+          {{ parent_entity.display_name|default:'Not provided' }}
+        {% endif %}
       </dd>
     </div>
   {% endif %}

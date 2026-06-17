@@ -1,6 +1,10 @@
 import pytest
+from django.template.loader import render_to_string
 from django.urls import reverse
 from waffle.testutils import override_switch
+
+from datahub_client.entities import EntitySummary, EntityRef, RelationshipType
+from tests.conftest import generate_table_metadata
 
 
 @pytest.mark.django_db
@@ -65,6 +69,36 @@ class TestTableView:
         assert response.content == (
             b"name,display_name,type,description\r\n" + b"urn,urn,string,description **with markdown**\r\n"
         )
+
+    @pytest.mark.django_db
+    def test_details_metadata_partial_handles_missing_parent_urn(self):
+        table_metadata = generate_table_metadata(
+            relations={
+                RelationshipType.PARENT: [
+                    EntitySummary(
+                        entity_ref=EntityRef(urn="", display_name="parent_database"),
+                        description="parent description",
+                        tags=[],
+                        entity_type="DATABASE",
+                    )
+                ],
+                RelationshipType.DATA_LINEAGE: [],
+            }
+        )
+
+        rendered = render_to_string(
+            "partial/details_metadata.html",
+            {
+                "entity": table_metadata,
+                "entity_type": "Table",
+                "parent_entity": EntityRef(urn="", display_name="parent_database"),
+                "parent_type": "database",
+                "is_access_requirements_a_url": False,
+            },
+        )
+
+        assert "parent_database" in rendered
+        assert 'href="' not in rendered
 
 
 class TestDatabaseView:

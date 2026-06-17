@@ -459,15 +459,23 @@ class EntityParser:
         related_entities = []
         for all_relations in relations_list:
             for relation in all_relations.get(relation_key, []):
-                urn = relation.get("entity").get("urn")
+                entity = relation.get("entity") or {}
+                urn = entity.get("urn")
+                if not urn:
+                    logger.warning(
+                        "Skipping malformed %s relation because related entity urn is blank: %r",
+                        relationship_type,
+                        relation,
+                    )
+                    continue
                 # we sometimes have multiple sub-types loaded or no subtype
                 if entity_type_of_relations is None:
                     entity_type = (
-                        relation.get("entity")
+                        entity
                         .get("subTypes", {})
-                        .get("typeNames", [relation.get("entity").get("type")])[0]
-                        if relation.get("entity").get("subTypes") is not None
-                        else [relation.get("entity").get("type")][0]
+                        .get("typeNames", [entity.get("type")])[0]
+                        if entity.get("subTypes") is not None
+                        else [entity.get("type")][0]
                     )
                     # Convert subtypes of table to table, else keep original type
                     entity_type = (
@@ -478,16 +486,16 @@ class EntityParser:
                 else:
                     entity_type = entity_type_of_relations
                 display_name = (
-                    relation.get("entity").get("properties").get("name")
-                    if relation.get("entity", {}).get("properties") is not None
-                    else relation.get("entity").get("name", "")
+                    entity.get("properties").get("name")
+                    if entity.get("properties") is not None
+                    else entity.get("name", "")
                 )
-                properties = relation.get("entity", {}).get("properties")
+                properties = entity.get("properties")
                 if properties is not None:
                     description = properties.get("description") or ""
                 elif properties is None:
                     description = ""
-                tags = self.parse_tags(relation.get("entity"))
+                tags = self.parse_tags(entity)
                 related_entities.append(
                     EntitySummary(
                         entity_ref=EntityRef(urn=urn, display_name=display_name),

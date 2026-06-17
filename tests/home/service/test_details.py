@@ -61,6 +61,19 @@ from tests.conftest import (
             },
             None,
         ),
+        (
+            {
+                RelationshipType.PARENT: [
+                    EntitySummary(
+                        entity_ref=EntityRef(urn="", display_name="db"),
+                        description="test",
+                        entity_type="database",
+                        tags=[],
+                    )
+                ]
+            },
+            None,
+        ),
     ],
 )
 def test_parse_parent(input, expected_output):
