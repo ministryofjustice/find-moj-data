@@ -37,6 +37,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: null
+                name: blackhole
                 port:
                   number: 80
