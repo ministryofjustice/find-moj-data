@@ -4,6 +4,7 @@
 {% block extra_details %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
+      {% include "partial/access_data.html" %}
       {% if charts %}
         <div class="govuk-heading-m">Dashboard content</div>
         {% include "partial/download_button.html" with entity_type='dashboard' title="chart descriptions" %}
@@ -14,6 +15,5 @@
       {% endif %}
     </div>
   </div>
-  {% include "partial/access_data.html" %}
 
 {% endblock extra_details %}
