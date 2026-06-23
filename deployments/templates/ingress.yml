@@ -32,3 +32,11 @@ spec:
                 name: find-moj-data-service # this should match the metadata.name in service.yml
                 port:
                   number: 80
+          # Route Prometheus metrics endpoint to a null service
+          - path: /metrics
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: null
+                port:
+                  number: 80
