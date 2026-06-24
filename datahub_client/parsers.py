@@ -313,6 +313,12 @@ class EntityParser:
                     name, value = value.split("=")
                 except ValueError:
                     continue
+            if name == "platform" and value:
+                value = (
+                    value.replace("urn:li:dataPlatformInstance:(", "")
+                    .replace("urn:li:dataPlatform:", "")
+                    .removesuffix(")")
+                )
             matched_fields[name] = value
         return matched_fields
 
