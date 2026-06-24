@@ -187,7 +187,6 @@ class SearchService(GenericService):
             "excluded_values": [
                 "description",
                 "_index",
-                # "fieldPaths",
                 "fieldDescriptions",
                 "id",
                 "urn",
@@ -197,7 +196,6 @@ class SearchService(GenericService):
                 "name",
                 "domain",
                 "database",
-                "tags",
                 "customProperties",
                 "Location",
                 "qualifiedName",
