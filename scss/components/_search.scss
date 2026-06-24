@@ -83,6 +83,17 @@
   }
 }
 
+.govuk-body-m mark {
+  display: inline;
+  font-weight: 700;
+  background-color: #ffe5cc;
+  box-shadow: 0 -2px 0 #ffb266 inset;
+}
+
+.found-in {
+  color: $govuk-secondary-text-colour;
+  margin-bottom: 10px;
+}
 .govuk-tag-search {
   @extend .govuk-tag--grey;
   background-color: govuk-colour("black", $variant: "tint-95");
