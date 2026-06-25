@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from waffle.testutils import override_switch
 
-from datahub_client.entities import EntitySummary, EntityRef, RelationshipType
+from datahub_client.entities import EntityRef, EntitySummary, RelationshipType
 from tests.conftest import generate_table_metadata
 
 

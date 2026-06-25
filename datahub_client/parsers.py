@@ -477,9 +477,7 @@ class EntityParser:
                 # we sometimes have multiple sub-types loaded or no subtype
                 if entity_type_of_relations is None:
                     entity_type = (
-                        entity
-                        .get("subTypes", {})
-                        .get("typeNames", [entity.get("type")])[0]
+                        entity.get("subTypes", {}).get("typeNames", [entity.get("type")])[0]
                         if entity.get("subTypes") is not None
                         else [entity.get("type")][0]
                     )
