@@ -182,9 +182,13 @@ def report_issue_view(request) -> HttpResponse:
         entity_name = request.GET.get("entity_name")
         entity_type = request.GET.get("entity_type")
         entity_url = request.GET.get("entity_url")
+        subject_area = request.GET.get("subject_area")
+
         request.session["entity_name"] = entity_name
         request.session["entity_type"] = entity_type
         request.session["entity_url"] = entity_url
+        request.session["subject_area"] = subject_area
+
         request.session["data_custodian_email"] = request.GET.get("data_custodian_email", "")
 
         form = IssueForm()
@@ -198,7 +202,7 @@ def report_issue_view(request) -> HttpResponse:
             "entity_name": entity_name,
             "entity_type": entity_type,
             "entity_url": entity_url,
-            "subject_area": request.session.get("subject_area", ""),
+            "subject_area": subject_area,
             "report": True,
             "technical_contact": technical_contact,
         },
