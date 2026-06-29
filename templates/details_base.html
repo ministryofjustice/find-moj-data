@@ -91,7 +91,7 @@
       {% endblock metadata_list %}
     </div>
     <div class="govuk-grid-column-one-third">
-      {% include "partial/contact_info.html" with entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform %}
+        {% include "partial/contact_info.html" with entity=entity entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform %}
     </div>
   </div>
 

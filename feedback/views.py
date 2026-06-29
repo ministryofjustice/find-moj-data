@@ -166,6 +166,7 @@ def report_issue_view(request) -> HttpResponse:
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
+
             entity_url = request.session["entity_url"]
             return render(
                 request,
@@ -179,14 +180,14 @@ def report_issue_view(request) -> HttpResponse:
             )
     else:
         entity_name = request.GET.get("entity_name")
+        entity_type = request.GET.get("entity_type")
         entity_url = request.GET.get("entity_url")
-
         request.session["entity_name"] = entity_name
+        request.session["entity_type"] = entity_type
         request.session["entity_url"] = entity_url
         request.session["data_custodian_email"] = request.GET.get("data_custodian_email", "")
 
         form = IssueForm()
-
     technical_contact = True if request.session.get("data_custodian_email") else False
     return render(
         request,
@@ -195,7 +196,9 @@ def report_issue_view(request) -> HttpResponse:
             "h1_value": "Report an issue",
             "form": form,
             "entity_name": entity_name,
+            "entity_type": entity_type,
             "entity_url": entity_url,
+            "subject_area": request.session.get("subject_area", ""),
             "report": True,
             "technical_contact": technical_contact,
         },
