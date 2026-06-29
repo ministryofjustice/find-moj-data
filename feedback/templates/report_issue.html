@@ -29,6 +29,27 @@
   <div class="govuk-grid-column-full">
     <span class="govuk-caption-l">{{entity_name}}</span>
     <h1 class="govuk-heading-l app-report-issue-header govuk-!-padding-top-2">{{h1_value}}</h1>
+
+      <dl class="app-metadata-list" id="metadata-property-list">
+
+
+  <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      Subject area
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{ subject_area }}
+    </dd>
+  </div>
+        <div class="app-metadata-list__row">
+    <dt class="app-metadata-list__key">
+      {{ entity_type }}
+    </dt>
+    <dd class="app-metadata-list__value">
+      {{ entity_name }}
+    </dd>
+  </div>
+  </dl>
     <h2 class="govuk-heading-s">What is wrong with this information?</h2>
   </div>
   <div class="govuk-grid-column-two-thirds">
@@ -36,6 +57,8 @@
       <div class="govuk-form-group {% if form.additional_info.errors %}govuk-form-group--error{% endif %}">
         <div id="more-detail-hint" class="govuk-hint">
           {{form.additional_info.label}}
+
+
         </div>
         {% for error in form.additional_info.errors %}
           <p id="additional-info-issued-error" class="govuk-error-message">
