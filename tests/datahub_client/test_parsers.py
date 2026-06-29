@@ -440,6 +440,29 @@ class TestEntityParser:
         result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
         assert result == {RelationshipType.PARENT: []}
 
+    def test_parse_relations_skips_relation_with_blank_urn(self, parser):
+        relations = {
+            "relationships": {
+                "total": 1,
+                "relationships": [
+                    {
+                        "entity": {
+                            "urn": "",
+                            "type": "DATABASE",
+                            "properties": {
+                                "name": "test_db",
+                                "description": "a test entity",
+                            },
+                            "tags": {"tags": [{"tag": {"urn": "urn:li:tag:dc_display_in_catalogue"}}]},
+                        }
+                    }
+                ],
+            }
+        }
+
+        result = parser.parse_relations(RelationshipType.PARENT, [relations["relationships"]])
+        assert result == {RelationshipType.PARENT: []}
+
     @pytest.mark.parametrize(
         "raw_created,raw_last_modified,expected_created,expected_modified",
         [

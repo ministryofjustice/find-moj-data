@@ -28,6 +28,8 @@ def _parse_parent(relationships: dict) -> EntityRef | None:
         # If the dataset belongs to multiple parents, this may diverge
         # from the path the user took to get to this page.
         parent_entity = parents[0].entity_ref
+        if not parent_entity or not parent_entity.urn:
+            return None
     else:
         parent_entity = None
     return parent_entity
