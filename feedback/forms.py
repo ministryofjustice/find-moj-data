@@ -56,6 +56,12 @@ class IssueForm(forms.ModelForm):
 
 
 class FeedbackYesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["interested_in_research"].required = True
+        self.fields["interested_in_research"].choices = [(True, "Yes"), (False, "No")]
+        self.initial["interested_in_research"] = None
+
     class Meta:
         model = FeedBackYes
         fields = [
@@ -98,6 +104,15 @@ class FeedbackYesForm(forms.ModelForm):
 
 
 class FeedbackNoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["interested_in_research"].required = True
+        self.fields["interested_in_research"].choices = [
+            (True, "Yes"),
+            (False, "No"),
+        ]
+        self.initial["interested_in_research"] = None
+
     class Meta:
         model = FeedBackNo
         fields = [

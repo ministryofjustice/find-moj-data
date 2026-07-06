@@ -68,7 +68,6 @@ class FeedBackYes(FeedbackMixin, models.Model):
         null=True,
         blank=True,
         verbose_name="Are you interested in taking part in research on Find MOJ Data?",
-        default=True,
         choices=RESEARCH_FEEDBACK_CHOICES,
     )
 
@@ -102,7 +101,6 @@ class FeedBackNo(FeedbackMixin, models.Model):
         null=True,
         blank=True,
         verbose_name="Are you interested in taking part in research on Find MOJ Data?",
-        default=True,
         choices=RESEARCH_FEEDBACK_CHOICES,
     )
 
