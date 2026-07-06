@@ -112,6 +112,12 @@ class FeedbackYesForm(forms.ModelForm):
                 )
         return summary_errors
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["interested_in_research"].required = True
+        self.fields["interested_in_research"].choices = [(True, "Yes"), (False, "No")]
+        self.initial["interested_in_research"] = None
+
     class Meta:
         model = FeedBackYes
         fields = [
@@ -223,6 +229,15 @@ class FeedbackNoForm(forms.ModelForm):
                     }
                 )
         return summary_errors
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["interested_in_research"].required = True
+        self.fields["interested_in_research"].choices = [
+            (True, "Yes"),
+            (False, "No"),
+        ]
+        self.initial["interested_in_research"] = None
 
     class Meta:
         model = FeedBackNo
