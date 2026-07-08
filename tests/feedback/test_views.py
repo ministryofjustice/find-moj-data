@@ -21,7 +21,7 @@ class TestFeedbackView:
     def test_valid_yes_form_redirects(self, client):
         response = client.post(
             reverse("feedback:yes"),
-            data={"url_path": "/some/path", "easy_to_find": True},
+            data={"url_path": "/some/path", "easy_to_find": True, "interested_in_research": True},
         )
         subject = "We'll use it to improve the service."
         assert response.status_code == 200
@@ -39,7 +39,7 @@ class TestFeedbackView:
     def test_valid_no_form_redirects(self, client):
         response = client.post(
             reverse("feedback:no"),
-            data={"url_path": "/some/path", "not_clear": True},
+            data={"url_path": "/some/path", "not_clear": True, "interested_in_research": False},
         )
         subject = "We'll use it to improve the service."
         assert response.status_code == 200
