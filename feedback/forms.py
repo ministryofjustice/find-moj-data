@@ -233,6 +233,10 @@ class FeedbackNoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["interested_in_research"].required = True
+        self.fields["interested_in_research"].error_messages = {
+            "required": "Select if you want to take part in research on Find MOJ Data",
+            "invalid_choice": "Select if you want to take part in research on Find MOJ Data",
+        }
         self.fields["interested_in_research"].choices = [(True, "Yes"), (False, "No")]
         self.initial["interested_in_research"] = None
 
