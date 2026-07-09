@@ -92,6 +92,8 @@ class DataHubCatalogueClient:
             self.gms_endpoint = api_url
         elif api_url.endswith("/api"):
             self.gms_endpoint = api_url + "/gms"
+        elif api_url.startswith("https"):
+            self.gms_endpoint = api_url
         else:
             raise ConnectivityError("api_url is incorrectly formatted")
 
