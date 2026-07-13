@@ -236,7 +236,7 @@ if not TESTING:
 if DEBUG and not TESTING:
     INSTALLED_APPS.insert(-1, "debug_toolbar")
     MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
-
+AZURE_AUTH = {}
 # Enable / Disable Azure Auth
 if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
     # Adds the Azure Authentication middleware to the Django Authentication middleware
