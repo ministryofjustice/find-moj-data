@@ -236,6 +236,7 @@ if not TESTING:
 if DEBUG and not TESTING:
     INSTALLED_APPS.insert(-1, "debug_toolbar")
     MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    AZURE_AUTH = {}
 
 # Enable / Disable Azure Auth
 if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
@@ -260,8 +261,6 @@ if not os.environ.get("AZURE_AUTH_ENABLED", "true") == "false":
     LOGIN_REDIRECT_URL = "/"  # Or any other endpoint
 
     AUTHENTICATION_BACKENDS = ("azure_auth.backends.AzureBackend",)
-else:
-    AZURE_AUTH = {}
 LANGUAGE_CODE = "en"
 LOCALE_PATHS = [BASE_DIR / "locale"]
 
