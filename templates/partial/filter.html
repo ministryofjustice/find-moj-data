@@ -13,8 +13,7 @@
       {% if remove_filter_hrefs|get_keys|length > 0 %}
         {% include "partial/selected_filters.html" %}
       {% endif %}
-      <div class="moj-filter__options">
-      <input type="submit" class="govuk-button apply_filters" value="Apply filters"/>
+      <div class="moj-filter__options govuk-!-padding-bottom-0">
         <div class="govuk-form-group">
           <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Subject area</legend>
@@ -28,11 +27,14 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Asset types</legend>
             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
               {% for entity_type, count in entity_type_counts %}
-                  <div aria-label="Select as an asset type filter" class="govuk-checkboxes__item">
-                    <input type="checkbox" name="entity_types" value="{{ entity_type.name }}" class="govuk-checkboxes__input" form="searchform"
-                            id="id_entity_types_{{ forloop.counter0 }}" {% if entity_type.name in request.GET|getlist:"entity_types" %}checked{% endif %}>
-                    <label class="govuk-label govuk-checkboxes__label" for="id_entity_types_{{ forloop.counter0 }}">{{ entity_type.value }} ({{ count }})</label>
-                  </div>
+                <div aria-label="Select as an asset type filter" class="govuk-checkboxes__item">
+                  <input type="checkbox" name="entity_types" value="{{ entity_type.name }}"
+                         class="govuk-checkboxes__input" form="searchform"
+                         id="id_entity_types_{{ forloop.counter0 }}"
+                         {% if entity_type.name in request.GET|getlist:"entity_types" %}checked{% endif %}>
+                  <label class="govuk-label govuk-checkboxes__label"
+                         for="id_entity_types_{{ forloop.counter0 }}">{{ entity_type.value }} ({{ count }})</label>
+                </div>
               {% endfor %}
             </div>
           </fieldset>
@@ -47,19 +49,23 @@
                        class="govuk-checkboxes__item">
                     <input type="checkbox" name="tags" value="{{ tag.name }}"
                            class="govuk-checkboxes__input" form="searchform"
-                            id="id_tags_{{ forloop.counter0 }}" {% if tag.name in request.GET|getlist:"tags" %}checked{% endif %}>
+                           id="id_tags_{{ forloop.counter0 }}"
+                           {% if tag.name in request.GET|getlist:"tags" %}checked{% endif %}>
                     <label class="govuk-label govuk-checkboxes__label"
                            for="id_tags_{{ forloop.counter0 }}">  {{ tag.name }} ({{ tag.count }})
                     </label>
                   </div>
                 {% endfor %}
               {% else %}
-                   <p>
-                     No Tags
-                    </p>
+                <p>
+                  No Tags
+                </p>
               {% endif %}
             </div>
           </fieldset>
+        </div>
+        <div class="govuk-form-group">
+          <input type="submit" class="govuk-button apply_filters" value="Apply filters" />
         </div>
       </div>
     </div>
