@@ -147,7 +147,17 @@ class FeedbackYesForm(forms.ModelForm):
 
     def get_error_summary_items(self):
         summary_errors = []
-        for errored_field, error_messages in self.errors.items():
+        ordered_fields = []
+
+        if "__all__" in self.errors:
+            ordered_fields.append("__all__")
+
+        ordered_fields.extend(field_name for field_name in self.fields.keys() if field_name in self.errors)
+
+        ordered_fields.extend(field_name for field_name in self.errors.keys() if field_name not in ordered_fields)
+
+        for errored_field in ordered_fields:
+            error_messages = self.errors.get(errored_field, [])
             href = "feedback-errors" if errored_field == "__all__" else f"id_{errored_field}"
             for error in error_messages:
                 summary_errors.append(
@@ -305,7 +315,17 @@ class FeedbackNoForm(forms.ModelForm):
 
     def get_error_summary_items(self):
         summary_errors = []
-        for errored_field, error_messages in self.errors.items():
+        ordered_fields = []
+
+        if "__all__" in self.errors:
+            ordered_fields.append("__all__")
+
+        ordered_fields.extend(field_name for field_name in self.fields.keys() if field_name in self.errors)
+
+        ordered_fields.extend(field_name for field_name in self.errors.keys() if field_name not in ordered_fields)
+
+        for errored_field in ordered_fields:
+            error_messages = self.errors.get(errored_field, [])
             href = "feedback-errors" if errored_field == "__all__" else f"id_{errored_field}"
             for error in error_messages:
                 summary_errors.append(
