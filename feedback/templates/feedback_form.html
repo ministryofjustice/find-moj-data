@@ -50,8 +50,8 @@
                   {% if field.name == "something_else" %}
                     {% if feedback_type == "yes" %}
                       <div id="what-went-well-container"
-                           class="feedback-conditional govuk-checkboxes__conditional {% if form.what_went_well.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
-                        <div class="govuk-form-group govuk-!-padding-top-4 {% if form.what_went_well.errors %}govuk-form-group--error{% endif %}">
+                           class="feedback-conditional feedback-conditional--compact govuk-checkboxes__conditional {% if form.what_went_well.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
+                        <div class="govuk-form-group govuk-!-padding-top-0 {% if form.what_went_well.errors %}govuk-form-group--error{% endif %}">
                           <h2 class="govuk-label-wrapper">
                             <label class="govuk-label govuk-label--s"
                                    for="{{ form.what_went_well.id_for_label }}">Tell us what went well
@@ -67,8 +67,8 @@
                       </div>
                     {% elif feedback_type == "no" %}
                       <div id="what-went-wrong-container"
-                          class="feedback-conditional govuk-checkboxes__conditional {% if form.what_went_wrong.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
-                        <div class="govuk-form-group {% if form.what_went_wrong.errors %}govuk-form-group--error{% endif %}">
+                          class="feedback-conditional feedback-conditional--compact govuk-checkboxes__conditional {% if form.what_went_wrong.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
+                        <div class="govuk-form-group govuk-!-padding-top-0 {% if form.what_went_wrong.errors %}govuk-form-group--error{% endif %}">
                           <label class="govuk-label govuk-label--s" for="{{ form.what_went_wrong.id_for_label }}">
                             Tell us what was wrong
                           </label>
@@ -110,7 +110,7 @@
                   </div>
               {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' %}
                 <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
-                  <div class="govuk-form-group govuk-!-padding-top-4">
+                  <div class="govuk-form-group govuk-!-padding-top-0">
                     <h2 class="govuk-label-wrapper">
                       {% if feedback_type == "report" %}
                         <label class="govuk-label govuk-label--s"

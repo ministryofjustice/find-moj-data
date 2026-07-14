@@ -160,7 +160,6 @@ class FeedbackYesForm(forms.ModelForm):
                 "easy_to_find",
                 "information_useful",
                 "information_easy_to_understand",
-                "additional_information",
                 "something_else",
             ]
         ):
@@ -275,7 +274,6 @@ class FeedbackNoForm(forms.ModelForm):
                 "not_clear",
                 "information_not_available",
                 "incomplete_information",
-                "additional_information",
                 "difficult_to_understand",
                 "something_else",
             ]

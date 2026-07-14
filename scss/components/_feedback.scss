@@ -155,3 +155,7 @@ $feedback-prompt-border-top-colour: #8eb8dc;
 .feedback-conditional .govuk-form-group--error .govuk-textarea {
   border-color: $govuk-error-colour;
 }
+
+.feedback-conditional--compact {
+  margin-bottom: govuk-spacing(2);
+}

@@ -72,6 +72,18 @@ class TestFeedbackView:
         assert response.status_code == 200
         assert escape("We'll use it to improve the service.") in response.text
 
+    def test_yes_form_rejects_only_optional_additional_information(self, client):
+        response = client.post(
+            reverse("feedback:yes"),
+            data={
+                "url_path": "/some/path",
+                "additional_information": "Some optional notes",
+                "interested_in_research": True,
+            },
+        )
+        assert response.status_code == 200
+        assert "Select one or more options to continue" in response.text
+
     def test_valid_no_form_redirects(self, client):
         response = client.post(
             reverse("feedback:no"),
@@ -125,6 +137,18 @@ class TestFeedbackView:
         )
         assert response.status_code == 200
         assert escape("We'll use it to improve the service.") in response.text
+
+    def test_no_form_rejects_only_optional_additional_information(self, client):
+        response = client.post(
+            reverse("feedback:no"),
+            data={
+                "url_path": "/some/path",
+                "additional_information": "Some optional notes",
+                "interested_in_research": False,
+            },
+        )
+        assert response.status_code == 200
+        assert "Select one or more options to continue" in response.text
 
     def test_valid_report_form_redirects(self, client):
         response = client.post(
