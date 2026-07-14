@@ -36,6 +36,42 @@ class TestFeedbackView:
         assert response.status_code == 200
         assert error in response.text
 
+    def test_invalid_yes_form_targets_research_radios_with_inline_error(self, client):
+        response = client.post(
+            reverse("feedback:yes"),
+            data={"easy_to_find": True, "url_path": "/some/path"},
+        )
+        assert response.status_code == 200
+        assert 'id="id_interested_in_research"' in response.text
+        assert 'class="govuk-form-group govuk-form-group--error"' in response.text
+        assert 'id="id_interested_in_research-error" class="govuk-error-message"' in response.text
+        assert "Choose Yes or No to submit" in response.text
+
+    def test_yes_form_requires_what_went_well_when_something_else_checked(self, client):
+        response = client.post(
+            reverse("feedback:yes"),
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+                "interested_in_research": True,
+            },
+        )
+        assert response.status_code == 200
+        assert "Tell us what went well to continue" in response.text
+
+    def test_yes_form_accepts_something_else_with_text(self, client):
+        response = client.post(
+            reverse("feedback:yes"),
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+                "what_went_well": "Found exactly what I needed",
+                "interested_in_research": True,
+            },
+        )
+        assert response.status_code == 200
+        assert escape("We'll use it to improve the service.") in response.text
+
     def test_valid_no_form_redirects(self, client):
         response = client.post(
             reverse("feedback:no"),
@@ -53,6 +89,42 @@ class TestFeedbackView:
         error = "There is a problem"
         assert response.status_code == 200
         assert error in response.text
+
+    def test_invalid_no_form_targets_research_radios_with_inline_error(self, client):
+        response = client.post(
+            reverse("feedback:no"),
+            data={"not_clear": True, "url_path": "/some/path"},
+        )
+        assert response.status_code == 200
+        assert 'id="id_interested_in_research"' in response.text
+        assert 'class="govuk-form-group govuk-form-group--error"' in response.text
+        assert 'id="id_interested_in_research-error" class="govuk-error-message"' in response.text
+        assert "Choose Yes or No to submit" in response.text
+
+    def test_no_form_requires_what_went_wrong_when_something_else_checked(self, client):
+        response = client.post(
+            reverse("feedback:no"),
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+                "interested_in_research": False,
+            },
+        )
+        assert response.status_code == 200
+        assert "Tell us what was wrong to continue" in response.text
+
+    def test_no_form_accepts_something_else_with_text(self, client):
+        response = client.post(
+            reverse("feedback:no"),
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+                "what_went_wrong": "Could not locate governance details",
+                "interested_in_research": False,
+            },
+        )
+        assert response.status_code == 200
+        assert escape("We'll use it to improve the service.") in response.text
 
     def test_valid_report_form_redirects(self, client):
         response = client.post(

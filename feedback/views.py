@@ -25,8 +25,16 @@ def feedback_view(request) -> HttpResponse:
     url_path = request.GET.get("url_path", "")
     field_set = []
 
+    if request.path == "/feedback/yes":
+        feedback_type = "yes"
+    elif request.path == "/feedback/no":
+        feedback_type = "no"
+    else:
+        feedback_type = "report"
+
     if request.method == "POST":
         success_message = "We'll use it to improve the service."
+        legend_label = "Can you tell us more?"
 
         match request.path:
             case "/feedback/yes":
@@ -38,6 +46,7 @@ def feedback_view(request) -> HttpResponse:
             case _:
                 form = FeedbackReportForm(request.POST)
                 success_message = "We look at every report received."
+                legend_label = "What is the issue?"
                 subject = "Report an issue with this page"
 
         if form.is_valid():
@@ -52,20 +61,42 @@ def feedback_view(request) -> HttpResponse:
             # Send notification
             send_feedback_notification(feedback, subject)
 
-            context = {"success_message": success_message}
-            return render(request, "feedback_success.html", context)
+            return render(
+                request,
+                "feedback_success.html",
+                {
+                    "success_message": success_message,
+                    "feedback_type": feedback_type,
+                },
+            )
+
         else:
             for field in form:
                 if field.widget_type == "checkbox":
                     field_set.append(field)
+            if hasattr(form, "get_error_summary_items"):
+                summary_errors = form.get_error_summary_items()
+            else:
+                summary_errors = [
+                    {
+                        "href": ("feedback-errors" if errored_field == "__all__" else f"id_{errored_field}"),
+                        "message": error,
+                    }
+                    for errored_field, error_messages in form.errors.items()
+                    for error in error_messages
+                ]
             log.info(f"invalid feedback form submission: {form.errors}")
+
             return render(
                 request,
                 "feedback_form.html",
                 {
                     "form": form,
+                    "summary_errors": summary_errors,
                     "url_path": url_path,
                     "field_set": field_set,
+                    "legend_label": legend_label,
+                    "feedback_type": feedback_type,
                 },
             )
 
@@ -84,9 +115,11 @@ def feedback_view(request) -> HttpResponse:
 
     context = {
         "form": form,
+        "summary_errors": [],
         "field_set": field_set,
         "url_path": url_path,
         "legend_label": legend_label,
+        "feedback_type": feedback_type,
     }
     return render(request, "feedback_form.html", context)
 

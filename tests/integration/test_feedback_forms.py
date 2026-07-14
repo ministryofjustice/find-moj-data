@@ -200,6 +200,9 @@ class TestFeedbackForms:
             addition_information = self.selenium.find_element(By.ID, "id_additional_information")
             addition_information.send_keys("This is a test comment")
 
+            interested_in_research_yes = self.selenium.find_element(By.ID, "id_interested_in_research_0")
+            interested_in_research_yes.click()
+
         submit_button = self.selenium.find_element(By.ID, "submit-feedback-button")
         submit_button.click()
 
@@ -219,6 +222,9 @@ class TestFeedbackForms:
 
             addition_information = self.selenium.find_element(By.ID, "id_additional_information")
             addition_information.send_keys("This is a test comment")
+
+            interested_in_research_yes = self.selenium.find_element(By.ID, "id_interested_in_research_0")
+            interested_in_research_yes.click()
 
         submit_button = self.selenium.find_element(By.ID, "submit-feedback-button")
         submit_button.click()

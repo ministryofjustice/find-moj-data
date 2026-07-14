@@ -70,6 +70,18 @@ class FeedBackYes(FeedbackMixin, models.Model):
         verbose_name="Are you interested in taking part in research on Find MOJ Data?",
         choices=RESEARCH_FEEDBACK_CHOICES,
     )
+    something_else = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Something else",
+        default=False,
+    )
+    what_went_well = models.CharField(
+        max_length=250,
+        null=True,
+        blank=True,
+        verbose_name="Tell us what went well",
+    )
 
 
 class FeedBackNo(FeedbackMixin, models.Model):
@@ -102,6 +114,19 @@ class FeedBackNo(FeedbackMixin, models.Model):
         blank=True,
         verbose_name="Are you interested in taking part in research on Find MOJ Data?",
         choices=RESEARCH_FEEDBACK_CHOICES,
+    )
+    something_else = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Something else",
+        default=False,
+    )
+
+    what_went_wrong = models.CharField(
+        max_length=250,
+        null=True,
+        blank=True,
+        verbose_name="Tell us what was wrong",
     )
 
 

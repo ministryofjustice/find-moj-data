@@ -2,72 +2,126 @@
   <div class="gem-c-feedback__prompt-content">
     <div class="gem-c-feedback__prompt-questions">
       <div class="gem-c-feedback__prompt-question-answer">
-        <form action="{{ request.path }}" method="post" novalidate>
+          <form action="{{ request.path }}"
+            method="post"
+            hx-post="{{ request.get_full_path }}"
+            hx-target="#feedback-widget"
+            hx-swap="innerHTML"
+            novalidate>
           {% csrf_token %}
           <input type="hidden" name="url_path" value="{{ url_path }}">
           <div class="govuk-form-group">
             {% if form.errors %}
-              <div class="govuk-error-summary" data-module="govuk-error-summary">
+              <div id="feedback-errors" class="govuk-error-summary" data-module="govuk-error-summary">
                 <div role="alert">
                   <h2 class="govuk-error-summary__title">
                     There is a problem
                   </h2>
                   <div class="govuk-error-summary__body">
                     <ul class="govuk-list govuk-error-summary__list">
-                      {% for errored_field, error_messages in form.errors.items %}
-                        {% for error in error_messages %}
-                          <li>
-                            <a href="#{{ errored_field }}">{{ error }}</a>
-                          </li>
-                        {% endfor %}
+                      {% for error in summary_errors %}
+                        <li>
+                          <a href="#{{ error.href }}">{{ error.message }}</a>
+                        </li>
                       {% endfor %}
                     </ul>
                   </div>
                 </div>
               </div>
             {% endif %}
-            <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
-              <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                {{ legend_label }}
-              </legend>
-              {% for field in field_set %}
-                <div class="govuk-checkboxes__item">
-                  {{ field }}
-                  <label class="govuk-label govuk-checkboxes__label" for="{{ field.id_for_label }}">
-                    {{ field.label }}
-                  </label>
-                </div>
-              {% endfor %}
-            </fieldset>
+            <div class="govuk-form-group {% if form.non_field_errors %}govuk-form-group--error{% endif %}">
+              <fieldset class="govuk-fieldset" aria-describedby="{% if form.non_field_errors %}checkboxes-error{% endif %}">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                  {{ legend_label }}
+                </legend>
+                {% if form.non_field_errors %}
+                  <p id="checkboxes-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                      {{ form.non_field_errors|first }}
+                  </p>
+                {% endif %}
+                {% for field in field_set %}
+                  <div class="govuk-checkboxes__item">
+                    {{ field }}
+                    <label class="govuk-label govuk-checkboxes__label" for="{{ field.id_for_label }}">
+                      {{ field.label }}
+                    </label>
+                  </div>
+                  {% if field.name == "something_else" %}
+                    {% if feedback_type == "yes" %}
+                      <div id="what-went-well-container"
+                           class="feedback-conditional govuk-checkboxes__conditional {% if form.what_went_well.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
+                        <div class="govuk-form-group govuk-!-padding-top-4 {% if form.what_went_well.errors %}govuk-form-group--error{% endif %}">
+                          <h2 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--s"
+                                   for="{{ form.what_went_well.id_for_label }}">Tell us what went well
+                            </label>
+                          </h2>
+                          {% if form.what_went_well.errors %}
+                            <p id="{{ form.what_went_well.id_for_label }}-error" class="govuk-error-message">
+                              <span class="govuk-visually-hidden">Error:</span> {{ form.what_went_well.errors|first }}
+                            </p>
+                          {% endif %}
+                          {{ form.what_went_well }}
+                        </div>
+                      </div>
+                    {% elif feedback_type == "no" %}
+                      <div id="what-went-wrong-container"
+                          class="feedback-conditional govuk-checkboxes__conditional {% if form.what_went_wrong.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
+                        <div class="govuk-form-group {% if form.what_went_wrong.errors %}govuk-form-group--error{% endif %}">
+                          <label class="govuk-label govuk-label--s" for="{{ form.what_went_wrong.id_for_label }}">
+                            Tell us what was wrong
+                          </label>
+                          {% if form.what_went_wrong.errors %}
+                            <p id="{{ form.what_went_wrong.id_for_label }}-error" class="govuk-error-message">
+                              <span class="govuk-visually-hidden">Error:</span> {{ form.what_went_wrong.errors|first }}
+                            </p>
+                          {% endif %}
+                          {{ form.what_went_wrong }}
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </fieldset>
+            </div>
             {% for field in form %}
               {% if field.widget_type == 'radioselect' %}
-                <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
-                  <label class="govuk-label govuk-label--s">{{ field.label }}</label>
-                  <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
-                    {% for radio in field %}
-                      <div class="govuk-radios__item">
-                        {{ radio.tag }}
-                        <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
-                          {{ radio.choice_label }}
-                        </label>
-                      </div>
-                    {% endfor %}
+                <div id="{{ field.auto_id }}" class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+                  <fieldset class="govuk-fieldset"
+                            aria-describedby="{% if field.errors %}{{ field.auto_id }}-error{% else %}{{ field.auto_id }}{% endif %}">
+                    <label class="govuk-label govuk-label--s">{{ field.label }}</label>
+                    {% if field.errors %}
+                      <p id="{{ field.auto_id }}-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> {{ field.errors|first }}
+                      </p>
+                    {% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                      {% for radio in field %}
+                        <div class="govuk-radios__item">
+                          {{ radio.tag }}
+                          <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
+                            {{ radio.choice_label }}
+                          </label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </fieldset>
                   </div>
-                </fieldset>
-              {% elif field.widget_type == 'textarea' %}
+              {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' %}
                 <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
                   <div class="govuk-form-group govuk-!-padding-top-4">
                     <h2 class="govuk-label-wrapper">
-                      {% if form.not_working %}
+                      {% if feedback_type == "report" %}
                         <label class="govuk-label govuk-label--s"
-                               for="{{ form.how_can_we_improve.id_for_label }}">Tell us more (optional)
+                           for="{{ field.id_for_label }}">Tell us more (optional)
                         </label>
                         <div id="more-detail-hint" class="govuk-hint">
                           Help us make sure the issue is appropriately addressed
                         </div>
                       {% else %}
                         <label class="govuk-label govuk-label--s"
-                               for="{{ form.additional_information.id_for_label }}"> {{ field.label }}
+                               for="{{ field.id_for_label }}"> {{ field.label }}
                         </label>
                       {% endif %}
                     </h2>
@@ -79,9 +133,7 @@
             <div class="govuk-button-group">
               <button
                 id="submit-feedback-button"
-                hx-post="{{ request.get_full_path }}"
-                hx-target="#feedback-widget"
-                hx-swap="innerHTML" type="submit" class="govuk-button" data-module="govuk-button">
+                type="submit" class="govuk-button" data-module="govuk-button">
                 Submit
               </button>
               <a class="govuk-link" href="{{ url_path }}">Cancel</a>
