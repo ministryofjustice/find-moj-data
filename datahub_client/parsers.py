@@ -765,11 +765,24 @@ class DatabaseParser(ContainerParser):
             child_relations.get(RelationshipType.CHILD)
             and not relations_to_display.get(RelationshipType.CHILD)
         ):
-            logger.warning(
-                "No display-tagged children found for database urn=%s; using unfiltered child relationships fallback",
-                urn,
-            )
-            relations_to_display = child_relations
+            if name == "dlpes_dfe_datashare":
+                dfe_children = [
+                    entity
+                    for entity in child_relations[RelationshipType.CHILD]
+                    if (entity.entity_ref.display_name or "").startswith("dfe_")
+                ]
+                relations_to_display = {RelationshipType.CHILD: dfe_children}
+                logger.warning(
+                    "No display-tagged children found for database urn=%s; using dfe_ prefix fallback with %d children",
+                    urn,
+                    len(dfe_children),
+                )
+            else:
+                logger.warning(
+                    "No display-tagged children found for database urn=%s; using unfiltered child relationships fallback",
+                    urn,
+                )
+                relations_to_display = child_relations
 
         return Database(
             urn=urn,
