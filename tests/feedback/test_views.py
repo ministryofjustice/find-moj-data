@@ -58,6 +58,7 @@ class TestFeedbackView:
         )
         assert response.status_code == 200
         assert "Tell us what went well to continue" in response.text
+        assert "govuk-checkboxes__conditional--error" in response.text
 
     def test_yes_form_accepts_something_else_with_text(self, client):
         response = client.post(
@@ -208,6 +209,7 @@ class TestFeedbackView:
         )
         assert response.status_code == 200
         assert "Tell us what was wrong to continue" in response.text
+        assert "govuk-checkboxes__conditional--error" in response.text
 
     def test_no_form_accepts_something_else_with_text(self, client):
         response = client.post(
@@ -340,6 +342,18 @@ class TestFeedbackView:
         error = "There is a problem"
         assert response.status_code == 200
         assert error in response.text
+
+    def test_report_form_requires_some_other_issue_when_something_else_checked(self, client):
+        response = client.post(
+            reverse("feedback:report"),
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+            },
+        )
+        assert response.status_code == 200
+        assert "Tell us what was wrong to continue" in response.text
+        assert "govuk-checkboxes__conditional--error" in response.text
 
 
 @pytest.mark.django_db

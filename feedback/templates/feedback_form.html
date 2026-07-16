@@ -38,7 +38,7 @@
                 </div>
               </div>
             {% endif %}
-            <div class="govuk-form-group {% if form.non_field_errors %}govuk-form-group--error{% endif %}">
+            <div class="govuk-form-group govuk-!-margin-bottom-2 {% if form.non_field_errors %}govuk-form-group--error{% endif %}">
               <fieldset class="govuk-fieldset" aria-describedby="{% if form.non_field_errors %}checkboxes-error{% endif %}">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                   {{ legend_label }}
@@ -89,6 +89,21 @@
                           {{ form.what_went_wrong }}
                         </div>
                       </div>
+                    {% elif feedback_type == "report" %}
+                      <div id="some-other-issue-container"
+                          class="feedback-conditional feedback-conditional--compact govuk-checkboxes__conditional {% if form.some_other_issue.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
+                        <div class="govuk-form-group govuk-!-padding-top-0 {% if form.some_other_issue.errors %}govuk-form-group--error{% endif %}">
+                          <label class="govuk-label govuk-label--s" for="{{ form.some_other_issue.id_for_label }}">
+                            Tell us what was wrong
+                          </label>
+                          {% if form.some_other_issue.errors %}
+                            <p id="{{ form.some_other_issue.id_for_label }}-error" class="govuk-error-message">
+                              <span class="govuk-visually-hidden">Error:</span> {{ form.some_other_issue.errors|first }}
+                            </p>
+                          {% endif %}
+                          {{ form.some_other_issue }}
+                        </div>
+                      </div>
                     {% endif %}
                   {% endif %}
                 {% endfor %}
@@ -119,8 +134,7 @@
                   </div>
               {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' %}
                 <div id="{{ field.auto_id }}" class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
-                  <fieldset class="govuk-fieldset"
-                            aria-describedby="{% if field.errors %}{{ field.auto_id }}-error{% else %}{{ field.auto_id }}{% endif %}">
+                  <fieldset class="govuk-fieldset" aria-describedby="{% if field.errors %}{{ field.auto_id }}-error{% else %}{{ field.auto_id }}{% endif %}">
                     <label class="govuk-label govuk-label--s">{{ field.label }}</label>
                     {% if field.errors %}
                       <p id="{{ field.auto_id }}-error" class="govuk-error-message">
@@ -139,7 +153,28 @@
                     </div>
                   </fieldset>
                   </div>
-              {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' %}
+              {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' and field.name != 'some_other_issue' %}
+                <div id="{{ field.auto_id }}" class="govuk-form-group {% if field.errors %}govuk-form-group--error{% endif %}">
+                  <fieldset class="govuk-fieldset" aria-describedby="{% if field.errors %}{{ field.auto_id }}-error{% else %}{{ field.auto_id }}{% endif %}">
+                    <label class="govuk-label govuk-label--s">{{ field.label }}</label>
+                    {% if field.errors %}
+                      <p id="{{ field.auto_id }}-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> {{ field.errors|first }}
+                      </p>
+                    {% endif %}
+                    <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+                      {% for radio in field %}
+                        <div class="govuk-radios__item">
+                          {{ radio.tag }}
+                          <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
+                            {{ radio.choice_label }}
+                          </label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </fieldset>
+                  </div>
+              {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' and field.name != 'some_other_issue' %}
                 <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
                   <div class="govuk-form-group govuk-!-padding-top-0">
                     <h2 class="govuk-label-wrapper">

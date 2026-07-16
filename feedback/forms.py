@@ -395,6 +395,25 @@ class FeedbackNoForm(forms.ModelForm):
 
 
 class FeedbackReportForm(forms.ModelForm):
+    something_else = forms.BooleanField(
+        required=False,
+        label="Something else",
+        widget=forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
+    )
+
+    some_other_issue = forms.CharField(
+        required=False,
+        label="Tell us what the issue is",
+        widget=Textarea(
+            attrs={
+                "class": "govuk-textarea",
+                "rows": "1",
+                "aria-describedby": "some-other-issue-hint",
+                "style": "width: 600px",
+            }
+        ),
+    )
+
     class Meta:
         model = FeedBackReport
         fields = [
@@ -403,6 +422,7 @@ class FeedbackReportForm(forms.ModelForm):
             "something_else",
             "additional_information",
             "url_path",
+            "some_other_issue",
         ]
         widgets = {
             "not_working": forms.CheckboxInput(attrs={"class": "govuk-checkboxes__input"}),
@@ -421,13 +441,23 @@ class FeedbackReportForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        something_else = cleaned_data.get("something_else")
+        some_other_issue = (cleaned_data.get("some_other_issue") or "").strip()
+
+        if something_else:
+            cleaned_data["some_other_issue"] = some_other_issue
+        else:
+            cleaned_data["some_other_issue"] = ""
+
+        if something_else and not some_other_issue:
+            self.add_error("some_other_issue", "Tell us what was wrong to continue")
+
         if not any(
             cleaned_data.get(field)
             for field in [
                 "not_working",
                 "needs_fixing",
                 "something_else",
-                "additional_information",
             ]
         ):
             raise forms.ValidationError("Select one or more options to continue")
