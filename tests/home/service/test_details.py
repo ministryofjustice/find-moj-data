@@ -5,6 +5,7 @@ from datahub_client.entities import (
     Chart,
     CustomEntityProperties,
     Dashboard,
+    TableEntityMapping,
     Database,
     EntityRef,
     EntitySummary,
@@ -14,6 +15,7 @@ from datahub_client.entities import (
     RelationshipType,
     TagRef,
 )
+from datahub_client.search.search_types import SearchResponse, SearchResult
 from home.service.details import (
     ChartDetailsService,
     DashboardDetailsService,
@@ -249,6 +251,40 @@ class TestDatabaseDetailsService:
         assert "schemas" in context
         assert "tables" not in context
         assert len(context["schemas"]) == 2
+
+    def test_dfe_database_falls_back_to_search_results_when_child_relations_missing(self, mock_catalogue):
+        mock_database = generate_database_metadata(
+            name="dlpes_dfe_datashare",
+            relations={RelationshipType.CHILD: []},
+        )
+        mock_catalogue.get_database_details.return_value = mock_database
+        mock_catalogue.search.return_value = SearchResponse(
+            total_results=2,
+            page_results=[
+                SearchResult(
+                    urn="urn:li:dataset:(urn:li:dataPlatform:glue,dlpes_dfe_datashare.dfe_table_one,PROD)",
+                    result_type=TableEntityMapping,
+                    name="dfe_table_one",
+                    display_name="dfe_table_one",
+                    description="table one",
+                    tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                ),
+                SearchResult(
+                    urn="urn:li:dataset:(urn:li:dataPlatform:glue,dlpes_dfe_datashare.learner_info_daily,PROD)",
+                    result_type=TableEntityMapping,
+                    name="learner_info_daily",
+                    display_name="learner_info_daily",
+                    description="table two",
+                    tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                ),
+            ],
+        )
+
+        service = DatabaseDetailsService("urn:li:container:dfe")
+
+        assert "tables" in service.context
+        assert len(service.context["tables"]) == 1
+        assert service.context["tables"][0].entity_ref.display_name == "dfe_table_one"
 
 
 class TestChartDetailsService:

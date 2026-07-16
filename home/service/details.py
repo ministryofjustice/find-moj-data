@@ -9,10 +9,13 @@ from datahub_client.entities import (
     DatabaseEntityMapping,
     DatahubSubtype,
     EntityRef,
+    EntitySummary,
     PublicationCollectionEntityMapping,
     PublicationDatasetEntityMapping,
     RelationshipType,
+    TableEntityMapping,
 )
+from datahub_client.search.search_types import MultiSelectFilter
 
 from ..urns import PlatformUrns
 from .base import GenericService
@@ -70,8 +73,41 @@ class DatabaseDetailsService(GenericService):
             term.display_name == "Essential Shared Data Asset (ESDA)" for term in self.database_metadata.tags
         )
         self.entities_in_database = self.database_metadata.relationships[RelationshipType.CHILD]
+        if not self.entities_in_database and self.database_metadata.name == "dlpes_dfe_datashare":
+            self.entities_in_database = self._get_dfe_tables_via_search()
+            self.database_metadata.relationships[RelationshipType.CHILD] = self.entities_in_database
         self.context = self._get_context()
         self.template = "details_database.html"
+
+    def _get_dfe_tables_via_search(self) -> list[EntitySummary]:
+        search_response = self.client.search(
+            query="dlpes_dfe_datashare.dfe_",
+            count=500,
+            result_types=(TableEntityMapping,),
+            filters=[
+                MultiSelectFilter(
+                    "tags",
+                    ["urn:li:tag:dc_display_in_catalogue"],
+                )
+            ],
+        )
+
+        results: list[EntitySummary] = []
+        for result in search_response.page_results:
+            if ",dlpes_dfe_datashare.dfe_" not in result.urn:
+                continue
+
+            results.append(
+                EntitySummary(
+                    entity_ref=EntityRef(urn=result.urn, display_name=result.display_name),
+                    description=result.description,
+                    entity_type=TableEntityMapping.find_moj_data_type.value,
+                    data_last_modified=result.last_modified,
+                    tags=result.tags,
+                )
+            )
+
+        return results
 
     def h1_value(self):
         if self.database_metadata.custom_properties.readable_name:
