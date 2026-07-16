@@ -769,7 +769,8 @@ class DatabaseParser(ContainerParser):
                 dfe_children = [
                     entity
                     for entity in child_relations[RelationshipType.CHILD]
-                    if (entity.entity_ref.display_name or "").startswith("dfe_")
+                    if entity.entity_ref.urn.startswith("urn:li:dataset:")
+                    and ",dlpes_dfe_datashare.dfe_" in entity.entity_ref.urn
                 ]
                 relations_to_display = {RelationshipType.CHILD: dfe_children}
                 logger.warning(
