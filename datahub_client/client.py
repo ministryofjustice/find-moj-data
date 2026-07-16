@@ -189,6 +189,33 @@ class DataHubCatalogueClient:
 
         raise EntityDoesNotExist(f"Table with urn: {urn} does not exist")
 
+    def _get_container_response_with_paginated_relationships(self, query: str, urn: str, page_size: int = 500) -> dict:
+        variables = {"urn": urn, "start": 0, "count": page_size}
+        response = self.graph.execute_graphql(query, variables)["container"]
+
+        relationships = response.get("relationships") or {}
+        total = relationships.get("total", 0)
+        all_relationships = list(relationships.get("relationships", []))
+
+        start = len(all_relationships)
+        while start < total:
+            paged_response = self.graph.execute_graphql(
+                query,
+                {"urn": urn, "start": start, "count": page_size},
+            )["container"]
+            page_relationships = (
+                paged_response.get("relationships", {}).get("relationships", [])
+            )
+            if not page_relationships:
+                break
+
+            all_relationships.extend(page_relationships)
+            start = len(all_relationships)
+
+        relationships["relationships"] = all_relationships
+        response["relationships"] = relationships
+        return response
+
     def get_chart_details(self, urn) -> Chart:
         if self.check_entity_exists_by_urn(urn):
             response = self.graph.execute_graphql(self.chart_query, {"urn": urn})["chart"]
@@ -199,7 +226,10 @@ class DataHubCatalogueClient:
 
     def get_database_details(self, urn: str) -> Database:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.database_query, {"urn": urn})["container"]
+            response = self._get_container_response_with_paginated_relationships(
+                self.database_query,
+                urn,
+            )
             database_object = DatabaseParser().parse_to_entity_object(response, urn)
             return database_object
 
@@ -207,7 +237,10 @@ class DataHubCatalogueClient:
 
     def get_schema_details(self, urn: str) -> Schema:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.schema_query, {"urn": urn})["container"]
+            response = self._get_container_response_with_paginated_relationships(
+                self.schema_query,
+                urn,
+            )
             database_object = SchemaParser().parse_to_entity_object(response, urn)
             return database_object
 
@@ -215,7 +248,10 @@ class DataHubCatalogueClient:
 
     def get_publication_collection_details(self, urn: str) -> PublicationCollection:
         if self.check_entity_exists_by_urn(urn):
-            response = self.graph.execute_graphql(self.database_query, {"urn": urn})["container"]
+            response = self._get_container_response_with_paginated_relationships(
+                self.database_query,
+                urn,
+            )
             publication_collection_object = PublicationCollectionParser().parse_to_entity_object(response, urn)
             return publication_collection_object
         raise EntityDoesNotExist(f"Database with urn: {urn} does not exist")

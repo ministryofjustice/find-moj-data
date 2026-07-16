@@ -1,4 +1,4 @@
-query getContainer($urn: String!) {
+query getContainer($urn: String!, $start: Int!, $count: Int!) {
   container(urn: $urn) {
     urn
     exists
@@ -30,7 +30,7 @@ query getContainer($urn: String!) {
       typeNames
     }
     relationships(
-      input: {types: ["IsPartOf"], direction: INCOMING, start: 0, count: 500, includeSoftDelete: false}
+      input: {types: ["IsPartOf"], direction: INCOMING, start: $start, count: $count, includeSoftDelete: false}
     ) {
       total
       relationships {
