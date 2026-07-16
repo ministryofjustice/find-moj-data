@@ -16,12 +16,12 @@ def test_invalid_feedback_form():
 
 
 def test_valid_feedback_yes_form():
-    form = FeedbackYesForm({"easy_to_find": True, "url_path": "/some-path/"})
+    form = FeedbackYesForm({"easy_to_find": True, "url_path": "/some-path/", "interested_in_research": True})
     assert form.is_valid()
 
 
 def test_valid_feedback_no_form():
-    form = FeedbackNoForm({"not_clear": True, "url_path": "/some-path/"})
+    form = FeedbackNoForm({"not_clear": True, "url_path": "/some-path/", "interested_in_research": False})
     assert form.is_valid()
 
 
@@ -32,7 +32,7 @@ def test_valid_feedback_report_form():
 
 @pytest.mark.django_db
 def test_feedback_yes_form_saves_to_db():
-    form = FeedbackYesForm({"easy_to_find": True, "url_path": "/some-path/"})
+    form = FeedbackYesForm({"easy_to_find": True, "url_path": "/some-path/", "interested_in_research": True})
     form.save()
 
     saved = FeedBackYes.objects.first()
@@ -43,7 +43,7 @@ def test_feedback_yes_form_saves_to_db():
 
 @pytest.mark.django_db
 def test_feedback_no_form_saves_to_db():
-    form = FeedbackNoForm({"not_clear": True, "url_path": "/some-path/"})
+    form = FeedbackNoForm({"not_clear": True, "url_path": "/some-path/", "interested_in_research": False})
     form.save()
 
     saved = FeedBackNo.objects.first()
