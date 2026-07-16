@@ -758,6 +758,19 @@ class DatabaseParser(ContainerParser):
         )
         relations_to_display = self.list_relations_to_display(child_relations)
 
+        # Fallback: if linked children exist but none are returned after the
+        # display-tag filter, keep the raw child relationships so the database
+        # page does not incorrectly render as having no table information.
+        if (
+            child_relations.get(RelationshipType.CHILD)
+            and not relations_to_display.get(RelationshipType.CHILD)
+        ):
+            logger.warning(
+                "No display-tagged children found for database urn=%s; using unfiltered child relationships fallback",
+                urn,
+            )
+            relations_to_display = child_relations
+
         return Database(
             urn=urn,
             display_name=display_name,
