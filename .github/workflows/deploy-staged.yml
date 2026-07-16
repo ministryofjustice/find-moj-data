@@ -1,6 +1,7 @@
 name: Staged deploy to Preprod, and Prod
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 
@@ -46,6 +47,7 @@ jobs:
       staff: ${{ secrets.STAFF }}
 
   deploy-prod:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: read
       deployments: write
@@ -69,6 +71,7 @@ jobs:
       staff: ${{ secrets.STAFF }}
 
   post-deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write
     name: "Post-deploy admin"
