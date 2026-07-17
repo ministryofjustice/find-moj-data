@@ -130,11 +130,8 @@
                     <h2 class="govuk-label-wrapper">
                       {% if feedback_type == "report" %}
                         <label class="govuk-label govuk-label--s"
-                           for="{{ field.id_for_label }}">Tell us more (optional)
+                           for="{{ field.id_for_label }}">Is there anything else you would like to tell us? (optional)
                         </label>
-                        <div id="more-detail-hint" class="govuk-hint">
-                          Help us make sure the issue is appropriately addressed
-                        </div>
                       {% else %}
                         <label class="govuk-label govuk-label--s"
                                for="{{ field.id_for_label }}"> {{ field.label }}
