@@ -1,4 +1,5 @@
 import os
+import logging
 from urllib.parse import urlsplit
 
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -19,6 +20,9 @@ from datahub_client.search.search_types import MultiSelectFilter
 
 from ..urns import PlatformUrns
 from .base import GenericService
+
+
+logger = logging.getLogger(__name__)
 
 
 def _parse_parent(relationships: dict) -> EntityRef | None:
