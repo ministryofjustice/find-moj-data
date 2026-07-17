@@ -73,15 +73,25 @@ class DatabaseDetailsService(GenericService):
             term.display_name == "Essential Shared Data Asset (ESDA)" for term in self.database_metadata.tags
         )
         self.entities_in_database = self.database_metadata.relationships[RelationshipType.CHILD]
-        if not self.entities_in_database and self.database_metadata.name == "dlpes_dfe_datashare":
+        if not self.entities_in_database and self._is_dfe_datashare_database():
             self.entities_in_database = self._get_dfe_tables_via_search()
             self.database_metadata.relationships[RelationshipType.CHILD] = self.entities_in_database
         self.context = self._get_context()
         self.template = "details_database.html"
 
+    def _is_dfe_datashare_database(self) -> bool:
+        candidate_values = [
+            self.database_metadata.urn,
+            self.database_metadata.name,
+            self.database_metadata.display_name,
+            self.database_metadata.fully_qualified_name,
+            self.database_metadata.custom_properties.readable_name,
+        ]
+        return any("dlpes_dfe_datashare" in (value or "") for value in candidate_values)
+
     def _get_dfe_tables_via_search(self) -> list[EntitySummary]:
         search_response = self.client.search(
-            query="dlpes_dfe_datashare.dfe_",
+            query="dlpes_dfe_datashare",
             count=500,
             result_types=(TableEntityMapping,),
             filters=[

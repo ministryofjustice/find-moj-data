@@ -255,6 +255,7 @@ class TestDatabaseDetailsService:
     def test_dfe_database_falls_back_to_search_results_when_child_relations_missing(self, mock_catalogue):
         mock_database = generate_database_metadata(
             name="dlpes_dfe_datashare",
+            description="",
             relations={RelationshipType.CHILD: []},
         )
         mock_catalogue.get_database_details.return_value = mock_database
