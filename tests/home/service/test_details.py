@@ -256,7 +256,19 @@ class TestDatabaseDetailsService:
         mock_database = generate_database_metadata(
             name="dlpes_dfe_datashare",
             description="",
-            relations={RelationshipType.CHILD: []},
+            relations={
+                RelationshipType.CHILD: [
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:dataset:(urn:li:dataPlatform:glue,dlpes_dfe_datashare.learner_info_daily,PROD)",
+                            display_name="learner_info_daily",
+                        ),
+                        description="table two",
+                        entity_type="Table",
+                        tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                    )
+                ]
+            },
         )
         mock_catalogue.get_database_details.return_value = mock_database
         mock_catalogue.search.return_value = SearchResponse(

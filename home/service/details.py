@@ -73,8 +73,10 @@ class DatabaseDetailsService(GenericService):
             term.display_name == "Essential Shared Data Asset (ESDA)" for term in self.database_metadata.tags
         )
         self.entities_in_database = self.database_metadata.relationships[RelationshipType.CHILD]
-        if not self.entities_in_database and self._is_dfe_datashare_database():
-            self.entities_in_database = self._get_dfe_tables_via_search()
+        if self._is_dfe_datashare_database():
+            self.entities_in_database = self._filter_dfe_children(self.entities_in_database)
+            if not self.entities_in_database:
+                self.entities_in_database = self._get_dfe_tables_via_search()
             self.database_metadata.relationships[RelationshipType.CHILD] = self.entities_in_database
         self.context = self._get_context()
         self.template = "details_database.html"
@@ -118,6 +120,19 @@ class DatabaseDetailsService(GenericService):
             )
 
         return results
+
+    def _filter_dfe_children(self, children: list[EntitySummary]) -> list[EntitySummary]:
+        filtered_children = [
+            child
+            for child in children
+            if ",dlpes_dfe_datashare.dfe_" in child.entity_ref.urn
+        ]
+        logger.info(
+            "Filtered DfE children from %d to %d using URN prefix dlpes_dfe_datashare.dfe_",
+            len(children),
+            len(filtered_children),
+        )
+        return filtered_children
 
     def h1_value(self):
         if self.database_metadata.custom_properties.readable_name:
