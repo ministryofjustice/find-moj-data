@@ -107,6 +107,7 @@ def test_send_yes_feedback_notification_settings(mock_notifications_client, sett
             "easy_to_find": True,
             "url_path": "/some-path/",
             "created_by": "newuser@justice.gov.uk",
+            "interested_in_research": True,
         }
     )
     feedback: FeedBackYes = form.save()
@@ -150,6 +151,7 @@ def test_send_no_feedback_notification_settings(mock_notifications_client, setti
             "not_clear": True,
             "url_path": "/some-path/",
             "created_by": "newuser@justice.gov.uk",
+            "interested_in_research": False,
         }
     )
     feedback: FeedBackNo = form.save()
