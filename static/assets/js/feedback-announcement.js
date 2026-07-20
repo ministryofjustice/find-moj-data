@@ -1,5 +1,39 @@
 let feedbackAnnouncement = "";
 
+function getFeedbackWidget() {
+  return document.getElementById("feedback-widget");
+}
+
+function getFeedbackErrorTarget(link) {
+  if (!link) {
+    return null;
+  }
+
+  const targetId = link.dataset.scrollTarget || link.getAttribute("href")?.slice(1);
+
+  if (!targetId) {
+    return null;
+  }
+
+  return document.getElementById(targetId);
+}
+
+function focusAndCenter(target) {
+  if (!target) {
+    return;
+  }
+
+  if (!target.hasAttribute("tabindex")) {
+    target.setAttribute("tabindex", "-1");
+  }
+
+  target.scrollIntoView({block: "center", inline: "nearest"});
+
+  if (typeof target.focus === "function") {
+    target.focus({preventScroll: true});
+  }
+}
+
 function getSomethingElseCheckbox() {
   return document.querySelector('input[name="something_else"]');
 }
@@ -74,6 +108,23 @@ document.body.addEventListener("change", function (event) {
     toggleWhatWentWrong();
     toggleSomeOtherIssue();
   }
+});
+
+document.body.addEventListener("click", function (event) {
+  const link = event.target.closest("#feedback-widget .govuk-error-summary a");
+
+  if (!link || !getFeedbackWidget()) {
+    return;
+  }
+
+  const target = getFeedbackErrorTarget(link);
+
+  if (!target) {
+    return;
+  }
+
+  event.preventDefault();
+  focusAndCenter(target);
 });
 
 // After HTMX updates #feedback-widget, re-announce and re-bind visual state.

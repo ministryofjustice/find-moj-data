@@ -3,6 +3,8 @@ from html import escape
 import pytest
 from django.urls import reverse
 
+from feedback.forms import FeedbackNoForm, FeedbackReportForm, FeedbackYesForm
+
 
 @pytest.mark.django_db
 class TestFeedbackView:
@@ -59,6 +61,39 @@ class TestFeedbackView:
         assert response.status_code == 200
         assert "Tell us what went well to continue" in response.text
         assert "govuk-checkboxes__conditional--error" in response.text
+
+    def test_yes_form_summary_targets_center_conditional_section(self):
+        form = FeedbackYesForm(
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+                "interested_in_research": True,
+            }
+        )
+
+        assert not form.is_valid()
+        summary_item = next(
+            item for item in form.get_error_summary_items() if item["message"] == "Tell us what went well to continue"
+        )
+        assert summary_item["href"] == "id_what_went_well"
+        assert summary_item["scroll_target"] == "what-went-well-container"
+
+    def test_yes_form_summary_targets_checkbox_group_for_non_field_error(self):
+        form = FeedbackYesForm(
+            data={
+                "url_path": "/some/path",
+                "interested_in_research": True,
+            }
+        )
+
+        assert not form.is_valid()
+        summary_item = next(
+            item
+            for item in form.get_error_summary_items()
+            if item["message"] == "Select one or more options to continue"
+        )
+        assert summary_item["href"] == "feedback-errors"
+        assert summary_item["scroll_target"] == "feedback-options"
 
     def test_yes_form_accepts_something_else_with_text(self, client):
         response = client.post(
@@ -151,6 +186,39 @@ class TestFeedbackView:
         assert response.status_code == 200
         assert "Tell us what was wrong to continue" in response.text
 
+    def test_no_form_summary_targets_center_conditional_section(self):
+        form = FeedbackNoForm(
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+                "interested_in_research": False,
+            }
+        )
+
+        assert not form.is_valid()
+        summary_item = next(
+            item for item in form.get_error_summary_items() if item["message"] == "Tell us what was wrong to continue"
+        )
+        assert summary_item["href"] == "id_what_went_wrong"
+        assert summary_item["scroll_target"] == "what-went-wrong-container"
+
+    def test_no_form_summary_targets_checkbox_group_for_non_field_error(self):
+        form = FeedbackNoForm(
+            data={
+                "url_path": "/some/path",
+                "interested_in_research": False,
+            }
+        )
+
+        assert not form.is_valid()
+        summary_item = next(
+            item
+            for item in form.get_error_summary_items()
+            if item["message"] == "Select one or more options to continue"
+        )
+        assert summary_item["href"] == "feedback-errors"
+        assert summary_item["scroll_target"] == "feedback-options"
+
     def test_valid_report_form_redirects(self, client):
         response = client.post(
             reverse("feedback:report"),
@@ -185,6 +253,37 @@ class TestFeedbackView:
         assert response.status_code == 200
         assert "Tell us what was wrong to continue" in response.text
         assert "govuk-checkboxes__conditional--error" in response.text
+
+    def test_report_form_summary_targets_center_conditional_section(self):
+        form = FeedbackReportForm(
+            data={
+                "url_path": "/some/path",
+                "something_else": True,
+            }
+        )
+
+        assert not form.is_valid()
+        summary_item = next(
+            item for item in form.get_error_summary_items() if item["message"] == "Tell us what was wrong to continue"
+        )
+        assert summary_item["href"] == "id_some_other_issue"
+        assert summary_item["scroll_target"] == "some-other-issue-container"
+
+    def test_report_form_summary_targets_checkbox_group_for_non_field_error(self):
+        form = FeedbackReportForm(
+            data={
+                "url_path": "/some/path",
+            }
+        )
+
+        assert not form.is_valid()
+        summary_item = next(
+            item
+            for item in form.get_error_summary_items()
+            if item["message"] == "Select one or more options to continue"
+        )
+        assert summary_item["href"] == "feedback-errors"
+        assert summary_item["scroll_target"] == "feedback-options"
 
 
 @pytest.mark.django_db

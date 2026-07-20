@@ -22,7 +22,7 @@
                     <ul class="govuk-list govuk-error-summary__list">
                       {% for error in summary_errors %}
                         <li>
-                          <a href="#{{ error.href }}">{{ error.message }}</a>
+                          <a href="#{{ error.href }}" data-scroll-target="{{ error.scroll_target|default:error.href }}">{{ error.message }}</a>
                         </li>
                       {% endfor %}
                     </ul>
@@ -31,7 +31,10 @@
               </div>
             {% endif %}
             <div class="govuk-form-group govuk-!-margin-bottom-2 {% if form.non_field_errors %}govuk-form-group--error{% endif %}">
-              <fieldset class="govuk-fieldset" aria-describedby="{% if form.non_field_errors %}checkboxes-error{% endif %}">
+              <fieldset id="feedback-options"
+                        class="govuk-fieldset"
+                        tabindex="-1"
+                        aria-describedby="{% if form.non_field_errors %}checkboxes-error{% endif %}">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                   {{ legend_label }}
                 </legend>

@@ -15,6 +15,43 @@ def formfield(field, **kwargs):
     return field.formfield(initial=None, **kwargs)
 
 
+FEEDBACK_ERROR_SCROLL_TARGETS = {
+    "__all__": "feedback-options",
+    "what_went_well": "what-went-well-container",
+    "what_went_wrong": "what-went-wrong-container",
+    "some_other_issue": "some-other-issue-container",
+}
+
+
+class FeedbackErrorSummaryMixin:
+    error_summary_messages = {}
+
+    def get_error_summary_items(self):
+        summary_errors = []
+        ordered_fields = []
+
+        if "__all__" in self.errors:
+            ordered_fields.append("__all__")
+
+        ordered_fields.extend(field_name for field_name in self.fields.keys() if field_name in self.errors)
+
+        ordered_fields.extend(field_name for field_name in self.errors.keys() if field_name not in ordered_fields)
+
+        for errored_field in ordered_fields:
+            error_messages = self.errors.get(errored_field, [])
+            href = "feedback-errors" if errored_field == "__all__" else f"id_{errored_field}"
+            scroll_target = FEEDBACK_ERROR_SCROLL_TARGETS.get(errored_field, href)
+            for error in error_messages:
+                summary_errors.append(
+                    {
+                        "href": href,
+                        "scroll_target": scroll_target,
+                        "message": self.error_summary_messages.get(errored_field, error),
+                    }
+                )
+        return summary_errors
+
+
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Issue
@@ -55,7 +92,7 @@ class IssueForm(forms.ModelForm):
     )
 
 
-class FeedbackYesForm(forms.ModelForm):
+class FeedbackYesForm(FeedbackErrorSummaryMixin, forms.ModelForm):
     error_summary_messages = {
         "interested_in_research": "Choose Yes or No to submit",
     }
@@ -88,29 +125,6 @@ class FeedbackYesForm(forms.ModelForm):
         }
         self.fields["interested_in_research"].choices = [(True, "Yes"), (False, "No")]
         self.initial["interested_in_research"] = None
-
-    def get_error_summary_items(self):
-        summary_errors = []
-        ordered_fields = []
-
-        if "__all__" in self.errors:
-            ordered_fields.append("__all__")
-
-        ordered_fields.extend(field_name for field_name in self.fields.keys() if field_name in self.errors)
-
-        ordered_fields.extend(field_name for field_name in self.errors.keys() if field_name not in ordered_fields)
-
-        for errored_field in ordered_fields:
-            error_messages = self.errors.get(errored_field, [])
-            href = "feedback-errors" if errored_field == "__all__" else f"id_{errored_field}"
-            for error in error_messages:
-                summary_errors.append(
-                    {
-                        "href": href,
-                        "message": self.error_summary_messages.get(errored_field, error),
-                    }
-                )
-        return summary_errors
 
     class Meta:
         model = FeedBackYes
@@ -167,7 +181,7 @@ class FeedbackYesForm(forms.ModelForm):
         return cleaned_data
 
 
-class FeedbackNoForm(forms.ModelForm):
+class FeedbackNoForm(FeedbackErrorSummaryMixin, forms.ModelForm):
     error_summary_messages = {
         "interested_in_research": "Choose Yes or No to submit",
     }
@@ -200,29 +214,6 @@ class FeedbackNoForm(forms.ModelForm):
         }
         self.fields["interested_in_research"].choices = [(True, "Yes"), (False, "No")]
         self.initial["interested_in_research"] = None
-
-    def get_error_summary_items(self):
-        summary_errors = []
-        ordered_fields = []
-
-        if "__all__" in self.errors:
-            ordered_fields.append("__all__")
-
-        ordered_fields.extend(field_name for field_name in self.fields.keys() if field_name in self.errors)
-
-        ordered_fields.extend(field_name for field_name in self.errors.keys() if field_name not in ordered_fields)
-
-        for errored_field in ordered_fields:
-            error_messages = self.errors.get(errored_field, [])
-            href = "feedback-errors" if errored_field == "__all__" else f"id_{errored_field}"
-            for error in error_messages:
-                summary_errors.append(
-                    {
-                        "href": href,
-                        "message": self.error_summary_messages.get(errored_field, error),
-                    }
-                )
-        return summary_errors
 
     class Meta:
         model = FeedBackNo
@@ -282,7 +273,7 @@ class FeedbackNoForm(forms.ModelForm):
         return cleaned_data
 
 
-class FeedbackReportForm(forms.ModelForm):
+class FeedbackReportForm(FeedbackErrorSummaryMixin, forms.ModelForm):
     something_else = forms.BooleanField(
         required=False,
         label="Something else",
