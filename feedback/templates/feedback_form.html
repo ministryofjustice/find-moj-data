@@ -2,7 +2,8 @@
   <div class="gem-c-feedback__prompt-content">
     <div class="gem-c-feedback__prompt-questions">
       <div class="gem-c-feedback__prompt-question-answer">
-          <form action="{{ request.path }}"
+            <form action="{{ request.path }}"
+
             method="post"
             hx-post="{{ request.get_full_path }}"
             hx-target="#feedback-widget"
@@ -21,7 +22,7 @@
                     <ul class="govuk-list govuk-error-summary__list">
                       {% for error in summary_errors %}
                         <li>
-                          <a href="#{{ error.href }}">{{ error.message }}</a>
+                          <a href="#{{ error.href }}" data-scroll-target="{{ error.scroll_target|default:error.href }}">{{ error.message }}</a>
                         </li>
                       {% endfor %}
                     </ul>
@@ -29,8 +30,11 @@
                 </div>
               </div>
             {% endif %}
-            <div class="govuk-form-group {% if form.non_field_errors %}govuk-form-group--error{% endif %}">
-              <fieldset class="govuk-fieldset" aria-describedby="{% if form.non_field_errors %}checkboxes-error{% endif %}">
+            <div class="govuk-form-group govuk-!-margin-bottom-2 {% if form.non_field_errors %}govuk-form-group--error{% endif %}">
+              <fieldset id="feedback-options"
+                        class="govuk-fieldset"
+                        tabindex="-1"
+                        aria-describedby="{% if form.non_field_errors %}checkboxes-error{% endif %}">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                   {{ legend_label }}
                 </legend>
@@ -80,6 +84,21 @@
                           {{ form.what_went_wrong }}
                         </div>
                       </div>
+                    {% elif feedback_type == "report" %}
+                      <div id="some-other-issue-container"
+                          class="feedback-conditional feedback-conditional--compact govuk-checkboxes__conditional {% if form.some_other_issue.errors %}govuk-checkboxes__conditional--error{% endif %} {% if not form.something_else.value %}govuk-!-display-none{% endif %}">
+                        <div class="govuk-form-group govuk-!-padding-top-0 {% if form.some_other_issue.errors %}govuk-form-group--error{% endif %}">
+                          <label class="govuk-label govuk-label--s" for="{{ form.some_other_issue.id_for_label }}">
+                            Tell us what was wrong
+                          </label>
+                          {% if form.some_other_issue.errors %}
+                            <p id="{{ form.some_other_issue.id_for_label }}-error" class="govuk-error-message">
+                              <span class="govuk-visually-hidden">Error:</span> {{ form.some_other_issue.errors|first }}
+                            </p>
+                          {% endif %}
+                          {{ form.some_other_issue }}
+                        </div>
+                      </div>
                     {% endif %}
                   {% endif %}
                 {% endfor %}
@@ -108,17 +127,14 @@
                     </div>
                   </fieldset>
                   </div>
-              {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' %}
+              {% elif field.widget_type == 'textarea' and field.name != 'what_went_well' and field.name != 'what_went_wrong' and field.name != 'some_other_issue' %}
                 <fieldset class="govuk-fieldset" aria-describedby="{{ field.id_for_label }}">
                   <div class="govuk-form-group govuk-!-padding-top-0">
                     <h2 class="govuk-label-wrapper">
                       {% if feedback_type == "report" %}
                         <label class="govuk-label govuk-label--s"
-                           for="{{ field.id_for_label }}">Tell us more (optional)
+                           for="{{ field.id_for_label }}">Is there anything else you would like to tell us? (optional)
                         </label>
-                        <div id="more-detail-hint" class="govuk-hint">
-                          Help us make sure the issue is appropriately addressed
-                        </div>
                       {% else %}
                         <label class="govuk-label govuk-label--s"
                                for="{{ field.id_for_label }}"> {{ field.label }}
