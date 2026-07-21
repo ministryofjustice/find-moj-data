@@ -152,10 +152,7 @@ $feedback-prompt-border-top-colour: #8eb8dc;
   }
 }
 
-.feedback-conditional .govuk-form-group--error .govuk-textarea {
+.govuk-textarea[aria-invalid="true"] {
   border-color: $govuk-error-colour;
-}
-
-.feedback-conditional--compact {
-  margin-bottom: govuk-spacing(2);
+  border-width: 4px;
 }

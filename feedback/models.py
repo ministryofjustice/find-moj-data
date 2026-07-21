@@ -149,3 +149,10 @@ class FeedBackReport(FeedbackMixin, models.Model):
         verbose_name="Something else",
         default=False,
     )
+
+    some_other_issue = models.CharField(
+        max_length=250,
+        null=True,
+        blank=True,
+        verbose_name="Tell us what the issue is",
+    )
