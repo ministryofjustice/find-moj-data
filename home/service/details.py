@@ -57,18 +57,6 @@ def friendly_platform_name(platform_name):
         return platform_name
 
 
-def get_parent_entity_friendly_name(client, parent_entity):
-    # Fetch the full parent entity to get readable_name
-    # Fetch the full parent entity to get readable_name
-    if parent_entity:
-        try:
-            parent_database = client.get_database_details(parent_entity.urn)
-            return parent_database.custom_properties.readable_name or parent_database.display_name
-        except Exception:
-            return parent_entity.display_name
-    return ""
-
-
 class DatabaseDetailsService(GenericService):
     def __init__(self, urn: str):
         self.urn = urn
