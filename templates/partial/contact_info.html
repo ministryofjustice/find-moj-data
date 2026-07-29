@@ -32,7 +32,16 @@
     <a
       type="button"
       class="govuk-button govuk-button--secondary"
-      href="{% url 'feedback:report-issue' %}?entity_name={{ entity_name|urlencode }}&entity_type={{ entity_type }}&data_custodian_email={{ governance.data_owner.email|urlencode }}&entity_url={{ request.build_absolute_uri|urlencode }}&subject_area={{ entity.subject_areas.0.display_name }}&parent_entity={{ parent_entity.display_name|urlencode }}&parent_entity_url={{ parent_entity.urn|urlencode }}&parent_entity_type={{ parent_type }}"
+      href="{% url 'feedback:report-issue' %}?entity_name={{ entity_name|urlencode }}
+      &entity_type={{ entity_type }}
+      &entity_url={{ request.build_absolute_uri|urlencode }}
+      &entity_system_name={{ entity.display_name|urlencode }}
+      &data_custodian_email={{ governance.data_owner.email|urlencode }}
+      &subject_area={{ entity.subject_areas.0.display_name }}
+      &parent_entity={{ parent_entity.display_name|urlencode }}
+      &parent_entity_url={{ parent_entity.urn|urlencode }}
+      &parent_entity_friendly_name={{ parent_entity_friendly_name|urlencode }}
+      &parent_entity_type={{ parent_type }}"
       class="govuk-link"
     >
       Report an issue</a>

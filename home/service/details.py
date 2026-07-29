@@ -57,6 +57,18 @@ def friendly_platform_name(platform_name):
         return platform_name
 
 
+def get_parent_entity_friendly_name(client, parent_entity):
+    # Fetch the full parent entity to get readable_name
+    # Fetch the full parent entity to get readable_name
+    if parent_entity:
+        try:
+            parent_database = client.get_database_details(parent_entity.urn)
+            return parent_database.custom_properties.readable_name or parent_database.display_name
+        except Exception:
+            return parent_entity.display_name
+    return ""
+
+
 class DatabaseDetailsService(GenericService):
     def __init__(self, urn: str):
         self.urn = urn
@@ -119,10 +131,22 @@ class SchemaDetailsService(GenericService):
         self.template = "details_schema.html"
 
     def _get_context(self):
+        parent_entity_friendly_name = ""
+        if self.parent_entity:
+            try:
+                parent_database = self.client.get_database_details(self.parent_entity.urn)
+                parent_entity_friendly_name = (
+                    parent_database.custom_properties.readable_name or parent_database.display_name
+                )
+            except Exception:
+                # If fetch fails, fall back to system name
+                parent_entity_friendly_name = self.parent_entity.display_name
+
         context = {
             "entity": self.schema_metadata,
             "entity_type": "Schema",
             "parent_entity": self.parent_entity,
+            "parent_entity_friendly_name": parent_entity_friendly_name,
             "parent_type": DatabaseEntityMapping.url_formatted,
             "tables": sorted(
                 self.entities_in_database,
@@ -158,11 +182,22 @@ class DatasetDetailsService(GenericService):
 
     def _get_context(self):
         split_datahub_url = urlsplit(os.getenv("CATALOGUE_URL", "https://test-catalogue.gov.uk"))
+        parent_entity_friendly_name = ""
+        if self.parent_entity:
+            try:
+                parent_database = self.client.get_database_details(self.parent_entity.urn)
+                parent_entity_friendly_name = (
+                    parent_database.custom_properties.readable_name or parent_database.display_name
+                )
+            except Exception:
+                # If fetch fails, fall back to system name
+                parent_entity_friendly_name = self.parent_entity.display_name
 
         return {
             "entity": self.table_metadata,
             "entity_type": "Table",
             "parent_entity": self.parent_entity,
+            "parent_entity_friendly_name": parent_entity_friendly_name,
             "parent_type": DatabaseEntityMapping.url_formatted,
             "h1_value": self.table_metadata.name,
             "has_lineage": self.has_lineage(),

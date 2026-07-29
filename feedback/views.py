@@ -179,10 +179,12 @@ def report_issue_view(request) -> HttpResponse:
                     "entity_name": request.session.get("entity_name"),
                     "entity_type": request.session.get("entity_type"),
                     "entity_url": request.session.get("entity_url"),
+                    "entity_system_name": request.session.get("entity_system_name"),
                     "subject_area": request.session.get("subject_area"),
                     "parent_entity": request.session.get("parent_entity"),
                     "parent_entity_url": request.session.get("parent_entity_url"),
                     "parent_entity_type": request.session.get("parent_entity_type"),
+                    "parent_entity_friendly_name": request.session.get("parent_entity_friendly_name"),
                     "report": True,
                 },
             )
@@ -207,20 +209,24 @@ def report_issue_view(request) -> HttpResponse:
             )
             return HttpResponse(status=400)
 
-        entity_name = request.GET.get("entity_name")
-        entity_type = request.GET.get("entity_type")
-        subject_area = request.GET.get("subject_area")
-        parent_entity = request.GET.get("parent_entity")
-        parent_entity_url = request.GET.get("parent_entity_url")
-        parent_entity_type = request.GET.get("parent_entity_type")
+        entity_name = (request.GET.get("entity_name") or "").strip() or None
+        entity_type = (request.GET.get("entity_type") or "").strip() or None
+        entity_system_name = (request.GET.get("entity_system_name") or "").strip() or None
+        subject_area = (request.GET.get("subject_area") or "").strip() or None
+        parent_entity = (request.GET.get("parent_entity") or "").strip() or None
+        parent_entity_url = (request.GET.get("parent_entity_url") or "").strip() or None
+        parent_entity_type = (request.GET.get("parent_entity_type") or "").strip() or None
+        parent_entity_friendly_name = (request.GET.get("parent_entity_friendly_name") or "").strip() or None
 
         request.session["entity_name"] = entity_name
         request.session["entity_type"] = entity_type
         request.session["entity_url"] = entity_url
+        request.session["entity_system_name"] = entity_system_name
         request.session["subject_area"] = subject_area
         request.session["parent_entity"] = parent_entity
         request.session["parent_entity_url"] = parent_entity_url
         request.session["parent_entity_type"] = parent_entity_type
+        request.session["parent_entity_friendly_name"] = parent_entity_friendly_name
 
         request.session["data_custodian_email"] = request.GET.get("data_custodian_email", "")
 
@@ -235,11 +241,13 @@ def report_issue_view(request) -> HttpResponse:
             "entity_name": entity_name,
             "entity_type": entity_type,
             "entity_url": entity_url,
+            "entity_system_name": entity_system_name,
             "subject_area": subject_area,
             "report": True,
             "technical_contact": technical_contact,
             "parent_entity": parent_entity,
             "parent_entity_url": parent_entity_url,
             "parent_entity_type": parent_entity_type,
+            "parent_entity_friendly_name": parent_entity_friendly_name,
         },
     )

@@ -86,13 +86,14 @@
       {% block extra_description %}
       {% endblock extra_description %}
       {% block metadata_list %}
-        {% include "partial/details_metadata.html" with entity=entity entity_type=entity_type %}
+        {% include "partial/details_metadata.html" with entity=entity entity_type=entity_type parent_entity=parent_entity parent_entity_friendly_name=parent_entity_friendly_name parent_type=parent_type %}
         {% include "partial/esda_info.html" with is_esda=is_esda %}
       {% endblock metadata_list %}
     </div>
     <div class="govuk-grid-column-one-third">
-        {% include "partial/contact_info.html" with entity=entity entity_name=entity.name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform parent_entity=parent_entity parent_type=parent_type entity_type=entity_type %}
-    </div>
+      {% with entity_friendly_name=entity.custom_properties.readable_name|default:entity.display_name %}
+        {% include "partial/contact_info.html" with entity_name=entity_friendly_name governance=entity.governance further_information=entity.custom_properties.further_information platform=entity.platform parent_entity=parent_entity parent_entity_friendly_name=parent_entity_friendly_name parent_type=parent_type entity_type=entity_type %}
+      {% endwith %}    </div>
   </div>
 
   {% block extra_details %}
