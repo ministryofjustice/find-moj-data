@@ -82,6 +82,9 @@ class DatabaseDetailsService(GenericService):
             if not self.entities_in_database:
                 self.entities_in_database = self._get_dfe_tables_via_search()
             self.database_metadata.relationships[RelationshipType.CHILD] = self.entities_in_database
+        elif self._is_data_insights_database():
+            self.entities_in_database = self._supplement_data_insights_children(self.entities_in_database)
+            self.database_metadata.relationships[RelationshipType.CHILD] = self.entities_in_database
         self.context = self._get_context()
         self.template = "details_database.html"
 
@@ -124,6 +127,56 @@ class DatabaseDetailsService(GenericService):
             )
 
         return results
+
+    def _is_data_insights_database(self) -> bool:
+        candidate_values = [
+            self.database_metadata.urn,
+            self.database_metadata.name,
+            self.database_metadata.display_name,
+            self.database_metadata.fully_qualified_name,
+            self.database_metadata.custom_properties.readable_name,
+        ]
+        return any("data_insights" in (value or "") for value in candidate_values)
+
+    def _get_data_insights_tables_via_search(self) -> list[EntitySummary]:
+        search_response = self.client.search(
+            query="data_insights",
+            count=500,
+            result_types=(TableEntityMapping,),
+        )
+
+        results: list[EntitySummary] = []
+        for result in search_response.page_results:
+            if ".data_insights." not in result.urn:
+                continue
+
+            results.append(
+                EntitySummary(
+                    entity_ref=EntityRef(urn=result.urn, display_name=result.display_name),
+                    description=result.description,
+                    entity_type=TableEntityMapping.find_moj_data_type.value,
+                    data_last_modified=result.last_modified,
+                    tags=result.tags,
+                )
+            )
+
+        return results
+
+    def _supplement_data_insights_children(self, children: list[EntitySummary]) -> list[EntitySummary]:
+        existing_urns = {child.entity_ref.urn for child in children if child.entity_ref and child.entity_ref.urn}
+        search_children = self._get_data_insights_tables_via_search()
+        supplemented_children = list(children)
+
+        for child in search_children:
+            if child.entity_ref.urn not in existing_urns:
+                supplemented_children.append(child)
+
+        logger.info(
+            "Supplemented data_insights children from %d to %d using search results",
+            len(children),
+            len(supplemented_children),
+        )
+        return supplemented_children
 
     def _filter_dfe_children(self, children: list[EntitySummary]) -> list[EntitySummary]:
         filtered_children = [

@@ -299,6 +299,94 @@ class TestDatabaseDetailsService:
         assert len(service.context["tables"]) == 1
         assert service.context["tables"][0].entity_ref.display_name == "dfe_table_one"
 
+    def test_data_insights_database_supplements_missing_children_from_search(self, mock_catalogue):
+        mock_database = generate_database_metadata(
+            name="data_insights",
+            description="",
+            relations={
+                RelationshipType.CHILD: [
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.caseload,PROD)",
+                            display_name="caseload",
+                        ),
+                        description="caseload",
+                        entity_type="Table",
+                        tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                    ),
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.daily_caseload_count,PROD)",
+                            display_name="daily_caseload_count",
+                        ),
+                        description="daily caseload",
+                        entity_type="Table",
+                        tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                    ),
+                    EntitySummary(
+                        entity_ref=EntityRef(
+                            urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.position,PROD)",
+                            display_name="position",
+                        ),
+                        description="position",
+                        entity_type="Table",
+                        tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                    ),
+                ]
+            },
+        )
+        mock_catalogue.get_database_details.return_value = mock_database
+        mock_catalogue.search.return_value = SearchResponse(
+            total_results=5,
+            page_results=[
+                SearchResult(
+                    urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.caseload,PROD)",
+                    result_type=TableEntityMapping,
+                    name="caseload",
+                    display_name="caseload",
+                    description="caseload",
+                    tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                ),
+                SearchResult(
+                    urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.curfew_atv,PROD)",
+                    result_type=TableEntityMapping,
+                    name="curfew_atv",
+                    display_name="curfew_atv",
+                    description="curfew atv",
+                    tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                ),
+                SearchResult(
+                    urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.daily_caseload_count,PROD)",
+                    result_type=TableEntityMapping,
+                    name="daily_caseload_count",
+                    display_name="daily_caseload_count",
+                    description="daily caseload count",
+                    tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                ),
+                SearchResult(
+                    urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.device_activations,PROD)",
+                    result_type=TableEntityMapping,
+                    name="device_activations",
+                    display_name="device_activations",
+                    description="device activations",
+                    tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                ),
+                SearchResult(
+                    urn="urn:li:dataset:(urn:li:dataPlatform:dbt,cadet_electronic_monitoring.awsdatacatalog.data_insights.device_wearer_violations,PROD)",
+                    result_type=TableEntityMapping,
+                    name="device_wearer_violations",
+                    display_name="device_wearer_violations",
+                    description="device wearer violations",
+                    tags=[TagRef(display_name="dc_display_in_catalogue", urn="urn:li:tag:dc_display_in_catalogue")],
+                ),
+            ],
+        )
+
+        service = DatabaseDetailsService("urn:li:container:data_insights")
+
+        assert "tables" in service.context
+        assert len(service.context["tables"]) == 5
+
 
 class TestChartDetailsService:
     def test_get_context(self, mock_catalogue):
