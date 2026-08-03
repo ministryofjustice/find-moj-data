@@ -16,9 +16,13 @@
         <ul class="govuk-list govuk-error-summary__list">
           {% for errored_field, error_messages in form.errors.items %}
             {% for error in error_messages %}
-              <li>
-                <a href="#{{errored_field}}">{{error}}</a>
-              </li>
+            <li>
+              {% if errored_field == "send_email_to_reporter" %}
+                <a href="#id_send_email_to_reporter_0">{{ error }}</a>
+              {% else %}
+                <a href="#id_{{ errored_field }}">{{ error }}</a>
+              {% endif %}
+            </li>
             {% endfor %}
           {% endfor %}
         </ul>
@@ -116,7 +120,7 @@
             {% for radio in form.send_email_to_reporter %}
             <div class="govuk-radios__item">
               {{radio.tag}}
-              <label class="govuk-label govuk-radios__label" for="send_email_to_reporter">
+              <label class="govuk-label govuk-radios__label" for="{{ radio.id_for_label }}">
                 {{ radio.choice_label }}
               </label>
             </div>

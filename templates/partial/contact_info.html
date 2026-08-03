@@ -30,7 +30,6 @@
   <h2 class="govuk-heading-s govuk-!-margin-top-1">Information missing or incorrect?</h2>
   <div class="govuk-body">
     <a
-      type="button"
       class="govuk-button govuk-button--secondary"
       href="{% url 'feedback:report-issue' %}?entity_name={{ entity_name|urlencode }}
       &entity_type={{ entity_type }}
@@ -42,7 +41,6 @@
       &parent_entity_url={{ parent_entity.urn|urlencode }}
       &parent_entity_friendly_name={{ parent_entity_friendly_name|urlencode }}
       &parent_entity_type={{ parent_type }}"
-      class="govuk-link"
     >
       Report an issue</a>
   </div>
