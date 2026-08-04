@@ -33,3 +33,18 @@
         }
     }
 }
+
+.app-metadata-list--compact-keys {
+  .app-metadata-list__key {
+    @include govuk-media-query($from: tablet) {
+      width: 20%;
+      padding-right: govuk-spacing(0);
+    }
+  }
+
+  .app-metadata-list__value {
+    @include govuk-media-query($from: tablet) {
+      padding-left: govuk-spacing(0);
+    }
+  }
+}

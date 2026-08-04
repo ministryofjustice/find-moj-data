@@ -344,3 +344,56 @@ class TestReportIssueView:
         )
         assert response.status_code == 302
         assert response.url == "http://localhost/my_entity"
+
+    def test_get_handler_rejects_invalid_url(self, client):
+        response = client.get(
+            reverse("feedback:report-issue"),
+            data={
+                "entity_name": "test_entity",
+                "entity_url": "javascript:alert('xss')",  # Invalid protocol
+                "entity_type": "Table",
+            },
+        )
+        assert response.status_code == 400
+
+    def test_get_handler_accepts_valid_url(self, client):
+        response = client.get(
+            reverse("feedback:report-issue"),
+            data={
+                "entity_name": "test_entity",
+                "entity_url": "http://localhost/details/table/test_urn",
+                "entity_type": "Table",
+                "subject_area": "test_subject_area",
+                "parent_entity": "test_parent_entity",
+            },
+        )
+        assert response.status_code == 200
+        assert response.context["entity_url"] == "http://localhost/details/table/test_urn"
+
+    def test_invalid_form_passes_all_metadata_on_error(self, client):
+        """Verify form error preserves ALL entity metadata from session"""
+        session = client.session
+        session["entity_name"] = "test_table"
+        session["entity_type"] = "Table"
+        session["entity_url"] = "http://localhost/details/table/test_urn"
+        session["subject_area"] = "test_subject_area"
+        session["parent_entity"] = "test_database"
+        session["data_custodian_email"] = "owner@justice.gov.uk"
+        session.save()
+
+        # Submit invalid form (missing required send_email_to_reporter choice)
+        response = client.post(
+            reverse("feedback:report-issue"),
+            data={"additional_info": "Some issue details"},
+        )
+
+        assert response.status_code == 200
+        # Verify ALL metadata fields are in context for re-rendering
+        assert response.context["entity_name"] == "test_table"
+        assert response.context["entity_type"] == "Table"
+        assert response.context["entity_url"] == "http://localhost/details/table/test_urn"
+        assert response.context["subject_area"] == "test_subject_area"
+        assert response.context["parent_entity"] == "test_database"
+        # Verify form is present for re-display
+        assert response.context["form"] is not None
+        assert "form" in response.content.decode()

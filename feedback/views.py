@@ -1,9 +1,9 @@
 import logging
+from urllib.parse import urlparse
 
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.utils.http import url_has_allowed_host_and_scheme
 
 from core.settings import ALLOWED_HOSTS
 
@@ -133,11 +133,14 @@ def report_issue_view(request) -> HttpResponse:
             issue.entity_url = request.session.get("entity_url")
             issue.data_custodian_email = request.session.get("data_custodian_email")
 
-            is_valid_url = url_has_allowed_host_and_scheme(
-                url=issue.entity_url,
-                allowed_hosts=ALLOWED_HOSTS,
-                require_https=False,
-            )
+            if issue.entity_url:
+                parsed_url = urlparse(issue.entity_url)
+                is_valid_url = parsed_url.scheme in ["http", "https"] and (
+                    not parsed_url.hostname or parsed_url.hostname in ALLOWED_HOSTS
+                )
+            else:
+                is_valid_url = True
+
             if not is_valid_url:
                 log.error(f"Invalid entity URL: {issue.entity_url}")
                 return HttpResponse(status=400)
@@ -166,27 +169,68 @@ def report_issue_view(request) -> HttpResponse:
 
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
-            entity_url = request.session["entity_url"]
+
             return render(
                 request,
                 "report_issue.html",
                 {
                     "h1_value": "Report an issue",
                     "form": form,
-                    "entity_url": entity_url,
+                    "entity_name": request.session.get("entity_name"),
+                    "entity_type": request.session.get("entity_type"),
+                    "entity_url": request.session.get("entity_url"),
+                    "entity_system_name": request.session.get("entity_system_name"),
+                    "subject_area": request.session.get("subject_area"),
+                    "parent_entity": request.session.get("parent_entity"),
+                    "parent_entity_url": request.session.get("parent_entity_url"),
+                    "parent_entity_type": request.session.get("parent_entity_type"),
+                    "parent_entity_friendly_name": request.session.get("parent_entity_friendly_name"),
                     "report": True,
                 },
             )
     else:
-        entity_name = request.GET.get("entity_name")
+        # GET handler
         entity_url = request.GET.get("entity_url")
+        parsed_url = None
+
+        if entity_url:
+            parsed_url = urlparse(entity_url)
+
+            if parsed_url.scheme not in ["http", "https"]:
+                log.warning(f"Invalid url scheme: {parsed_url.scheme} in entity_url: {entity_url}")
+                return HttpResponse(status=400)
+
+        hostname = parsed_url.hostname if parsed_url else None
+        if hostname and hostname not in ALLOWED_HOSTS:
+            log.warning(
+                "Invalid hostname in entity_url: %s. Allowed hosts: %s",
+                hostname,
+                ALLOWED_HOSTS,
+            )
+            return HttpResponse(status=400)
+
+        entity_name = (request.GET.get("entity_name") or "").strip() or None
+        entity_type = (request.GET.get("entity_type") or "").strip() or None
+        entity_system_name = (request.GET.get("entity_system_name") or "").strip() or None
+        subject_area = (request.GET.get("subject_area") or "").strip() or None
+        parent_entity = (request.GET.get("parent_entity") or "").strip() or None
+        parent_entity_url = (request.GET.get("parent_entity_url") or "").strip() or None
+        parent_entity_type = (request.GET.get("parent_entity_type") or "").strip() or None
+        parent_entity_friendly_name = (request.GET.get("parent_entity_friendly_name") or "").strip() or None
 
         request.session["entity_name"] = entity_name
+        request.session["entity_type"] = entity_type
         request.session["entity_url"] = entity_url
+        request.session["entity_system_name"] = entity_system_name
+        request.session["subject_area"] = subject_area
+        request.session["parent_entity"] = parent_entity
+        request.session["parent_entity_url"] = parent_entity_url
+        request.session["parent_entity_type"] = parent_entity_type
+        request.session["parent_entity_friendly_name"] = parent_entity_friendly_name
+
         request.session["data_custodian_email"] = request.GET.get("data_custodian_email", "")
 
         form = IssueForm()
-
     technical_contact = True if request.session.get("data_custodian_email") else False
     return render(
         request,
@@ -195,8 +239,15 @@ def report_issue_view(request) -> HttpResponse:
             "h1_value": "Report an issue",
             "form": form,
             "entity_name": entity_name,
+            "entity_type": entity_type,
             "entity_url": entity_url,
+            "entity_system_name": entity_system_name,
+            "subject_area": subject_area,
             "report": True,
             "technical_contact": technical_contact,
+            "parent_entity": parent_entity,
+            "parent_entity_url": parent_entity_url,
+            "parent_entity_type": parent_entity_type,
+            "parent_entity_friendly_name": parent_entity_friendly_name,
         },
     )
