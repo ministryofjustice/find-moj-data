@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block breadcrumbs %}
- <a href="javascript:history.back()" class="govuk-back-link">Back</a>
+  {% include "base/history_back_link.html" with fallback_href=back_fallback_url fallback_label=back_fallback_label %}
 {% endblock breadcrumbs %}
 {% block content %}
 <div class="govuk-grid-row  govuk-!-margin-top-0">
