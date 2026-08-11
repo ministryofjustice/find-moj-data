@@ -19,7 +19,7 @@ class Issue(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=True)
 
     additional_info = models.TextField(
-        verbose_name="Please provide as much information as you can to help resolve the issue.",
+        verbose_name="Provide as much information as you can to help resolve the problem.",
         null=False,
         blank=False,
         validators=[MinLengthValidator(10)],

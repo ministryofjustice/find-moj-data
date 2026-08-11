@@ -59,7 +59,7 @@ class IssueForm(forms.ModelForm):
         widgets = {
             "additional_info": Textarea(
                 attrs={
-                    "class": "govuk-textarea",
+                    "class": "govuk-textarea govuk-!-margin-bottom-4",
                     "rows": "5",
                     "aria-describedby": "more-detail-hint",
                 }
