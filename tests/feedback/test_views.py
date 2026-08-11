@@ -370,6 +370,21 @@ class TestReportIssueView:
         assert response.status_code == 200
         assert response.context["entity_url"] == "http://localhost/details/table/test_urn"
 
+    def test_report_issue_renders_history_back_link_with_fallback(self, client):
+        response = client.get(
+            reverse("feedback:report-issue"),
+            data={
+                "entity_name": "test_entity",
+                "entity_url": "http://localhost/details/table/test_urn",
+                "entity_type": "Table",
+            },
+        )
+
+        assert response.status_code == 200
+        assert 'data-history-back-link="true"' in response.text
+        assert 'href="http://localhost/details/table/test_urn"' in response.text
+        assert "Back to table" in response.text
+
     def test_invalid_form_passes_all_metadata_on_error(self, client):
         """Verify form error preserves ALL entity metadata from session"""
         session = client.session
