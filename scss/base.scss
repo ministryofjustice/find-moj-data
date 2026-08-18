@@ -17,8 +17,12 @@
 @use "./components/contact";
 @use "./components/access_panel";
 
-@if vars.$govuk-global-styles {
-  @include govuk-global-styles;
+p {
+  @extend .govuk-body;
+}
+
+a {
+  @extend .govuk-link;
 }
 
 .js-required {
