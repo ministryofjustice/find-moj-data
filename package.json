@@ -15,5 +15,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
     "jest": "^30.4.2"
+  },
+  "overrides": {
+    "js-yaml": "^3.15.1"
   }
 }
