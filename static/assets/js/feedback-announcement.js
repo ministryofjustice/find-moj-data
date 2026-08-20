@@ -146,6 +146,27 @@ document.body.addEventListener("htmx:afterSwap", function (event) {
   toggleWhatWentWell();
   toggleWhatWentWrong();
   toggleSomeOtherIssue();
+
+  window.setTimeout(function () {
+    // GOV.UK pattern: focus error summary first
+    const errorSummary = document.querySelector(".govuk-error-summary");
+
+    if (errorSummary && typeof errorSummary.focus === "function") {
+      if (!errorSummary.hasAttribute("tabindex")) {
+        errorSummary.setAttribute("tabindex", "-1");
+      }
+      errorSummary.focus({ preventScroll: true });
+      return;
+    }
+
+    // Otherwise focus the questions
+    const feedbackOptions = getFeedbackWidget().querySelector("#feedback-options");
+
+    if (feedbackOptions && typeof feedbackOptions.focus === "function") {
+      feedbackOptions.focus({ preventScroll: true });
+    }
+  }, 0);
+
 });
 
 // Initial page-load sync so server-rendered states match checkbox values.

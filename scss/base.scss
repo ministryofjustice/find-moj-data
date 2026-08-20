@@ -16,6 +16,15 @@
 @use "./components/feedback";
 @use "./components/contact";
 @use "./components/access_panel";
+
+p {
+  @extend .govuk-body;
+}
+
+a {
+  @extend .govuk-link;
+}
+
 .js-required {
   display: none;
 }
