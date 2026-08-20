@@ -139,3 +139,12 @@ class TestChartView:
         response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
         assert response.status_code == 200
         assert response.headers["Cache-Control"] == "max-age=300, private"
+
+    @pytest.mark.django_db
+    def test_details_page_renders_history_back_link_with_search_fallback(self, client):
+        response = client.get(reverse("home:details", kwargs={"urn": "fake", "result_type": "chart"}))
+
+        assert response.status_code == 200
+        assert 'data-history-back-link="true"' in response.text
+        assert 'href="/search?"' in response.text
+        assert "Back to search results" in response.text
