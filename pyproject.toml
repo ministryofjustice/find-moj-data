@@ -28,7 +28,7 @@ dependencies = [
     "acryl-datahub[datahub-rest]>=1.1.0.4,<2",
     "deepdiff>=8.6.0,<10",
     "boto3>=1.38.46,<2",
-    "setuptools==83.0.0",
+    "setuptools==84.0.0",
     "cffi==2.1.1",
     "pyjwt==2.13.0",
 ]
@@ -36,7 +36,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pre-commit>=4.2.0,<5",
-    "selenium>=4.41,<4.47",
+    "selenium>=4.41,<4.48",
     "pytest-django>=4.11.1,<5",
     "pytest-cov>=6.2.1,<8",
     "faker>=37.4.0,<41",
