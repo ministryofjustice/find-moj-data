@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from core.settings import ALLOWED_HOSTS
 
@@ -19,6 +20,15 @@ from .service import (
 )
 
 log = logging.getLogger(__name__)
+
+
+def _build_report_issue_back_link_context(entity_url: str | None, entity_type: str | None) -> dict[str, str]:
+    fallback_url = entity_url or reverse("home:home")
+    fallback_label = (entity_type or "home").strip().lower()
+    return {
+        "back_fallback_url": fallback_url,
+        "back_fallback_label": fallback_label,
+    }
 
 
 def feedback_view(request) -> HttpResponse:
@@ -170,6 +180,10 @@ def report_issue_view(request) -> HttpResponse:
         else:
             log.info(f"Invalid report issue form submission: {form.errors}")
 
+            entity_url = request.session.get("entity_url")
+            entity_type = request.session.get("entity_type")
+            back_link_context = _build_report_issue_back_link_context(entity_url, entity_type)
+
             return render(
                 request,
                 "report_issue.html",
@@ -186,6 +200,7 @@ def report_issue_view(request) -> HttpResponse:
                     "parent_entity_type": request.session.get("parent_entity_type"),
                     "parent_entity_friendly_name": request.session.get("parent_entity_friendly_name"),
                     "report": True,
+                    **back_link_context,
                 },
             )
     else:
@@ -231,6 +246,8 @@ def report_issue_view(request) -> HttpResponse:
         request.session["data_custodian_email"] = request.GET.get("data_custodian_email", "")
 
         form = IssueForm()
+
+    back_link_context = _build_report_issue_back_link_context(entity_url, entity_type)
     technical_contact = True if request.session.get("data_custodian_email") else False
     return render(
         request,
@@ -249,5 +266,6 @@ def report_issue_view(request) -> HttpResponse:
             "parent_entity_url": parent_entity_url,
             "parent_entity_type": parent_entity_type,
             "parent_entity_friendly_name": parent_entity_friendly_name,
+            **back_link_context,
         },
     )
