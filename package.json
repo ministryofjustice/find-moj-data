@@ -6,7 +6,7 @@
     "babel-jest": "^30.5.0",
     "govuk-frontend": "^6.5.0",
     "jest-environment-jsdom": "^30.5.1",
-    "sass": "^1.103.1"
+    "sass": "^1.104.0"
   },
   "scripts": {
     "dependencies": "bash scripts/import-static.sh",
