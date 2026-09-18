@@ -10,3 +10,11 @@ def lookup(value_list, lookup_dict) -> list[Any]:
     Ignore any that are not in the list.
     """
     return sorted([lookup_dict[item] for item in value_list if item in lookup_dict])
+
+
+@register.filter
+def get_readable_name(key, lookup_dict) -> Any:
+    """
+    Return the value for key in lookup_dict, falling back to the key itself if it's absent.
+    """
+    return lookup_dict.get(key, key)
