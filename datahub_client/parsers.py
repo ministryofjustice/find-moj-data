@@ -54,14 +54,17 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
     assertions_map = {}
     if assertions.get("total", 0) > 0:
         for assertion in assertions.get("assertions", []):
-            display_name = assertion["info"]["datasetAssertion"]["nativeType"]
+            dataset_assertion = assertion["info"]["datasetAssertion"]
+            if dataset_assertion is None:
+                continue
+            display_name = dataset_assertion["nativeType"]
             if display_name.startswith("column_completeness_"):
                 assertion_type = ColumnAssertionType.COMPLETENESS
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("column_completeness_")[1]
+                assertion_level = display_name.split("column_completeness_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             elif display_name.startswith("consistency"):
                 assertion_type = ColumnAssertionType.CONSISTENCY
-                assertion_level = assertion["info"]["datasetAssertion"]["nativeType"].split("consistency_")[1]
+                assertion_level = display_name.split("consistency_")[1]
                 assertion_level = assertion_level.split("_property")[0]
             else:
                 continue
@@ -75,7 +78,7 @@ def parse_assertions(assertions: dict) -> dict[str, ColumnAssertion]:
                 logger.info(assertion)
                 continue
 
-            for parameter in assertion["info"]["datasetAssertion"]["nativeParameters"]:
+            for parameter in dataset_assertion["nativeParameters"]:
                 if parameter["key"] == "column_name":
                     column_name = parameter["value"]
                     assertions_map.setdefault(column_name, {}).setdefault(assertion_type, {})[assertion_level] = result
