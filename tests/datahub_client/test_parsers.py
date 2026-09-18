@@ -159,7 +159,7 @@ class TestEntityParser:
 
     def test_parse_assertions(self):
         assertions_input = {
-            "total": 2,
+            "total": 3,
             "assertions": [
                 {
                     "info": {
@@ -178,6 +178,10 @@ class TestEntityParser:
                         }
                     },
                     "runEvents": {"runEvents": [{"result": {"type": "FAILED"}}]},
+                },
+                {
+                    "info": {"datasetAssertion": None},
+                    "runEvents": {"runEvents": [{"result": {"type": "SUCCESS"}}]},
                 },
             ],
         }
