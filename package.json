@@ -3,7 +3,7 @@
     "@babel/preset-env": "^8.0.5",
     "@ministryofjustice/frontend": "^11.0.1",
     "@x-govuk/govuk-prototype-components": "^6.0.0",
-    "babel-jest": "^30.5.0",
+    "babel-jest": "^30.5.2",
     "govuk-frontend": "^6.5.1",
     "jest-environment-jsdom": "^30.5.1",
     "sass": "^1.104.1"
