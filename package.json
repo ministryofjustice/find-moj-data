@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "@babel/preset-env": "^8.0.5",
-    "@ministryofjustice/frontend": "^11.0.1",
+    "@babel/preset-env": "^8.0.6",
+    "@ministryofjustice/frontend": "^11.1.0",
     "@x-govuk/govuk-prototype-components": "^6.0.0",
     "babel-jest": "^30.5.0",
     "govuk-frontend": "^6.5.1",
-    "jest-environment-jsdom": "^30.5.1",
+    "jest-environment-jsdom": "^30.5.2",
     "sass": "^1.104.1"
   },
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
-    "jest": "^30.5.1"
+    "jest": "^30.5.2"
   },
   "overrides": {
     "js-yaml": "^3.15.2"
