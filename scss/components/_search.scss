@@ -28,12 +28,13 @@
 // Variant with search button adjacent to the input
 .app-search--compact {
   display: flex;
+  gap: 10px;
 
   .govuk-input[type="search"] {
-    border-right-width: 0;
+    background-color: $govuk-body-background-colour;
 
     &:focus {
-      border-right-width: 2px;
+      border: 3px solid $govuk-focus-colour;
       z-index: 1;
     }
   }
@@ -43,9 +44,9 @@
   }
 
   button {
-    background-color: govuk-colour("blue");
+    background-color: $govuk-body-background-colour;
     border: 0;
-    color: govuk-colour("white");
+    color: govuk-colour("black");
     cursor: pointer;
     height: 40px;
     margin-bottom: 0;
@@ -53,32 +54,52 @@
     width: 40px;
 
     &:hover {
-      background-color: lighten(govuk-colour("blue"), 5%);
+      background-color: #e9f1f8;
     }
 
     &:focus {
-      box-shadow: inset 0 0 0 4px govuk-colour("black");
-      outline: 3px solid govuk-colour("yellow");
+      background-color: $govuk-focus-colour;
+      border: 0;
+      border-bottom: 2px solid govuk-colour("black");
+      outline: 0;
     }
   }
 }
 
-// Variant for blue backgrounds
 .app-search--on-govuk-blue {
   .govuk-input[type="search"] {
-    border-width: 0;
+    border: 0;
 
     &:focus {
-      border-width: 2px;
+      border: 3px solid $govuk-focus-colour;
+    }
+  }
+}
+
+.app-search--results {
+  .govuk-input[type="search"] {
+    border: 2px solid $govuk-input-border-colour;
+
+    &:focus {
+      border: 3px solid $govuk-focus-colour;
     }
   }
 
   button {
-    background-color: #d2e2f1;
-    color: govuk-colour("dark-blue");
+    background-color: #0f7a52;
+    border: 0;
+    border-bottom: 2px solid #083d29;
+    color: govuk-colour("white");
 
     &:hover {
-      background-color: lighten(#d2e2f1, 5%);
+      background-color: #083d29;
+      border-bottom-color: #083d29;
+    }
+
+    &:focus {
+      background-color: $govuk-focus-colour;
+      border-bottom-color: govuk-colour("black");
+      color: govuk-colour("black");
     }
   }
 }
