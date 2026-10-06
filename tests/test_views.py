@@ -4,7 +4,7 @@ from django.urls import reverse
 from waffle.testutils import override_switch
 
 from datahub_client.entities import EntityRef, EntitySummary, RelationshipType
-from tests.conftest import generate_table_metadata
+from tests.conftest import generate_search_result, generate_table_metadata, mock_search_response
 
 
 @pytest.mark.django_db
@@ -44,6 +44,77 @@ class TestSearchView:
     def test_bad_form(self, client):
         response = client.get(reverse("home:search"), data={"subject_area": "fake"})
         assert response.status_code == 400
+
+
+@pytest.mark.django_db
+class TestSearchFoundInDescription:
+    """
+    "Found in description" should only be shown when the search query matches the description
+    """
+
+    FOUND_IN = "Found in description"
+
+    def search_with_description(self, client, mock_catalogue, description, query):
+        result = generate_search_result()
+        result.description = description
+        mock_search_response(mock_catalogue, total_results=1, page_results=[result])
+        response = client.get(reverse("home:search"), data={"query": query})
+        assert response.status_code == 200
+        return response.text
+
+    def test_shown_when_query_matches_description(self, client, mock_catalogue):
+        html = self.search_with_description(client, mock_catalogue, "Monthly prison population figures", "prison")
+
+        assert self.FOUND_IN in html
+        assert "<mark>prison</mark>" in html
+
+    def test_shown_when_stemmed_query_matches_description(self, client, mock_catalogue):
+        html = self.search_with_description(client, mock_catalogue, "Monthly prison population figures", "prisons")
+
+        assert self.FOUND_IN in html
+
+    def test_not_shown_when_query_does_not_match_description(self, client, mock_catalogue):
+        html = self.search_with_description(client, mock_catalogue, "Monthly prison population figures", "courts")
+
+        assert self.FOUND_IN not in html
+        assert "Monthly prison population figures" not in html
+
+    @pytest.mark.parametrize("query", ["", "*"])
+    def test_not_shown_without_a_search_query(self, client, mock_catalogue, query):
+        html = self.search_with_description(client, mock_catalogue, "Monthly prison population figures", query)
+
+        assert self.FOUND_IN not in html
+        assert "Monthly prison population figures" in html
+
+    def test_not_shown_when_description_is_empty(self, client, mock_catalogue):
+        html = self.search_with_description(client, mock_catalogue, "", "prison")
+
+        assert self.FOUND_IN not in html
+
+
+class TestSearchCardTemplate:
+    FOUND_IN = "Found in description"
+
+    def render_card(self, description):
+        result = generate_search_result()
+        result.description = description
+        return render_to_string("partial/search_card.html", {"result": result})
+
+    def test_shows_found_in_for_highlighted_description(self):
+        rendered = self.render_card("Monthly <mark>prison</mark> population figures")
+
+        assert self.FOUND_IN in rendered
+
+    def test_hides_found_in_for_unhighlighted_description(self):
+        rendered = self.render_card("Monthly prison population figures")
+
+        assert self.FOUND_IN not in rendered
+        assert "Monthly prison population figures" in rendered
+
+    def test_hides_found_in_for_empty_description(self):
+        rendered = self.render_card("")
+
+        assert self.FOUND_IN not in rendered
 
 
 class TestTableView:
