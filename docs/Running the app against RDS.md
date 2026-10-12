@@ -1,9 +1,9 @@
 # Running the app against the RDS database(s)
 
 The database settings in the application are such that for local development an sqlite db will be created.
-However if there is a usecase to target one of the RDS environments then you will need to carry out the following steps.
+However if there is a use case to target one of the RDS environments then you will need to carry out the following steps.
 It is important to note that to access the rds environment you will need to create a loopback connection which means opening a local free
-port on your machine for the postgres connection, the loopback connection then forwards matching traffic to a dedicated port forward pod, which inturn forwards
+port on your machine for the postgres connection, the loopback connection then forwards matching traffic to a dedicated port forward pod, which in turn forwards
 to the specified rds environment. Please pay particular attention to the port numbers that have been specified in the examples. We have used port 1234 for
 the local port.
 
@@ -49,8 +49,8 @@ the local port.
     Connection to localhost port 1234 [tcp/search-agent] succeeded!
     ```
 
-5.  Optionally populate the .env file if you dont already have one. Add additional environment variables required for RDS.
-    Note the value of `RDS_INSTANCE_ADDRESS` as `docker.for.mac.host.internal`. This is a special requirment for accessing local connections through docker containers on MAC OS.
+5.  Optionally populate the .env file if you don't already have one. Add additional environment variables required for RDS.
+    Note the value of `RDS_INSTANCE_ADDRESS` as `docker.for.mac.host.internal`. This is a special requirement for accessing local connections through docker containers on MAC OS.
 
         ```
         op inject --in-file .env.tpl --out-file .env
@@ -63,7 +63,7 @@ the local port.
         DATABASE_PASSWORD=< 1pass >
         ```
 
-6.  In order for the application to utilise the loopback connection you have created in the steps above, you will need to change the postgres port number in the Django settings file `settings.py` and addionally in the startup script ```./scripts/app-entrypoint.sh` if you are running as a docker image, to match the local port value used for the loopback connection i.e. `1234` in our examples.
+6.  In order for the application to utilise the loopback connection you have created in the steps above, you will need to change the postgres port number in the Django settings file `settings.py` and additionally in the startup script ```./scripts/app-entrypoint.sh` if you are running as a docker image, to match the local port value used for the loopback connection i.e. `1234` in our examples.
 
     ```
     "default": {

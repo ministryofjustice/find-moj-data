@@ -10,10 +10,12 @@
   },
   "scripts": {
     "dependencies": "bash scripts/import-static.sh",
-    "test": "jest"
+    "test": "jest",
+    "spellcheck": "cspell --no-progress \"**/*.md\" \"**/*.html\""
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
+    "cspell": "^10.3.6",
     "jest": "^30.5.2"
   },
   "overrides": {
