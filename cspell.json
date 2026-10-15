@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en-GB",
+  "ignorePaths": [
+    "package-lock.json",
+    "uv.lock",
+    "static/assets/**",
+    "**/*.svg",
+    ".grype.yml",
+    "coverage/**"
+  ],
+  "overrides": [
+  {
+    "filename": "**/templates/**/*.html",
+    "ignoreRegExpList": [
+      "/{%[\\s\\S]*?%}/g",
+      "/{{[\\s\\S]*?}}/g",
+      "/{#[\\s\\S]*?#}/g"
+    ]
+  },
+  {
+  "filename": "**/*.md",
+  "ignoreRegExpList": [
+  "/{%[\\s\\S]*?%}/g",
+  "/{{[\\s\\S]*?}}/g",
+  "/{#[\\s\\S]*?#}/g"
+  ]
+  },
+  {
+  "filename": "docs/Running the app against RDS.md",
+  "ignoreRegExpList": ["/[A-Za-z0-9.-]+\\.rds\\.amazonaws\\.com/g"]
+  }
+  ],
+  "words": [
+    "app-search",
+    "awswrangler",
+    "Bloggs",
+    "Caseman",
+    "ChromeDriver",
+    "clearable",
+    "collectstatic",
+    "csrftoken",
+    "DataHub",
+    "Delius",
+    "DMET",
+    "EASS",
+    "EHRC",
+    "ESDA",
+    "ESDAs",
+    "found-in",
+    "govuk",
+    "HTMX",
+    "isort",
+    "mojap",
+    "Netcat",
+    "noinput",
+    "Nomis",
+    "Oasys",
+    "pyproject",
+    "runserver",
+    "searchform",
+    "sessionid",
+    "Sirius",
+    "Xhibit"
+  ]
+}

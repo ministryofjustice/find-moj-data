@@ -36,7 +36,7 @@ For example, `/model_templates/oasys/templates/models/risk/oasys/oasys__{table_n
 
 ### Set required metadata
 
-When adding new entities to the catalgoue, we require that you specify some additional metadata in DBT. For example:
+When adding new entities to the catalogue, we require that you specify some additional metadata in DBT. For example:
 
 ```yaml
 models:
@@ -80,7 +80,7 @@ models:
     +materialized: table
     +group: default
     +meta:
-      # Metadata to send Find MoJ data. Can be overriden
+      # Metadata to send Find MoJ data. Can be overridden
       # per domain/model/source
       dc_slack_channel_name: "#ask-data-modelling"
       dc_slack_channel_url: https://moj.enterprise.slack.com/archives/C03J21VFHQ9
@@ -111,7 +111,7 @@ However, this database will have no associated metadata available to make it mor
 
 ### Creating a metadata file for your CaDeT database
 
-Create a branch off of latest main in the [CaDeT github repoistory](https://github.com/moj-analytical-services/create-a-derived-table).
+Create a branch off of latest main in the [CaDeT github repository](https://github.com/moj-analytical-services/create-a-derived-table).
 
 Add a new yaml file with filename as the name of your database in the folder [`mojap_derived_tables/database_metadata`](https://github.com/moj-analytical-services/create-a-derived-table/tree/main/mojap_derived_tables/database_metadata)
 
