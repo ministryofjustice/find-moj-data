@@ -9,4 +9,4 @@ cp node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js static/assets/js
     && cp node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js.map static/assets/js/govuk-frontend.min.js.map \
     && cp node_modules/@ministryofjustice/frontend/moj/moj-frontend.min.js static/assets/js/moj-frontend.min.js
 
-sass -q --load-path=. scss:static/assets/css
+sass -q --load-path=. --load-path=node_modules scss:static/assets/css
