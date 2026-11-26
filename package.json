@@ -14,7 +14,7 @@
     "spellcheck": "cspell --no-progress \"**/*.md\" \"**/*.html\""
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/jest-dom": "^8.0.0",
     "cspell": "^10.4.1",
     "jest": "^30.5.2"
   },
